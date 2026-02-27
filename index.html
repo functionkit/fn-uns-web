@@ -1,2636 +1,389 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>fn-uns — Unified Namespace for Manufacturing</title>
-    <meta
-      name="description"
-      content="Build a real-time manufacturing data backbone using serverless functions, MQTT, and GitOps. Open source. Self-hosted. Zero vendor lock-in."
-    />
-    <style>
-      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500;700&display=swap');
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-      }
-      :root {
-        --black: #0a0a0a;
-        --grey-950: #141414;
-        --grey-900: #1a1a1a;
-        --grey-800: #262626;
-        --grey-700: #404040;
-        --grey-600: #525252;
-        --grey-500: #737373;
-        --grey-400: #a3a3a3;
-        --grey-300: #d4d4d4;
-        --grey-200: #e5e5e5;
-        --grey-100: #f5f5f5;
-        --grey-50: #fafafa;
-        --white: #ffffff;
-        --nav-bg: rgba(255, 255, 255, 0.88);
-        --overlay-bg: rgba(255, 255, 255, 0.95);
-        --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
-        --font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', monospace;
-      }
-      [data-theme="dark"] {
-        --black: #f5f5f5;
-        --grey-950: #141414;
-        --grey-900: #1a1a1a;
-        --grey-800: #d4d4d4;
-        --grey-700: #a3a3a3;
-        --grey-600: #a3a3a3;
-        --grey-500: #737373;
-        --grey-400: #525252;
-        --grey-300: #404040;
-        --grey-200: #262626;
-        --grey-100: #1a1a1a;
-        --grey-50: #141414;
-        --white: #0a0a0a;
-        --nav-bg: rgba(10, 10, 10, 0.88);
-        --overlay-bg: rgba(10, 10, 10, 0.95);
-      }
-      html {
-        scroll-behavior: smooth;
-      }
-      body {
-        font-family: var(--font-sans);
-        background: var(--white);
-        color: var(--black);
-        font-size: 16px;
-        line-height: 1.6;
-        -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
-      }
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>UNS Framework — Unified Namespace for Manufacturing</title>
+<meta name="description" content="Simplifying MQTT and Unified Namespace management through standardisation, transparency, and collaboration. Open source. Self-hosted. Zero vendor lock-in."/>
+<link rel="stylesheet" href="style.css"/>
+<style>
+/* HERO */
+.hero { min-height: 100vh; display: flex; align-items: center; padding: 56px 0 0; }
+.hero .container { text-align: center; max-width: 800px; }
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-family: var(--font-mono); font-size: 12px; font-weight: 500;
+  color: var(--grey-700); background: var(--grey-50); border: 1px solid var(--grey-200);
+  padding: 6px 16px; border-radius: 100px; margin-bottom: 32px;
+}
+.hero-badge .dot { width: 6px; height: 6px; background: var(--black); border-radius: 50%; }
+.hero h1 {
+  font-size: clamp(40px, 6vw, 72px); font-weight: 800;
+  line-height: 1.05; letter-spacing: -0.04em; margin-bottom: 24px;
+}
+.hero .subtitle {
+  font-size: 19px; font-weight: 400; color: var(--grey-700);
+  line-height: 1.65; margin-bottom: 40px; max-width: 600px; margin-left: auto; margin-right: auto;
+}
+.hero .cta-group { justify-content: center; }
 
-      /* NAV */
-      nav {
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        z-index: 100;
-        height: 56px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 0 48px;
-        background: var(--nav-bg);
-        backdrop-filter: blur(24px);
-        -webkit-backdrop-filter: blur(24px);
-        border-bottom: 1px solid var(--grey-200);
-      }
-      nav .logo {
-        font-family: var(--font-mono);
-        font-weight: 600;
-        font-size: 15px;
-        letter-spacing: -0.02em;
-        color: var(--black);
-      }
-      nav .links {
-        display: flex;
-        gap: 32px;
-      }
-      nav .links a {
-        color: var(--grey-700);
-        text-decoration: none;
-        font-size: 14px;
-        font-weight: 400;
-        transition: color 0.2s;
-      }
-      nav .links a:hover {
-        color: var(--black);
-      }
+/* ANIMATED TOPIC BAR */
+.topic-bar {
+  margin-top: 64px; padding: 20px 32px;
+  background: var(--grey-950); border-radius: 12px;
+  font-family: var(--font-mono); font-size: 14px;
+  color: var(--grey-400); text-align: left;
+  box-shadow: 0 24px 48px rgba(0,0,0,0.08);
+  overflow: hidden; position: relative;
+}
+.topic-bar .topic-line { margin: 4px 0; }
+.topic-bar .topic-ver { color: var(--grey-300); font-weight: 500; }
+.topic-bar .topic-sep { color: var(--grey-600); }
+.topic-bar .topic-val { color: #e5e5e5; }
+@keyframes cursor-blink { 0%,100%{opacity:1;} 50%{opacity:0;} }
+.topic-bar .cursor {
+  display: inline-block; width: 8px; height: 16px;
+  background: var(--grey-400); vertical-align: middle;
+  animation: cursor-blink 1s step-end infinite; margin-left: 4px;
+}
 
-      /* LAYOUT */
-      .container {
-        max-width: 1120px;
-        margin: 0 auto;
-        padding: 0 48px;
-      }
-      .divider {
-        width: 100%;
-        height: 1px;
-        background: var(--grey-200);
-      }
-      section {
-        padding: 120px 0;
-      }
-      .section-label {
-        font-family: var(--font-mono);
-        font-size: 12px;
-        font-weight: 500;
-        color: var(--grey-700);
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
-        margin-bottom: 16px;
-      }
-      section h2 {
-        font-size: clamp(28px, 4vw, 42px);
-        font-weight: 700;
-        line-height: 1.12;
-        letter-spacing: -0.03em;
-        margin-bottom: 16px;
-      }
-      section .lead {
-        font-size: 17px;
-        font-weight: 400;
-        color: var(--grey-700);
-        max-width: 560px;
-        line-height: 1.7;
-        margin-bottom: 56px;
-      }
+/* PROJECTS SECTION */
+.projects-section { padding: 120px 0; }
+.projects-section .container > .section-label { margin-bottom: 16px; }
+.projects-section h2 { margin-bottom: 16px; }
+.projects-section .lead { margin-bottom: 56px; }
 
-      /* BUTTONS */
-      .btn-primary {
-        display: inline-flex;
-        align-items: center;
-        padding: 12px 28px;
-        background: var(--black);
-        color: var(--white);
-        font-size: 14px;
-        font-weight: 500;
-        text-decoration: none;
-        border-radius: 8px;
-        font-family: var(--font-sans);
-        transition: all 0.2s;
-        border: 1px solid var(--black);
-      }
-      .btn-primary:hover {
-        background: var(--grey-800);
-      }
-      .btn-secondary {
-        display: inline-flex;
-        align-items: center;
-        padding: 12px 28px;
-        background: transparent;
-        color: var(--black);
-        font-size: 14px;
-        font-weight: 500;
-        text-decoration: none;
-        border-radius: 8px;
-        border: 1px solid var(--grey-300);
-        font-family: var(--font-sans);
-        transition: all 0.2s;
-      }
-      .btn-secondary:hover {
-        border-color: var(--black);
-      }
-      .cta-group {
-        display: flex;
-        gap: 12px;
-        flex-wrap: wrap;
-      }
+/* OVERVIEW SECTION */
+.overview-section { padding: 120px 0; background: var(--grey-50); border-top: 1px solid var(--grey-200); border-bottom: 1px solid var(--grey-200); }
+.overview-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: start; }
+.overview-text h3 { font-size: 22px; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 12px; }
+.overview-text p { font-size: 15px; color: var(--grey-700); line-height: 1.7; margin-bottom: 20px; }
+.overview-text p strong { color: var(--black); font-weight: 600; }
 
-      /* HERO */
-      .hero {
-        min-height: 100vh;
-        display: flex;
-        align-items: center;
-        padding: 56px 0 0;
-      }
-      .hero .container {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 80px;
-        align-items: center;
-      }
-      .hero-content h1 {
-        font-size: clamp(36px, 5vw, 56px);
-        font-weight: 800;
-        line-height: 1.08;
-        letter-spacing: -0.035em;
-        margin-bottom: 24px;
-      }
-      .hero-content .subtitle {
-        font-size: 18px;
-        font-weight: 400;
-        color: var(--grey-700);
-        line-height: 1.65;
-        margin-bottom: 36px;
-        max-width: 480px;
-      }
-      .hero-visual {
-        position: relative;
-        width: 100%;
-        max-width: 520px;
-      }
-      .hero-visual svg {
-        width: 100%;
-        height: auto;
-        display: block;
-      }
-      /* Infographic animations */
-      @keyframes pulse-dot {
-        0%, 100% { opacity: 0.35; }
-        50% { opacity: 1; }
-      }
-      @keyframes flow-dash {
-        to { stroke-dashoffset: -12; }
-      }
-      @keyframes data-packet {
-        0% { offset-distance: 0%; opacity: 0; }
-        10% { opacity: 1; }
-        90% { opacity: 1; }
-        100% { offset-distance: 100%; opacity: 0; }
-      }
-      @keyframes fade-up-in {
-        0% { opacity: 0; transform: translateY(8px); }
-        100% { opacity: 1; transform: translateY(0); }
-      }
-      @keyframes glow-border {
-        0%, 100% { stroke: #e5e5e5; }
-        50% { stroke: #0a0a0a; }
-      }
-      @keyframes kpi-count {
-        0% { opacity: 0; transform: translateY(4px); }
-        100% { opacity: 1; transform: translateY(0); }
-      }
-      .ig-flow-line {
-        stroke-dasharray: 4 8;
-        animation: flow-dash 1.2s linear infinite;
-      }
-      .ig-pulse {
-        animation: pulse-dot 2.4s ease-in-out infinite;
-      }
-      .ig-pulse-d1 { animation-delay: 0s; }
-      .ig-pulse-d2 { animation-delay: 0.6s; }
-      .ig-pulse-d3 { animation-delay: 1.2s; }
-      .ig-pulse-d4 { animation-delay: 1.8s; }
-      /* Data packet dots travelling along paths */
-      .ig-packet {
-        offset-rotate: 0deg;
-        animation: data-packet 2.4s ease-in-out infinite;
-      }
-      .ig-packet-d1 { animation-delay: 0s; }
-      .ig-packet-d2 { animation-delay: 0.8s; }
-      .ig-packet-d3 { animation-delay: 1.6s; }
-      .ig-packet-d4 { animation-delay: 0.4s; }
-      .ig-packet-d5 { animation-delay: 1.2s; }
-      /* Function card highlight on "process" */
-      .ig-fn-highlight {
-        animation: glow-border 3s ease-in-out infinite;
-      }
-      .ig-fn-highlight:nth-child(2) { animation-delay: 0.6s; }
-      .ig-fn-highlight:nth-child(3) { animation-delay: 1.2s; }
-      .ig-fn-highlight:nth-child(4) { animation-delay: 1.8s; }
-      .ig-fn-highlight:nth-child(5) { animation-delay: 2.4s; }
-      /* KPI values fade in staggered */
-      .ig-kpi-row {
-        animation: kpi-count 0.6s ease-out both;
-      }
-      .ig-kpi-d1 { animation-delay: 2.0s; }
-      .ig-kpi-d2 { animation-delay: 2.2s; }
-      .ig-kpi-d3 { animation-delay: 2.4s; }
-      .ig-kpi-d4 { animation-delay: 2.6s; }
-      .ig-kpi-d5 { animation-delay: 2.8s; }
+/* DEFINITIONS PREVIEW */
+.def-preview {
+  border: 1px solid var(--grey-200); border-radius: 12px; overflow: hidden;
+  background: var(--white);
+}
+.def-preview-header {
+  padding: 16px 24px; background: var(--grey-50);
+  border-bottom: 1px solid var(--grey-200);
+  font-family: var(--font-mono); font-size: 11px; font-weight: 600;
+  color: var(--grey-500); letter-spacing: 0.06em; text-transform: uppercase;
+}
+.def-preview-item {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 12px 24px; border-bottom: 1px solid var(--grey-100);
+  font-size: 14px; text-decoration: none; transition: background 0.15s;
+}
+.def-preview-item:last-child { border-bottom: none; }
+.def-preview-item:hover { background: var(--grey-50); }
+.def-preview-item .def-name {
+  font-family: var(--font-mono); font-weight: 500; color: var(--black); font-size: 13px;
+}
+.def-preview-item .def-desc { color: var(--grey-700); font-size: 13px; }
+.def-preview-item .def-arrow { color: var(--grey-400); font-size: 14px; }
 
-      /* Fullscreen overlay for hero graphic */
-      .hero-visual {
-        cursor: pointer;
-      }
-      .hero-fullscreen-overlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        z-index: 9999;
-        background: var(--overlay-bg);
-        backdrop-filter: blur(24px);
-        -webkit-backdrop-filter: blur(24px);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        opacity: 0;
-        transition: opacity 0.3s ease;
-      }
-      .hero-fullscreen-overlay.active {
-        opacity: 1;
-      }
-      .hero-fullscreen-overlay > svg {
-        max-width: 90vw;
-        max-height: 90vh;
-        width: 90vw;
-        height: auto;
-        aspect-ratio: 520 / 480;
-        display: block;
-        filter: drop-shadow(0 24px 48px rgba(0, 0, 0, 0.08));
-      }
-      .hero-fullscreen-close {
-        position: absolute;
-        top: 24px;
-        right: 32px;
-        width: 40px;
-        height: 40px;
-        border: 1px solid var(--grey-300);
-        border-radius: 8px;
-        background: var(--white);
-        color: var(--black);
-        font-size: 18px;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        transition: border-color 0.2s;
-        font-family: var(--font-sans);
-      }
-      .hero-fullscreen-close:hover {
-        border-color: var(--black);
-      }
-      /* Stage labels fade in */
-      .ig-stage-label {
-        animation: fade-up-in 0.5s ease-out both;
-      }
-      .ig-stage-l1 { animation-delay: 0.1s; }
-      .ig-stage-l2 { animation-delay: 0.3s; }
-      .ig-stage-l3 { animation-delay: 0.5s; }
-      /* Machine cards stagger in */
-      .ig-machine-card {
-        animation: fade-up-in 0.4s ease-out both;
-      }
-      .ig-mc-d1 { animation-delay: 0.2s; }
-      .ig-mc-d2 { animation-delay: 0.35s; }
-      .ig-mc-d3 { animation-delay: 0.5s; }
-      .ig-mc-d4 { animation-delay: 0.65s; }
+/* YAML PREVIEW */
+.yaml-preview {
+  background: var(--grey-950); color: var(--grey-300); padding: 28px;
+  border-radius: 12px; font-family: var(--font-mono); font-size: 13px;
+  line-height: 1.8; overflow-x: auto; box-shadow: 0 24px 48px rgba(0,0,0,0.08);
+}
+.yaml-preview .yk { color: #e5e5e5; font-weight: 500; }
+.yaml-preview .yv { color: #a3a3a3; }
+.yaml-preview .yc { color: #525252; }
 
-      /* ── Problem section animations ── */
-      @keyframes spaghetti-arrow-pulse {
-        0%, 100% { color: var(--grey-300); }
-        50% { color: var(--black); }
-      }
-      @keyframes spoke-border-flash {
-        0%, 100% { border-color: transparent; background: var(--grey-50); }
-        50% { border-color: var(--black); background: var(--white); }
-      }
-      @keyframes spaghetti-line-slide {
-        0% { opacity: 0; transform: translateX(-12px); }
-        100% { opacity: 1; transform: translateX(0); }
-      }
-      .problem-section-animated .spaghetti-line .arrow {
-        animation: spaghetti-arrow-pulse 2s ease-in-out infinite;
-      }
-      .problem-section-animated .spaghetti-line:nth-child(1) .arrow { animation-delay: 0s; }
-      .problem-section-animated .spaghetti-line:nth-child(2) .arrow { animation-delay: 0.3s; }
-      .problem-section-animated .spaghetti-line:nth-child(3) .arrow { animation-delay: 0.6s; }
-      .problem-section-animated .spaghetti-line:nth-child(4) .arrow { animation-delay: 0.9s; }
-      .problem-section-animated .spaghetti-line:nth-child(5) .arrow { animation-delay: 1.2s; }
-      .problem-section-animated .spaghetti-line:nth-child(6) .arrow { animation-delay: 1.5s; }
-      .problem-section-animated .spaghetti-line {
-        animation: spaghetti-line-slide 0.5s ease-out both;
-      }
-      .problem-section-animated .spaghetti-line:nth-child(1) { animation-delay: 0.1s; }
-      .problem-section-animated .spaghetti-line:nth-child(2) { animation-delay: 0.2s; }
-      .problem-section-animated .spaghetti-line:nth-child(3) { animation-delay: 0.3s; }
-      .problem-section-animated .spaghetti-line:nth-child(4) { animation-delay: 0.4s; }
-      .problem-section-animated .spaghetti-line:nth-child(5) { animation-delay: 0.5s; }
-      .problem-section-animated .spaghetti-line:nth-child(6) { animation-delay: 0.6s; }
-      .problem-section-animated .spoke {
-        border: 1px solid transparent;
-        transition: all 0.3s ease;
-        animation: spoke-border-flash 3s ease-in-out infinite;
-      }
-      .problem-section-animated .spoke:nth-child(1) { animation-delay: 0s; }
-      .problem-section-animated .spoke:nth-child(2) { animation-delay: 0.5s; }
-      .problem-section-animated .spoke:nth-child(3) { animation-delay: 1.0s; }
-      .problem-section-animated .spoke:nth-child(4) { animation-delay: 1.5s; }
-      .problem-section-animated .spoke:nth-child(5) { animation-delay: 2.0s; }
-      .problem-section-animated .spoke:nth-child(6) { animation-delay: 2.5s; }
-      @keyframes uns-hub-pulse {
-        0%, 100% { border-color: var(--black); box-shadow: 0 0 0 0 rgba(10,10,10,0); }
-        50% { border-color: var(--black); box-shadow: 0 0 0 6px rgba(10,10,10,0.06); }
-      }
-      .problem-section-animated .uns-hub {
-        animation: uns-hub-pulse 3s ease-in-out infinite;
-      }
+/* TOPIC TREE */
+.topic-tree {
+  border: 1px solid var(--grey-200); border-radius: 12px; padding: 32px;
+  font-family: var(--font-mono); font-size: 13px; line-height: 2.2;
+  background: var(--white);
+}
+.topic-tree .level { color: var(--grey-700); }
+.topic-tree .value { color: var(--black); font-weight: 500; }
+.topic-tree .sep { color: var(--grey-300); }
 
-      /* PROBLEM SECTION */
-      .problem-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 64px;
-        align-items: start;
-      }
-      .problem-before {
-        padding: 36px;
-        background: var(--grey-50);
-        border: 1px solid var(--grey-200);
-        border-radius: 12px;
-      }
-      .problem-before h3 {
-        font-size: 14px;
-        font-weight: 600;
-        color: var(--grey-700);
-        text-transform: uppercase;
-        letter-spacing: 0.06em;
-        margin-bottom: 20px;
-      }
-      .spaghetti-line {
-        font-family: var(--font-mono);
-        font-size: 13px;
-        color: var(--grey-700);
-        padding: 8px 0;
-        border-bottom: 1px solid var(--grey-100);
-        display: flex;
-        align-items: center;
-        gap: 8px;
-      }
-      .spaghetti-line:last-child {
-        border-bottom: none;
-      }
-      .spaghetti-line .arrow {
-        color: var(--grey-600);
-      }
-      .problem-after h3 {
-        font-size: 14px;
-        font-weight: 600;
-        color: var(--black);
-        text-transform: uppercase;
-        letter-spacing: 0.06em;
-        margin-bottom: 20px;
-      }
-      .uns-hub {
-        text-align: center;
-        padding: 36px;
-        border: 2px solid var(--black);
-        border-radius: 12px;
-        margin-bottom: 24px;
-      }
-      .uns-hub-label {
-        font-family: var(--font-mono);
-        font-size: 15px;
-        font-weight: 600;
-        color: var(--black);
-      }
-      .uns-hub-sub {
-        font-size: 13px;
-        color: var(--grey-700);
-        margin-top: 4px;
-      }
-      .spoke-grid {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 8px;
-      }
-      .spoke {
-        text-align: center;
-        padding: 12px;
-        background: var(--grey-50);
-        border-radius: 8px;
-        font-size: 12px;
-        color: var(--grey-700);
-      }
+/* ANIMATED FLOW */
+@keyframes flow-pulse { 0%,100%{opacity:0.3;} 50%{opacity:1;} }
+.flow-dots { display: flex; gap: 6px; margin: 24px 0; }
+.flow-dot {
+  width: 8px; height: 8px; background: var(--black); border-radius: 50%;
+  animation: flow-pulse 2s ease-in-out infinite;
+}
+.flow-dot:nth-child(2) { animation-delay: 0.3s; }
+.flow-dot:nth-child(3) { animation-delay: 0.6s; }
+.flow-dot:nth-child(4) { animation-delay: 0.9s; }
+.flow-dot:nth-child(5) { animation-delay: 1.2s; }
 
-      /* STATS ROW */
-      .stats-row {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 1px;
-        background: var(--grey-200);
-        border: 1px solid var(--grey-200);
-        border-radius: 12px;
-        overflow: hidden;
-        margin-top: 64px;
-      }
-      .stat {
-        background: var(--white);
-        padding: 36px 28px;
-        text-align: center;
-      }
-      .stat-number {
-        font-size: 44px;
-        font-weight: 700;
-        letter-spacing: -0.03em;
-        line-height: 1;
-        margin-bottom: 6px;
-        font-family: var(--font-mono);
-      }
-      .stat-label {
-        font-size: 13px;
-        color: var(--grey-700);
-      }
+/* RESPONSIVE */
+@media (max-width: 960px) {
+  .overview-grid { grid-template-columns: 1fr; }
+  .topic-bar { font-size: 12px; padding: 16px 20px; }
+}
+@media (max-width: 600px) {
+  .hero h1 { font-size: 32px; }
+  .hero .subtitle { font-size: 15px; }
+  .topic-bar { font-size: 10px; padding: 12px 16px; }
+  .overview-section { padding: 56px 0; }
+  .projects-section { padding: 56px 0; }
+}
+</style>
+</head>
+<body>
 
-      /* HOW IT WORKS */
-      .how-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 64px;
-        align-items: start;
-      }
-      .how-text h3 {
-        font-size: 22px;
-        font-weight: 700;
-        letter-spacing: -0.02em;
-        margin-bottom: 12px;
-      }
-      .how-text p {
-        font-size: 15px;
-        color: var(--grey-700);
-        line-height: 1.7;
-        margin-bottom: 20px;
-      }
-      .how-text ul {
-        list-style: none;
-        margin-bottom: 24px;
-      }
-      .how-text ul li {
-        font-size: 14px;
-        color: var(--grey-700);
-        padding: 8px 0;
-        border-bottom: 1px solid var(--grey-100);
-        display: flex;
-        align-items: flex-start;
-        gap: 10px;
-        line-height: 1.5;
-      }
-      .how-text ul li:last-child {
-        border-bottom: none;
-      }
-      .how-text ul li strong {
-        color: var(--black);
-        font-weight: 600;
-      }
-      .topic-tree {
-        border: 1px solid var(--grey-200);
-        border-radius: 12px;
-        padding: 32px;
-        font-family: var(--font-mono);
-        font-size: 13px;
-        line-height: 2.2;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
-      }
-      .topic-tree .level {
-        color: var(--grey-700);
-      }
-      .topic-tree .value {
-        color: var(--black);
-        font-weight: 500;
-      }
-      .topic-tree .sep {
-        color: var(--grey-300);
-      }
-
-      /* ARCHITECTURE */
-      .arch-pipeline {
-        display: flex;
-        align-items: stretch;
-        gap: 2px;
-        margin-bottom: 48px;
-      }
-      .arch-stage {
-        flex: 1;
-        background: var(--white);
-        border: 1px solid var(--grey-200);
-        border-radius: 12px;
-        padding: 32px;
-        position: relative;
-      }
-      .arch-stage-num {
-        font-family: var(--font-mono);
-        font-size: 11px;
-        font-weight: 600;
-        color: var(--grey-700);
-        letter-spacing: 0.08em;
-        margin-bottom: 12px;
-      }
-      .arch-stage h3 {
-        font-size: 20px;
-        font-weight: 700;
-        letter-spacing: -0.02em;
-        margin-bottom: 8px;
-      }
-      .arch-stage p {
-        font-size: 14px;
-        color: var(--grey-700);
-        line-height: 1.6;
-        margin-bottom: 16px;
-      }
-      .arch-tags {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 4px;
-      }
-      .arch-tags span {
-        font-family: var(--font-mono);
-        font-size: 11px;
-        padding: 3px 10px;
-        border: 1px solid var(--grey-200);
-        border-radius: 6px;
-        color: var(--grey-700);
-      }
-      .arch-arrow {
-        display: flex;
-        align-items: center;
-        font-size: 20px;
-        color: var(--grey-300);
-        padding: 0 4px;
-      }
-      .arch-detail {
-        font-size: 14px;
-        color: var(--grey-700);
-        line-height: 1.7;
-        max-width: 700px;
-      }
-      .arch-detail strong {
-        color: var(--black);
-      }
-
-      /* COMPONENT GRID */
-      .component-grid {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 1px;
-        background: var(--grey-200);
-        border: 1px solid var(--grey-200);
-        border-radius: 12px;
-        overflow: hidden;
-      }
-      .component-card {
-        background: var(--white);
-        padding: 28px;
-        transition: background 0.2s;
-      }
-      .component-card:hover {
-        background: var(--grey-50);
-      }
-      .card-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: flex-start;
-        margin-bottom: 10px;
-      }
-      .card-name {
-        font-family: var(--font-mono);
-        font-weight: 600;
-        font-size: 14px;
-      }
-      .card-badge {
-        font-family: var(--font-mono);
-        font-size: 10px;
-        font-weight: 500;
-        color: var(--grey-700);
-        background: var(--grey-100);
-        padding: 3px 10px;
-        border-radius: 100px;
-      }
-      .card-desc {
-        font-size: 13px;
-        color: var(--grey-700);
-        line-height: 1.55;
-      }
-
-      /* VALUE GRID */
-      .value-grid {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 1px;
-        background: var(--grey-200);
-        border: 1px solid var(--grey-200);
-        border-radius: 12px;
-        overflow: hidden;
-      }
-      .value-card {
-        background: var(--white);
-        padding: 32px;
-      }
-      .value-card h3 {
-        font-size: 16px;
-        font-weight: 700;
-        letter-spacing: -0.01em;
-        margin-bottom: 8px;
-      }
-      .value-card p {
-        font-size: 13px;
-        color: var(--grey-700);
-        line-height: 1.6;
-      }
-
-      /* CODE SECTION */
-      .code-layout {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 48px;
-        align-items: start;
-      }
-      .code-block {
-        background: var(--grey-950);
-        color: var(--grey-400);
-        padding: 28px;
-        border-radius: 12px;
-        font-family: var(--font-mono);
-        font-size: 12px;
-        line-height: 1.9;
-        overflow-x: auto;
-        box-shadow: 0 24px 48px rgba(0, 0, 0, 0.08);
-      }
-      .code-block .kw {
-        color: var(--white);
-        font-weight: 500;
-      }
-      .code-block .cm {
-        color: var(--grey-400);
-      }
-      .code-block .str {
-        color: var(--grey-300);
-      }
-      .code-annotation h3 {
-        font-size: 24px;
-        font-weight: 700;
-        letter-spacing: -0.02em;
-        margin-bottom: 16px;
-        line-height: 1.2;
-      }
-      .code-annotation p {
-        font-size: 15px;
-        color: var(--grey-700);
-        line-height: 1.7;
-        margin-bottom: 16px;
-      }
-      .code-annotation .stat-line {
-        font-family: var(--font-mono);
-        font-size: 12px;
-        color: var(--grey-700);
-        padding-top: 16px;
-        border-top: 1px solid var(--grey-200);
-      }
-
-      /* KPI GRID */
-      .kpi-grid {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 1px;
-        background: var(--grey-200);
-        border: 1px solid var(--grey-200);
-        border-radius: 12px;
-        overflow: hidden;
-        margin-bottom: 24px;
-      }
-      .kpi-card {
-        background: var(--white);
-        padding: 32px;
-      }
-      .kpi-val {
-        font-family: var(--font-mono);
-        font-size: 44px;
-        font-weight: 700;
-        letter-spacing: -0.03em;
-        line-height: 1;
-        margin-bottom: 6px;
-      }
-      .kpi-label {
-        font-size: 14px;
-        font-weight: 600;
-        margin-bottom: 4px;
-      }
-      .kpi-sub {
-        font-size: 12px;
-        color: var(--grey-700);
-      }
-      .api-line {
-        font-family: var(--font-mono);
-        font-size: 13px;
-        color: var(--grey-700);
-        padding: 16px 0;
-      }
-      .api-line .url {
-        color: var(--black);
-        font-weight: 500;
-      }
-
-      /* COMPARISON */
-      .compare {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        border: 1px solid var(--grey-200);
-        border-radius: 12px;
-        overflow: hidden;
-      }
-      .compare-col {
-        padding: 36px;
-      }
-      .compare-col:first-child {
-        background: var(--grey-50);
-        border-right: 1px solid var(--grey-200);
-      }
-      .compare-col h3 {
-        font-size: 12px;
-        font-weight: 600;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
-        margin-bottom: 24px;
-        padding-bottom: 12px;
-        border-bottom: 2px solid var(--grey-200);
-        color: var(--grey-700);
-      }
-      .compare-col:last-child h3 {
-        border-color: var(--black);
-        color: var(--black);
-      }
-      .compare-col ul {
-        list-style: none;
-      }
-      .compare-col ul li {
-        font-size: 14px;
-        padding: 10px 0;
-        border-bottom: 1px solid var(--grey-100);
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        line-height: 1.5;
-      }
-      .compare-col ul li:last-child {
-        border-bottom: none;
-      }
-      .compare-col:first-child ul li {
-        color: var(--grey-700);
-      }
-      .icon-x,
-      .icon-check {
-        width: 22px;
-        height: 22px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 11px;
-        flex-shrink: 0;
-        border-radius: 6px;
-        font-weight: 600;
-      }
-      .icon-x {
-        background: var(--grey-200);
-        color: var(--grey-700);
-      }
-      .icon-check {
-        background: var(--black);
-        color: var(--white);
-      }
-
-      /* STACK GRID */
-      .stack-grid {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 1px;
-        background: var(--grey-200);
-        border: 1px solid var(--grey-200);
-        border-radius: 12px;
-        overflow: hidden;
-      }
-      .stack-card {
-        background: var(--white);
-        padding: 36px;
-      }
-      .stack-card:hover {
-        background: var(--grey-50);
-      }
-      .stack-num {
-        font-family: var(--font-mono);
-        font-size: 11px;
-        font-weight: 600;
-        color: var(--grey-700);
-        letter-spacing: 0.08em;
-        margin-bottom: 16px;
-      }
-      .stack-card h3 {
-        font-size: 22px;
-        font-weight: 700;
-        letter-spacing: -0.02em;
-        margin-bottom: 4px;
-      }
-      .stack-url {
-        font-family: var(--font-mono);
-        font-size: 12px;
-        color: var(--grey-700);
-        margin-bottom: 16px;
-      }
-      .stack-card p {
-        font-size: 14px;
-        color: var(--grey-700);
-        line-height: 1.65;
-        margin-bottom: 20px;
-      }
-      .stack-role {
-        font-family: var(--font-mono);
-        font-size: 11px;
-        font-weight: 600;
-        color: var(--black);
-        letter-spacing: 0.04em;
-        text-transform: uppercase;
-        padding-top: 16px;
-        border-top: 1px solid var(--grey-200);
-      }
-
-      /* GET STARTED */
-      .start-terminal {
-        background: var(--grey-950);
-        color: var(--grey-400);
-        padding: 32px;
-        border-radius: 12px;
-        font-family: var(--font-mono);
-        font-size: 13px;
-        line-height: 2;
-        max-width: 680px;
-        margin-bottom: 36px;
-        overflow-x: auto;
-        box-shadow: 0 24px 48px rgba(0, 0, 0, 0.08);
-      }
-      .start-terminal .prompt {
-        color: var(--grey-400);
-      }
-      .start-terminal .cmd {
-        color: var(--grey-300);
-      }
-      .start-terminal .comment {
-        color: var(--grey-400);
-      }
-
-      /* FADE */
-      .fade-in {
-        opacity: 0;
-        transform: translateY(16px);
-        transition:
-          opacity 0.5s ease,
-          transform 0.5s ease;
-      }
-      .fade-in.visible {
-        opacity: 1;
-        transform: translateY(0);
-      }
-
-      /* FOOTER */
-      footer {
-        padding: 48px 0;
-        border-top: 1px solid var(--grey-200);
-      }
-      footer .container {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        font-size: 13px;
-        color: var(--grey-700);
-      }
-      footer a {
-        color: var(--grey-700);
-        text-decoration: none;
-        transition: color 0.2s;
-      }
-      footer a:hover {
-        color: var(--black);
-      }
-      footer .footer-links {
-        display: flex;
-        gap: 24px;
-      }
-
-      /* DARK MODE TOGGLE */
-      .theme-toggle {
-        position: relative;
-        width: 44px;
-        height: 24px;
-        background: var(--grey-200);
-        border: 1px solid var(--grey-300);
-        border-radius: 100px;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        display: flex;
-        align-items: center;
-        padding: 0 3px;
-        flex-shrink: 0;
-      }
-      .theme-toggle:hover {
-        border-color: var(--grey-500);
-      }
-      .theme-toggle .toggle-thumb {
-        width: 18px;
-        height: 18px;
-        background: var(--white);
-        border-radius: 50%;
-        transition: all 0.3s ease;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 10px;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.12);
-      }
-      [data-theme="dark"] .theme-toggle {
-        background: var(--grey-200);
-      }
-      [data-theme="dark"] .theme-toggle .toggle-thumb {
-        transform: translateX(18px);
-        background: var(--grey-50);
-      }
-      .toggle-icon-sun, .toggle-icon-moon {
-        pointer-events: none;
-        line-height: 1;
-      }
-      .toggle-icon-moon { display: none; }
-      [data-theme="dark"] .toggle-icon-sun { display: none; }
-      [data-theme="dark"] .toggle-icon-moon { display: block; }
-
-      /* Dark mode SVG overrides */
-      [data-theme="dark"] .hero-visual svg rect[fill="#fafafa"] { fill: #141414; }
-      [data-theme="dark"] .hero-visual svg rect[fill="#ffffff"] { fill: #1a1a1a; }
-      [data-theme="dark"] .hero-visual svg rect[fill="#0a0a0a"] { fill: #f5f5f5; }
-      [data-theme="dark"] .hero-visual svg rect[stroke="#e5e5e5"] { stroke: #262626; }
-      [data-theme="dark"] .hero-visual svg rect[stroke="#0a0a0a"] { stroke: #f5f5f5; }
-      [data-theme="dark"] .hero-visual svg line[stroke="#e5e5e5"] { stroke: #262626; }
-      [data-theme="dark"] .hero-visual svg line[stroke="#d4d4d4"] { stroke: #404040; }
-      [data-theme="dark"] .hero-visual svg line[stroke="#f5f5f5"] { stroke: #1a1a1a; }
-      [data-theme="dark"] .hero-visual svg path[stroke="#d4d4d4"] { stroke: #404040; }
-      [data-theme="dark"] .hero-visual svg circle[fill="#0a0a0a"] { fill: #f5f5f5; }
-      [data-theme="dark"] .hero-visual svg circle[fill="#ffffff"] { fill: #0a0a0a; }
-      [data-theme="dark"] .hero-visual svg text[fill="#0a0a0a"] { fill: #f5f5f5; }
-      [data-theme="dark"] .hero-visual svg text[fill="#737373"] { fill: #a3a3a3; }
-      [data-theme="dark"] .hero-visual svg text[fill="#a3a3a3"] { fill: #737373; }
-      [data-theme="dark"] .hero-visual svg text[fill="#ffffff"] { fill: #0a0a0a; }
-
-      /* Transition for smooth theme switching */
-      body, nav, .hero-fullscreen-overlay {
-        transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
-      }
-
-      /* RESPONSIVE — TABLET */
-      @media (max-width: 960px) {
-        nav {
-          padding: 0 24px;
-        }
-        .container {
-          padding: 0 24px;
-        }
-        .hero .container {
-          grid-template-columns: 1fr;
-          gap: 48px;
-        }
-        section {
-          padding: 80px 0;
-        }
-        .problem-grid {
-          grid-template-columns: 1fr;
-        }
-        .how-grid {
-          grid-template-columns: 1fr;
-        }
-        .arch-pipeline {
-          flex-direction: column;
-        }
-        .arch-arrow {
-          transform: rotate(90deg);
-          justify-content: center;
-          padding: 8px 0;
-        }
-        .component-grid {
-          grid-template-columns: repeat(2, 1fr);
-        }
-        .value-grid {
-          grid-template-columns: repeat(2, 1fr);
-        }
-        .code-layout {
-          grid-template-columns: 1fr;
-        }
-        .kpi-grid {
-          grid-template-columns: repeat(2, 1fr);
-        }
-        .compare {
-          grid-template-columns: 1fr;
-        }
-        .compare-col:first-child {
-          border-right: none;
-          border-bottom: 1px solid var(--grey-200);
-        }
-        .stats-row {
-          grid-template-columns: repeat(2, 1fr);
-        }
-        .stack-grid {
-          grid-template-columns: repeat(2, 1fr);
-        }
-      }
-
-      /* RESPONSIVE — MOBILE */
-      @media (max-width: 600px) {
-        /* Base */
-        nav {
-          padding: 0 16px;
-        }
-        nav .links {
-          gap: 20px;
-        }
-        nav .links a {
-          font-size: 13px;
-        }
-        .container {
-          padding: 0 16px;
-        }
-        section {
-          padding: 56px 0;
-        }
-        section h2 {
-          font-size: 26px;
-        }
-        section .lead {
-          font-size: 14px;
-          margin-bottom: 32px;
-        }
-        .section-label {
-          font-size: 11px;
-          margin-bottom: 12px;
-        }
-        .divider {
-          margin: 0;
-        }
-
-        /* Hero — centered, no visual on mobile */
-        .hero {
-          min-height: auto;
-          padding: 100px 0 56px;
-        }
-        .hero .container {
-          gap: 32px;
-        }
-        .hero-content h1 {
-          font-size: 32px;
-          letter-spacing: -0.03em;
-        }
-        .hero-content .subtitle {
-          font-size: 15px;
-          line-height: 1.6;
-        }
-        .hero-visual {
-          padding: 20px;
-          font-size: 10px;
-          line-height: 1.8;
-          border-radius: 12px;
-        }
-        .cta-group {
-          flex-direction: column;
-          align-items: stretch;
-        }
-        .btn-primary,
-        .btn-secondary {
-          justify-content: center;
-          padding: 14px 24px;
-          font-size: 15px;
-        }
-
-        /* Stats — horizontal scroll strip */
-        .stats-row {
-          grid-template-columns: repeat(4, 1fr);
-          gap: 1px;
-          margin-top: 32px;
-          overflow-x: auto;
-          -webkit-overflow-scrolling: touch;
-        }
-        .stat {
-          padding: 20px 16px;
-          min-width: 0;
-        }
-        .stat-number {
-          font-size: 28px;
-        }
-        .stat-label {
-          font-size: 10px;
-          line-height: 1.3;
-        }
-
-        /* Problem — stack, compact spaghetti */
-        .problem-grid {
-          gap: 24px;
-        }
-        .problem-before {
-          padding: 20px;
-          border-radius: 10px;
-        }
-        .problem-before h3 {
-          font-size: 12px;
-          margin-bottom: 12px;
-        }
-        .spaghetti-line {
-          font-size: 11px;
-          padding: 6px 0;
-        }
-        .problem-before p {
-          font-size: 12px !important;
-        }
-        .problem-after h3 {
-          font-size: 12px;
-          margin-bottom: 12px;
-        }
-        .uns-hub {
-          padding: 24px;
-          border-radius: 10px;
-        }
-        .uns-hub-label {
-          font-size: 13px;
-        }
-        .uns-hub-sub {
-          font-size: 11px;
-        }
-        .spoke-grid {
-          grid-template-columns: repeat(3, 1fr);
-          gap: 6px;
-        }
-        .spoke {
-          padding: 8px;
-          font-size: 11px;
-          border-radius: 6px;
-        }
-        .problem-after p {
-          font-size: 12px !important;
-        }
-
-        /* How it works — topic tree scrollable */
-        .how-text h3 {
-          font-size: 20px;
-        }
-        .how-text p {
-          font-size: 14px;
-        }
-        .how-text ul li {
-          font-size: 13px;
-          padding: 6px 0;
-        }
-        .topic-tree {
-          padding: 16px;
-          font-size: 10px;
-          line-height: 1.9;
-          overflow-x: auto;
-          white-space: nowrap;
-          -webkit-overflow-scrolling: touch;
-        }
-
-        /* Architecture — compact vertical cards */
-        .arch-stage {
-          padding: 20px;
-          border-radius: 10px;
-        }
-        .arch-stage-num {
-          font-size: 10px;
-          margin-bottom: 8px;
-        }
-        .arch-stage h3 {
-          font-size: 17px;
-          margin-bottom: 6px;
-        }
-        .arch-stage p {
-          font-size: 13px;
-          margin-bottom: 12px;
-        }
-        .arch-tags span {
-          font-size: 10px;
-          padding: 2px 8px;
-        }
-        .arch-arrow {
-          padding: 4px 0;
-          font-size: 16px;
-        }
-        .arch-detail {
-          font-size: 13px;
-        }
-
-        /* Components — horizontal scroll carousel */
-        .component-grid {
-          display: flex;
-          overflow-x: auto;
-          -webkit-overflow-scrolling: touch;
-          gap: 12px;
-          background: none;
-          border: none;
-          border-radius: 0;
-          padding-bottom: 8px;
-          scroll-snap-type: x mandatory;
-        }
-        .component-card {
-          min-width: 260px;
-          max-width: 280px;
-          flex-shrink: 0;
-          border: 1px solid var(--grey-200);
-          border-radius: 10px;
-          padding: 20px;
-          scroll-snap-align: start;
-        }
-        .card-name {
-          font-size: 13px;
-        }
-        .card-badge {
-          font-size: 9px;
-          padding: 2px 8px;
-        }
-        .card-desc {
-          font-size: 12px;
-        }
-
-        /* Value cards — horizontal scroll */
-        .value-grid {
-          display: flex;
-          overflow-x: auto;
-          -webkit-overflow-scrolling: touch;
-          gap: 12px;
-          background: none;
-          border: none;
-          border-radius: 0;
-          padding-bottom: 8px;
-          scroll-snap-type: x mandatory;
-        }
-        .value-card {
-          min-width: 260px;
-          max-width: 280px;
-          flex-shrink: 0;
-          border: 1px solid var(--grey-200);
-          border-radius: 10px;
-          padding: 24px;
-          scroll-snap-align: start;
-        }
-        .value-card h3 {
-          font-size: 15px;
-        }
-        .value-card p {
-          font-size: 12px;
-        }
-
-        /* Code — full width, annotation below */
-        .code-block {
-          padding: 16px;
-          font-size: 10px;
-          line-height: 1.8;
-          border-radius: 10px;
-          overflow-x: auto;
-          -webkit-overflow-scrolling: touch;
-          white-space: pre;
-        }
-        .code-annotation h3 {
-          font-size: 20px;
-          margin-top: 4px;
-        }
-        .code-annotation p {
-          font-size: 14px;
-        }
-        .code-annotation .stat-line {
-          font-size: 11px;
-        }
-
-        /* KPIs — 2×3 tight grid */
-        .kpi-grid {
-          grid-template-columns: 1fr 1fr;
-          gap: 1px;
-        }
-        .kpi-card {
-          padding: 20px;
-        }
-        .kpi-val {
-          font-size: 32px;
-        }
-        .kpi-label {
-          font-size: 12px;
-        }
-        .kpi-sub {
-          font-size: 10px;
-        }
-        .api-line {
-          font-size: 11px;
-          overflow-x: auto;
-          white-space: nowrap;
-        }
-
-        /* Comparison — side by side kept but compact */
-        .compare {
-          grid-template-columns: 1fr 1fr;
-          border-radius: 10px;
-        }
-        .compare-col {
-          padding: 16px;
-        }
-        .compare-col h3 {
-          font-size: 10px;
-          margin-bottom: 16px;
-          padding-bottom: 8px;
-        }
-        .compare-col ul li {
-          font-size: 11px;
-          padding: 7px 0;
-          gap: 6px;
-        }
-        .icon-x,
-        .icon-check {
-          width: 18px;
-          height: 18px;
-          font-size: 9px;
-          border-radius: 4px;
-        }
-
-        /* Stack — horizontal scroll */
-        .stack-grid {
-          display: flex;
-          overflow-x: auto;
-          -webkit-overflow-scrolling: touch;
-          gap: 12px;
-          background: none;
-          border: none;
-          border-radius: 0;
-          padding-bottom: 8px;
-          scroll-snap-type: x mandatory;
-        }
-        .stack-card {
-          min-width: 280px;
-          max-width: 300px;
-          flex-shrink: 0;
-          border: 1px solid var(--grey-200);
-          border-radius: 10px;
-          padding: 24px;
-          scroll-snap-align: start;
-        }
-        .stack-card h3 {
-          font-size: 18px;
-        }
-        .stack-card p {
-          font-size: 12px;
-        }
-
-        /* Get started — compact terminal */
-        .start-terminal {
-          padding: 16px;
-          font-size: 10px;
-          line-height: 1.8;
-          border-radius: 10px;
-          overflow-x: auto;
-          -webkit-overflow-scrolling: touch;
-          white-space: nowrap;
-        }
-
-        /* Footer */
-        footer {
-          padding: 32px 0;
-        }
-        footer .container {
-          flex-direction: column;
-          gap: 12px;
-          text-align: center;
-        }
-        footer .footer-links {
-          justify-content: center;
-        }
-      }
-    </style>
-  </head>
-  <body>
-    <nav>
-      <div class="logo">fn-uns</div>
-      <div class="links">
-        <a href="https://www.unsframework.com">Docs</a>
-        <a href="https://github.com/orgs/functionkit/repositories">GitHub</a>
-        <a href="https://functionkit.github.io/fnkit/">fnkit</a>
-        <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
-          <div class="toggle-thumb">
-            <span class="toggle-icon-sun">☀</span>
-            <span class="toggle-icon-moon">☾</span>
-          </div>
-        </button>
+<nav>
+  <a href="/" class="logo">UNS Framework</a>
+  <div class="links">
+    <a href="/framework/">Standard v1.0</a>
+    <a href="/fn-uns/">fn-uns</a>
+    <a href="https://github.com/unsframework" target="_blank">GitHub</a>
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+      <div class="toggle-thumb">
+        <span class="toggle-icon-sun">☀</span>
+        <span class="toggle-icon-moon">☾</span>
       </div>
-    </nav>
+    </button>
+  </div>
+</nav>
 
-    <!-- HERO -->
-    <div class="hero">
-      <div class="container">
-        <div class="hero-content">
-          <h1>Manufacturing data is&nbsp;trapped. We fix&nbsp;that.</h1>
-          <p class="subtitle">
-            fn-uns is an open-source Unified Namespace. Serverless functions
-            that turn fragmented factory data into real-time KPIs. Self-hosted.
-            Version controlled. Deployed with git push.
-          </p>
-          <div class="cta-group">
-            <a href="https://www.unsframework.com" class="btn-primary">Read the Docs →</a>
-            <a href="https://github.com/orgs/functionkit/repositories" class="btn-secondary">View on GitHub</a>
-          </div>
+<!-- HERO -->
+<div class="hero">
+  <div class="container">
+    <div class="hero-badge"><span class="dot"></span> Standard v1.0</div>
+    <h1>UNS<br/>Framework</h1>
+    <p class="subtitle">
+      Simplifying MQTT and Unified Namespace management through
+      standardisation, transparency, and collaboration. Seamlessly integrate
+      and comprehend your UNS.
+    </p>
+    <div class="cta-group">
+      <a href="/framework/" class="btn-primary">Read the Standard →</a>
+      <a href="/fn-uns/" class="btn-secondary">View fn-uns</a>
+    </div>
+
+    <div class="topic-bar">
+      <div class="topic-line"><span class="topic-ver">v1.0</span> <span class="topic-sep">/</span> <span class="topic-val">enterprise</span> <span class="topic-sep">/</span> <span class="topic-val">site1</span> <span class="topic-sep">/</span> <span class="topic-val">area1</span> <span class="topic-sep">/</span> <span class="topic-val">cnc-01</span> <span class="topic-sep">/</span> <span class="topic-val">status</span></div>
+      <div class="topic-line" style="color:var(--grey-600);">→ { "state": "ACTIVE", "program": "OP-4521" }<span class="cursor"></span></div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- THREE PROJECTS -->
+<section class="projects-section fade-in">
+  <div class="container">
+    <div class="section-label">The Ecosystem</div>
+    <h2>Three projects. One unified solution.</h2>
+    <p class="lead">
+      An open standard for structuring manufacturing data, an open platform
+      for deploying serverless functions, and a reference implementation that
+      brings them together.
+    </p>
+
+    <div class="stack-grid">
+      <a href="/framework/" class="stack-card" style="text-decoration:none;color:inherit;">
+        <div class="stack-num">01</div>
+        <h3>UNS Framework</h3>
+        <div class="stack-url">unsframework.com</div>
+        <p>
+          An open standard that defines how to structure manufacturing data
+          in MQTT using YAML files. ISA-95 topic hierarchy, versioned namespaces,
+          payload conventions, and best practices. Vendor-neutral — any system
+          that follows the standard can participate.
+        </p>
+        <div class="stack-role">Defines the data structure</div>
+      </a>
+      <a href="https://functionkit.github.io/fnkit/" class="stack-card" style="text-decoration:none;color:inherit;">
+        <div class="stack-num">02</div>
+        <h3>fnkit</h3>
+        <div class="stack-url">fnkit.dev</div>
+        <p>
+          A lightweight Functions-as-a-Service platform that runs anywhere
+          Containers run. Write functions in any language — Go, Node.js,
+          Python — scaffold with one command, deploy via git push. No cloud
+          vendor required.
+        </p>
+        <div class="stack-role">Provides the platform</div>
+      </a>
+      <a href="/fn-uns/" class="stack-card" style="text-decoration:none;color:inherit;">
+        <div class="stack-num">03</div>
+        <h3>fn-uns</h3>
+        <div class="stack-url">fn.unsframework.com</div>
+        <p>
+          Serverless functions that implement a complete UNS data pipeline
+          on fnkit. From machine simulation to KPI computation — capture,
+          process, and report on manufacturing data using the UNS Framework standard.
+        </p>
+        <div class="stack-role">Delivers the functions</div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- OVERVIEW -->
+<section class="overview-section fade-in">
+  <div class="container">
+    <div class="overview-grid">
+      <div class="overview-text">
+        <div class="section-label">What is UNS Framework?</div>
+        <h3>Describe what you have — without changing what or how you do it.</h3>
+        <p>
+          The <strong>UNS Framework</strong> is an open-source initiative that offers a
+          technically-driven approach to MQTT and Unified Namespace through the use of
+          YAML files. Inspired by standards like Docker and Kubernetes, it establishes
+          a universal standard that is both <strong>human-readable</strong> and
+          <strong>machine-readable</strong>.
+        </p>
+        <p>
+          It is not a software product but a descriptive standard that seamlessly
+          integrates with any new or existing UNS deployments. It complements existing
+          standards like Sparkplug, OPC/UA, and MT Connect by focusing on
+          <strong>describing what you have</strong>.
+        </p>
+        <p>
+          By articulating your UNS with the framework, you enable seamless integration
+          across documentation, applications, analytics, security tools, and AI systems.
+        </p>
+        <div class="flow-dots">
+          <div class="flow-dot"></div>
+          <div class="flow-dot"></div>
+          <div class="flow-dot"></div>
+          <div class="flow-dot"></div>
+          <div class="flow-dot"></div>
         </div>
-        <div class="hero-visual">
-          <svg viewBox="0 0 520 480" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <!-- Background card -->
-            <rect x="0" y="0" width="520" height="480" rx="16" fill="#fafafa" stroke="#e5e5e5" stroke-width="1"/>
+        <a href="/framework/" class="btn-primary">Explore the Standard →</a>
+      </div>
+      <div>
+        <div class="yaml-preview">
+<pre style="margin:0;font:inherit;white-space:pre"><span class="yc"># uns.yml — describe your namespace</span>
+<span class="yk">version:</span> <span class="yv">'1.0'</span>
+<span class="yk">uns:</span>
+  <span class="yk">name:</span> <span class="yv">'UNS Framework'</span>
+  <span class="yk">region:</span> <span class="yv">'UK'</span>
+  <span class="yk">timezone:</span> <span class="yv">'UTC'</span>
+  <span class="yk">topic_structure:</span> <span class="yv">'version/site/area/...'</span>
+  <span class="yk">topic_standard:</span> <span class="yv">'ISA95'</span>
+  <span class="yk">information_model:</span> <span class="yv">'User Defined'</span>
 
-            <!-- ═══ STAGE LABELS ═══ -->
-            <text x="60" y="32" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="600" fill="#a3a3a3" letter-spacing="0.08em" class="ig-stage-label ig-stage-l1">CAPTURE</text>
-            <text x="222" y="32" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="600" fill="#a3a3a3" letter-spacing="0.08em" class="ig-stage-label ig-stage-l2">PROCESS</text>
-            <text x="410" y="32" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="600" fill="#a3a3a3" letter-spacing="0.08em" class="ig-stage-label ig-stage-l3">REPORT</text>
-
-            <!-- Vertical stage dividers -->
-            <line x1="180" y1="20" x2="180" y2="390" stroke="#e5e5e5" stroke-width="1" stroke-dasharray="4 4"/>
-            <line x1="370" y1="20" x2="370" y2="390" stroke="#e5e5e5" stroke-width="1" stroke-dasharray="4 4"/>
-
-            <!-- ═══ DATA PACKET PATHS (invisible, used for offset-path) ═══ -->
-            <defs>
-              <!-- Machine → MQTT vertical path -->
-              <path id="path-m-mqtt" d="M 90 108 L 90 324"/>
-              <!-- MQTT → Valkey L-shaped path -->
-              <path id="path-mqtt-valkey" d="M 156 350 L 175 350 Q 185 350 185 340 L 185 84 Q 185 74 195 74 L 275 74"/>
-              <!-- Valkey → Functions vertical path -->
-              <path id="path-valkey-fn" d="M 275 112 L 275 352"/>
-              <!-- Functions → PostgreSQL path -->
-              <path id="path-fn-pg" d="M 352 200 L 365 200 Q 375 200 375 190 L 375 84 Q 375 74 385 74 L 442 74"/>
-              <!-- PostgreSQL → KPI path -->
-              <path id="path-pg-kpi" d="M 442 112 L 442 174"/>
-              <!-- KPI → Output path -->
-              <path id="path-kpi-out" d="M 442 200 L 442 302"/>
-            </defs>
-
-            <!-- ═══ TRAVELLING DATA PACKETS ═══ -->
-            <!-- Machines → MQTT -->
-            <circle r="3" fill="#0a0a0a" style="offset-path: path('M 90 108 L 90 324');" class="ig-packet ig-packet-d1"/>
-            <circle r="3" fill="#0a0a0a" style="offset-path: path('M 90 108 L 90 324');" class="ig-packet ig-packet-d3"/>
-            <!-- MQTT → Valkey -->
-            <circle r="3" fill="#0a0a0a" style="offset-path: path('M 156 350 L 175 350 Q 185 350 185 340 L 185 84 Q 185 74 195 74 L 275 74');" class="ig-packet ig-packet-d2"/>
-            <circle r="3" fill="#0a0a0a" style="offset-path: path('M 156 350 L 175 350 Q 185 350 185 340 L 185 84 Q 185 74 195 74 L 275 74');" class="ig-packet ig-packet-d4"/>
-            <!-- Valkey → Functions -->
-            <circle r="2.5" fill="#0a0a0a" style="offset-path: path('M 275 112 L 275 352');" class="ig-packet ig-packet-d1"/>
-            <circle r="2.5" fill="#0a0a0a" style="offset-path: path('M 275 112 L 275 352');" class="ig-packet ig-packet-d5"/>
-            <!-- Functions → PostgreSQL -->
-            <circle r="2.5" fill="#0a0a0a" style="offset-path: path('M 352 200 L 365 200 Q 375 200 375 190 L 375 84 Q 375 74 385 74 L 442 74');" class="ig-packet ig-packet-d3"/>
-            <circle r="2.5" fill="#0a0a0a" style="offset-path: path('M 352 200 L 365 200 Q 375 200 375 190 L 375 84 Q 375 74 385 74 L 442 74');" class="ig-packet ig-packet-d5"/>
-            <!-- PostgreSQL → KPI -->
-            <circle r="2.5" fill="#ffffff" style="offset-path: path('M 442 112 L 442 174');" class="ig-packet ig-packet-d2"/>
-            <!-- KPI → Output -->
-            <circle r="2.5" fill="#0a0a0a" style="offset-path: path('M 442 200 L 442 302');" class="ig-packet ig-packet-d4"/>
-
-            <!-- ═══ MACHINES (left column) ═══ -->
-            <!-- CNC-01 -->
-            <rect x="24" y="56" width="132" height="52" rx="8" fill="#ffffff" stroke="#e5e5e5" stroke-width="1" class="ig-machine-card ig-mc-d1"/>
-            <circle cx="42" cy="82" r="5" fill="#0a0a0a" class="ig-pulse ig-pulse-d1"/>
-            <text x="54" y="78" font-family="'JetBrains Mono', monospace" font-size="11" font-weight="600" fill="#0a0a0a">cnc-01</text>
-            <text x="54" y="94" font-family="'JetBrains Mono', monospace" font-size="9" fill="#737373">ACTIVE</text>
-
-            <!-- CNC-02 -->
-            <rect x="24" y="120" width="132" height="52" rx="8" fill="#ffffff" stroke="#e5e5e5" stroke-width="1"/>
-            <circle cx="42" cy="146" r="5" fill="#0a0a0a" class="ig-pulse ig-pulse-d2"/>
-            <text x="54" y="142" font-family="'JetBrains Mono', monospace" font-size="11" font-weight="600" fill="#0a0a0a">cnc-02</text>
-            <text x="54" y="158" font-family="'JetBrains Mono', monospace" font-size="9" fill="#737373">IDLE</text>
-
-            <!-- CNC-03 -->
-            <rect x="24" y="184" width="132" height="52" rx="8" fill="#ffffff" stroke="#e5e5e5" stroke-width="1"/>
-            <circle cx="42" cy="210" r="5" fill="#0a0a0a" class="ig-pulse ig-pulse-d3"/>
-            <text x="54" y="206" font-family="'JetBrains Mono', monospace" font-size="11" font-weight="600" fill="#0a0a0a">cnc-03</text>
-            <text x="54" y="222" font-family="'JetBrains Mono', monospace" font-size="9" fill="#737373">ACTIVE</text>
-
-            <!-- CNC-04 -->
-            <rect x="24" y="248" width="132" height="52" rx="8" fill="#ffffff" stroke="#e5e5e5" stroke-width="1"/>
-            <circle cx="42" cy="274" r="5" fill="#0a0a0a" class="ig-pulse ig-pulse-d4"/>
-            <text x="54" y="270" font-family="'JetBrains Mono', monospace" font-size="11" font-weight="600" fill="#0a0a0a">cnc-04</text>
-            <text x="54" y="286" font-family="'JetBrains Mono', monospace" font-size="9" fill="#737373">ALARM</text>
-
-            <!-- ═══ MQTT BROKER (centre-left) ═══ -->
-            <rect x="24" y="324" width="132" height="52" rx="8" fill="#0a0a0a"/>
-            <text x="90" y="347" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="600" fill="#ffffff" text-anchor="middle">MQTT</text>
-            <text x="90" y="363" font-family="'JetBrains Mono', monospace" font-size="8" fill="#a3a3a3" text-anchor="middle">Broker</text>
-
-            <!-- Flow lines: machines → MQTT -->
-            <line x1="90" y1="108" x2="90" y2="120" stroke="#d4d4d4" stroke-width="1" class="ig-flow-line"/>
-            <line x1="90" y1="172" x2="90" y2="184" stroke="#d4d4d4" stroke-width="1" class="ig-flow-line"/>
-            <line x1="90" y1="236" x2="90" y2="248" stroke="#d4d4d4" stroke-width="1" class="ig-flow-line"/>
-            <line x1="90" y1="300" x2="90" y2="324" stroke="#d4d4d4" stroke-width="1" class="ig-flow-line"/>
-
-            <!-- ═══ VALKEY CACHE (centre) ═══ -->
-            <rect x="198" y="56" width="154" height="56" rx="8" fill="#ffffff" stroke="#0a0a0a" stroke-width="1.5"/>
-            <text x="275" y="79" font-family="'JetBrains Mono', monospace" font-size="11" font-weight="600" fill="#0a0a0a" text-anchor="middle">Valkey Cache</text>
-            <text x="275" y="97" font-family="'JetBrains Mono', monospace" font-size="8" fill="#737373" text-anchor="middle">uns:data:* · uns:prev:*</text>
-
-            <!-- Flow line: MQTT → Valkey (via uns-framework) -->
-            <path d="M 156 350 L 175 350 Q 185 350 185 340 L 185 84 Q 185 74 195 74 L 198 74" stroke="#d4d4d4" stroke-width="1" fill="none" class="ig-flow-line"/>
-            <text x="170" y="345" font-family="'JetBrains Mono', monospace" font-size="7" fill="#a3a3a3" transform="rotate(-90 170 345)">uns-framework</text>
-
-            <!-- ═══ PROCESSING FUNCTIONS (centre column) ═══ -->
-            <!-- uns-state -->
-            <rect x="198" y="132" width="154" height="40" rx="6" fill="#ffffff" stroke="#e5e5e5" stroke-width="1" class="ig-fn-highlight"/>
-            <text x="214" y="157" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="500" fill="#0a0a0a">uns-state</text>
-            <text x="336" y="157" font-family="'JetBrains Mono', monospace" font-size="8" fill="#a3a3a3" text-anchor="end">Go</text>
-
-            <!-- uns-stoppage -->
-            <rect x="198" y="182" width="154" height="40" rx="6" fill="#ffffff" stroke="#e5e5e5" stroke-width="1" class="ig-fn-highlight" style="animation-delay: 0.6s"/>
-            <text x="214" y="207" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="500" fill="#0a0a0a">uns-stoppage</text>
-            <text x="336" y="207" font-family="'JetBrains Mono', monospace" font-size="8" fill="#a3a3a3" text-anchor="end">Node</text>
-
-            <!-- uns-productivity -->
-            <rect x="198" y="232" width="154" height="40" rx="6" fill="#ffffff" stroke="#e5e5e5" stroke-width="1" class="ig-fn-highlight" style="animation-delay: 1.2s"/>
-            <text x="214" y="257" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="500" fill="#0a0a0a">uns-productivity</text>
-            <text x="336" y="257" font-family="'JetBrains Mono', monospace" font-size="8" fill="#a3a3a3" text-anchor="end">Go</text>
-
-            <!-- uns-log -->
-            <rect x="198" y="282" width="154" height="40" rx="6" fill="#ffffff" stroke="#e5e5e5" stroke-width="1" class="ig-fn-highlight" style="animation-delay: 1.8s"/>
-            <text x="214" y="307" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="500" fill="#0a0a0a">uns-log</text>
-            <text x="336" y="307" font-family="'JetBrains Mono', monospace" font-size="8" fill="#a3a3a3" text-anchor="end">Go</text>
-
-            <!-- uns-input -->
-            <rect x="198" y="332" width="154" height="40" rx="6" fill="#ffffff" stroke="#e5e5e5" stroke-width="1" class="ig-fn-highlight" style="animation-delay: 2.4s"/>
-            <text x="214" y="357" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="500" fill="#0a0a0a">uns-input</text>
-            <text x="336" y="357" font-family="'JetBrains Mono', monospace" font-size="8" fill="#a3a3a3" text-anchor="end">Node</text>
-
-            <!-- Flow lines: Valkey → processing functions -->
-            <line x1="275" y1="112" x2="275" y2="132" stroke="#d4d4d4" stroke-width="1" class="ig-flow-line"/>
-            <line x1="275" y1="172" x2="275" y2="182" stroke="#d4d4d4" stroke-width="1" class="ig-flow-line"/>
-            <line x1="275" y1="222" x2="275" y2="232" stroke="#d4d4d4" stroke-width="1" class="ig-flow-line"/>
-            <line x1="275" y1="272" x2="275" y2="282" stroke="#d4d4d4" stroke-width="1" class="ig-flow-line"/>
-            <line x1="275" y1="322" x2="275" y2="332" stroke="#d4d4d4" stroke-width="1" class="ig-flow-line"/>
-
-            <!-- ═══ POSTGRESQL (right column, top) ═══ -->
-            <rect x="388" y="56" width="108" height="56" rx="8" fill="#ffffff" stroke="#0a0a0a" stroke-width="1.5"/>
-            <text x="442" y="79" font-family="'JetBrains Mono', monospace" font-size="11" font-weight="600" fill="#0a0a0a" text-anchor="middle">PostgreSQL</text>
-            <text x="442" y="97" font-family="'JetBrains Mono', monospace" font-size="8" fill="#737373" text-anchor="middle">4 tables</text>
-
-            <!-- Flow lines: processing → PostgreSQL -->
-            <path d="M 352 152 L 365 152 Q 375 152 375 142 L 375 84 Q 375 74 385 74 L 388 74" stroke="#d4d4d4" stroke-width="1" fill="none" class="ig-flow-line"/>
-            <path d="M 352 202 L 365 202 Q 375 202 375 192 L 375 90 Q 375 80 385 80 L 388 80" stroke="#d4d4d4" stroke-width="1" fill="none" class="ig-flow-line"/>
-            <path d="M 352 252 L 365 252 Q 375 252 375 242 L 375 92 Q 375 82 385 82 L 388 82" stroke="#d4d4d4" stroke-width="1" fill="none" class="ig-flow-line"/>
-            <path d="M 352 302 L 365 302 Q 375 302 375 292 L 375 94 Q 375 84 385 84 L 388 84" stroke="#d4d4d4" stroke-width="1" fill="none" class="ig-flow-line"/>
-
-            <!-- ═══ UNS-KPI (right column, centre) ═══ -->
-            <rect x="388" y="148" width="108" height="52" rx="8" fill="#0a0a0a"/>
-            <text x="442" y="171" font-family="'JetBrains Mono', monospace" font-size="11" font-weight="600" fill="#ffffff" text-anchor="middle">uns-kpi</text>
-            <text x="442" y="187" font-family="'JetBrains Mono', monospace" font-size="8" fill="#a3a3a3" text-anchor="middle">Go · HTTP</text>
-
-            <!-- Flow line: PostgreSQL → uns-kpi -->
-            <line x1="442" y1="112" x2="442" y2="148" stroke="#d4d4d4" stroke-width="1" class="ig-flow-line"/>
-
-            <!-- ═══ KPI OUTPUT (right column, bottom) ═══ -->
-            <rect x="388" y="224" width="108" height="156" rx="8" fill="#ffffff" stroke="#e5e5e5" stroke-width="1"/>
-
-            <!-- Flow line: uns-kpi → KPI output -->
-            <line x1="442" y1="200" x2="442" y2="224" stroke="#d4d4d4" stroke-width="1" class="ig-flow-line"/>
-
-            <g class="ig-kpi-row ig-kpi-d1">
-              <text x="404" y="248" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="600" fill="#0a0a0a">72%</text>
-              <text x="444" y="248" font-family="'JetBrains Mono', monospace" font-size="8" fill="#737373">Utilisation</text>
-            </g>
-
-            <line x1="404" y1="258" x2="480" y2="258" stroke="#f5f5f5" stroke-width="1"/>
-
-            <g class="ig-kpi-row ig-kpi-d2">
-              <text x="404" y="276" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="600" fill="#0a0a0a">94%</text>
-              <text x="444" y="276" font-family="'JetBrains Mono', monospace" font-size="7" fill="#737373">Availability</text>
-            </g>
-
-            <line x1="404" y1="286" x2="480" y2="286" stroke="#f5f5f5" stroke-width="1"/>
-
-            <g class="ig-kpi-row ig-kpi-d3">
-              <text x="404" y="304" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="600" fill="#0a0a0a">48/hr</text>
-              <text x="444" y="304" font-family="'JetBrains Mono', monospace" font-size="8" fill="#737373">Throughput</text>
-            </g>
-
-            <line x1="404" y1="314" x2="480" y2="314" stroke="#f5f5f5" stroke-width="1"/>
-
-            <g class="ig-kpi-row ig-kpi-d4">
-              <text x="404" y="332" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="600" fill="#0a0a0a">142m</text>
-              <text x="444" y="332" font-family="'JetBrains Mono', monospace" font-size="8" fill="#737373">MTBF</text>
-            </g>
-
-            <line x1="404" y1="342" x2="480" y2="342" stroke="#f5f5f5" stroke-width="1"/>
-
-            <g class="ig-kpi-row ig-kpi-d5">
-              <text x="404" y="360" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="600" fill="#0a0a0a">8.3m</text>
-              <text x="444" y="360" font-family="'JetBrains Mono', monospace" font-size="8" fill="#737373">MTTR</text>
-            </g>
-
-            <line x1="404" y1="370" x2="480" y2="370" stroke="#f5f5f5" stroke-width="1"/>
-
-            <!-- ═══ TOPIC PATH (bottom bar) ═══ -->
-            <rect x="24" y="404" width="472" height="52" rx="8" fill="#0a0a0a"/>
-            <text x="260" y="426" font-family="'JetBrains Mono', monospace" font-size="9" fill="#737373" text-anchor="middle">ISA-95 TOPIC HIERARCHY</text>
-            <text x="260" y="444" font-family="'JetBrains Mono', monospace" font-size="10" fill="#ffffff" text-anchor="middle">v1.0 / enterprise / site1 / area1 / cnc-01 / status</text>
-
-            <!-- ═══ DEPLOY BADGE ═══ -->
-            <rect x="24" y="466" width="472" height="0" rx="0" fill="none"/>
-          </svg>
+<span class="yc"># site.yml — describe your factory</span>
+<span class="yk">site:</span>
+  - <span class="yk">name:</span> <span class="yv">UK</span>
+    <span class="yk">id:</span> <span class="yv">UK</span>
+    <span class="yk">area:</span>
+      - <span class="yk">name:</span> <span class="yv">Area 1</span>
+        <span class="yk">line:</span>
+          - <span class="yk">name:</span> <span class="yv">Line 1</span>
+            <span class="yk">cell:</span>
+              - <span class="yk">name:</span> <span class="yv">Cell 1</span></pre>
         </div>
       </div>
     </div>
+  </div>
+</section>
 
-    <div class="divider"></div>
+<!-- CORE DEFINITIONS PREVIEW -->
+<section class="fade-in">
+  <div class="container">
+    <div class="section-label">Core Definitions</div>
+    <h2>Everything described in YAML.</h2>
+    <p class="lead">
+      The UNS Framework configuration encompasses sites, areas, lines, cells,
+      equipment, sensors, functions, producers, consumers, MQTT brokers, and databases.
+    </p>
 
-    <!-- THE PROBLEM -->
-    <section class="fade-in problem-section-animated">
-      <div class="container">
-        <div class="section-label">The Problem</div>
-        <h2>Manufacturing data is trapped in silos.</h2>
-        <p class="lead">
-          Every factory generates vast amounts of data — machine states,
-          production counts, quality metrics, maintenance logs. But it's
-          fragmented across disconnected systems that don't talk to each other.
-        </p>
+    <div class="def-preview">
+      <div class="def-preview-header">UNS Framework V1.0 — Definitions</div>
+      <a href="/framework/uns.html" class="def-preview-item"><span class="def-name">UNS</span><span class="def-desc">Unified Namespace configuration</span><span class="def-arrow">→</span></a>
+      <a href="/framework/site.html" class="def-preview-item"><span class="def-name">Site</span><span class="def-desc">Physical or logical site</span><span class="def-arrow">→</span></a>
+      <a href="/framework/area.html" class="def-preview-item"><span class="def-name">Area</span><span class="def-desc">Building, floor, room, or partition</span><span class="def-arrow">→</span></a>
+      <a href="/framework/line.html" class="def-preview-item"><span class="def-name">Line</span><span class="def-desc">Production line within an area</span><span class="def-arrow">→</span></a>
+      <a href="/framework/cell.html" class="def-preview-item"><span class="def-name">Cell</span><span class="def-desc">Workstation or unit in a line</span><span class="def-arrow">→</span></a>
+      <a href="/framework/equipment.html" class="def-preview-item"><span class="def-name">Equipment</span><span class="def-desc">Machine, device, or hardware</span><span class="def-arrow">→</span></a>
+      <a href="/framework/sensor.html" class="def-preview-item"><span class="def-name">Sensor</span><span class="def-desc">Temperature, pressure, humidity, etc.</span><span class="def-arrow">→</span></a>
+      <a href="/framework/function.html" class="def-preview-item"><span class="def-name">Function</span><span class="def-desc">Self-contained code block</span><span class="def-arrow">→</span></a>
+      <a href="/framework/producer.html" class="def-preview-item"><span class="def-name">Producer</span><span class="def-desc">Entity that sends information</span><span class="def-arrow">→</span></a>
+      <a href="/framework/consumer.html" class="def-preview-item"><span class="def-name">Consumer</span><span class="def-desc">Entity that receives information</span><span class="def-arrow">→</span></a>
+      <a href="/framework/mqtt.html" class="def-preview-item"><span class="def-name">MQTT</span><span class="def-desc">Broker configuration</span><span class="def-arrow">→</span></a>
+      <a href="/framework/database.html" class="def-preview-item"><span class="def-name">Database</span><span class="def-desc">Storage configuration</span><span class="def-arrow">→</span></a>
+      <a href="/framework/artifact.html" class="def-preview-item"><span class="def-name">Artifact</span><span class="def-desc">Static data</span><span class="def-arrow">→</span></a>
+    </div>
 
-        <div class="problem-grid">
-          <div class="problem-before">
-            <h3>Today: Point-to-Point Spaghetti</h3>
-            <div class="spaghetti-line">
-              PLC <span class="arrow">→</span> SCADA
-              <span class="arrow">→</span> Historian
-            </div>
-            <div class="spaghetti-line">
-              PLC <span class="arrow">→</span> MES
-              <span class="arrow">→</span> ERP
-            </div>
-            <div class="spaghetti-line">
-              PLC <span class="arrow">→</span> Custom Dashboard
-            </div>
-            <div class="spaghetti-line">
-              Sensor <span class="arrow">→</span> Cloud Platform
-            </div>
-            <div class="spaghetti-line">
-              Sensor <span class="arrow">→</span> Another Custom App
-            </div>
-            <div class="spaghetti-line">
-              ERP <span class="arrow">→</span> Spreadsheet
-              <span class="arrow">→</span> Email
-            </div>
-            <p
-              style="
-                font-size: 13px;
-                color: var(--grey-700);
-                margin-top: 16px;
-                line-height: 1.5;
-              "
-            >
-              Every new connection adds complexity. Every system has its own
-              data model. Getting a simple answer — "what's the utilisation of
-              cnc-01 this shift?" — requires pulling data from multiple systems
-              and hoping the timestamps align.
-            </p>
-          </div>
+    <div style="margin-top:32px;">
+      <a href="/framework/core-definitions.html" class="btn-secondary">View all definitions →</a>
+    </div>
+  </div>
+</section>
 
-          <div class="problem-after">
-            <h3>With UNS: One Data Layer</h3>
-            <div class="uns-hub">
-              <div class="uns-hub-label">MQTT Broker</div>
-              <div class="uns-hub-sub">
-                Unified Namespace — single source of truth
-              </div>
-            </div>
-            <div class="spoke-grid">
-              <div class="spoke">PLCs</div>
-              <div class="spoke">Sensors</div>
-              <div class="spoke">SCADA</div>
-              <div class="spoke">MES</div>
-              <div class="spoke">Dashboards</div>
-              <div class="spoke">Analytics</div>
-            </div>
-            <p
-              style="
-                font-size: 13px;
-                color: var(--grey-700);
-                margin-top: 16px;
-                line-height: 1.5;
-              "
-            >
-              Any system can publish data. Any system can subscribe. No
-              point-to-point wiring. No vendor lock-in. Adding a new consumer
-              means subscribing to existing topics — not building a new
-              integration.
-            </p>
-          </div>
-        </div>
+<div class="divider"></div>
 
-        <div class="stats-row">
-          <div class="stat">
-            <div class="stat-number">&lt;1s</div>
-            <div class="stat-label">Data latency — real-time, not batch</div>
-          </div>
-          <div class="stat">
-            <div class="stat-number">1</div>
-            <div class="stat-label">Source of truth for all systems</div>
-          </div>
-          <div class="stat">
-            <div class="stat-number">0</div>
-            <div class="stat-label">Point-to-point integrations needed</div>
-          </div>
-          <div class="stat">
-            <div class="stat-number">∞</div>
-            <div class="stat-label">
-              Subscribers — add without changing anything
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
+<!-- TOPIC HIERARCHY -->
+<section class="fade-in">
+  <div class="container">
+    <div class="section-label">ISA-95 Topic Hierarchy</div>
+    <h2>Structured, self-describing, real-time.</h2>
+    <p class="lead">
+      Every data point follows the ISA-95 standard. Any consumer can parse
+      the topic path to understand where data comes from — no mapping tables
+      or documentation required.
+    </p>
 
-    <div class="divider"></div>
+    <div class="topic-tree" style="max-width:600px;">
+      <div><span class="sep">v1.0 /</span> <span class="value">enterprise</span> <span class="sep">/</span> <span class="value">site1</span> <span class="sep">/</span> <span class="value">area1</span> <span class="sep">/</span> <span class="value">cnc-01</span> <span class="sep">/</span> <span class="value">status</span></div>
+      <div><span class="level"> └─ namespace version</span></div>
+      <div><span class="level"> └─ company / business unit</span></div>
+      <div><span class="level"> └─ factory / physical site</span></div>
+      <div><span class="level"> └─ production area</span></div>
+      <div><span class="level"> └─ individual machine</span></div>
+      <div><span class="level"> └─ data point</span></div>
+    </div>
 
-    <!-- THE STACK -->
-    <section class="fade-in">
-      <div class="container">
-        <div class="section-label">The Stack</div>
-        <h2>Three projects. One unified solution.</h2>
-        <p class="lead">
-          fn-uns is built on two open foundations — an open standard for
-          structuring manufacturing data, and an open platform for deploying
-          serverless functions.
-        </p>
+    <div class="stats-row" style="margin-top:48px;">
+      <div class="stat"><div class="stat-number">&lt;1s</div><div class="stat-label">Data latency — real-time, not batch</div></div>
+      <div class="stat"><div class="stat-number">1</div><div class="stat-label">Source of truth for all systems</div></div>
+      <div class="stat"><div class="stat-number">0</div><div class="stat-label">Point-to-point integrations needed</div></div>
+      <div class="stat"><div class="stat-number">∞</div><div class="stat-label">Subscribers — add without changing anything</div></div>
+    </div>
+  </div>
+</section>
 
-        <div class="stack-grid">
-          <div class="stack-card">
-            <div class="stack-num">01</div>
-            <h3>UNS Framework</h3>
-            <div class="stack-url">unsframework.com</div>
-            <p>
-              An open standard that defines how to structure manufacturing data
-              in MQTT. It specifies the ISA-95 topic hierarchy, versioned
-              namespaces, payload conventions, and best practices for topic
-              naming and QoS selection. The framework is vendor-neutral — any
-              system that follows the standard can participate in the namespace.
-            </p>
-            <div class="stack-role">Defines the data structure</div>
-          </div>
-          <div class="stack-card">
-            <div class="stack-num">02</div>
-            <h3>fnkit</h3>
-            <div class="stack-url">fnkit.dev</div>
-            <p>
-              A lightweight Functions-as-a-Service platform that runs anywhere
-              Containers runs. Write functions in any language — Go, Node.js,
-              Python — scaffold with one command, deploy via git push. fnkit
-              handles the gateway, routing, TLS, caching, and GitOps workflow.
-              No cloud vendor required.
-            </p>
-            <div class="stack-role">Provides the platform</div>
-          </div>
-          <div class="stack-card">
-            <div class="stack-num">03</div>
-            <h3>fn-uns</h3>
-            <div class="stack-url">This project</div>
-            <p>
-              Serverless functions that implement a complete UNS data pipeline
-              on fnkit. From machine simulation to KPI computation — capture,
-              process, and report on manufacturing data. Each function follows
-              the UNS Framework standard and deploys through fnkit's GitOps
-              workflow.
-            </p>
-            <div class="stack-role">Delivers the functions</div>
-          </div>
-        </div>
-      </div>
-    </section>
+<div class="divider"></div>
 
-    <div class="divider"></div>
+<!-- GET STARTED -->
+<section class="fade-in">
+  <div class="container" style="text-align:center;">
+    <div class="section-label">Get Started</div>
+    <h2>Start describing your UNS today.</h2>
+    <p class="lead" style="margin-left:auto;margin-right:auto;">
+      Read the standard, explore the YAML definitions, or dive straight into
+      the fn-uns reference implementation with real serverless functions.
+    </p>
+    <div class="cta-group" style="justify-content:center;">
+      <a href="/framework/" class="btn-primary">Read the Standard →</a>
+      <a href="/fn-uns/" class="btn-secondary">Explore fn-uns →</a>
+      <a href="https://github.com/unsframework" class="btn-secondary" target="_blank">GitHub</a>
+    </div>
+  </div>
+</section>
 
-    <!-- HOW IT WORKS -->
-    <section class="fade-in">
-      <div class="container">
-        <div class="section-label">How It Works</div>
-        <h2>Structured data. Serverless functions. Git push to deploy.</h2>
-        <p class="lead">
-          Three ideas come together: an ISA-95 topic hierarchy gives every data
-          point a canonical address, lightweight functions process the data, and
-          MQTT connects everything in real time.
-        </p>
+<div class="divider"></div>
 
-        <div class="how-grid">
-          <div class="how-text">
-            <h3>ISA-95 Topic Hierarchy</h3>
-            <p>
-              All data is organised using the ISA-95 international standard — a
-              structured path from enterprise down to individual data points.
-              The hierarchy is self-describing: any consumer can parse the topic
-              path to understand where data comes from without mapping tables or
-              documentation.
-            </p>
+<footer>
+  <div class="container">
+    <span>UNS Framework — Open Source</span>
+    <div class="footer-links">
+      <a href="/framework/">Standard</a>
+      <a href="/fn-uns/">fn-uns</a>
+      <a href="https://github.com/unsframework" target="_blank">GitHub</a>
+      <a href="https://functionkit.github.io/fnkit/" target="_blank">fnkit</a>
+      <a href="/changelog.html">Changelog</a>
+    </div>
+  </div>
+</footer>
 
-            <h3>Publish / Subscribe Messaging</h3>
-            <p>
-              MQTT decouples producers from consumers. Machines publish to
-              topics, applications subscribe to what they need. The broker
-              handles delivery. Adding a new machine means publishing to a new
-              topic — the entire pipeline picks it up automatically.
-            </p>
-
-            <h3>Serverless Functions</h3>
-            <p>
-              Each piece of logic is a small, independent function — Go or
-              Node.js. No monolithic platform, no flow builder. Functions read
-              from a shared cache, write to PostgreSQL, and compose through
-              infrastructure rather than through each other.
-            </p>
-
-            <h3>GitOps Deployment</h3>
-            <p>
-              Every function is version controlled. Deploy with
-              <code
-                style="
-                  font-family: var(--font-mono);
-                  font-size: 12px;
-                  background: var(--grey-100);
-                  padding: 2px 6px;
-                  border-radius: 4px;
-                "
-                >git push</code
-              >. Roll back with
-              <code
-                style="
-                  font-family: var(--font-mono);
-                  font-size: 12px;
-                  background: var(--grey-100);
-                  padding: 2px 6px;
-                  border-radius: 4px;
-                "
-                >git revert</code
-              >. Full audit trail, code review, and CI/CD — the same workflow
-              your software team already uses.
-            </p>
-          </div>
-
-          <div>
-            <div class="topic-tree">
-              <div>
-                <span class="sep">v1.0 /</span>
-                <span class="value">enterprise</span> <span class="sep">/</span>
-                <span class="value">site1</span> <span class="sep">/</span>
-                <span class="value">area1</span> <span class="sep">/</span>
-                <span class="value">cnc-01</span> <span class="sep">/</span>
-                <span class="value">status</span>
-              </div>
-              <div><span class="level"> └─ namespace version</span></div>
-              <div><span class="level"> └─ company / business unit</span></div>
-              <div><span class="level"> └─ factory / physical site</span></div>
-              <div><span class="level"> └─ production area</span></div>
-              <div><span class="level"> └─ individual machine</span></div>
-              <div><span class="level"> └─ data point</span></div>
-            </div>
-            <p
-              style="
-                font-size: 13px;
-                color: var(--grey-700);
-                margin-top: 24px;
-                line-height: 1.6;
-              "
-            >
-              <strong style="color: var(--grey-700)">The data flow:</strong>
-              Machines publish → MQTT broker distributes → Functions cache in
-              Valkey → Functions detect changes and write to PostgreSQL → KPI
-              functions query and compute on demand.
-            </p>
-            <p
-              style="
-                font-size: 13px;
-                color: var(--grey-700);
-                margin-top: 12px;
-                line-height: 1.6;
-              "
-            >
-              <strong style="color: var(--grey-700)">The deploy flow:</strong>
-              Write code → git commit → git push → fnkit builds container →
-              running in production. No manual server management, no UI
-              configuration.
-            </p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <div class="divider"></div>
-
-    <!-- ARCHITECTURE -->
-    <section class="fade-in">
-      <div class="container">
-        <div class="section-label">Architecture</div>
-        <h2>Capture. Process. Report.</h2>
-        <p class="lead">
-          Data flows through three stages. Each stage is independent and
-          composable — built from small functions that do one thing well.
-        </p>
-
-        <div class="arch-pipeline">
-          <div class="arch-stage">
-            <div class="arch-stage-num">STAGE 01</div>
-            <h3>Capture</h3>
-            <p>
-              Machines publish status, program, and tool data to MQTT every 3
-              seconds. The framework subscribes to the entire namespace and
-              caches every message in Valkey — current value and previous value,
-              for change detection.
-            </p>
-            <div class="arch-tags">
-              <span>uns-sim</span><span>uns-framework</span><span>MQTT</span
-              ><span>Valkey</span>
-            </div>
-          </div>
-          <div class="arch-arrow">→</div>
-          <div class="arch-stage">
-            <div class="arch-stage-num">STAGE 02</div>
-            <h3>Process</h3>
-            <p>
-              HTTP functions poll the cache, detect changes, and write
-              structured records to PostgreSQL — state durations, stoppage
-              classifications, production runs, and operator input.
-            </p>
-            <div class="arch-tags">
-              <span>uns-state</span><span>uns-stoppage</span
-              ><span>uns-productivity</span><span>uns-log</span
-              ><span>uns-input</span>
-            </div>
-          </div>
-          <div class="arch-arrow">→</div>
-          <div class="arch-stage">
-            <div class="arch-stage-num">STAGE 03</div>
-            <h3>Report</h3>
-            <p>
-              KPI functions query all PostgreSQL tables and compute
-              manufacturing metrics on demand — utilisation, availability,
-              throughput, MTBF, MTTR, and stoppage pareto.
-            </p>
-            <div class="arch-tags">
-              <span>uns-kpi</span><span>uns-cache</span><span>PostgreSQL</span>
-            </div>
-          </div>
-        </div>
-
-        <p class="arch-detail">
-          All functions run as <strong>Containers</strong> on a shared network.
-          External access goes through <strong>Caddy</strong> (automatic TLS) →
-          <strong>fnkit-gateway</strong> (auth, routing, rate limiting).
-          Internal communication happens directly between containers. Deployed
-          via <strong>git push</strong> using fnkit's GitOps workflow.
-        </p>
-      </div>
-    </section>
-
-    <div class="divider"></div>
-
-    <!-- COMPONENTS -->
-    <section class="fade-in">
-      <div class="container">
-        <div class="section-label">Components</div>
-        <h2>Limitless functions. Zero coupling.</h2>
-        <p class="lead">
-          Each function is a standard Go or Node.js program — its own container,
-          its own repo, its own deploy lifecycle. They compose through shared
-          infrastructure, not through each other.
-        </p>
-
-        <div class="component-grid">
-          <div class="component-card">
-            <div class="card-header">
-              <span class="card-name">uns-sim</span
-              ><span class="card-badge">Node.js · MQTT</span>
-            </div>
-            <div class="card-desc">
-              Simulates 4 CNC machines publishing realistic status, program, and
-              tool data every 3 seconds
-            </div>
-          </div>
-          <div class="component-card">
-            <div class="card-header">
-              <span class="card-name">uns-framework</span
-              ><span class="card-badge">Go · MQTT</span>
-            </div>
-            <div class="card-desc">
-              Subscribes to the entire namespace, caches every message with
-              current/previous value tracking
-            </div>
-          </div>
-          <div class="component-card">
-            <div class="card-header">
-              <span class="card-name">uns-cache</span
-              ><span class="card-badge">Node.js · HTTP</span>
-            </div>
-            <div class="card-desc">
-              Read API for cached topics — returns JSON with change detection
-              and metadata
-            </div>
-          </div>
-          <div class="component-card">
-            <div class="card-header">
-              <span class="card-name">uns-log</span
-              ><span class="card-badge">Go · HTTP</span>
-            </div>
-            <div class="card-desc">
-              Logs data snapshots to PostgreSQL whenever a topic value changes
-            </div>
-          </div>
-          <div class="component-card">
-            <div class="card-header">
-              <span class="card-name">uns-state</span
-              ><span class="card-badge">Go · HTTP</span>
-            </div>
-            <div class="card-desc">
-              Tracks machine state transitions and logs precise durations — the
-              foundation for all time-based KPIs
-            </div>
-          </div>
-          <div class="component-card">
-            <div class="card-header">
-              <span class="card-name">uns-stoppage</span
-              ><span class="card-badge">Node.js · HTTP</span>
-            </div>
-            <div class="card-desc">
-              Auto-classifies why machines aren't running, with manual operator
-              override for real reasons
-            </div>
-          </div>
-          <div class="component-card">
-            <div class="card-header">
-              <span class="card-name">uns-productivity</span
-              ><span class="card-badge">Go · HTTP</span>
-            </div>
-            <div class="card-desc">
-              Tracks production runs — parts completed, target attainment,
-              throughput per hour
-            </div>
-          </div>
-          <div class="component-card">
-            <div class="card-header">
-              <span class="card-name">uns-input</span
-              ><span class="card-badge">Node.js · HTTP</span>
-            </div>
-            <div class="card-desc">
-              Manual operator data entry — scrap counts, quality notes, shift
-              handover information
-            </div>
-          </div>
-          <div class="component-card">
-            <div class="card-header">
-              <span class="card-name">uns-kpi</span
-              ><span class="card-badge">Go · HTTP</span>
-            </div>
-            <div class="card-desc">
-              Pure read function — queries all tables and computes manufacturing
-              KPIs on demand via a single API call
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <div class="divider"></div>
-
-    <!-- WHO IT'S FOR -->
-    <section class="fade-in">
-      <div class="container">
-        <div class="section-label">Who It's For</div>
-        <h2>Value for every role on the floor.</h2>
-        <p class="lead">
-          The UNS isn't just a technical architecture — it's a business tool.
-          Different teams get different value from the same underlying data.
-        </p>
-
-        <div class="value-grid">
-          <div class="value-card">
-            <h3>Operations Managers</h3>
-            <p>
-              Real-time dashboards showing machine utilisation, production
-              progress, and stoppage reasons across the entire shop floor. No
-              more walking the floor to check machine status.
-            </p>
-          </div>
-          <div class="value-card">
-            <h3>Maintenance Teams</h3>
-            <p>
-              Automatic MTBF and MTTR calculations per machine. Alarm history
-              with durations. Stoppage pareto charts showing exactly where to
-              focus improvement efforts.
-            </p>
-          </div>
-          <div class="value-card">
-            <h3>Production Planners</h3>
-            <p>
-              Actual throughput data — parts per hour, target attainment —
-              compared against planned schedules. Identify bottleneck machines
-              and underperforming programs.
-            </p>
-          </div>
-          <div class="value-card">
-            <h3>Quality Engineers</h3>
-            <p>
-              Scrap tracking linked to specific machines, programs, and
-              operators. Quality check pass rates over time. Correlation between
-              machine conditions and quality outcomes.
-            </p>
-          </div>
-          <div class="value-card">
-            <h3>Continuous Improvement</h3>
-            <p>
-              Data-driven kaizen. Every state change, every stoppage, every
-              production run is recorded with timestamps and durations. The data
-              tells you exactly where time is being lost.
-            </p>
-          </div>
-          <div class="value-card">
-            <h3>IT &amp; Engineering</h3>
-            <p>
-              A clean, maintainable architecture. Each function is independent,
-              version-controlled, and deployable via git push. No monolithic
-              platforms. No vendor lock-in. Standard tools.
-            </p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <div class="divider"></div>
-
-    <!-- CODE-FIRST -->
-    <section class="fade-in">
-      <div class="container">
-        <div class="section-label">Code-First</div>
-        <h2>Readable. Testable. Reviewable.</h2>
-        <p class="lead">
-          No drag-and-drop flow builders. No visual wiring. No opaque
-          configuration UIs. Just code that any developer can read, review, and
-          extend.
-        </p>
-
-        <div class="code-layout">
-          <div class="code-block">
-            <pre
-              style="margin: 0; font: inherit; white-space: pre"
-            ><span class="cm">// Read current + previous for every topic</span>
-<span class="kw">const</span> pipe = rdb.pipeline()
-
-<span class="kw">for</span> (<span class="kw">const</span> topic <span class="kw">of</span> topics) {
-  pipe.get(<span class="str">`uns:data:${topic}`</span>)
-  pipe.get(<span class="str">`uns:prev:${topic}`</span>)
-}
-
-<span class="kw">const</span> results = <span class="kw">await</span> pipe.exec()
-
-<span class="cm">// Did the value change?</span>
-<span class="kw">const</span> changed = current !== previous</pre>
-          </div>
-          <div class="code-annotation">
-            <h3>Current value. Previous value. Change detection. One call.</h3>
-            <p>
-              The cache stores two versions of every topic — current and
-              previous. A single pipelined read returns both, plus metadata. The
-              <code
-                style="
-                  font-family: var(--font-mono);
-                  font-size: 13px;
-                  background: var(--grey-100);
-                  padding: 2px 8px;
-                  border-radius: 4px;
-                "
-                >changed</code
-              >
-              flag tells downstream functions whether to act.
-            </p>
-            <p>
-              This is the pattern that powers the entire pipeline. State
-              tracking, stoppage classification, production logging — they all
-              read from this cache and only write to PostgreSQL when something
-              actually changes.
-            </p>
-            <p>
-              Standard Node.js. Standard Redis commands. No proprietary SDK, no
-              vendor abstraction layer.
-            </p>
-            <div class="stat-line">
-              uns-cache/index.js — the complete cache read function
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <div class="divider"></div>
-
-    <!-- KPIs -->
-    <section class="fade-in">
-      <div class="container">
-        <div class="section-label">Manufacturing KPIs</div>
-        <h2>Real-time metrics. One API call.</h2>
-        <p class="lead">
-          Utilisation, availability, throughput, reliability, stoppage analysis
-          — all computed on demand from the data flowing through the UNS
-          pipeline. No pre-aggregation, no stale reports.
-        </p>
-
-        <div class="kpi-grid">
-          <div class="kpi-card">
-            <div class="kpi-val">72%</div>
-            <div class="kpi-label">Utilisation</div>
-            <div class="kpi-sub">ACTIVE time ÷ total tracked time</div>
-          </div>
-          <div class="kpi-card">
-            <div class="kpi-val">94%</div>
-            <div class="kpi-label">Availability</div>
-            <div class="kpi-sub">Excluding unplanned downtime only</div>
-          </div>
-          <div class="kpi-card">
-            <div class="kpi-val">48/hr</div>
-            <div class="kpi-label">Throughput</div>
-            <div class="kpi-sub">Parts per hour with target attainment</div>
-          </div>
-          <div class="kpi-card">
-            <div class="kpi-val">142m</div>
-            <div class="kpi-label">MTBF</div>
-            <div class="kpi-sub">Mean time between failures</div>
-          </div>
-          <div class="kpi-card">
-            <div class="kpi-val">8.3m</div>
-            <div class="kpi-label">MTTR</div>
-            <div class="kpi-sub">Mean time to repair</div>
-          </div>
-          <div class="kpi-card">
-            <div class="kpi-val">Pareto</div>
-            <div class="kpi-label">Stoppages</div>
-            <div class="kpi-sub">Top reasons ranked by total duration</div>
-          </div>
-        </div>
-        <div class="api-line">
-          <span class="url">GET /uns-kpi?hours=8&amp;machine=cnc-01</span> —
-          filter by machine, area, or time range
-        </div>
-      </div>
-    </section>
-
-    <div class="divider"></div>
-
-    <!-- COMPARISON -->
-    <section class="fade-in">
-      <div class="container">
-        <div class="section-label">Why This Approach</div>
-        <h2>Code beats configuration.</h2>
-        <p class="lead">
-          Traditional manufacturing software relies on monolithic platforms,
-          drag-and-drop flow builders, or heavyweight MES systems. fn-uns takes
-          a fundamentally different approach.
-        </p>
-
-        <div class="compare">
-          <div class="compare-col">
-            <h3>Traditional Platforms</h3>
-            <ul>
-              <li>
-                <span class="icon-x">✕</span>Vendor-locked platforms with
-                proprietary formats
-              </li>
-              <li>
-                <span class="icon-x">✕</span>Drag-and-drop flow UIs that become
-                unreadable spaghetti
-              </li>
-              <li>
-                <span class="icon-x">✕</span>No version control — flows live in
-                runtime databases
-              </li>
-              <li>
-                <span class="icon-x">✕</span>No code review, no pull requests,
-                no diffs
-              </li>
-              <li>
-                <span class="icon-x">✕</span>Impossible to unit test or run
-                CI/CD
-              </li>
-              <li>
-                <span class="icon-x">✕</span>Six-figure licence fees or
-                per-device subscriptions
-              </li>
-              <li>
-                <span class="icon-x">✕</span>Monolithic deployments — one bad
-                change breaks everything
-              </li>
-              <li>
-                <span class="icon-x">✕</span>Manual rollback — risky and
-                time-consuming
-              </li>
-            </ul>
-          </div>
-          <div class="compare-col">
-            <h3>fn-uns + fnkit</h3>
-            <ul>
-              <li>
-                <span class="icon-check">✓</span>Open source, self-hosted, your
-                infrastructure
-              </li>
-              <li>
-                <span class="icon-check">✓</span>Code-first — readable,
-                auditable, maintainable
-              </li>
-              <li>
-                <span class="icon-check">✓</span>Full git history — every change
-                tracked with author and date
-              </li>
-              <li>
-                <span class="icon-check">✓</span>Pull requests, diffs, and code
-                review for every change
-              </li>
-              <li>
-                <span class="icon-check">✓</span>Unit tests, integration tests,
-                CI/CD pipelines
-              </li>
-              <li>
-                <span class="icon-check">✓</span>Infrastructure cost only — no
-                licence fees
-              </li>
-              <li>
-                <span class="icon-check">✓</span>Independent microservices —
-                deploy each function separately
-              </li>
-              <li>
-                <span class="icon-check">✓</span>git revert + push — instant,
-                safe rollback
-              </li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <div class="divider"></div>
-
-    <!-- GET STARTED -->
-    <section class="fade-in">
-      <div class="container">
-        <div class="section-label">Get Started</div>
-        <h2>Running in 5 minutes.</h2>
-        <p class="lead">
-          Clone the repo, start the infrastructure, and verify data is flowing.
-          The full UNS pipeline — from simulated machines to KPI APIs — runs
-          locally as a Container.
-        </p>
-
-        <div class="start-terminal">
-          <div>
-            <span class="comment"># Clone and set up the shared network</span>
-          </div>
-          <div>
-            <span class="prompt">$</span>
-            <span class="cmd"
-              >git clone https://github.com/functionkit/fnkit.git && cd
-              fnkit</span
-            >
-          </div>
-          <div>
-            <span class="prompt">$</span>
-            <span class="cmd">docker network create fnkit-network</span>
-          </div>
-          <div>
-            <span class="prompt">$</span>
-            <span class="cmd">fnkit cache start</span>
-          </div>
-          <div>&nbsp;</div>
-          <div>
-            <span class="comment"># Start the UNS capture pipeline</span>
-          </div>
-          <div>
-            <span class="prompt">$</span>
-            <span class="cmd"
-              >cd uns-framework && docker compose up -d && cd ..</span
-            >
-          </div>
-          <div>
-            <span class="prompt">$</span>
-            <span class="cmd">cd uns-sim && docker compose up -d && cd ..</span>
-          </div>
-          <div>
-            <span class="prompt">$</span>
-            <span class="cmd"
-              >cd uns-cache && docker compose up -d && cd ..</span
-            >
-          </div>
-          <div>&nbsp;</div>
-          <div>
-            <span class="comment"># Verify real-time data is flowing</span>
-          </div>
-          <div>
-            <span class="prompt">$</span>
-            <span class="cmd">curl http://localhost:8080/uns-cache | jq</span>
-          </div>
-          <div>
-            <span class="comment"
-              ># → JSON with live data from 4 simulated CNC machines</span
-            >
-          </div>
-        </div>
-
-        <div class="cta-group">
-          <a href="https://www.unsframework.com" class="btn-primary">Full Documentation →</a>
-          <a href="https://github.com/orgs/functionkit/repositories" class="btn-secondary">View on GitHub</a>
-        </div>
-      </div>
-    </section>
-
-    <div class="divider"></div>
-
-    <!-- FOOTER -->
-    <footer>
-      <div class="container">
-        <span
-          >fn-uns — Built with
-          <a href="https://functionkit.github.io/fnkit/">fnkit</a></span
-        >
-        <div class="footer-links">
-          <a href="https://www.unsframework.com">Docs</a>
-          <a href="https://github.com/orgs/functionkit/repositories">GitHub</a>
-          <a href="https://functionkit.github.io/fnkit/">fnkit</a>
-          <a href="slide/">Slides</a>
-        </div>
-      </div>
-    </footer>
-
-    <script>
-      const o = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((e) => {
-            if (e.isIntersecting) {
-              e.target.classList.add('visible')
-              o.unobserve(e.target)
-            }
-          })
-        },
-        { threshold: 0.08, rootMargin: '0px 0px -40px 0px' },
-      )
-      document.querySelectorAll('.fade-in').forEach((el) => o.observe(el))
-
-      // ── KPI number cycling animation ──
-      const kpiData = [
-        { el: null, values: ['72%', '68%', '74%', '71%', '73%', '69%'], suffix: '' },
-        { el: null, values: ['94%', '92%', '95%', '93%', '96%', '94%'], suffix: '' },
-        { el: null, values: ['48/hr', '45/hr', '51/hr', '47/hr', '50/hr', '46/hr'], suffix: '' },
-        { el: null, values: ['142m', '138m', '145m', '140m', '147m', '136m'], suffix: '' },
-        { el: null, values: ['8.3m', '7.9m', '8.6m', '8.1m', '9.0m', '8.4m'], suffix: '' },
-      ]
-      const kpiEls = document.querySelectorAll('.kpi-val')
-      kpiData.forEach((d, i) => { d.el = kpiEls[i] })
-
-      // ── Hero graphic fullscreen on click ──
-      const heroVisual = document.querySelector('.hero-visual')
-      const heroSvg = heroVisual.querySelector('svg')
-
-      heroVisual.addEventListener('click', () => {
-        // Create overlay
-        const overlay = document.createElement('div')
-        overlay.className = 'hero-fullscreen-overlay'
-
-        // Use innerHTML to properly clone SVG with namespace
-        const svgWrapper = document.createElement('div')
-        svgWrapper.style.cssText = 'max-width:90vw;max-height:90vh;width:90vw;aspect-ratio:520/480;display:flex;align-items:center;justify-content:center;'
-        svgWrapper.innerHTML = heroSvg.outerHTML
-        const svgEl = svgWrapper.querySelector('svg')
-        svgEl.style.cssText = 'width:100%;height:100%;display:block;filter:drop-shadow(0 24px 48px rgba(0,0,0,0.08));'
-        overlay.appendChild(svgWrapper)
-
-        // Close button
-        const closeBtn = document.createElement('button')
-        closeBtn.className = 'hero-fullscreen-close'
-        closeBtn.innerHTML = '✕'
-        closeBtn.setAttribute('aria-label', 'Close fullscreen')
-        overlay.appendChild(closeBtn)
-
-        document.body.appendChild(overlay)
-        document.body.style.overflow = 'hidden'
-
-        // Trigger fade-in
-        requestAnimationFrame(() => {
-          overlay.classList.add('active')
-        })
-
-        // Close handlers
-        function closeOverlay() {
-          overlay.classList.remove('active')
-          overlay.addEventListener('transitionend', () => {
-            overlay.remove()
-            document.body.style.overflow = ''
-          }, { once: true })
-        }
-
-        closeBtn.addEventListener('click', (e) => {
-          e.stopPropagation()
-          closeOverlay()
-        })
-
-        overlay.addEventListener('click', (e) => {
-          if (e.target === overlay) closeOverlay()
-        })
-
-        document.addEventListener('keydown', function escHandler(e) {
-          if (e.key === 'Escape') {
-            closeOverlay()
-            document.removeEventListener('keydown', escHandler)
-          }
-        })
-      })
-
-      // ── Dark mode toggle ──
-      const toggle = document.getElementById('themeToggle')
-      const html = document.documentElement
-      const saved = localStorage.getItem('theme')
-      if (saved) {
-        html.setAttribute('data-theme', saved)
-      } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-        html.setAttribute('data-theme', 'dark')
-      }
-      toggle.addEventListener('click', () => {
-        const isDark = html.getAttribute('data-theme') === 'dark'
-        const next = isDark ? 'light' : 'dark'
-        html.setAttribute('data-theme', next)
-        localStorage.setItem('theme', next)
-      })
-
-      let kpiIdx = 0
-      setInterval(() => {
-        kpiIdx = (kpiIdx + 1) % kpiData[0].values.length
-        kpiData.forEach((d) => {
-          if (!d.el) return
-          d.el.style.transition = 'opacity 0.3s ease'
-          d.el.style.opacity = '0'
-          setTimeout(() => {
-            d.el.textContent = d.values[kpiIdx]
-            d.el.style.opacity = '1'
-          }, 300)
-        })
-      }, 8000)
-    </script>
-  </body>
+<script src="shared.js"></script>
+</body>
 </html>

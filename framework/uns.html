@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>UNS — UNS Framework</title>
+<meta name="description" content="Configuration of the Unified Namespace."/>
+<link rel="stylesheet" href="../style.css"/>
+<link rel="stylesheet" href="../docs.css"/>
+</head>
+<body>
+<nav>
+  <a href="/" class="logo">UNS Framework</a>
+  <div class="links">
+    <a href="/framework/">Standard v1.0</a>
+    <a href="/fn-uns/">fn-uns</a>
+    <a href="https://github.com/unsframework" target="_blank">GitHub</a>
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+      <div class="toggle-thumb"><span class="toggle-icon-sun">☀</span><span class="toggle-icon-moon">☾</span></div>
+    </button>
+  </div>
+</nav>
+<div class="docs-layout">
+  <aside class="docs-sidebar">
+    <div class="sidebar-section">
+      <div class="sidebar-title">Getting Started</div>
+      <a href="/framework/">Introduction</a>
+      <a href="/framework/core-definitions.html">Core Definitions</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-title">Definitions</div>
+      <a href="/framework/uns.html" class="active">UNS</a>
+      <a href="/framework/site.html">Site</a>
+      <a href="/framework/area.html">Area</a>
+      <a href="/framework/line.html">Line</a>
+      <a href="/framework/cell.html">Cell</a>
+      <a href="/framework/equipment.html">Equipment</a>
+      <a href="/framework/sensor.html">Sensor</a>
+      <a href="/framework/function.html">Function</a>
+      <a href="/framework/producer.html">Producer</a>
+      <a href="/framework/consumer.html">Consumer</a>
+      <a href="/framework/mqtt.html">MQTT</a>
+      <a href="/framework/database.html">Database</a>
+      <a href="/framework/artifact.html">Artifact</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-title">Resources</div>
+      <a href="/framework/example.html">Example</a>
+      <a href="/changelog.html">Changelog</a>
+    </div>
+  </aside>
+  <main class="docs-content">
+    <h1>Unified Namespace Configuration <span class="beta-badge">Beta</span></h1>
+    <p class="page-desc">Configuration of the Unified Namespace.</p>
+
+    <h2>Parameters</h2>
+    <table class="def-table">
+      <thead><tr><th>Parameter</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td>name</td><td>Name of the UNS.</td></tr>
+        <tr><td>region</td><td>Region of the UNS.</td></tr>
+        <tr><td>timezone</td><td>Timezone of the UNS.</td></tr>
+        <tr><td>topic_structure</td><td>The structure of the MQTT topics.</td></tr>
+        <tr><td>topic_standard</td><td>The standard of the MQTT topics.</td></tr>
+        <tr><td>information_model</td><td>The information model used.</td></tr>
+      </tbody>
+    </table>
+
+    <h2>YAML</h2>
+    <div class="yaml-block">
+<pre style="margin:0;font:inherit;white-space:pre"><span class="yaml-key">version:</span> <span class="yaml-val">'1.0'</span>
+<span class="yaml-key">uns:</span>
+  <span class="yaml-key">name:</span> <span class="yaml-val">string</span>              <span class="yaml-comment"># Name of the UNS</span>
+  <span class="yaml-key">timezone:</span> <span class="yaml-val">string</span>          <span class="yaml-comment"># Timezone of the UNS</span>
+  <span class="yaml-key">region:</span> <span class="yaml-val">string</span>            <span class="yaml-comment"># Region of the UNS</span>
+  <span class="yaml-key">topic_structure:</span> <span class="yaml-val">'version/site/area/line/cell/equipment/sensor/information_model/'</span>
+  <span class="yaml-key">topic_standard:</span> <span class="yaml-val">string</span>    <span class="yaml-comment"># The standard of the MQTT topic</span>
+  <span class="yaml-key">information_model:</span> <span class="yaml-val">string</span> <span class="yaml-comment"># The information model used</span></pre>
+    </div>
+
+    <div class="docs-nav-buttons">
+      <a href="/framework/core-definitions.html" class="docs-nav-btn">
+        <span class="nav-label">Previous</span>
+        <span class="nav-title">Core Definitions</span>
+      </a>
+      <a href="/framework/site.html" class="docs-nav-btn next">
+        <span class="nav-label">Next</span>
+        <span class="nav-title">Site</span>
+      </a>
+    </div>
+  </main>
+</div>
+<script src="../shared.js"></script>
+</body>
+</html>

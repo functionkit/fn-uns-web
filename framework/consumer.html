@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Consumer Configuration — UNS Framework</title>
+<link rel="stylesheet" href="../style.css"/>
+<link rel="stylesheet" href="../docs.css"/>
+</head>
+<body>
+<nav>
+  <a href="/" class="logo">UNS Framework</a>
+  <div class="links">
+    <a href="/framework/">Standard v1.0</a>
+    <a href="/fn-uns/">fn-uns</a>
+    <a href="https://github.com/unsframework" target="_blank">GitHub</a>
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+      <div class="toggle-thumb"><span class="toggle-icon-sun">☀</span><span class="toggle-icon-moon">☾</span></div>
+    </button>
+  </div>
+</nav>
+<div class="docs-layout">
+  <aside class="docs-sidebar">
+    <div class="sidebar-section">
+      <div class="sidebar-title">Getting Started</div>
+      <a href="/framework/">Introduction</a>
+      <a href="/framework/core-definitions.html">Core Definitions</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-title">Definitions</div>
+      <a href="/framework/uns.html">UNS</a>
+      <a href="/framework/site.html">Site</a>
+      <a href="/framework/area.html">Area</a>
+      <a href="/framework/line.html">Line</a>
+      <a href="/framework/cell.html">Cell</a>
+      <a href="/framework/equipment.html">Equipment</a>
+      <a href="/framework/sensor.html">Sensor</a>
+      <a href="/framework/function.html">Function</a>
+      <a href="/framework/producer.html">Producer</a>
+      <a href="/framework/consumer.html">Consumer</a>
+      <a href="/framework/mqtt.html">MQTT</a>
+      <a href="/framework/database.html">Database</a>
+      <a href="/framework/artifact.html">Artifact</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-title">Resources</div>
+      <a href="/framework/example.html">Example</a>
+      <a href="/changelog.html">Changelog</a>
+    </div>
+  </aside>
+  <main class="docs-content">
+    <h1>Consumer Configuration <span class="beta-badge">Beta</span></h1>
+    <p class="page-desc">This is the configuration for the consumer, an entity that receives information.</p>
+    <h2>Parameters</h2>
+    <table class="def-table">
+      <thead><tr><th>Parameter</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td>name</td><td>Name of the consumer.</td></tr>
+        <tr><td>endpoint</td><td>Endpoint of the consumer.</td></tr>
+      </tbody>
+    </table>
+    <h2>YAML</h2>
+    <div class="yaml-block"><pre style="margin:0;font:inherit;white-space:pre"><span class="yaml-key">version:</span> <span class="yaml-val">'1.0'</span>
+<span class="yaml-key">consumer:</span>
+  - <span class="yaml-key">name:</span> <span class="yaml-val">string</span>
+    <span class="yaml-key">endpoint:</span> <span class="yaml-val">string</span></pre></div>
+
+    <div class="docs-nav-buttons">
+      <a href="/framework/producer.html" class="docs-nav-btn"><span class="nav-label">Previous</span><span class="nav-title">Producer</span></a>
+      <a href="/framework/mqtt.html" class="docs-nav-btn next"><span class="nav-label">Next</span><span class="nav-title">MQTT</span></a>
+    </div>
+  </main>
+</div>
+<script>document.querySelectorAll('.docs-sidebar a').forEach(function(a){if(a.getAttribute('href')==='/framework/consumer.html')a.classList.add('active');});</script>
+<script src="../shared.js"></script>
+</body>
+</html>

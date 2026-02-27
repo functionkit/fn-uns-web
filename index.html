@@ -1250,17 +1250,42 @@
           </div>
         </div>
         <div class="hero-visual">
-          <div><span class="comment"># Machine data flows through MQTT topics</span></div>
-          <div>v1.0/enterprise/site1/area1/<span class="accent">cnc-01</span>/status</div>
-          <div><span class="output">→ { <span class="key">"status"</span>: <span class="val">"ACTIVE"</span> }</span></div>
-          <div>v1.0/enterprise/site1/area1/<span class="accent">cnc-02</span>/program</div>
-          <div><span class="output">→ { <span class="key">"program"</span>: <span class="val">"OP-4521"</span>, <span class="key">"parts"</span>: <span class="val">47</span> }</span></div>
+          <div>
+            <span class="comment"
+              ># Machine data flows through MQTT topics</span
+            >
+          </div>
+          <div>
+            v1.0/enterprise/site1/area1/<span class="accent">cnc-01</span
+            >/status
+          </div>
+          <div>
+            <span class="output"
+              >→ { <span class="key">"status"</span>:
+              <span class="val">"ACTIVE"</span> }</span
+            >
+          </div>
+          <div>
+            v1.0/enterprise/site1/area1/<span class="accent">cnc-02</span
+            >/program
+          </div>
+          <div>
+            <span class="output"
+              >→ { <span class="key">"program"</span>:
+              <span class="val">"OP-4521"</span>,
+              <span class="key">"parts"</span>:
+              <span class="val">47</span> }</span
+            >
+          </div>
           <div>&nbsp;</div>
           <div><span class="comment"># One API call → all KPIs</span></div>
-          <div><span class="prompt">$</span> <span class="cmd">curl /uns-kpi?hours=8</span></div>
+          <div>
+            <span class="prompt">$</span>
+            <span class="cmd">curl /uns-kpi?hours=8</span>
+          </div>
           <div><span class="output">{ "utilisation_pct": 72.0,</span></div>
-          <div><span class="output">  "availability_pct": 94.2,</span></div>
-          <div><span class="output">  "mtbf_minutes": 142.0 }</span></div>
+          <div><span class="output"> "availability_pct": 94.2,</span></div>
+          <div><span class="output"> "mtbf_minutes": 142.0 }</span></div>
         </div>
       </div>
     </div>
@@ -1378,29 +1403,51 @@
     <section class="fade-in">
       <div class="container">
         <div class="section-label">The Stack</div>
-        <h2>Three projects. One modern solution.</h2>
-        <p class="lead">fn-uns is built on two open foundations — an open standard for structuring manufacturing data, and an open platform for deploying serverless functions.</p>
+        <h2>Three projects. One unified solution.</h2>
+        <p class="lead">
+          fn-uns is built on two open foundations — an open standard for
+          structuring manufacturing data, and an open platform for deploying
+          serverless functions.
+        </p>
 
         <div class="stack-grid">
           <div class="stack-card">
             <div class="stack-num">01</div>
             <h3>UNS Framework</h3>
             <div class="stack-url">unsframework.com</div>
-            <p>An open standard that defines how to structure manufacturing data in MQTT. It specifies the ISA-95 topic hierarchy, versioned namespaces, payload conventions, and best practices for topic naming and QoS selection. The framework is vendor-neutral — any system that follows the standard can participate in the namespace.</p>
+            <p>
+              An open standard that defines how to structure manufacturing data
+              in MQTT. It specifies the ISA-95 topic hierarchy, versioned
+              namespaces, payload conventions, and best practices for topic
+              naming and QoS selection. The framework is vendor-neutral — any
+              system that follows the standard can participate in the namespace.
+            </p>
             <div class="stack-role">Defines the data structure</div>
           </div>
           <div class="stack-card">
             <div class="stack-num">02</div>
             <h3>fnkit</h3>
             <div class="stack-url">fnkit.dev</div>
-            <p>A lightweight Functions-as-a-Service platform that runs anywhere Docker runs. Write functions in any language — Go, Node.js, Python — scaffold with one command, deploy via git push. fnkit handles the gateway, routing, TLS, caching, and GitOps workflow. No cloud vendor required.</p>
+            <p>
+              A lightweight Functions-as-a-Service platform that runs anywhere
+              Docker runs. Write functions in any language — Go, Node.js, Python
+              — scaffold with one command, deploy via git push. fnkit handles
+              the gateway, routing, TLS, caching, and GitOps workflow. No cloud
+              vendor required.
+            </p>
             <div class="stack-role">Provides the platform</div>
           </div>
           <div class="stack-card">
             <div class="stack-num">03</div>
             <h3>fn-uns</h3>
             <div class="stack-url">This project</div>
-            <p>9 serverless functions that implement a complete UNS data pipeline on fnkit. From machine simulation to KPI computation — capture, process, and report on manufacturing data. Each function follows the UNS Framework standard and deploys through fnkit's GitOps workflow.</p>
+            <p>
+              Serverless functions that implement a complete UNS data pipeline
+              on fnkit. From machine simulation to KPI computation — capture,
+              process, and report on manufacturing data. Each function follows
+              the UNS Framework standard and deploys through fnkit's GitOps
+              workflow.
+            </p>
             <div class="stack-role">Delivers the functions</div>
           </div>
         </div>
@@ -1413,62 +1460,31 @@
     <section class="fade-in">
       <div class="container">
         <div class="section-label">How It Works</div>
-        <h2>One topic hierarchy. Every data point.</h2>
+        <h2>Structured data. Serverless functions. Git push to deploy.</h2>
         <p class="lead">
-          The Unified Namespace organises all factory data using the ISA-95
-          international standard — a structured MQTT topic hierarchy that's
-          self-describing and machine-readable.
+          Three ideas come together: an ISA-95 topic hierarchy gives every data point a canonical address, lightweight functions process the data, and MQTT connects everything in real time.
         </p>
 
         <div class="how-grid">
           <div class="how-text">
-            <h3>What is MQTT?</h3>
+            <h3>ISA-95 Topic Hierarchy</h3>
             <p>
-              MQTT is a lightweight publish/subscribe messaging protocol.
-              Machines publish data to topics. Applications subscribe to the
-              topics they need. The broker handles delivery — no direct
-              connections between systems.
+              All data is organised using the ISA-95 international standard — a structured path from enterprise down to individual data points. The hierarchy is self-describing: any consumer can parse the topic path to understand where data comes from without mapping tables or documentation.
             </p>
-            <ul>
-              <li>
-                <strong>Publish/Subscribe</strong> — Producers and consumers are
-                completely decoupled
-              </li>
-              <li>
-                <strong>Wildcard subscriptions</strong> — Subscribe to
-                <code
-                  style="
-                    font-family: var(--font-mono);
-                    font-size: 12px;
-                    background: var(--grey-100);
-                    padding: 2px 6px;
-                    border-radius: 4px;
-                  "
-                  >v1.0/#</code
-                >
-                for everything, or filter by area
-              </li>
-              <li>
-                <strong>Retained messages</strong> — New subscribers get the
-                last known value immediately
-              </li>
-              <li>
-                <strong>Industry standard</strong> — Supported by every major
-                PLC, gateway, and cloud platform
-              </li>
-            </ul>
 
-            <h3>What is the UNS?</h3>
+            <h3>Publish / Subscribe Messaging</h3>
             <p>
-              The Unified Namespace is a design pattern: organise all your
-              operational data into a single MQTT topic tree that mirrors your
-              physical plant hierarchy. Every machine, every sensor, every data
-              point has one canonical address.
+              MQTT decouples producers from consumers. Machines publish to topics, applications subscribe to what they need. The broker handles delivery. Adding a new machine means publishing to a new topic — the entire pipeline picks it up automatically.
             </p>
+
+            <h3>Serverless Functions</h3>
             <p>
-              fn-uns implements this pattern with 9 serverless functions that
-              capture, process, and report on the data flowing through the
-              namespace.
+              Each piece of logic is a small, independent function — Go or Node.js. No monolithic platform, no flow builder. Functions read from a shared cache, write to PostgreSQL, and compose through infrastructure rather than through each other.
+            </p>
+
+            <h3>GitOps Deployment</h3>
+            <p>
+              Every function is version controlled. Deploy with <code style="font-family:var(--font-mono);font-size:12px;background:var(--grey-100);padding:2px 6px;border-radius:4px">git push</code>. Roll back with <code style="font-family:var(--font-mono);font-size:12px;background:var(--grey-100);padding:2px 6px;border-radius:4px">git revert</code>. Full audit trail, code review, and CI/CD — the same workflow your software team already uses.
             </p>
           </div>
 
@@ -1493,15 +1509,11 @@
               style="
                 font-size: 13px;
                 color: var(--grey-400);
-                margin-top: 16px;
+                margin-top: 24px;
                 line-height: 1.6;
               "
             >
-              The hierarchy is self-describing. Any consumer can parse the topic
-              path to understand
-              <strong style="color: var(--grey-600)">where</strong> the data
-              comes from — no mapping tables, no configuration, no documentation
-              required.
+              <strong style="color: var(--grey-600)">The data flow:</strong> Machines publish → MQTT broker distributes → Functions cache in Valkey → Functions detect changes and write to PostgreSQL → KPI functions query and compute on demand.
             </p>
             <p
               style="
@@ -1511,9 +1523,7 @@
                 line-height: 1.6;
               "
             >
-              Adding a new machine? Just publish to a new topic path. The entire
-              pipeline — caching, state tracking, KPI computation — picks it up
-              automatically.
+              <strong style="color: var(--grey-600)">The deploy flow:</strong> Write code → git commit → git push → fnkit builds container → running in production. No manual server management, no UI configuration.
             </p>
           </div>
         </div>
@@ -1774,51 +1784,31 @@
         </p>
 
         <div class="code-layout">
-          <div class="code-block">
-            <span class="cm">// State changed — log the completed state</span>
-            <span class="kw">if</span> currentState != tracked.State { duration
-            := now.Sub(tracked.EnteredAt).Seconds() uns := parseTopic(topic)
+          <div class="code-block"><pre style="margin:0;font:inherit;white-space:pre"><span class="cm">// Read current + previous for every topic</span>
+<span class="kw">const</span> pipe = rdb.pipeline()
 
-            <span class="cm">// Insert to PostgreSQL</span>
-            err = insertStateRow( config.Table, uns, tracked.State,
-            <span class="cm">// previous state</span> tracked.EnteredAt,
-            <span class="cm">// when it started</span> now,
-            <span class="cm">// when it ended</span> duration,
-            <span class="cm">// how long</span> currentState,
-            <span class="cm">// what it changed to</span>
-            )
+<span class="kw">for</span> (<span class="kw">const</span> topic <span class="kw">of</span> topics) {
+  pipe.get(<span class="str">`uns:data:${topic}`</span>)
+  pipe.get(<span class="str">`uns:prev:${topic}`</span>)
+}
 
-            <span class="cm">// Update in-memory tracker</span>
-            machineStates[topic] = &amp;machineState{ State: currentState,
-            EnteredAt: now, } }
-          </div>
+<span class="kw">const</span> results = <span class="kw">await</span> pipe.exec()
+
+<span class="cm">// Did the value change?</span>
+<span class="kw">const</span> changed = current !== previous</pre></div>
           <div class="code-annotation">
-            <h3>This is the entire state tracking logic.</h3>
+            <h3>Current value. Previous value. Change detection. One call.</h3>
             <p>
-              When a machine changes state — from ACTIVE to IDLE, from SETUP to
-              ACTIVE, from ALARM to IDLE — this code logs the completed state
-              with its precise duration to PostgreSQL.
+              The cache stores two versions of every topic — current and previous. A single pipelined read returns both, plus metadata. The <code style="font-family:var(--font-mono);font-size:13px;background:var(--grey-100);padding:2px 8px;border-radius:4px">changed</code> flag tells downstream functions whether to act.
             </p>
             <p>
-              That single table becomes the foundation for utilisation,
-              availability, MTBF, MTTR, and downtime analysis. One function, one
-              responsibility, one table.
+              This is the pattern that powers the entire pipeline. State tracking, stoppage classification, production logging — they all read from this cache and only write to PostgreSQL when something actually changes.
             </p>
             <p>
-              Version controlled. Code reviewed. Unit tested. Deployed with
-              <code
-                style="
-                  font-family: var(--font-mono);
-                  font-size: 13px;
-                  background: var(--grey-100);
-                  padding: 2px 8px;
-                  border-radius: 4px;
-                "
-                >git push</code
-              >.
+              Standard Node.js. Standard Redis commands. No proprietary SDK, no vendor abstraction layer.
             </p>
             <div class="stat-line">
-              uns-state/function.go — the complete state tracking engine
+              uns-cache/index.js — the complete cache read function
             </div>
           </div>
         </div>

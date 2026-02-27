@@ -299,6 +299,9 @@
       [data-theme='dark'] .hero-visual-wrap svg line[stroke='#d4d4d4'] {
         stroke: #404040;
       }
+      [data-theme='dark'] .hero-visual-wrap svg line[stroke='#f5f5f5'] {
+        stroke: #1a1a1a;
+      }
       [data-theme='dark'] .hero-visual-wrap svg path[stroke='#d4d4d4'] {
         stroke: #404040;
       }
@@ -543,1033 +546,212 @@
     <!-- HERO -->
     <div class="hero">
       <div class="container">
-        <h1>UNS&nbsp;Framework</h1>
+        <h1>UNS Framework</h1>
+
         <p class="subtitle">
-          Manufacturing data is&nbsp;trapped. We&nbsp;fix&nbsp;that. An open
-          standard for structuring your MQTT namespace in YAML — plus serverless
-          functions that turn fragmented factory data into real-time KPIs.
-          Self-hosted. Version&nbsp;controlled. Deployed with git&nbsp;push.
+          Manufacturing data is&nbsp;trapped. We&nbsp;fix&nbsp;that. A YAML standard
+          for describing your factory, serverless functions for computing KPIs,
+          and an open platform to run it all. Three open-source projects that
+          give every machine on your shop floor a&nbsp;voice.
         </p>
-        <!-- ANIMATED AEROSPACE FACTORY INFOGRAPHIC -->
+        <!-- ANIMATED INFOGRAPHIC -->
         <div class="hero-visual-wrap">
-          <svg
-            viewBox="0 0 880 420"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
+          <svg viewBox="0 0 880 440" fill="none" xmlns="http://www.w3.org/2000/svg">
             <!-- Background -->
-            <rect
-              x="0"
-              y="0"
-              width="880"
-              height="420"
-              rx="16"
-              fill="#fafafa"
-              stroke="#e5e5e5"
-              stroke-width="1"
-            />
+            <rect x="0" y="0" width="880" height="440" rx="16" fill="#fafafa" stroke="#e5e5e5" stroke-width="1"/>
 
             <!-- ═══ STAGE LABELS ═══ -->
-            <text
-              x="110"
-              y="28"
-              font-family="'JetBrains Mono', monospace"
-              font-size="9"
-              font-weight="600"
-              fill="#a3a3a3"
-              letter-spacing="0.08em"
-              class="h-fade h-fade-d1"
-            >
-              SHOP FLOOR
-            </text>
-            <text
-              x="390"
-              y="28"
-              font-family="'JetBrains Mono', monospace"
-              font-size="9"
-              font-weight="600"
-              fill="#a3a3a3"
-              letter-spacing="0.08em"
-              class="h-fade h-fade-d2"
-            >
-              UNS FRAMEWORK
-            </text>
-            <text
-              x="700"
-              y="28"
-              font-family="'JetBrains Mono', monospace"
-              font-size="9"
-              font-weight="600"
-              fill="#a3a3a3"
-              letter-spacing="0.08em"
-              class="h-fade h-fade-d3"
-            >
-              INSIGHT
-            </text>
+            <text x="100" y="28" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="600" fill="#a3a3a3" letter-spacing="0.08em" class="h-fade h-fade-d1">PRODUCERS</text>
+            <text x="400" y="28" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="600" fill="#a3a3a3" letter-spacing="0.08em" class="h-fade h-fade-d2">UNS FRAMEWORK</text>
+            <text x="710" y="28" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="600" fill="#a3a3a3" letter-spacing="0.08em" class="h-fade h-fade-d3">CONSUMERS</text>
 
             <!-- Vertical dividers -->
-            <line
-              x1="290"
-              y1="18"
-              x2="290"
-              y2="370"
-              stroke="#e5e5e5"
-              stroke-width="1"
-              stroke-dasharray="4 4"
-            />
-            <line
-              x1="610"
-              y1="18"
-              x2="610"
-              y2="370"
-              stroke="#e5e5e5"
-              stroke-width="1"
-              stroke-dasharray="4 4"
-            />
+            <line x1="270" y1="18" x2="270" y2="390" stroke="#e5e5e5" stroke-width="1" stroke-dasharray="4 4"/>
+            <line x1="620" y1="18" x2="620" y2="390" stroke="#e5e5e5" stroke-width="1" stroke-dasharray="4 4"/>
 
-            <!-- ═══ MACHINES (left) — Aerospace CNC shop ═══ -->
-            <!-- 5-Axis CNC -->
-            <rect
-              x="20"
-              y="48"
-              width="250"
-              height="48"
-              rx="8"
-              fill="#ffffff"
-              stroke="#e5e5e5"
-              stroke-width="1"
-              class="h-fade h-fade-d1"
-            />
-            <circle
-              cx="40"
-              cy="72"
-              r="5"
-              fill="#0a0a0a"
-              class="h-pulse h-pulse-d1"
-            />
-            <text
-              x="54"
-              y="68"
-              font-family="'JetBrains Mono', monospace"
-              font-size="10"
-              font-weight="600"
-              fill="#0a0a0a"
-            >
-              DMG MORI DMU-80
-            </text>
-            <text
-              x="54"
-              y="82"
-              font-family="'JetBrains Mono', monospace"
-              font-size="8"
-              fill="#737373"
-            >
-              5-AXIS · ACTIVE · OP-7842
-            </text>
+            <!-- ═══ PRODUCERS (left) ═══ -->
+            <!-- Machine: 5-Axis CNC -->
+            <rect x="20" y="48" width="230" height="44" rx="8" fill="#ffffff" stroke="#e5e5e5" stroke-width="1" class="h-fade h-fade-d1"/>
+            <circle cx="38" cy="70" r="5" fill="#0a0a0a" class="h-pulse h-pulse-d1"/>
+            <text x="52" y="66" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="600" fill="#0a0a0a">5-Axis CNC</text>
+            <text x="52" y="80" font-family="'JetBrains Mono', monospace" font-size="8" fill="#737373">ACTIVE · OP-7842</text>
 
-            <!-- Turning Centre -->
-            <rect
-              x="20"
-              y="106"
-              width="250"
-              height="48"
-              rx="8"
-              fill="#ffffff"
-              stroke="#e5e5e5"
-              stroke-width="1"
-              class="h-fade h-fade-d2"
-            />
-            <circle
-              cx="40"
-              cy="130"
-              r="5"
-              fill="#0a0a0a"
-              class="h-pulse h-pulse-d2"
-            />
-            <text
-              x="54"
-              y="126"
-              font-family="'JetBrains Mono', monospace"
-              font-size="10"
-              font-weight="600"
-              fill="#0a0a0a"
-            >
-              Mazak QTN-350
-            </text>
-            <text
-              x="54"
-              y="140"
-              font-family="'JetBrains Mono', monospace"
-              font-size="8"
-              fill="#737373"
-            >
-              TURNING · IDLE · TOOL CHANGE
-            </text>
+            <!-- Machine: Turning Centre -->
+            <rect x="20" y="100" width="230" height="44" rx="8" fill="#ffffff" stroke="#e5e5e5" stroke-width="1" class="h-fade h-fade-d2"/>
+            <circle cx="38" cy="122" r="5" fill="#0a0a0a" class="h-pulse h-pulse-d2"/>
+            <text x="52" y="118" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="600" fill="#0a0a0a">Turning Centre</text>
+            <text x="52" y="132" font-family="'JetBrains Mono', monospace" font-size="8" fill="#737373">IDLE · TOOL CHANGE</text>
 
-            <!-- CMM -->
-            <rect
-              x="20"
-              y="164"
-              width="250"
-              height="48"
-              rx="8"
-              fill="#ffffff"
-              stroke="#e5e5e5"
-              stroke-width="1"
-              class="h-fade h-fade-d3"
-            />
-            <circle
-              cx="40"
-              cy="188"
-              r="5"
-              fill="#0a0a0a"
-              class="h-pulse h-pulse-d3"
-            />
-            <text
-              x="54"
-              y="184"
-              font-family="'JetBrains Mono', monospace"
-              font-size="10"
-              font-weight="600"
-              fill="#0a0a0a"
-            >
-              Zeiss Contura
-            </text>
-            <text
-              x="54"
-              y="198"
-              font-family="'JetBrains Mono', monospace"
-              font-size="8"
-              fill="#737373"
-            >
-              CMM · MEASURING · PART-2847
-            </text>
-
-            <!-- Wire EDM -->
-            <rect
-              x="20"
-              y="222"
-              width="250"
-              height="48"
-              rx="8"
-              fill="#ffffff"
-              stroke="#e5e5e5"
-              stroke-width="1"
-              class="h-fade h-fade-d4"
-            />
-            <circle
-              cx="40"
-              cy="246"
-              r="5"
-              fill="#0a0a0a"
-              class="h-pulse h-pulse-d4"
-            />
-            <text
-              x="54"
-              y="242"
-              font-family="'JetBrains Mono', monospace"
-              font-size="10"
-              font-weight="600"
-              fill="#0a0a0a"
-            >
-              Sodick ALC600G
-            </text>
-            <text
-              x="54"
-              y="256"
-              font-family="'JetBrains Mono', monospace"
-              font-size="8"
-              fill="#737373"
-            >
-              WIRE EDM · ACTIVE · BLADE-09
-            </text>
-
-            <!-- Grinding -->
-            <rect
-              x="20"
-              y="280"
-              width="250"
-              height="48"
-              rx="8"
-              fill="#ffffff"
-              stroke="#e5e5e5"
-              stroke-width="1"
-              class="h-fade h-fade-d5"
-            />
-            <circle
-              cx="40"
-              cy="304"
-              r="5"
-              fill="#0a0a0a"
-              class="h-pulse h-pulse-d5"
-            />
-            <text
-              x="54"
-              y="300"
-              font-family="'JetBrains Mono', monospace"
-              font-size="10"
-              font-weight="600"
-              fill="#0a0a0a"
-            >
-              Studer S41
-            </text>
-            <text
-              x="54"
-              y="314"
-              font-family="'JetBrains Mono', monospace"
-              font-size="8"
-              fill="#737373"
-            >
-              GRINDER · ALARM · COOLANT LOW
-            </text>
-
-            <!-- ═══ MQTT BROKER ═══ -->
-            <rect
-              x="20"
-              y="346"
-              width="250"
-              height="44"
-              rx="8"
-              fill="#0a0a0a"
-            />
-            <text
-              x="145"
-              y="365"
-              font-family="'JetBrains Mono', monospace"
-              font-size="10"
-              font-weight="600"
-              fill="#ffffff"
-              text-anchor="middle"
-            >
-              MQTT Broker
-            </text>
-            <text
-              x="145"
-              y="379"
-              font-family="'JetBrains Mono', monospace"
-              font-size="7"
-              fill="#a3a3a3"
-              text-anchor="middle"
-            >
-              HiveMQ · 12 topics/machine
-            </text>
+            <!-- Machine: CMM -->
+            <rect x="20" y="152" width="230" height="44" rx="8" fill="#ffffff" stroke="#e5e5e5" stroke-width="1" class="h-fade h-fade-d3"/>
+            <circle cx="38" cy="174" r="5" fill="#0a0a0a" class="h-pulse h-pulse-d3"/>
+            <text x="52" y="170" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="600" fill="#0a0a0a">CMM</text>
+            <text x="52" y="184" font-family="'JetBrains Mono', monospace" font-size="8" fill="#737373">MEASURING · PART-2847</text>
 
             <!-- Flow lines: machines → MQTT -->
-            <line
-              x1="145"
-              y1="96"
-              x2="145"
-              y2="106"
-              stroke="#d4d4d4"
-              stroke-width="1"
-              class="h-flow-line"
-            />
-            <line
-              x1="145"
-              y1="154"
-              x2="145"
-              y2="164"
-              stroke="#d4d4d4"
-              stroke-width="1"
-              class="h-flow-line"
-            />
-            <line
-              x1="145"
-              y1="212"
-              x2="145"
-              y2="222"
-              stroke="#d4d4d4"
-              stroke-width="1"
-              class="h-flow-line"
-            />
-            <line
-              x1="145"
-              y1="270"
-              x2="145"
-              y2="280"
-              stroke="#d4d4d4"
-              stroke-width="1"
-              class="h-flow-line"
-            />
-            <line
-              x1="145"
-              y1="328"
-              x2="145"
-              y2="346"
-              stroke="#d4d4d4"
-              stroke-width="1"
-              class="h-flow-line"
-            />
+            <line x1="135" y1="92" x2="135" y2="100" stroke="#d4d4d4" stroke-width="1" class="h-flow-line"/>
+            <line x1="135" y1="144" x2="135" y2="152" stroke="#d4d4d4" stroke-width="1" class="h-flow-line"/>
+            <line x1="135" y1="196" x2="135" y2="212" stroke="#d4d4d4" stroke-width="1" class="h-flow-line"/>
 
-            <!-- ═══ DATA PACKETS: Machines → MQTT → UNS ═══ -->
-            <circle
-              r="3"
-              fill="#0a0a0a"
-              style="offset-path: path('M 145 96 L 145 346')"
-              class="h-packet h-packet-d1"
-            />
-            <circle
-              r="3"
-              fill="#0a0a0a"
-              style="offset-path: path('M 145 96 L 145 346')"
-              class="h-packet h-packet-d3"
-            />
+            <!-- ═══ MQTT BROKER (centre of left column) ═══ -->
+            <rect x="20" y="212" width="230" height="48" rx="8" fill="#0a0a0a"/>
+            <text x="135" y="233" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="600" fill="#ffffff" text-anchor="middle">MQTT Broker</text>
+            <text x="135" y="248" font-family="'JetBrains Mono', monospace" font-size="8" fill="#a3a3a3" text-anchor="middle">Pub/Sub · Real-time</text>
+
+            <!-- Data packets: machines → MQTT -->
+            <circle r="3" fill="#0a0a0a" style="offset-path: path('M 135 92 L 135 212');" class="h-packet h-packet-d1"/>
+            <circle r="3" fill="#0a0a0a" style="offset-path: path('M 135 92 L 135 212');" class="h-packet h-packet-d3"/>
+
+            <!-- ═══ BIDIRECTIONAL SYSTEMS (below MQTT) ═══ -->
+            <!-- MES -->
+            <rect x="20" y="276" width="230" height="36" rx="6" fill="#ffffff" stroke="#e5e5e5" stroke-width="1" class="h-fade h-fade-d4"/>
+            <text x="36" y="298" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="500" fill="#0a0a0a">MES</text>
+            <text x="234" y="298" font-family="'JetBrains Mono', monospace" font-size="8" fill="#a3a3a3" text-anchor="end">↑ programs · ↓ production</text>
+
+            <!-- ERP -->
+            <rect x="20" y="320" width="230" height="36" rx="6" fill="#ffffff" stroke="#e5e5e5" stroke-width="1" class="h-fade h-fade-d5"/>
+            <text x="36" y="342" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="500" fill="#0a0a0a">ERP</text>
+            <text x="234" y="342" font-family="'JetBrains Mono', monospace" font-size="8" fill="#a3a3a3" text-anchor="end">↑ orders · ↓ completions</text>
+
+            <!-- Quality -->
+            <rect x="20" y="364" width="230" height="36" rx="6" fill="#ffffff" stroke="#e5e5e5" stroke-width="1" class="h-fade h-fade-d5"/>
+            <text x="36" y="386" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="500" fill="#0a0a0a">Quality</text>
+            <text x="234" y="386" font-family="'JetBrains Mono', monospace" font-size="8" fill="#a3a3a3" text-anchor="end">↑ specs · ↓ results</text>
+
+            <!-- Flow lines: MQTT ↔ bidirectional systems -->
+            <line x1="135" y1="260" x2="135" y2="276" stroke="#d4d4d4" stroke-width="1" class="h-flow-line"/>
+            <line x1="135" y1="312" x2="135" y2="320" stroke="#d4d4d4" stroke-width="1" class="h-flow-line"/>
+            <line x1="135" y1="356" x2="135" y2="364" stroke="#d4d4d4" stroke-width="1" class="h-flow-line"/>
+
+            <!-- Bidirectional data packets (upward — systems publishing to MQTT) -->
+            <circle r="2.5" fill="#0a0a0a" style="offset-path: path('M 135 400 L 135 260');" class="h-packet h-packet-d2"/>
+            <circle r="2.5" fill="#0a0a0a" style="offset-path: path('M 135 400 L 135 260');" class="h-packet h-packet-d4"/>
 
             <!-- ═══ UNS FRAMEWORK (centre) ═══ -->
-            <!-- YAML Config -->
-            <rect
-              x="310"
-              y="48"
-              width="280"
-              height="56"
-              rx="8"
-              fill="#ffffff"
-              stroke="#0a0a0a"
-              stroke-width="1.5"
-            />
-            <text
-              x="450"
-              y="70"
-              font-family="'JetBrains Mono', monospace"
-              font-size="11"
-              font-weight="600"
-              fill="#0a0a0a"
-              text-anchor="middle"
-            >
-              uns.yml + site.yml
-            </text>
-            <text
-              x="450"
-              y="88"
-              font-family="'JetBrains Mono', monospace"
-              font-size="8"
-              fill="#737373"
-              text-anchor="middle"
-            >
-              ISA-95 · v1.0 · YAML Standard
-            </text>
 
-            <!-- Flow: MQTT → UNS -->
-            <path
-              d="M 270 368 L 290 368 Q 300 368 300 358 L 300 76 Q 300 66 310 66 L 310 76"
-              stroke="#d4d4d4"
-              stroke-width="1"
-              fill="none"
-              class="h-flow-line"
-            />
-            <circle
-              r="3"
-              fill="#0a0a0a"
-              style="
-                offset-path: path(
-                  'M 270 368 L 290 368 Q 300 368 300 358 L 300 76 Q 300 66 310 66 L 310 76'
-                );
-              "
-              class="h-packet h-packet-d2"
-            />
-            <circle
-              r="3"
-              fill="#0a0a0a"
-              style="
-                offset-path: path(
-                  'M 270 368 L 290 368 Q 300 368 300 358 L 300 76 Q 300 66 310 66 L 310 76'
-                );
-              "
-              class="h-packet h-packet-d4"
-            />
+            <!-- Flow: MQTT → UNS Standard -->
+            <path d="M 250 236 L 270 236 Q 280 236 280 226 L 280 72 Q 280 62 290 62 L 300 62" stroke="#d4d4d4" stroke-width="1" fill="none" class="h-flow-line"/>
+            <!-- Data packets: MQTT → UNS -->
+            <circle r="3" fill="#0a0a0a" style="offset-path: path('M 250 236 L 270 236 Q 280 236 280 226 L 280 72 Q 280 62 290 62 L 300 62');" class="h-packet h-packet-d2"/>
+            <circle r="3" fill="#0a0a0a" style="offset-path: path('M 250 236 L 270 236 Q 280 236 280 226 L 280 72 Q 280 62 290 62 L 300 62');" class="h-packet h-packet-d4"/>
 
-            <!-- Hierarchy boxes -->
-            <rect
-              x="310"
-              y="120"
-              width="280"
-              height="36"
-              rx="6"
-              fill="#ffffff"
-              stroke="#e5e5e5"
-              stroke-width="1"
-              class="h-glow"
-            />
-            <text
-              x="326"
-              y="142"
-              font-family="'JetBrains Mono', monospace"
-              font-size="9"
-              font-weight="500"
-              fill="#0a0a0a"
-            >
-              site: Aerospace UK
-            </text>
-            <text
-              x="574"
-              y="142"
-              font-family="'JetBrains Mono', monospace"
-              font-size="8"
-              fill="#a3a3a3"
-              text-anchor="end"
-            >
-              site.yml
-            </text>
+            <!-- YAML Standard card -->
+            <rect x="300" y="48" width="300" height="52" rx="8" fill="#ffffff" stroke="#0a0a0a" stroke-width="1.5"/>
+            <text x="450" y="70" font-family="'JetBrains Mono', monospace" font-size="11" font-weight="600" fill="#0a0a0a" text-anchor="middle">uns.yml + site.yml</text>
+            <text x="450" y="86" font-family="'JetBrains Mono', monospace" font-size="8" fill="#737373" text-anchor="middle">ISA-95 · v1.0 · YAML Standard</text>
 
-            <rect
-              x="310"
-              y="164"
-              width="280"
-              height="36"
-              rx="6"
-              fill="#ffffff"
-              stroke="#e5e5e5"
-              stroke-width="1"
-              class="h-glow"
-              style="animation-delay: 0.5s"
-            />
-            <text
-              x="326"
-              y="186"
-              font-family="'JetBrains Mono', monospace"
-              font-size="9"
-              font-weight="500"
-              fill="#0a0a0a"
-            >
-              area: Precision Machining
-            </text>
-            <text
-              x="574"
-              y="186"
-              font-family="'JetBrains Mono', monospace"
-              font-size="8"
-              fill="#a3a3a3"
-              text-anchor="end"
-            >
-              area
-            </text>
+            <!-- Compact topic hierarchy (single bar) -->
+            <rect x="300" y="112" width="300" height="28" rx="6" fill="#ffffff" stroke="#e5e5e5" stroke-width="1" class="h-glow"/>
+            <text x="450" y="130" font-family="'JetBrains Mono', monospace" font-size="8" fill="#737373" text-anchor="middle">site / area / line / cell / equipment / sensor</text>
 
-            <rect
-              x="310"
-              y="208"
-              width="280"
-              height="36"
-              rx="6"
-              fill="#ffffff"
-              stroke="#e5e5e5"
-              stroke-width="1"
-              class="h-glow"
-              style="animation-delay: 1s"
-            />
-            <text
-              x="326"
-              y="230"
-              font-family="'JetBrains Mono', monospace"
-              font-size="9"
-              font-weight="500"
-              fill="#0a0a0a"
-            >
-              line: Turbine Blades
-            </text>
-            <text
-              x="574"
-              y="230"
-              font-family="'JetBrains Mono', monospace"
-              font-size="8"
-              fill="#a3a3a3"
-              text-anchor="end"
-            >
-              line
-            </text>
+            <!-- Flow: standard → functions -->
+            <line x1="450" y1="100" x2="450" y2="112" stroke="#d4d4d4" stroke-width="1" class="h-flow-line"/>
+            <line x1="450" y1="140" x2="450" y2="158" stroke="#d4d4d4" stroke-width="1" class="h-flow-line"/>
 
-            <rect
-              x="310"
-              y="252"
-              width="280"
-              height="36"
-              rx="6"
-              fill="#ffffff"
-              stroke="#e5e5e5"
-              stroke-width="1"
-              class="h-glow"
-              style="animation-delay: 1.5s"
-            />
-            <text
-              x="326"
-              y="274"
-              font-family="'JetBrains Mono', monospace"
-              font-size="9"
-              font-weight="500"
-              fill="#0a0a0a"
-            >
-              cell: 5-Axis Cell A
-            </text>
-            <text
-              x="574"
-              y="274"
-              font-family="'JetBrains Mono', monospace"
-              font-size="8"
-              fill="#a3a3a3"
-              text-anchor="end"
-            >
-              cell
-            </text>
+            <!-- ═══ fn-uns FUNCTIONS ═══ -->
+            <rect x="300" y="158" width="300" height="36" rx="6" fill="#ffffff" stroke="#e5e5e5" stroke-width="1" class="h-glow"/>
+            <text x="316" y="180" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="500" fill="#0a0a0a">uns-state</text>
+            <text x="584" y="180" font-family="'JetBrains Mono', monospace" font-size="8" fill="#a3a3a3" text-anchor="end">state tracking</text>
 
-            <rect
-              x="310"
-              y="296"
-              width="280"
-              height="36"
-              rx="6"
-              fill="#ffffff"
-              stroke="#e5e5e5"
-              stroke-width="1"
-              class="h-glow"
-              style="animation-delay: 2s"
-            />
-            <text
-              x="326"
-              y="318"
-              font-family="'JetBrains Mono', monospace"
-              font-size="9"
-              font-weight="500"
-              fill="#0a0a0a"
-            >
-              equipment: DMG MORI DMU-80
-            </text>
-            <text
-              x="574"
-              y="318"
-              font-family="'JetBrains Mono', monospace"
-              font-size="8"
-              fill="#a3a3a3"
-              text-anchor="end"
-            >
-              equipment
-            </text>
+            <rect x="300" y="202" width="300" height="36" rx="6" fill="#ffffff" stroke="#e5e5e5" stroke-width="1" class="h-glow" style="animation-delay: 0.6s"/>
+            <text x="316" y="224" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="500" fill="#0a0a0a">uns-stoppage</text>
+            <text x="584" y="224" font-family="'JetBrains Mono', monospace" font-size="8" fill="#a3a3a3" text-anchor="end">downtime classification</text>
 
-            <rect
-              x="310"
-              y="340"
-              width="280"
-              height="36"
-              rx="6"
-              fill="#ffffff"
-              stroke="#e5e5e5"
-              stroke-width="1"
-              class="h-glow"
-              style="animation-delay: 2.5s"
-            />
-            <text
-              x="326"
-              y="362"
-              font-family="'JetBrains Mono', monospace"
-              font-size="9"
-              font-weight="500"
-              fill="#0a0a0a"
-            >
-              sensor: spindle · coolant · status
-            </text>
-            <text
-              x="574"
-              y="362"
-              font-family="'JetBrains Mono', monospace"
-              font-size="8"
-              fill="#a3a3a3"
-              text-anchor="end"
-            >
-              sensor
-            </text>
+            <rect x="300" y="246" width="300" height="36" rx="6" fill="#ffffff" stroke="#e5e5e5" stroke-width="1" class="h-glow" style="animation-delay: 1.2s"/>
+            <text x="316" y="268" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="500" fill="#0a0a0a">uns-productivity</text>
+            <text x="584" y="268" font-family="'JetBrains Mono', monospace" font-size="8" fill="#a3a3a3" text-anchor="end">production runs</text>
 
-            <!-- Flow lines between hierarchy -->
-            <line
-              x1="450"
-              y1="104"
-              x2="450"
-              y2="120"
-              stroke="#d4d4d4"
-              stroke-width="1"
-              class="h-flow-line"
-            />
-            <line
-              x1="450"
-              y1="156"
-              x2="450"
-              y2="164"
-              stroke="#d4d4d4"
-              stroke-width="1"
-              class="h-flow-line"
-            />
-            <line
-              x1="450"
-              y1="200"
-              x2="450"
-              y2="208"
-              stroke="#d4d4d4"
-              stroke-width="1"
-              class="h-flow-line"
-            />
-            <line
-              x1="450"
-              y1="244"
-              x2="450"
-              y2="252"
-              stroke="#d4d4d4"
-              stroke-width="1"
-              class="h-flow-line"
-            />
-            <line
-              x1="450"
-              y1="288"
-              x2="450"
-              y2="296"
-              stroke="#d4d4d4"
-              stroke-width="1"
-              class="h-flow-line"
-            />
-            <line
-              x1="450"
-              y1="332"
-              x2="450"
-              y2="340"
-              stroke="#d4d4d4"
-              stroke-width="1"
-              class="h-flow-line"
-            />
+            <rect x="300" y="290" width="300" height="36" rx="6" fill="#ffffff" stroke="#e5e5e5" stroke-width="1" class="h-glow" style="animation-delay: 1.8s"/>
+            <text x="316" y="312" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="500" fill="#0a0a0a">uns-kpi</text>
+            <text x="584" y="312" font-family="'JetBrains Mono', monospace" font-size="8" fill="#a3a3a3" text-anchor="end">real-time metrics</text>
 
-            <!-- ═══ INSIGHT (right) ═══ -->
-            <!-- Flow: UNS → Insight -->
-            <path
-              d="M 590 200 L 610 200 Q 620 200 620 190 L 620 66 Q 620 56 630 56 L 640 56"
-              stroke="#d4d4d4"
-              stroke-width="1"
-              fill="none"
-              class="h-flow-line"
-            />
-            <circle
-              r="2.5"
-              fill="#0a0a0a"
-              style="
-                offset-path: path(
-                  'M 590 200 L 610 200 Q 620 200 620 190 L 620 66 Q 620 56 630 56 L 640 56'
-                );
-              "
-              class="h-packet h-packet-d1"
-            />
+            <!-- Flow lines between functions -->
+            <line x1="450" y1="194" x2="450" y2="202" stroke="#d4d4d4" stroke-width="1" class="h-flow-line"/>
+            <line x1="450" y1="238" x2="450" y2="246" stroke="#d4d4d4" stroke-width="1" class="h-flow-line"/>
+            <line x1="450" y1="282" x2="450" y2="290" stroke="#d4d4d4" stroke-width="1" class="h-flow-line"/>
+
+            <!-- Infrastructure badges -->
+            <rect x="300" y="340" width="144" height="32" rx="6" fill="#0a0a0a"/>
+            <text x="372" y="360" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="500" fill="#ffffff" text-anchor="middle">Cache</text>
+
+            <rect x="456" y="340" width="144" height="32" rx="6" fill="#0a0a0a"/>
+            <text x="528" y="360" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="500" fill="#ffffff" text-anchor="middle">Database</text>
+
+            <!-- Flow: functions → infrastructure -->
+            <line x1="400" y1="326" x2="400" y2="340" stroke="#d4d4d4" stroke-width="1" class="h-flow-line"/>
+            <line x1="500" y1="326" x2="500" y2="340" stroke="#d4d4d4" stroke-width="1" class="h-flow-line"/>
+
+            <!-- ═══ CONSUMERS (right) ═══ -->
+
+            <!-- Flow: Functions → KPI Dashboard -->
+            <path d="M 600 290 L 620 290 Q 630 290 630 280 L 630 66 Q 630 56 640 56 L 650 56" stroke="#d4d4d4" stroke-width="1" fill="none" class="h-flow-line"/>
+            <!-- Data packets: Functions → KPIs -->
+            <circle r="2.5" fill="#0a0a0a" style="offset-path: path('M 600 290 L 620 290 Q 630 290 630 280 L 630 66 Q 630 56 640 56 L 650 56');" class="h-packet h-packet-d1"/>
 
             <!-- KPI Dashboard -->
-            <rect
-              x="630"
-              y="48"
-              width="230"
-              height="148"
-              rx="8"
-              fill="#ffffff"
-              stroke="#e5e5e5"
-              stroke-width="1"
-            />
-            <text
-              x="646"
-              y="68"
-              font-family="'JetBrains Mono', monospace"
-              font-size="9"
-              font-weight="600"
-              fill="#0a0a0a"
-            >
-              LIVE DASHBOARD
-            </text>
+            <rect x="640" y="48" width="220" height="140" rx="8" fill="#ffffff" stroke="#e5e5e5" stroke-width="1"/>
+            <text x="656" y="68" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="600" fill="#0a0a0a">LIVE DASHBOARD</text>
 
             <g class="h-kpi h-kpi-d1">
-              <text
-                x="646"
-                y="92"
-                font-family="'JetBrains Mono', monospace"
-                font-size="18"
-                font-weight="700"
-                fill="#0a0a0a"
-              >
-                87%
-              </text>
-              <text
-                x="700"
-                y="92"
-                font-family="'JetBrains Mono', monospace"
-                font-size="8"
-                fill="#737373"
-              >
-                OEE
-              </text>
+              <text x="656" y="92" font-family="'JetBrains Mono', monospace" font-size="18" font-weight="700" fill="#0a0a0a">87%</text>
+              <text x="710" y="92" font-family="'JetBrains Mono', monospace" font-size="8" fill="#737373">OEE</text>
             </g>
-            <line
-              x1="646"
-              y1="100"
-              x2="844"
-              y2="100"
-              stroke="#f5f5f5"
-              stroke-width="1"
-            />
+            <line x1="656" y1="100" x2="844" y2="100" stroke="#f5f5f5" stroke-width="1"/>
 
             <g class="h-kpi h-kpi-d2">
-              <text
-                x="646"
-                y="120"
-                font-family="'JetBrains Mono', monospace"
-                font-size="11"
-                font-weight="600"
-                fill="#0a0a0a"
-              >
-                94.2%
-              </text>
-              <text
-                x="710"
-                y="120"
-                font-family="'JetBrains Mono', monospace"
-                font-size="8"
-                fill="#737373"
-              >
-                Availability
-              </text>
-              <text
-                x="790"
-                y="120"
-                font-family="'JetBrains Mono', monospace"
-                font-size="11"
-                font-weight="600"
-                fill="#0a0a0a"
-              >
-                96.1%
-              </text>
-              <text
-                x="830"
-                y="120"
-                font-family="'JetBrains Mono', monospace"
-                font-size="8"
-                fill="#737373"
-              >
-                Quality
-              </text>
+              <text x="656" y="120" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="600" fill="#0a0a0a">94.2%</text>
+              <text x="706" y="120" font-family="'JetBrains Mono', monospace" font-size="7" fill="#737373">Avail</text>
+              <text x="756" y="120" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="600" fill="#0a0a0a">96.1%</text>
+              <text x="806" y="120" font-family="'JetBrains Mono', monospace" font-size="7" fill="#737373">Quality</text>
             </g>
-            <line
-              x1="646"
-              y1="130"
-              x2="844"
-              y2="130"
-              stroke="#f5f5f5"
-              stroke-width="1"
-            />
+            <line x1="656" y1="128" x2="844" y2="128" stroke="#f5f5f5" stroke-width="1"/>
 
             <g class="h-kpi h-kpi-d3">
-              <text
-                x="646"
-                y="150"
-                font-family="'JetBrains Mono', monospace"
-                font-size="11"
-                font-weight="600"
-                fill="#0a0a0a"
-              >
-                12/hr
-              </text>
-              <text
-                x="710"
-                y="150"
-                font-family="'JetBrains Mono', monospace"
-                font-size="8"
-                fill="#737373"
-              >
-                Throughput
-              </text>
-              <text
-                x="790"
-                y="150"
-                font-family="'JetBrains Mono', monospace"
-                font-size="11"
-                font-weight="600"
-                fill="#0a0a0a"
-              >
-                4.2m
-              </text>
-              <text
-                x="830"
-                y="150"
-                font-family="'JetBrains Mono', monospace"
-                font-size="8"
-                fill="#737373"
-              >
-                MTTR
-              </text>
+              <text x="656" y="146" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="600" fill="#0a0a0a">12/hr</text>
+              <text x="706" y="146" font-family="'JetBrains Mono', monospace" font-size="7" fill="#737373">Thru</text>
+              <text x="756" y="146" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="600" fill="#0a0a0a">4.2m</text>
+              <text x="806" y="146" font-family="'JetBrains Mono', monospace" font-size="7" fill="#737373">MTTR</text>
             </g>
-            <line
-              x1="646"
-              y1="160"
-              x2="844"
-              y2="160"
-              stroke="#f5f5f5"
-              stroke-width="1"
-            />
+            <line x1="656" y1="154" x2="844" y2="154" stroke="#f5f5f5" stroke-width="1"/>
 
             <g class="h-kpi h-kpi-d4">
-              <text
-                x="646"
-                y="180"
-                font-family="'JetBrains Mono', monospace"
-                font-size="11"
-                font-weight="600"
-                fill="#0a0a0a"
-              >
-                0
-              </text>
-              <text
-                x="660"
-                y="180"
-                font-family="'JetBrains Mono', monospace"
-                font-size="8"
-                fill="#737373"
-              >
-                Scrap (shift)
-              </text>
-              <text
-                x="790"
-                y="180"
-                font-family="'JetBrains Mono', monospace"
-                font-size="11"
-                font-weight="600"
-                fill="#0a0a0a"
-              >
-                AS9100
-              </text>
-              <text
-                x="844"
-                y="180"
-                font-family="'JetBrains Mono', monospace"
-                font-size="8"
-                fill="#737373"
-              >
-                ✓
-              </text>
+              <text x="656" y="172" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="600" fill="#0a0a0a">142m</text>
+              <text x="706" y="172" font-family="'JetBrains Mono', monospace" font-size="7" fill="#737373">MTBF</text>
+              <text x="756" y="172" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="600" fill="#0a0a0a">Pareto</text>
+              <text x="806" y="172" font-family="'JetBrains Mono', monospace" font-size="7" fill="#737373">Stops</text>
             </g>
 
-            <!-- Consumers box -->
-            <rect
-              x="630"
-              y="212"
-              width="230"
-              height="80"
-              rx="8"
-              fill="#ffffff"
-              stroke="#e5e5e5"
-              stroke-width="1"
-            />
-            <text
-              x="646"
-              y="232"
-              font-family="'JetBrains Mono', monospace"
-              font-size="9"
-              font-weight="600"
-              fill="#0a0a0a"
-            >
-              CONSUMERS
-            </text>
-            <text
-              x="646"
-              y="252"
-              font-family="'JetBrains Mono', monospace"
-              font-size="9"
-              fill="#737373"
-            >
-              → ERP (SAP)
-            </text>
-            <text
-              x="646"
-              y="268"
-              font-family="'JetBrains Mono', monospace"
-              font-size="9"
-              fill="#737373"
-            >
-              → MES (Siemens)
-            </text>
-            <text
-              x="646"
-              y="284"
-              font-family="'JetBrains Mono', monospace"
-              font-size="9"
-              fill="#737373"
-            >
-              → Quality (Solumina)
-            </text>
+            <!-- Consumer systems (bidirectional — they also produce) -->
+            <rect x="640" y="204" width="220" height="36" rx="6" fill="#ffffff" stroke="#e5e5e5" stroke-width="1" class="h-fade h-fade-d4"/>
+            <text x="656" y="226" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="500" fill="#0a0a0a">MES</text>
+            <text x="844" y="226" font-family="'JetBrains Mono', monospace" font-size="8" fill="#a3a3a3" text-anchor="end">← schedules · → data</text>
 
-            <!-- Functions box -->
-            <rect
-              x="630"
-              y="308"
-              width="230"
-              height="68"
-              rx="8"
-              fill="#0a0a0a"
-            />
-            <text
-              x="745"
-              y="330"
-              font-family="'JetBrains Mono', monospace"
-              font-size="10"
-              font-weight="600"
-              fill="#ffffff"
-              text-anchor="middle"
-            >
-              fn-uns Functions
-            </text>
-            <text
-              x="745"
-              y="348"
-              font-family="'JetBrains Mono', monospace"
-              font-size="8"
-              fill="#a3a3a3"
-              text-anchor="middle"
-            >
-              state · stoppage · productivity · kpi
-            </text>
-            <text
-              x="745"
-              y="364"
-              font-family="'JetBrains Mono', monospace"
-              font-size="7"
-              fill="#a3a3a3"
-              text-anchor="middle"
-            >
-              Deployed via git push · fnkit
-            </text>
+            <rect x="640" y="248" width="220" height="36" rx="6" fill="#ffffff" stroke="#e5e5e5" stroke-width="1" class="h-fade h-fade-d5"/>
+            <text x="656" y="270" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="500" fill="#0a0a0a">ERP</text>
+            <text x="844" y="270" font-family="'JetBrains Mono', monospace" font-size="8" fill="#a3a3a3" text-anchor="end">← orders · → completions</text>
 
-            <!-- Flow: UNS → Consumers -->
-            <path
-              d="M 590 300 L 610 300 Q 620 300 620 290 L 620 252 Q 620 242 630 242"
-              stroke="#d4d4d4"
-              stroke-width="1"
-              fill="none"
-              class="h-flow-line"
-            />
-            <!-- Flow: UNS → Functions -->
-            <path
-              d="M 590 340 L 610 340 Q 620 340 620 342 L 620 342 Q 620 342 630 342"
-              stroke="#d4d4d4"
-              stroke-width="1"
-              fill="none"
-              class="h-flow-line"
-            />
+            <rect x="640" y="292" width="220" height="36" rx="6" fill="#ffffff" stroke="#e5e5e5" stroke-width="1" class="h-fade h-fade-d5"/>
+            <text x="656" y="314" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="500" fill="#0a0a0a">Quality</text>
+            <text x="844" y="314" font-family="'JetBrains Mono', monospace" font-size="8" fill="#a3a3a3" text-anchor="end">← specs · → results</text>
+
+            <!-- Output channels -->
+            <rect x="640" y="340" width="220" height="52" rx="8" fill="#0a0a0a"/>
+            <text x="750" y="362" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="600" fill="#ffffff" text-anchor="middle">fn-uns</text>
+            <text x="750" y="380" font-family="'JetBrains Mono', monospace" font-size="8" fill="#a3a3a3" text-anchor="middle">Dashboard · API · Alerts</text>
+
+            <!-- Flow: Functions → Consumers -->
+            <path d="M 600 220 L 620 220 Q 630 220 630 222 L 630 222 Q 630 222 640 222" stroke="#d4d4d4" stroke-width="1" fill="none" class="h-flow-line"/>
+            <path d="M 600 260 L 620 260 Q 630 260 630 266 L 630 266 Q 630 266 640 266" stroke="#d4d4d4" stroke-width="1" fill="none" class="h-flow-line"/>
+            <path d="M 600 300 L 620 300 Q 630 300 630 310 L 630 310 Q 630 310 640 310" stroke="#d4d4d4" stroke-width="1" fill="none" class="h-flow-line"/>
+
+            <!-- Bidirectional flow: Consumers → back to MQTT (via UNS) -->
+            <path d="M 640 230 L 625 230 Q 615 230 615 240 L 615 380 Q 615 390 605 390 L 280 390 Q 270 390 270 380 L 270 250 Q 270 240 260 240 L 250 240" stroke="#d4d4d4" stroke-width="1" fill="none" class="h-flow-line"/>
+            <!-- Reverse data packets (consumers publishing back) -->
+            <circle r="2.5" fill="#0a0a0a" style="offset-path: path('M 640 230 L 625 230 Q 615 230 615 240 L 615 380 Q 615 390 605 390 L 280 390 Q 270 390 270 380 L 270 250 Q 270 240 260 240 L 250 240');" class="h-packet h-packet-d3"/>
 
             <!-- ═══ TOPIC PATH (bottom bar) ═══ -->
-            <rect
-              x="20"
-              y="394"
-              width="840"
-              height="22"
-              rx="4"
-              fill="#0a0a0a"
-            />
-            <text
-              x="440"
-              y="409"
-              font-family="'JetBrains Mono', monospace"
-              font-size="9"
-              fill="#ffffff"
-              text-anchor="middle"
-            >
-              v1.0 / aerospace-uk / precision-machining / turbine-blades /
-              cell-a / dmu-80 / spindle-speed
-            </text>
+            <rect x="20" y="412" width="840" height="22" rx="4" fill="#0a0a0a"/>
+            <text x="440" y="427" font-family="'JetBrains Mono', monospace" font-size="9" fill="#ffffff" text-anchor="middle">v1.0 / site / area / line / cell / equipment / sensor</text>
           </svg>
         </div>
 

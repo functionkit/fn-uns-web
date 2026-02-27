@@ -74,7 +74,7 @@
         gap: 32px;
       }
       nav .links a {
-        color: var(--grey-500);
+        color: var(--grey-700);
         text-decoration: none;
         font-size: 14px;
         font-weight: 400;
@@ -102,7 +102,7 @@
         font-family: var(--font-mono);
         font-size: 12px;
         font-weight: 500;
-        color: var(--grey-400);
+        color: var(--grey-700);
         letter-spacing: 0.08em;
         text-transform: uppercase;
         margin-bottom: 16px;
@@ -117,7 +117,7 @@
       section .lead {
         font-size: 17px;
         font-weight: 400;
-        color: var(--grey-500);
+        color: var(--grey-700);
         max-width: 560px;
         line-height: 1.7;
         margin-bottom: 56px;
@@ -187,44 +187,100 @@
       .hero-content .subtitle {
         font-size: 18px;
         font-weight: 400;
-        color: var(--grey-500);
+        color: var(--grey-700);
         line-height: 1.65;
         margin-bottom: 36px;
         max-width: 480px;
       }
       .hero-visual {
-        background: var(--grey-950);
-        border-radius: 16px;
-        padding: 32px;
-        font-family: var(--font-mono);
-        font-size: 13px;
-        line-height: 2;
-        color: var(--grey-400);
-        overflow: hidden;
-        box-shadow: 0 24px 48px rgba(0, 0, 0, 0.12);
+        position: relative;
+        width: 100%;
+        max-width: 520px;
       }
-      .hero-visual .prompt {
-        color: var(--grey-700);
+      .hero-visual svg {
+        width: 100%;
+        height: auto;
+        display: block;
       }
-      .hero-visual .cmd {
-        color: var(--grey-400);
+      /* Infographic animations */
+      @keyframes pulse-dot {
+        0%, 100% { opacity: 0.35; }
+        50% { opacity: 1; }
       }
-      .hero-visual .accent {
-        color: var(--grey-300);
-        font-weight: 500;
+      @keyframes flow-dash {
+        to { stroke-dashoffset: -12; }
       }
-      .hero-visual .comment {
-        color: var(--grey-600);
+      @keyframes data-packet {
+        0% { offset-distance: 0%; opacity: 0; }
+        10% { opacity: 1; }
+        90% { opacity: 1; }
+        100% { offset-distance: 100%; opacity: 0; }
       }
-      .hero-visual .output {
-        color: var(--grey-500);
+      @keyframes fade-up-in {
+        0% { opacity: 0; transform: translateY(8px); }
+        100% { opacity: 1; transform: translateY(0); }
       }
-      .hero-visual .key {
-        color: var(--grey-500);
+      @keyframes glow-border {
+        0%, 100% { stroke: #e5e5e5; }
+        50% { stroke: #0a0a0a; }
       }
-      .hero-visual .val {
-        color: var(--grey-400);
+      @keyframes kpi-count {
+        0% { opacity: 0; transform: translateY(4px); }
+        100% { opacity: 1; transform: translateY(0); }
       }
+      .ig-flow-line {
+        stroke-dasharray: 4 8;
+        animation: flow-dash 1.2s linear infinite;
+      }
+      .ig-pulse {
+        animation: pulse-dot 2.4s ease-in-out infinite;
+      }
+      .ig-pulse-d1 { animation-delay: 0s; }
+      .ig-pulse-d2 { animation-delay: 0.6s; }
+      .ig-pulse-d3 { animation-delay: 1.2s; }
+      .ig-pulse-d4 { animation-delay: 1.8s; }
+      /* Data packet dots travelling along paths */
+      .ig-packet {
+        offset-rotate: 0deg;
+        animation: data-packet 2.4s ease-in-out infinite;
+      }
+      .ig-packet-d1 { animation-delay: 0s; }
+      .ig-packet-d2 { animation-delay: 0.8s; }
+      .ig-packet-d3 { animation-delay: 1.6s; }
+      .ig-packet-d4 { animation-delay: 0.4s; }
+      .ig-packet-d5 { animation-delay: 1.2s; }
+      /* Function card highlight on "process" */
+      .ig-fn-highlight {
+        animation: glow-border 3s ease-in-out infinite;
+      }
+      .ig-fn-highlight:nth-child(2) { animation-delay: 0.6s; }
+      .ig-fn-highlight:nth-child(3) { animation-delay: 1.2s; }
+      .ig-fn-highlight:nth-child(4) { animation-delay: 1.8s; }
+      .ig-fn-highlight:nth-child(5) { animation-delay: 2.4s; }
+      /* KPI values fade in staggered */
+      .ig-kpi-row {
+        animation: kpi-count 0.6s ease-out both;
+      }
+      .ig-kpi-d1 { animation-delay: 2.0s; }
+      .ig-kpi-d2 { animation-delay: 2.2s; }
+      .ig-kpi-d3 { animation-delay: 2.4s; }
+      .ig-kpi-d4 { animation-delay: 2.6s; }
+      .ig-kpi-d5 { animation-delay: 2.8s; }
+      /* Stage labels fade in */
+      .ig-stage-label {
+        animation: fade-up-in 0.5s ease-out both;
+      }
+      .ig-stage-l1 { animation-delay: 0.1s; }
+      .ig-stage-l2 { animation-delay: 0.3s; }
+      .ig-stage-l3 { animation-delay: 0.5s; }
+      /* Machine cards stagger in */
+      .ig-machine-card {
+        animation: fade-up-in 0.4s ease-out both;
+      }
+      .ig-mc-d1 { animation-delay: 0.2s; }
+      .ig-mc-d2 { animation-delay: 0.35s; }
+      .ig-mc-d3 { animation-delay: 0.5s; }
+      .ig-mc-d4 { animation-delay: 0.65s; }
 
       /* PROBLEM SECTION */
       .problem-grid {
@@ -242,7 +298,7 @@
       .problem-before h3 {
         font-size: 14px;
         font-weight: 600;
-        color: var(--grey-400);
+        color: var(--grey-700);
         text-transform: uppercase;
         letter-spacing: 0.06em;
         margin-bottom: 20px;
@@ -250,7 +306,7 @@
       .spaghetti-line {
         font-family: var(--font-mono);
         font-size: 13px;
-        color: var(--grey-400);
+        color: var(--grey-700);
         padding: 8px 0;
         border-bottom: 1px solid var(--grey-100);
         display: flex;
@@ -261,7 +317,7 @@
         border-bottom: none;
       }
       .spaghetti-line .arrow {
-        color: var(--grey-300);
+        color: var(--grey-600);
       }
       .problem-after h3 {
         font-size: 14px;
@@ -286,7 +342,7 @@
       }
       .uns-hub-sub {
         font-size: 13px;
-        color: var(--grey-500);
+        color: var(--grey-700);
         margin-top: 4px;
       }
       .spoke-grid {
@@ -300,7 +356,7 @@
         background: var(--grey-50);
         border-radius: 8px;
         font-size: 12px;
-        color: var(--grey-600);
+        color: var(--grey-700);
       }
 
       /* STATS ROW */
@@ -329,7 +385,7 @@
       }
       .stat-label {
         font-size: 13px;
-        color: var(--grey-500);
+        color: var(--grey-700);
       }
 
       /* HOW IT WORKS */
@@ -347,7 +403,7 @@
       }
       .how-text p {
         font-size: 15px;
-        color: var(--grey-500);
+        color: var(--grey-700);
         line-height: 1.7;
         margin-bottom: 20px;
       }
@@ -357,7 +413,7 @@
       }
       .how-text ul li {
         font-size: 14px;
-        color: var(--grey-600);
+        color: var(--grey-700);
         padding: 8px 0;
         border-bottom: 1px solid var(--grey-100);
         display: flex;
@@ -382,7 +438,7 @@
         box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
       }
       .topic-tree .level {
-        color: var(--grey-400);
+        color: var(--grey-700);
       }
       .topic-tree .value {
         color: var(--black);
@@ -411,7 +467,7 @@
         font-family: var(--font-mono);
         font-size: 11px;
         font-weight: 600;
-        color: var(--grey-400);
+        color: var(--grey-700);
         letter-spacing: 0.08em;
         margin-bottom: 12px;
       }
@@ -423,7 +479,7 @@
       }
       .arch-stage p {
         font-size: 14px;
-        color: var(--grey-500);
+        color: var(--grey-700);
         line-height: 1.6;
         margin-bottom: 16px;
       }
@@ -438,7 +494,7 @@
         padding: 3px 10px;
         border: 1px solid var(--grey-200);
         border-radius: 6px;
-        color: var(--grey-600);
+        color: var(--grey-700);
       }
       .arch-arrow {
         display: flex;
@@ -449,7 +505,7 @@
       }
       .arch-detail {
         font-size: 14px;
-        color: var(--grey-500);
+        color: var(--grey-700);
         line-height: 1.7;
         max-width: 700px;
       }
@@ -490,14 +546,14 @@
         font-family: var(--font-mono);
         font-size: 10px;
         font-weight: 500;
-        color: var(--grey-400);
+        color: var(--grey-700);
         background: var(--grey-100);
         padding: 3px 10px;
         border-radius: 100px;
       }
       .card-desc {
         font-size: 13px;
-        color: var(--grey-500);
+        color: var(--grey-700);
         line-height: 1.55;
       }
 
@@ -523,7 +579,7 @@
       }
       .value-card p {
         font-size: 13px;
-        color: var(--grey-500);
+        color: var(--grey-700);
         line-height: 1.6;
       }
 
@@ -550,7 +606,7 @@
         font-weight: 500;
       }
       .code-block .cm {
-        color: var(--grey-600);
+        color: var(--grey-400);
       }
       .code-block .str {
         color: var(--grey-300);
@@ -564,14 +620,14 @@
       }
       .code-annotation p {
         font-size: 15px;
-        color: var(--grey-500);
+        color: var(--grey-700);
         line-height: 1.7;
         margin-bottom: 16px;
       }
       .code-annotation .stat-line {
         font-family: var(--font-mono);
         font-size: 12px;
-        color: var(--grey-400);
+        color: var(--grey-700);
         padding-top: 16px;
         border-top: 1px solid var(--grey-200);
       }
@@ -606,12 +662,12 @@
       }
       .kpi-sub {
         font-size: 12px;
-        color: var(--grey-400);
+        color: var(--grey-700);
       }
       .api-line {
         font-family: var(--font-mono);
         font-size: 13px;
-        color: var(--grey-400);
+        color: var(--grey-700);
         padding: 16px 0;
       }
       .api-line .url {
@@ -642,7 +698,7 @@
         margin-bottom: 24px;
         padding-bottom: 12px;
         border-bottom: 2px solid var(--grey-200);
-        color: var(--grey-400);
+        color: var(--grey-700);
       }
       .compare-col:last-child h3 {
         border-color: var(--black);
@@ -664,7 +720,7 @@
         border-bottom: none;
       }
       .compare-col:first-child ul li {
-        color: var(--grey-400);
+        color: var(--grey-700);
       }
       .icon-x,
       .icon-check {
@@ -680,7 +736,7 @@
       }
       .icon-x {
         background: var(--grey-200);
-        color: var(--grey-400);
+        color: var(--grey-700);
       }
       .icon-check {
         background: var(--black);
@@ -708,7 +764,7 @@
         font-family: var(--font-mono);
         font-size: 11px;
         font-weight: 600;
-        color: var(--grey-400);
+        color: var(--grey-700);
         letter-spacing: 0.08em;
         margin-bottom: 16px;
       }
@@ -721,12 +777,12 @@
       .stack-url {
         font-family: var(--font-mono);
         font-size: 12px;
-        color: var(--grey-400);
+        color: var(--grey-700);
         margin-bottom: 16px;
       }
       .stack-card p {
         font-size: 14px;
-        color: var(--grey-500);
+        color: var(--grey-700);
         line-height: 1.65;
         margin-bottom: 20px;
       }
@@ -756,13 +812,13 @@
         box-shadow: 0 24px 48px rgba(0, 0, 0, 0.08);
       }
       .start-terminal .prompt {
-        color: var(--grey-600);
+        color: var(--grey-400);
       }
       .start-terminal .cmd {
         color: var(--grey-300);
       }
       .start-terminal .comment {
-        color: var(--grey-600);
+        color: var(--grey-400);
       }
 
       /* FADE */
@@ -788,10 +844,10 @@
         justify-content: space-between;
         align-items: center;
         font-size: 13px;
-        color: var(--grey-400);
+        color: var(--grey-700);
       }
       footer a {
-        color: var(--grey-500);
+        color: var(--grey-700);
         text-decoration: none;
         transition: color 0.2s;
       }
@@ -1250,42 +1306,199 @@
           </div>
         </div>
         <div class="hero-visual">
-          <div>
-            <span class="comment"
-              ># Machine data flows through MQTT topics</span
-            >
-          </div>
-          <div>
-            v1.0/enterprise/site1/area1/<span class="accent">cnc-01</span
-            >/status
-          </div>
-          <div>
-            <span class="output"
-              >→ { <span class="key">"status"</span>:
-              <span class="val">"ACTIVE"</span> }</span
-            >
-          </div>
-          <div>
-            v1.0/enterprise/site1/area1/<span class="accent">cnc-02</span
-            >/program
-          </div>
-          <div>
-            <span class="output"
-              >→ { <span class="key">"program"</span>:
-              <span class="val">"OP-4521"</span>,
-              <span class="key">"parts"</span>:
-              <span class="val">47</span> }</span
-            >
-          </div>
-          <div>&nbsp;</div>
-          <div><span class="comment"># One API call → all KPIs</span></div>
-          <div>
-            <span class="prompt">$</span>
-            <span class="cmd">curl /uns-kpi?hours=8</span>
-          </div>
-          <div><span class="output">{ "utilisation_pct": 72.0,</span></div>
-          <div><span class="output"> "availability_pct": 94.2,</span></div>
-          <div><span class="output"> "mtbf_minutes": 142.0 }</span></div>
+          <svg viewBox="0 0 520 480" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <!-- Background card -->
+            <rect x="0" y="0" width="520" height="480" rx="16" fill="#fafafa" stroke="#e5e5e5" stroke-width="1"/>
+
+            <!-- ═══ STAGE LABELS ═══ -->
+            <text x="60" y="32" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="600" fill="#a3a3a3" letter-spacing="0.08em" class="ig-stage-label ig-stage-l1">CAPTURE</text>
+            <text x="222" y="32" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="600" fill="#a3a3a3" letter-spacing="0.08em" class="ig-stage-label ig-stage-l2">PROCESS</text>
+            <text x="410" y="32" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="600" fill="#a3a3a3" letter-spacing="0.08em" class="ig-stage-label ig-stage-l3">REPORT</text>
+
+            <!-- Vertical stage dividers -->
+            <line x1="180" y1="20" x2="180" y2="390" stroke="#e5e5e5" stroke-width="1" stroke-dasharray="4 4"/>
+            <line x1="370" y1="20" x2="370" y2="390" stroke="#e5e5e5" stroke-width="1" stroke-dasharray="4 4"/>
+
+            <!-- ═══ DATA PACKET PATHS (invisible, used for offset-path) ═══ -->
+            <defs>
+              <!-- Machine → MQTT vertical path -->
+              <path id="path-m-mqtt" d="M 90 108 L 90 324"/>
+              <!-- MQTT → Valkey L-shaped path -->
+              <path id="path-mqtt-valkey" d="M 156 350 L 175 350 Q 185 350 185 340 L 185 84 Q 185 74 195 74 L 275 74"/>
+              <!-- Valkey → Functions vertical path -->
+              <path id="path-valkey-fn" d="M 275 112 L 275 352"/>
+              <!-- Functions → PostgreSQL path -->
+              <path id="path-fn-pg" d="M 352 200 L 365 200 Q 375 200 375 190 L 375 84 Q 375 74 385 74 L 442 74"/>
+              <!-- PostgreSQL → KPI path -->
+              <path id="path-pg-kpi" d="M 442 112 L 442 174"/>
+              <!-- KPI → Output path -->
+              <path id="path-kpi-out" d="M 442 200 L 442 302"/>
+            </defs>
+
+            <!-- ═══ TRAVELLING DATA PACKETS ═══ -->
+            <!-- Machines → MQTT -->
+            <circle r="3" fill="#0a0a0a" style="offset-path: path('M 90 108 L 90 324');" class="ig-packet ig-packet-d1"/>
+            <circle r="3" fill="#0a0a0a" style="offset-path: path('M 90 108 L 90 324');" class="ig-packet ig-packet-d3"/>
+            <!-- MQTT → Valkey -->
+            <circle r="3" fill="#0a0a0a" style="offset-path: path('M 156 350 L 175 350 Q 185 350 185 340 L 185 84 Q 185 74 195 74 L 275 74');" class="ig-packet ig-packet-d2"/>
+            <circle r="3" fill="#0a0a0a" style="offset-path: path('M 156 350 L 175 350 Q 185 350 185 340 L 185 84 Q 185 74 195 74 L 275 74');" class="ig-packet ig-packet-d4"/>
+            <!-- Valkey → Functions -->
+            <circle r="2.5" fill="#0a0a0a" style="offset-path: path('M 275 112 L 275 352');" class="ig-packet ig-packet-d1"/>
+            <circle r="2.5" fill="#0a0a0a" style="offset-path: path('M 275 112 L 275 352');" class="ig-packet ig-packet-d5"/>
+            <!-- Functions → PostgreSQL -->
+            <circle r="2.5" fill="#0a0a0a" style="offset-path: path('M 352 200 L 365 200 Q 375 200 375 190 L 375 84 Q 375 74 385 74 L 442 74');" class="ig-packet ig-packet-d3"/>
+            <circle r="2.5" fill="#0a0a0a" style="offset-path: path('M 352 200 L 365 200 Q 375 200 375 190 L 375 84 Q 375 74 385 74 L 442 74');" class="ig-packet ig-packet-d5"/>
+            <!-- PostgreSQL → KPI -->
+            <circle r="2.5" fill="#ffffff" style="offset-path: path('M 442 112 L 442 174');" class="ig-packet ig-packet-d2"/>
+            <!-- KPI → Output -->
+            <circle r="2.5" fill="#0a0a0a" style="offset-path: path('M 442 200 L 442 302');" class="ig-packet ig-packet-d4"/>
+
+            <!-- ═══ MACHINES (left column) ═══ -->
+            <!-- CNC-01 -->
+            <rect x="24" y="56" width="132" height="52" rx="8" fill="#ffffff" stroke="#e5e5e5" stroke-width="1" class="ig-machine-card ig-mc-d1"/>
+            <circle cx="42" cy="82" r="5" fill="#0a0a0a" class="ig-pulse ig-pulse-d1"/>
+            <text x="54" y="78" font-family="'JetBrains Mono', monospace" font-size="11" font-weight="600" fill="#0a0a0a">cnc-01</text>
+            <text x="54" y="94" font-family="'JetBrains Mono', monospace" font-size="9" fill="#737373">ACTIVE</text>
+
+            <!-- CNC-02 -->
+            <rect x="24" y="120" width="132" height="52" rx="8" fill="#ffffff" stroke="#e5e5e5" stroke-width="1"/>
+            <circle cx="42" cy="146" r="5" fill="#0a0a0a" class="ig-pulse ig-pulse-d2"/>
+            <text x="54" y="142" font-family="'JetBrains Mono', monospace" font-size="11" font-weight="600" fill="#0a0a0a">cnc-02</text>
+            <text x="54" y="158" font-family="'JetBrains Mono', monospace" font-size="9" fill="#737373">IDLE</text>
+
+            <!-- CNC-03 -->
+            <rect x="24" y="184" width="132" height="52" rx="8" fill="#ffffff" stroke="#e5e5e5" stroke-width="1"/>
+            <circle cx="42" cy="210" r="5" fill="#0a0a0a" class="ig-pulse ig-pulse-d3"/>
+            <text x="54" y="206" font-family="'JetBrains Mono', monospace" font-size="11" font-weight="600" fill="#0a0a0a">cnc-03</text>
+            <text x="54" y="222" font-family="'JetBrains Mono', monospace" font-size="9" fill="#737373">ACTIVE</text>
+
+            <!-- CNC-04 -->
+            <rect x="24" y="248" width="132" height="52" rx="8" fill="#ffffff" stroke="#e5e5e5" stroke-width="1"/>
+            <circle cx="42" cy="274" r="5" fill="#0a0a0a" class="ig-pulse ig-pulse-d4"/>
+            <text x="54" y="270" font-family="'JetBrains Mono', monospace" font-size="11" font-weight="600" fill="#0a0a0a">cnc-04</text>
+            <text x="54" y="286" font-family="'JetBrains Mono', monospace" font-size="9" fill="#737373">ALARM</text>
+
+            <!-- ═══ MQTT BROKER (centre-left) ═══ -->
+            <rect x="24" y="324" width="132" height="52" rx="8" fill="#0a0a0a"/>
+            <text x="90" y="347" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="600" fill="#ffffff" text-anchor="middle">MQTT</text>
+            <text x="90" y="363" font-family="'JetBrains Mono', monospace" font-size="8" fill="#a3a3a3" text-anchor="middle">Broker</text>
+
+            <!-- Flow lines: machines → MQTT -->
+            <line x1="90" y1="108" x2="90" y2="120" stroke="#d4d4d4" stroke-width="1" class="ig-flow-line"/>
+            <line x1="90" y1="172" x2="90" y2="184" stroke="#d4d4d4" stroke-width="1" class="ig-flow-line"/>
+            <line x1="90" y1="236" x2="90" y2="248" stroke="#d4d4d4" stroke-width="1" class="ig-flow-line"/>
+            <line x1="90" y1="300" x2="90" y2="324" stroke="#d4d4d4" stroke-width="1" class="ig-flow-line"/>
+
+            <!-- ═══ VALKEY CACHE (centre) ═══ -->
+            <rect x="198" y="56" width="154" height="56" rx="8" fill="#ffffff" stroke="#0a0a0a" stroke-width="1.5"/>
+            <text x="275" y="79" font-family="'JetBrains Mono', monospace" font-size="11" font-weight="600" fill="#0a0a0a" text-anchor="middle">Valkey Cache</text>
+            <text x="275" y="97" font-family="'JetBrains Mono', monospace" font-size="8" fill="#737373" text-anchor="middle">uns:data:* · uns:prev:*</text>
+
+            <!-- Flow line: MQTT → Valkey (via uns-framework) -->
+            <path d="M 156 350 L 175 350 Q 185 350 185 340 L 185 84 Q 185 74 195 74 L 198 74" stroke="#d4d4d4" stroke-width="1" fill="none" class="ig-flow-line"/>
+            <text x="170" y="345" font-family="'JetBrains Mono', monospace" font-size="7" fill="#a3a3a3" transform="rotate(-90 170 345)">uns-framework</text>
+
+            <!-- ═══ PROCESSING FUNCTIONS (centre column) ═══ -->
+            <!-- uns-state -->
+            <rect x="198" y="132" width="154" height="40" rx="6" fill="#ffffff" stroke="#e5e5e5" stroke-width="1" class="ig-fn-highlight"/>
+            <text x="214" y="157" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="500" fill="#0a0a0a">uns-state</text>
+            <text x="336" y="157" font-family="'JetBrains Mono', monospace" font-size="8" fill="#a3a3a3" text-anchor="end">Go</text>
+
+            <!-- uns-stoppage -->
+            <rect x="198" y="182" width="154" height="40" rx="6" fill="#ffffff" stroke="#e5e5e5" stroke-width="1" class="ig-fn-highlight" style="animation-delay: 0.6s"/>
+            <text x="214" y="207" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="500" fill="#0a0a0a">uns-stoppage</text>
+            <text x="336" y="207" font-family="'JetBrains Mono', monospace" font-size="8" fill="#a3a3a3" text-anchor="end">Node</text>
+
+            <!-- uns-productivity -->
+            <rect x="198" y="232" width="154" height="40" rx="6" fill="#ffffff" stroke="#e5e5e5" stroke-width="1" class="ig-fn-highlight" style="animation-delay: 1.2s"/>
+            <text x="214" y="257" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="500" fill="#0a0a0a">uns-productivity</text>
+            <text x="336" y="257" font-family="'JetBrains Mono', monospace" font-size="8" fill="#a3a3a3" text-anchor="end">Go</text>
+
+            <!-- uns-log -->
+            <rect x="198" y="282" width="154" height="40" rx="6" fill="#ffffff" stroke="#e5e5e5" stroke-width="1" class="ig-fn-highlight" style="animation-delay: 1.8s"/>
+            <text x="214" y="307" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="500" fill="#0a0a0a">uns-log</text>
+            <text x="336" y="307" font-family="'JetBrains Mono', monospace" font-size="8" fill="#a3a3a3" text-anchor="end">Go</text>
+
+            <!-- uns-input -->
+            <rect x="198" y="332" width="154" height="40" rx="6" fill="#ffffff" stroke="#e5e5e5" stroke-width="1" class="ig-fn-highlight" style="animation-delay: 2.4s"/>
+            <text x="214" y="357" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="500" fill="#0a0a0a">uns-input</text>
+            <text x="336" y="357" font-family="'JetBrains Mono', monospace" font-size="8" fill="#a3a3a3" text-anchor="end">Node</text>
+
+            <!-- Flow lines: Valkey → processing functions -->
+            <line x1="275" y1="112" x2="275" y2="132" stroke="#d4d4d4" stroke-width="1" class="ig-flow-line"/>
+            <line x1="275" y1="172" x2="275" y2="182" stroke="#d4d4d4" stroke-width="1" class="ig-flow-line"/>
+            <line x1="275" y1="222" x2="275" y2="232" stroke="#d4d4d4" stroke-width="1" class="ig-flow-line"/>
+            <line x1="275" y1="272" x2="275" y2="282" stroke="#d4d4d4" stroke-width="1" class="ig-flow-line"/>
+            <line x1="275" y1="322" x2="275" y2="332" stroke="#d4d4d4" stroke-width="1" class="ig-flow-line"/>
+
+            <!-- ═══ POSTGRESQL (right column, top) ═══ -->
+            <rect x="388" y="56" width="108" height="56" rx="8" fill="#ffffff" stroke="#0a0a0a" stroke-width="1.5"/>
+            <text x="442" y="79" font-family="'JetBrains Mono', monospace" font-size="11" font-weight="600" fill="#0a0a0a" text-anchor="middle">PostgreSQL</text>
+            <text x="442" y="97" font-family="'JetBrains Mono', monospace" font-size="8" fill="#737373" text-anchor="middle">4 tables</text>
+
+            <!-- Flow lines: processing → PostgreSQL -->
+            <path d="M 352 152 L 365 152 Q 375 152 375 142 L 375 84 Q 375 74 385 74 L 388 74" stroke="#d4d4d4" stroke-width="1" fill="none" class="ig-flow-line"/>
+            <path d="M 352 202 L 365 202 Q 375 202 375 192 L 375 90 Q 375 80 385 80 L 388 80" stroke="#d4d4d4" stroke-width="1" fill="none" class="ig-flow-line"/>
+            <path d="M 352 252 L 365 252 Q 375 252 375 242 L 375 92 Q 375 82 385 82 L 388 82" stroke="#d4d4d4" stroke-width="1" fill="none" class="ig-flow-line"/>
+            <path d="M 352 302 L 365 302 Q 375 302 375 292 L 375 94 Q 375 84 385 84 L 388 84" stroke="#d4d4d4" stroke-width="1" fill="none" class="ig-flow-line"/>
+
+            <!-- ═══ UNS-KPI (right column, centre) ═══ -->
+            <rect x="388" y="148" width="108" height="52" rx="8" fill="#0a0a0a"/>
+            <text x="442" y="171" font-family="'JetBrains Mono', monospace" font-size="11" font-weight="600" fill="#ffffff" text-anchor="middle">uns-kpi</text>
+            <text x="442" y="187" font-family="'JetBrains Mono', monospace" font-size="8" fill="#a3a3a3" text-anchor="middle">Go · HTTP</text>
+
+            <!-- Flow line: PostgreSQL → uns-kpi -->
+            <line x1="442" y1="112" x2="442" y2="148" stroke="#d4d4d4" stroke-width="1" class="ig-flow-line"/>
+
+            <!-- ═══ KPI OUTPUT (right column, bottom) ═══ -->
+            <rect x="388" y="224" width="108" height="156" rx="8" fill="#ffffff" stroke="#e5e5e5" stroke-width="1"/>
+
+            <!-- Flow line: uns-kpi → KPI output -->
+            <line x1="442" y1="200" x2="442" y2="224" stroke="#d4d4d4" stroke-width="1" class="ig-flow-line"/>
+
+            <g class="ig-kpi-row ig-kpi-d1">
+              <text x="404" y="248" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="600" fill="#0a0a0a">72%</text>
+              <text x="444" y="248" font-family="'JetBrains Mono', monospace" font-size="8" fill="#737373">Utilisation</text>
+            </g>
+
+            <line x1="404" y1="258" x2="480" y2="258" stroke="#f5f5f5" stroke-width="1"/>
+
+            <g class="ig-kpi-row ig-kpi-d2">
+              <text x="404" y="276" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="600" fill="#0a0a0a">94%</text>
+              <text x="444" y="276" font-family="'JetBrains Mono', monospace" font-size="7" fill="#737373">Availability</text>
+            </g>
+
+            <line x1="404" y1="286" x2="480" y2="286" stroke="#f5f5f5" stroke-width="1"/>
+
+            <g class="ig-kpi-row ig-kpi-d3">
+              <text x="404" y="304" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="600" fill="#0a0a0a">48/hr</text>
+              <text x="444" y="304" font-family="'JetBrains Mono', monospace" font-size="8" fill="#737373">Throughput</text>
+            </g>
+
+            <line x1="404" y1="314" x2="480" y2="314" stroke="#f5f5f5" stroke-width="1"/>
+
+            <g class="ig-kpi-row ig-kpi-d4">
+              <text x="404" y="332" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="600" fill="#0a0a0a">142m</text>
+              <text x="444" y="332" font-family="'JetBrains Mono', monospace" font-size="8" fill="#737373">MTBF</text>
+            </g>
+
+            <line x1="404" y1="342" x2="480" y2="342" stroke="#f5f5f5" stroke-width="1"/>
+
+            <g class="ig-kpi-row ig-kpi-d5">
+              <text x="404" y="360" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="600" fill="#0a0a0a">8.3m</text>
+              <text x="444" y="360" font-family="'JetBrains Mono', monospace" font-size="8" fill="#737373">MTTR</text>
+            </g>
+
+            <line x1="404" y1="370" x2="480" y2="370" stroke="#f5f5f5" stroke-width="1"/>
+
+            <!-- ═══ TOPIC PATH (bottom bar) ═══ -->
+            <rect x="24" y="404" width="472" height="52" rx="8" fill="#0a0a0a"/>
+            <text x="260" y="426" font-family="'JetBrains Mono', monospace" font-size="9" fill="#737373" text-anchor="middle">ISA-95 TOPIC HIERARCHY</text>
+            <text x="260" y="444" font-family="'JetBrains Mono', monospace" font-size="10" fill="#ffffff" text-anchor="middle">v1.0 / enterprise / site1 / area1 / cnc-01 / status</text>
+
+            <!-- ═══ DEPLOY BADGE ═══ -->
+            <rect x="24" y="466" width="472" height="0" rx="0" fill="none"/>
+          </svg>
         </div>
       </div>
     </div>
@@ -1330,7 +1543,7 @@
             <p
               style="
                 font-size: 13px;
-                color: var(--grey-400);
+                color: var(--grey-700);
                 margin-top: 16px;
                 line-height: 1.5;
               "
@@ -1361,7 +1574,7 @@
             <p
               style="
                 font-size: 13px;
-                color: var(--grey-500);
+                color: var(--grey-700);
                 margin-top: 16px;
                 line-height: 1.5;
               "
@@ -1430,10 +1643,10 @@
             <div class="stack-url">fnkit.dev</div>
             <p>
               A lightweight Functions-as-a-Service platform that runs anywhere
-              Docker runs. Write functions in any language — Go, Node.js, Python
-              — scaffold with one command, deploy via git push. fnkit handles
-              the gateway, routing, TLS, caching, and GitOps workflow. No cloud
-              vendor required.
+              Containers runs. Write functions in any language — Go, Node.js,
+              Python — scaffold with one command, deploy via git push. fnkit
+              handles the gateway, routing, TLS, caching, and GitOps workflow.
+              No cloud vendor required.
             </p>
             <div class="stack-role">Provides the platform</div>
           </div>
@@ -1462,29 +1675,62 @@
         <div class="section-label">How It Works</div>
         <h2>Structured data. Serverless functions. Git push to deploy.</h2>
         <p class="lead">
-          Three ideas come together: an ISA-95 topic hierarchy gives every data point a canonical address, lightweight functions process the data, and MQTT connects everything in real time.
+          Three ideas come together: an ISA-95 topic hierarchy gives every data
+          point a canonical address, lightweight functions process the data, and
+          MQTT connects everything in real time.
         </p>
 
         <div class="how-grid">
           <div class="how-text">
             <h3>ISA-95 Topic Hierarchy</h3>
             <p>
-              All data is organised using the ISA-95 international standard — a structured path from enterprise down to individual data points. The hierarchy is self-describing: any consumer can parse the topic path to understand where data comes from without mapping tables or documentation.
+              All data is organised using the ISA-95 international standard — a
+              structured path from enterprise down to individual data points.
+              The hierarchy is self-describing: any consumer can parse the topic
+              path to understand where data comes from without mapping tables or
+              documentation.
             </p>
 
             <h3>Publish / Subscribe Messaging</h3>
             <p>
-              MQTT decouples producers from consumers. Machines publish to topics, applications subscribe to what they need. The broker handles delivery. Adding a new machine means publishing to a new topic — the entire pipeline picks it up automatically.
+              MQTT decouples producers from consumers. Machines publish to
+              topics, applications subscribe to what they need. The broker
+              handles delivery. Adding a new machine means publishing to a new
+              topic — the entire pipeline picks it up automatically.
             </p>
 
             <h3>Serverless Functions</h3>
             <p>
-              Each piece of logic is a small, independent function — Go or Node.js. No monolithic platform, no flow builder. Functions read from a shared cache, write to PostgreSQL, and compose through infrastructure rather than through each other.
+              Each piece of logic is a small, independent function — Go or
+              Node.js. No monolithic platform, no flow builder. Functions read
+              from a shared cache, write to PostgreSQL, and compose through
+              infrastructure rather than through each other.
             </p>
 
             <h3>GitOps Deployment</h3>
             <p>
-              Every function is version controlled. Deploy with <code style="font-family:var(--font-mono);font-size:12px;background:var(--grey-100);padding:2px 6px;border-radius:4px">git push</code>. Roll back with <code style="font-family:var(--font-mono);font-size:12px;background:var(--grey-100);padding:2px 6px;border-radius:4px">git revert</code>. Full audit trail, code review, and CI/CD — the same workflow your software team already uses.
+              Every function is version controlled. Deploy with
+              <code
+                style="
+                  font-family: var(--font-mono);
+                  font-size: 12px;
+                  background: var(--grey-100);
+                  padding: 2px 6px;
+                  border-radius: 4px;
+                "
+                >git push</code
+              >. Roll back with
+              <code
+                style="
+                  font-family: var(--font-mono);
+                  font-size: 12px;
+                  background: var(--grey-100);
+                  padding: 2px 6px;
+                  border-radius: 4px;
+                "
+                >git revert</code
+              >. Full audit trail, code review, and CI/CD — the same workflow
+              your software team already uses.
             </p>
           </div>
 
@@ -1508,22 +1754,28 @@
             <p
               style="
                 font-size: 13px;
-                color: var(--grey-400);
+                color: var(--grey-700);
                 margin-top: 24px;
                 line-height: 1.6;
               "
             >
-              <strong style="color: var(--grey-600)">The data flow:</strong> Machines publish → MQTT broker distributes → Functions cache in Valkey → Functions detect changes and write to PostgreSQL → KPI functions query and compute on demand.
+              <strong style="color: var(--grey-700)">The data flow:</strong>
+              Machines publish → MQTT broker distributes → Functions cache in
+              Valkey → Functions detect changes and write to PostgreSQL → KPI
+              functions query and compute on demand.
             </p>
             <p
               style="
                 font-size: 13px;
-                color: var(--grey-400);
+                color: var(--grey-700);
                 margin-top: 12px;
                 line-height: 1.6;
               "
             >
-              <strong style="color: var(--grey-600)">The deploy flow:</strong> Write code → git commit → git push → fnkit builds container → running in production. No manual server management, no UI configuration.
+              <strong style="color: var(--grey-700)">The deploy flow:</strong>
+              Write code → git commit → git push → fnkit builds container →
+              running in production. No manual server management, no UI
+              configuration.
             </p>
           </div>
         </div>
@@ -1588,9 +1840,8 @@
         </div>
 
         <p class="arch-detail">
-          All functions run as <strong>Docker containers</strong> on a shared
-          network. External access goes through
-          <strong>Caddy</strong> (automatic TLS) →
+          All functions run as <strong>Containers</strong> on a shared network.
+          External access goes through <strong>Caddy</strong> (automatic TLS) →
           <strong>fnkit-gateway</strong> (auth, routing, rate limiting).
           Internal communication happens directly between containers. Deployed
           via <strong>git push</strong> using fnkit's GitOps workflow.
@@ -1784,7 +2035,10 @@
         </p>
 
         <div class="code-layout">
-          <div class="code-block"><pre style="margin:0;font:inherit;white-space:pre"><span class="cm">// Read current + previous for every topic</span>
+          <div class="code-block">
+            <pre
+              style="margin: 0; font: inherit; white-space: pre"
+            ><span class="cm">// Read current + previous for every topic</span>
 <span class="kw">const</span> pipe = rdb.pipeline()
 
 <span class="kw">for</span> (<span class="kw">const</span> topic <span class="kw">of</span> topics) {
@@ -1795,17 +2049,34 @@
 <span class="kw">const</span> results = <span class="kw">await</span> pipe.exec()
 
 <span class="cm">// Did the value change?</span>
-<span class="kw">const</span> changed = current !== previous</pre></div>
+<span class="kw">const</span> changed = current !== previous</pre>
+          </div>
           <div class="code-annotation">
             <h3>Current value. Previous value. Change detection. One call.</h3>
             <p>
-              The cache stores two versions of every topic — current and previous. A single pipelined read returns both, plus metadata. The <code style="font-family:var(--font-mono);font-size:13px;background:var(--grey-100);padding:2px 8px;border-radius:4px">changed</code> flag tells downstream functions whether to act.
+              The cache stores two versions of every topic — current and
+              previous. A single pipelined read returns both, plus metadata. The
+              <code
+                style="
+                  font-family: var(--font-mono);
+                  font-size: 13px;
+                  background: var(--grey-100);
+                  padding: 2px 8px;
+                  border-radius: 4px;
+                "
+                >changed</code
+              >
+              flag tells downstream functions whether to act.
             </p>
             <p>
-              This is the pattern that powers the entire pipeline. State tracking, stoppage classification, production logging — they all read from this cache and only write to PostgreSQL when something actually changes.
+              This is the pattern that powers the entire pipeline. State
+              tracking, stoppage classification, production logging — they all
+              read from this cache and only write to PostgreSQL when something
+              actually changes.
             </p>
             <p>
-              Standard Node.js. Standard Redis commands. No proprietary SDK, no vendor abstraction layer.
+              Standard Node.js. Standard Redis commands. No proprietary SDK, no
+              vendor abstraction layer.
             </p>
             <div class="stat-line">
               uns-cache/index.js — the complete cache read function
@@ -1969,7 +2240,7 @@
         <p class="lead">
           Clone the repo, start the infrastructure, and verify data is flowing.
           The full UNS pipeline — from simulated machines to KPI APIs — runs
-          locally with Docker.
+          locally as a Container.
         </p>
 
         <div class="start-terminal">

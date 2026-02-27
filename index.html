@@ -1,0 +1,2078 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>fn-uns — Unified Namespace for Manufacturing</title>
+    <meta
+      name="description"
+      content="Build a real-time manufacturing data backbone using serverless functions, MQTT, and GitOps. Open source. Self-hosted. Zero vendor lock-in."
+    />
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500;700&display=swap');
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      :root {
+        --black: #0a0a0a;
+        --grey-950: #141414;
+        --grey-900: #1a1a1a;
+        --grey-800: #262626;
+        --grey-700: #404040;
+        --grey-600: #525252;
+        --grey-500: #737373;
+        --grey-400: #a3a3a3;
+        --grey-300: #d4d4d4;
+        --grey-200: #e5e5e5;
+        --grey-100: #f5f5f5;
+        --grey-50: #fafafa;
+        --white: #ffffff;
+        --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+        --font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', monospace;
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        font-family: var(--font-sans);
+        background: var(--white);
+        color: var(--black);
+        font-size: 16px;
+        line-height: 1.6;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+
+      /* NAV */
+      nav {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 100;
+        height: 56px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 48px;
+        background: rgba(255, 255, 255, 0.88);
+        backdrop-filter: blur(24px);
+        -webkit-backdrop-filter: blur(24px);
+        border-bottom: 1px solid var(--grey-200);
+      }
+      nav .logo {
+        font-family: var(--font-mono);
+        font-weight: 600;
+        font-size: 15px;
+        letter-spacing: -0.02em;
+        color: var(--black);
+      }
+      nav .links {
+        display: flex;
+        gap: 32px;
+      }
+      nav .links a {
+        color: var(--grey-500);
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 400;
+        transition: color 0.2s;
+      }
+      nav .links a:hover {
+        color: var(--black);
+      }
+
+      /* LAYOUT */
+      .container {
+        max-width: 1120px;
+        margin: 0 auto;
+        padding: 0 48px;
+      }
+      .divider {
+        width: 100%;
+        height: 1px;
+        background: var(--grey-200);
+      }
+      section {
+        padding: 120px 0;
+      }
+      .section-label {
+        font-family: var(--font-mono);
+        font-size: 12px;
+        font-weight: 500;
+        color: var(--grey-400);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        margin-bottom: 16px;
+      }
+      section h2 {
+        font-size: clamp(28px, 4vw, 42px);
+        font-weight: 700;
+        line-height: 1.12;
+        letter-spacing: -0.03em;
+        margin-bottom: 16px;
+      }
+      section .lead {
+        font-size: 17px;
+        font-weight: 400;
+        color: var(--grey-500);
+        max-width: 560px;
+        line-height: 1.7;
+        margin-bottom: 56px;
+      }
+
+      /* BUTTONS */
+      .btn-primary {
+        display: inline-flex;
+        align-items: center;
+        padding: 12px 28px;
+        background: var(--black);
+        color: var(--white);
+        font-size: 14px;
+        font-weight: 500;
+        text-decoration: none;
+        border-radius: 8px;
+        font-family: var(--font-sans);
+        transition: all 0.2s;
+        border: 1px solid var(--black);
+      }
+      .btn-primary:hover {
+        background: var(--grey-800);
+      }
+      .btn-secondary {
+        display: inline-flex;
+        align-items: center;
+        padding: 12px 28px;
+        background: transparent;
+        color: var(--black);
+        font-size: 14px;
+        font-weight: 500;
+        text-decoration: none;
+        border-radius: 8px;
+        border: 1px solid var(--grey-300);
+        font-family: var(--font-sans);
+        transition: all 0.2s;
+      }
+      .btn-secondary:hover {
+        border-color: var(--black);
+      }
+      .cta-group {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+      }
+
+      /* HERO */
+      .hero {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        padding: 56px 0 0;
+      }
+      .hero .container {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 80px;
+        align-items: center;
+      }
+      .hero-content h1 {
+        font-size: clamp(36px, 5vw, 56px);
+        font-weight: 800;
+        line-height: 1.08;
+        letter-spacing: -0.035em;
+        margin-bottom: 24px;
+      }
+      .hero-content .subtitle {
+        font-size: 18px;
+        font-weight: 400;
+        color: var(--grey-500);
+        line-height: 1.65;
+        margin-bottom: 36px;
+        max-width: 480px;
+      }
+      .hero-visual {
+        background: var(--grey-950);
+        border-radius: 16px;
+        padding: 32px;
+        font-family: var(--font-mono);
+        font-size: 13px;
+        line-height: 2;
+        color: var(--grey-400);
+        overflow: hidden;
+        box-shadow: 0 24px 48px rgba(0, 0, 0, 0.12);
+      }
+      .hero-visual .prompt {
+        color: var(--grey-700);
+      }
+      .hero-visual .cmd {
+        color: var(--grey-400);
+      }
+      .hero-visual .accent {
+        color: var(--grey-300);
+        font-weight: 500;
+      }
+      .hero-visual .comment {
+        color: var(--grey-600);
+      }
+      .hero-visual .output {
+        color: var(--grey-500);
+      }
+      .hero-visual .key {
+        color: var(--grey-500);
+      }
+      .hero-visual .val {
+        color: var(--grey-400);
+      }
+
+      /* PROBLEM SECTION */
+      .problem-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 64px;
+        align-items: start;
+      }
+      .problem-before {
+        padding: 36px;
+        background: var(--grey-50);
+        border: 1px solid var(--grey-200);
+        border-radius: 12px;
+      }
+      .problem-before h3 {
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--grey-400);
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        margin-bottom: 20px;
+      }
+      .spaghetti-line {
+        font-family: var(--font-mono);
+        font-size: 13px;
+        color: var(--grey-400);
+        padding: 8px 0;
+        border-bottom: 1px solid var(--grey-100);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .spaghetti-line:last-child {
+        border-bottom: none;
+      }
+      .spaghetti-line .arrow {
+        color: var(--grey-300);
+      }
+      .problem-after h3 {
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--black);
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        margin-bottom: 20px;
+      }
+      .uns-hub {
+        text-align: center;
+        padding: 36px;
+        border: 2px solid var(--black);
+        border-radius: 12px;
+        margin-bottom: 24px;
+      }
+      .uns-hub-label {
+        font-family: var(--font-mono);
+        font-size: 15px;
+        font-weight: 600;
+        color: var(--black);
+      }
+      .uns-hub-sub {
+        font-size: 13px;
+        color: var(--grey-500);
+        margin-top: 4px;
+      }
+      .spoke-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+      }
+      .spoke {
+        text-align: center;
+        padding: 12px;
+        background: var(--grey-50);
+        border-radius: 8px;
+        font-size: 12px;
+        color: var(--grey-600);
+      }
+
+      /* STATS ROW */
+      .stats-row {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1px;
+        background: var(--grey-200);
+        border: 1px solid var(--grey-200);
+        border-radius: 12px;
+        overflow: hidden;
+        margin-top: 64px;
+      }
+      .stat {
+        background: var(--white);
+        padding: 36px 28px;
+        text-align: center;
+      }
+      .stat-number {
+        font-size: 44px;
+        font-weight: 700;
+        letter-spacing: -0.03em;
+        line-height: 1;
+        margin-bottom: 6px;
+        font-family: var(--font-mono);
+      }
+      .stat-label {
+        font-size: 13px;
+        color: var(--grey-500);
+      }
+
+      /* HOW IT WORKS */
+      .how-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 64px;
+        align-items: start;
+      }
+      .how-text h3 {
+        font-size: 22px;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+        margin-bottom: 12px;
+      }
+      .how-text p {
+        font-size: 15px;
+        color: var(--grey-500);
+        line-height: 1.7;
+        margin-bottom: 20px;
+      }
+      .how-text ul {
+        list-style: none;
+        margin-bottom: 24px;
+      }
+      .how-text ul li {
+        font-size: 14px;
+        color: var(--grey-600);
+        padding: 8px 0;
+        border-bottom: 1px solid var(--grey-100);
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        line-height: 1.5;
+      }
+      .how-text ul li:last-child {
+        border-bottom: none;
+      }
+      .how-text ul li strong {
+        color: var(--black);
+        font-weight: 600;
+      }
+      .topic-tree {
+        border: 1px solid var(--grey-200);
+        border-radius: 12px;
+        padding: 32px;
+        font-family: var(--font-mono);
+        font-size: 13px;
+        line-height: 2.2;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+      }
+      .topic-tree .level {
+        color: var(--grey-400);
+      }
+      .topic-tree .value {
+        color: var(--black);
+        font-weight: 500;
+      }
+      .topic-tree .sep {
+        color: var(--grey-300);
+      }
+
+      /* ARCHITECTURE */
+      .arch-pipeline {
+        display: flex;
+        align-items: stretch;
+        gap: 2px;
+        margin-bottom: 48px;
+      }
+      .arch-stage {
+        flex: 1;
+        background: var(--white);
+        border: 1px solid var(--grey-200);
+        border-radius: 12px;
+        padding: 32px;
+        position: relative;
+      }
+      .arch-stage-num {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        font-weight: 600;
+        color: var(--grey-400);
+        letter-spacing: 0.08em;
+        margin-bottom: 12px;
+      }
+      .arch-stage h3 {
+        font-size: 20px;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+        margin-bottom: 8px;
+      }
+      .arch-stage p {
+        font-size: 14px;
+        color: var(--grey-500);
+        line-height: 1.6;
+        margin-bottom: 16px;
+      }
+      .arch-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 4px;
+      }
+      .arch-tags span {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        padding: 3px 10px;
+        border: 1px solid var(--grey-200);
+        border-radius: 6px;
+        color: var(--grey-600);
+      }
+      .arch-arrow {
+        display: flex;
+        align-items: center;
+        font-size: 20px;
+        color: var(--grey-300);
+        padding: 0 4px;
+      }
+      .arch-detail {
+        font-size: 14px;
+        color: var(--grey-500);
+        line-height: 1.7;
+        max-width: 700px;
+      }
+      .arch-detail strong {
+        color: var(--black);
+      }
+
+      /* COMPONENT GRID */
+      .component-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1px;
+        background: var(--grey-200);
+        border: 1px solid var(--grey-200);
+        border-radius: 12px;
+        overflow: hidden;
+      }
+      .component-card {
+        background: var(--white);
+        padding: 28px;
+        transition: background 0.2s;
+      }
+      .component-card:hover {
+        background: var(--grey-50);
+      }
+      .card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 10px;
+      }
+      .card-name {
+        font-family: var(--font-mono);
+        font-weight: 600;
+        font-size: 14px;
+      }
+      .card-badge {
+        font-family: var(--font-mono);
+        font-size: 10px;
+        font-weight: 500;
+        color: var(--grey-400);
+        background: var(--grey-100);
+        padding: 3px 10px;
+        border-radius: 100px;
+      }
+      .card-desc {
+        font-size: 13px;
+        color: var(--grey-500);
+        line-height: 1.55;
+      }
+
+      /* VALUE GRID */
+      .value-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1px;
+        background: var(--grey-200);
+        border: 1px solid var(--grey-200);
+        border-radius: 12px;
+        overflow: hidden;
+      }
+      .value-card {
+        background: var(--white);
+        padding: 32px;
+      }
+      .value-card h3 {
+        font-size: 16px;
+        font-weight: 700;
+        letter-spacing: -0.01em;
+        margin-bottom: 8px;
+      }
+      .value-card p {
+        font-size: 13px;
+        color: var(--grey-500);
+        line-height: 1.6;
+      }
+
+      /* CODE SECTION */
+      .code-layout {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 48px;
+        align-items: start;
+      }
+      .code-block {
+        background: var(--grey-950);
+        color: var(--grey-400);
+        padding: 28px;
+        border-radius: 12px;
+        font-family: var(--font-mono);
+        font-size: 12px;
+        line-height: 1.9;
+        overflow-x: auto;
+        box-shadow: 0 24px 48px rgba(0, 0, 0, 0.08);
+      }
+      .code-block .kw {
+        color: var(--white);
+        font-weight: 500;
+      }
+      .code-block .cm {
+        color: var(--grey-600);
+      }
+      .code-block .str {
+        color: var(--grey-300);
+      }
+      .code-annotation h3 {
+        font-size: 24px;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+        margin-bottom: 16px;
+        line-height: 1.2;
+      }
+      .code-annotation p {
+        font-size: 15px;
+        color: var(--grey-500);
+        line-height: 1.7;
+        margin-bottom: 16px;
+      }
+      .code-annotation .stat-line {
+        font-family: var(--font-mono);
+        font-size: 12px;
+        color: var(--grey-400);
+        padding-top: 16px;
+        border-top: 1px solid var(--grey-200);
+      }
+
+      /* KPI GRID */
+      .kpi-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1px;
+        background: var(--grey-200);
+        border: 1px solid var(--grey-200);
+        border-radius: 12px;
+        overflow: hidden;
+        margin-bottom: 24px;
+      }
+      .kpi-card {
+        background: var(--white);
+        padding: 32px;
+      }
+      .kpi-val {
+        font-family: var(--font-mono);
+        font-size: 44px;
+        font-weight: 700;
+        letter-spacing: -0.03em;
+        line-height: 1;
+        margin-bottom: 6px;
+      }
+      .kpi-label {
+        font-size: 14px;
+        font-weight: 600;
+        margin-bottom: 4px;
+      }
+      .kpi-sub {
+        font-size: 12px;
+        color: var(--grey-400);
+      }
+      .api-line {
+        font-family: var(--font-mono);
+        font-size: 13px;
+        color: var(--grey-400);
+        padding: 16px 0;
+      }
+      .api-line .url {
+        color: var(--black);
+        font-weight: 500;
+      }
+
+      /* COMPARISON */
+      .compare {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        border: 1px solid var(--grey-200);
+        border-radius: 12px;
+        overflow: hidden;
+      }
+      .compare-col {
+        padding: 36px;
+      }
+      .compare-col:first-child {
+        background: var(--grey-50);
+        border-right: 1px solid var(--grey-200);
+      }
+      .compare-col h3 {
+        font-size: 12px;
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        margin-bottom: 24px;
+        padding-bottom: 12px;
+        border-bottom: 2px solid var(--grey-200);
+        color: var(--grey-400);
+      }
+      .compare-col:last-child h3 {
+        border-color: var(--black);
+        color: var(--black);
+      }
+      .compare-col ul {
+        list-style: none;
+      }
+      .compare-col ul li {
+        font-size: 14px;
+        padding: 10px 0;
+        border-bottom: 1px solid var(--grey-100);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        line-height: 1.5;
+      }
+      .compare-col ul li:last-child {
+        border-bottom: none;
+      }
+      .compare-col:first-child ul li {
+        color: var(--grey-400);
+      }
+      .icon-x,
+      .icon-check {
+        width: 22px;
+        height: 22px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 11px;
+        flex-shrink: 0;
+        border-radius: 6px;
+        font-weight: 600;
+      }
+      .icon-x {
+        background: var(--grey-200);
+        color: var(--grey-400);
+      }
+      .icon-check {
+        background: var(--black);
+        color: var(--white);
+      }
+
+      /* STACK GRID */
+      .stack-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1px;
+        background: var(--grey-200);
+        border: 1px solid var(--grey-200);
+        border-radius: 12px;
+        overflow: hidden;
+      }
+      .stack-card {
+        background: var(--white);
+        padding: 36px;
+      }
+      .stack-card:hover {
+        background: var(--grey-50);
+      }
+      .stack-num {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        font-weight: 600;
+        color: var(--grey-400);
+        letter-spacing: 0.08em;
+        margin-bottom: 16px;
+      }
+      .stack-card h3 {
+        font-size: 22px;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+        margin-bottom: 4px;
+      }
+      .stack-url {
+        font-family: var(--font-mono);
+        font-size: 12px;
+        color: var(--grey-400);
+        margin-bottom: 16px;
+      }
+      .stack-card p {
+        font-size: 14px;
+        color: var(--grey-500);
+        line-height: 1.65;
+        margin-bottom: 20px;
+      }
+      .stack-role {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        font-weight: 600;
+        color: var(--black);
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        padding-top: 16px;
+        border-top: 1px solid var(--grey-200);
+      }
+
+      /* GET STARTED */
+      .start-terminal {
+        background: var(--grey-950);
+        color: var(--grey-400);
+        padding: 32px;
+        border-radius: 12px;
+        font-family: var(--font-mono);
+        font-size: 13px;
+        line-height: 2;
+        max-width: 680px;
+        margin-bottom: 36px;
+        overflow-x: auto;
+        box-shadow: 0 24px 48px rgba(0, 0, 0, 0.08);
+      }
+      .start-terminal .prompt {
+        color: var(--grey-600);
+      }
+      .start-terminal .cmd {
+        color: var(--grey-300);
+      }
+      .start-terminal .comment {
+        color: var(--grey-600);
+      }
+
+      /* FADE */
+      .fade-in {
+        opacity: 0;
+        transform: translateY(16px);
+        transition:
+          opacity 0.5s ease,
+          transform 0.5s ease;
+      }
+      .fade-in.visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      /* FOOTER */
+      footer {
+        padding: 48px 0;
+        border-top: 1px solid var(--grey-200);
+      }
+      footer .container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 13px;
+        color: var(--grey-400);
+      }
+      footer a {
+        color: var(--grey-500);
+        text-decoration: none;
+        transition: color 0.2s;
+      }
+      footer a:hover {
+        color: var(--black);
+      }
+      footer .footer-links {
+        display: flex;
+        gap: 24px;
+      }
+
+      /* RESPONSIVE — TABLET */
+      @media (max-width: 960px) {
+        nav {
+          padding: 0 24px;
+        }
+        .container {
+          padding: 0 24px;
+        }
+        .hero .container {
+          grid-template-columns: 1fr;
+          gap: 48px;
+        }
+        section {
+          padding: 80px 0;
+        }
+        .problem-grid {
+          grid-template-columns: 1fr;
+        }
+        .how-grid {
+          grid-template-columns: 1fr;
+        }
+        .arch-pipeline {
+          flex-direction: column;
+        }
+        .arch-arrow {
+          transform: rotate(90deg);
+          justify-content: center;
+          padding: 8px 0;
+        }
+        .component-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        .value-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        .code-layout {
+          grid-template-columns: 1fr;
+        }
+        .kpi-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        .compare {
+          grid-template-columns: 1fr;
+        }
+        .compare-col:first-child {
+          border-right: none;
+          border-bottom: 1px solid var(--grey-200);
+        }
+        .stats-row {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        .stack-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+
+      /* RESPONSIVE — MOBILE */
+      @media (max-width: 600px) {
+        /* Base */
+        nav {
+          padding: 0 16px;
+        }
+        nav .links {
+          gap: 20px;
+        }
+        nav .links a {
+          font-size: 13px;
+        }
+        .container {
+          padding: 0 16px;
+        }
+        section {
+          padding: 56px 0;
+        }
+        section h2 {
+          font-size: 26px;
+        }
+        section .lead {
+          font-size: 14px;
+          margin-bottom: 32px;
+        }
+        .section-label {
+          font-size: 11px;
+          margin-bottom: 12px;
+        }
+        .divider {
+          margin: 0;
+        }
+
+        /* Hero — centered, no visual on mobile */
+        .hero {
+          min-height: auto;
+          padding: 100px 0 56px;
+        }
+        .hero .container {
+          gap: 32px;
+        }
+        .hero-content h1 {
+          font-size: 32px;
+          letter-spacing: -0.03em;
+        }
+        .hero-content .subtitle {
+          font-size: 15px;
+          line-height: 1.6;
+        }
+        .hero-visual {
+          padding: 20px;
+          font-size: 10px;
+          line-height: 1.8;
+          border-radius: 12px;
+        }
+        .cta-group {
+          flex-direction: column;
+          align-items: stretch;
+        }
+        .btn-primary,
+        .btn-secondary {
+          justify-content: center;
+          padding: 14px 24px;
+          font-size: 15px;
+        }
+
+        /* Stats — horizontal scroll strip */
+        .stats-row {
+          grid-template-columns: repeat(4, 1fr);
+          gap: 1px;
+          margin-top: 32px;
+          overflow-x: auto;
+          -webkit-overflow-scrolling: touch;
+        }
+        .stat {
+          padding: 20px 16px;
+          min-width: 0;
+        }
+        .stat-number {
+          font-size: 28px;
+        }
+        .stat-label {
+          font-size: 10px;
+          line-height: 1.3;
+        }
+
+        /* Problem — stack, compact spaghetti */
+        .problem-grid {
+          gap: 24px;
+        }
+        .problem-before {
+          padding: 20px;
+          border-radius: 10px;
+        }
+        .problem-before h3 {
+          font-size: 12px;
+          margin-bottom: 12px;
+        }
+        .spaghetti-line {
+          font-size: 11px;
+          padding: 6px 0;
+        }
+        .problem-before p {
+          font-size: 12px !important;
+        }
+        .problem-after h3 {
+          font-size: 12px;
+          margin-bottom: 12px;
+        }
+        .uns-hub {
+          padding: 24px;
+          border-radius: 10px;
+        }
+        .uns-hub-label {
+          font-size: 13px;
+        }
+        .uns-hub-sub {
+          font-size: 11px;
+        }
+        .spoke-grid {
+          grid-template-columns: repeat(3, 1fr);
+          gap: 6px;
+        }
+        .spoke {
+          padding: 8px;
+          font-size: 11px;
+          border-radius: 6px;
+        }
+        .problem-after p {
+          font-size: 12px !important;
+        }
+
+        /* How it works — topic tree scrollable */
+        .how-text h3 {
+          font-size: 20px;
+        }
+        .how-text p {
+          font-size: 14px;
+        }
+        .how-text ul li {
+          font-size: 13px;
+          padding: 6px 0;
+        }
+        .topic-tree {
+          padding: 16px;
+          font-size: 10px;
+          line-height: 1.9;
+          overflow-x: auto;
+          white-space: nowrap;
+          -webkit-overflow-scrolling: touch;
+        }
+
+        /* Architecture — compact vertical cards */
+        .arch-stage {
+          padding: 20px;
+          border-radius: 10px;
+        }
+        .arch-stage-num {
+          font-size: 10px;
+          margin-bottom: 8px;
+        }
+        .arch-stage h3 {
+          font-size: 17px;
+          margin-bottom: 6px;
+        }
+        .arch-stage p {
+          font-size: 13px;
+          margin-bottom: 12px;
+        }
+        .arch-tags span {
+          font-size: 10px;
+          padding: 2px 8px;
+        }
+        .arch-arrow {
+          padding: 4px 0;
+          font-size: 16px;
+        }
+        .arch-detail {
+          font-size: 13px;
+        }
+
+        /* Components — horizontal scroll carousel */
+        .component-grid {
+          display: flex;
+          overflow-x: auto;
+          -webkit-overflow-scrolling: touch;
+          gap: 12px;
+          background: none;
+          border: none;
+          border-radius: 0;
+          padding-bottom: 8px;
+          scroll-snap-type: x mandatory;
+        }
+        .component-card {
+          min-width: 260px;
+          max-width: 280px;
+          flex-shrink: 0;
+          border: 1px solid var(--grey-200);
+          border-radius: 10px;
+          padding: 20px;
+          scroll-snap-align: start;
+        }
+        .card-name {
+          font-size: 13px;
+        }
+        .card-badge {
+          font-size: 9px;
+          padding: 2px 8px;
+        }
+        .card-desc {
+          font-size: 12px;
+        }
+
+        /* Value cards — horizontal scroll */
+        .value-grid {
+          display: flex;
+          overflow-x: auto;
+          -webkit-overflow-scrolling: touch;
+          gap: 12px;
+          background: none;
+          border: none;
+          border-radius: 0;
+          padding-bottom: 8px;
+          scroll-snap-type: x mandatory;
+        }
+        .value-card {
+          min-width: 260px;
+          max-width: 280px;
+          flex-shrink: 0;
+          border: 1px solid var(--grey-200);
+          border-radius: 10px;
+          padding: 24px;
+          scroll-snap-align: start;
+        }
+        .value-card h3 {
+          font-size: 15px;
+        }
+        .value-card p {
+          font-size: 12px;
+        }
+
+        /* Code — full width, annotation below */
+        .code-block {
+          padding: 16px;
+          font-size: 10px;
+          line-height: 1.8;
+          border-radius: 10px;
+          overflow-x: auto;
+          -webkit-overflow-scrolling: touch;
+          white-space: pre;
+        }
+        .code-annotation h3 {
+          font-size: 20px;
+          margin-top: 4px;
+        }
+        .code-annotation p {
+          font-size: 14px;
+        }
+        .code-annotation .stat-line {
+          font-size: 11px;
+        }
+
+        /* KPIs — 2×3 tight grid */
+        .kpi-grid {
+          grid-template-columns: 1fr 1fr;
+          gap: 1px;
+        }
+        .kpi-card {
+          padding: 20px;
+        }
+        .kpi-val {
+          font-size: 32px;
+        }
+        .kpi-label {
+          font-size: 12px;
+        }
+        .kpi-sub {
+          font-size: 10px;
+        }
+        .api-line {
+          font-size: 11px;
+          overflow-x: auto;
+          white-space: nowrap;
+        }
+
+        /* Comparison — side by side kept but compact */
+        .compare {
+          grid-template-columns: 1fr 1fr;
+          border-radius: 10px;
+        }
+        .compare-col {
+          padding: 16px;
+        }
+        .compare-col h3 {
+          font-size: 10px;
+          margin-bottom: 16px;
+          padding-bottom: 8px;
+        }
+        .compare-col ul li {
+          font-size: 11px;
+          padding: 7px 0;
+          gap: 6px;
+        }
+        .icon-x,
+        .icon-check {
+          width: 18px;
+          height: 18px;
+          font-size: 9px;
+          border-radius: 4px;
+        }
+
+        /* Stack — horizontal scroll */
+        .stack-grid {
+          display: flex;
+          overflow-x: auto;
+          -webkit-overflow-scrolling: touch;
+          gap: 12px;
+          background: none;
+          border: none;
+          border-radius: 0;
+          padding-bottom: 8px;
+          scroll-snap-type: x mandatory;
+        }
+        .stack-card {
+          min-width: 280px;
+          max-width: 300px;
+          flex-shrink: 0;
+          border: 1px solid var(--grey-200);
+          border-radius: 10px;
+          padding: 24px;
+          scroll-snap-align: start;
+        }
+        .stack-card h3 {
+          font-size: 18px;
+        }
+        .stack-card p {
+          font-size: 12px;
+        }
+
+        /* Get started — compact terminal */
+        .start-terminal {
+          padding: 16px;
+          font-size: 10px;
+          line-height: 1.8;
+          border-radius: 10px;
+          overflow-x: auto;
+          -webkit-overflow-scrolling: touch;
+          white-space: nowrap;
+        }
+
+        /* Footer */
+        footer {
+          padding: 32px 0;
+        }
+        footer .container {
+          flex-direction: column;
+          gap: 12px;
+          text-align: center;
+        }
+        footer .footer-links {
+          justify-content: center;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <nav>
+      <div class="logo">fn-uns</div>
+      <div class="links">
+        <a href="#">Docs</a>
+        <a href="#">GitHub</a>
+        <a href="#">fnkit</a>
+      </div>
+    </nav>
+
+    <!-- HERO -->
+    <div class="hero">
+      <div class="container">
+        <div class="hero-content">
+          <h1>Manufacturing data is&nbsp;trapped. We fix&nbsp;that.</h1>
+          <p class="subtitle">
+            fn-uns is an open-source Unified Namespace. Serverless functions
+            that turn fragmented factory data into real-time KPIs. Self-hosted.
+            Version controlled. Deployed with git push.
+          </p>
+          <div class="cta-group">
+            <a href="#" class="btn-primary">Read the Docs →</a>
+            <a href="#" class="btn-secondary">View on GitHub</a>
+          </div>
+        </div>
+        <div class="hero-visual">
+          <div><span class="comment"># Machine data flows through MQTT topics</span></div>
+          <div>v1.0/enterprise/site1/area1/<span class="accent">cnc-01</span>/status</div>
+          <div><span class="output">→ { <span class="key">"status"</span>: <span class="val">"ACTIVE"</span> }</span></div>
+          <div>v1.0/enterprise/site1/area1/<span class="accent">cnc-02</span>/program</div>
+          <div><span class="output">→ { <span class="key">"program"</span>: <span class="val">"OP-4521"</span>, <span class="key">"parts"</span>: <span class="val">47</span> }</span></div>
+          <div>&nbsp;</div>
+          <div><span class="comment"># One API call → all KPIs</span></div>
+          <div><span class="prompt">$</span> <span class="cmd">curl /uns-kpi?hours=8</span></div>
+          <div><span class="output">{ "utilisation_pct": 72.0,</span></div>
+          <div><span class="output">  "availability_pct": 94.2,</span></div>
+          <div><span class="output">  "mtbf_minutes": 142.0 }</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- THE PROBLEM -->
+    <section class="fade-in">
+      <div class="container">
+        <div class="section-label">The Problem</div>
+        <h2>Manufacturing data is trapped in silos.</h2>
+        <p class="lead">
+          Every factory generates vast amounts of data — machine states,
+          production counts, quality metrics, maintenance logs. But it's
+          fragmented across disconnected systems that don't talk to each other.
+        </p>
+
+        <div class="problem-grid">
+          <div class="problem-before">
+            <h3>Today: Point-to-Point Spaghetti</h3>
+            <div class="spaghetti-line">
+              PLC <span class="arrow">→</span> SCADA
+              <span class="arrow">→</span> Historian
+            </div>
+            <div class="spaghetti-line">
+              PLC <span class="arrow">→</span> MES
+              <span class="arrow">→</span> ERP
+            </div>
+            <div class="spaghetti-line">
+              PLC <span class="arrow">→</span> Custom Dashboard
+            </div>
+            <div class="spaghetti-line">
+              Sensor <span class="arrow">→</span> Cloud Platform
+            </div>
+            <div class="spaghetti-line">
+              Sensor <span class="arrow">→</span> Another Custom App
+            </div>
+            <div class="spaghetti-line">
+              ERP <span class="arrow">→</span> Spreadsheet
+              <span class="arrow">→</span> Email
+            </div>
+            <p
+              style="
+                font-size: 13px;
+                color: var(--grey-400);
+                margin-top: 16px;
+                line-height: 1.5;
+              "
+            >
+              Every new connection adds complexity. Every system has its own
+              data model. Getting a simple answer — "what's the utilisation of
+              cnc-01 this shift?" — requires pulling data from multiple systems
+              and hoping the timestamps align.
+            </p>
+          </div>
+
+          <div class="problem-after">
+            <h3>With UNS: One Data Layer</h3>
+            <div class="uns-hub">
+              <div class="uns-hub-label">MQTT Broker</div>
+              <div class="uns-hub-sub">
+                Unified Namespace — single source of truth
+              </div>
+            </div>
+            <div class="spoke-grid">
+              <div class="spoke">PLCs</div>
+              <div class="spoke">Sensors</div>
+              <div class="spoke">SCADA</div>
+              <div class="spoke">MES</div>
+              <div class="spoke">Dashboards</div>
+              <div class="spoke">Analytics</div>
+            </div>
+            <p
+              style="
+                font-size: 13px;
+                color: var(--grey-500);
+                margin-top: 16px;
+                line-height: 1.5;
+              "
+            >
+              Any system can publish data. Any system can subscribe. No
+              point-to-point wiring. No vendor lock-in. Adding a new consumer
+              means subscribing to existing topics — not building a new
+              integration.
+            </p>
+          </div>
+        </div>
+
+        <div class="stats-row">
+          <div class="stat">
+            <div class="stat-number">&lt;1s</div>
+            <div class="stat-label">Data latency — real-time, not batch</div>
+          </div>
+          <div class="stat">
+            <div class="stat-number">1</div>
+            <div class="stat-label">Source of truth for all systems</div>
+          </div>
+          <div class="stat">
+            <div class="stat-number">0</div>
+            <div class="stat-label">Point-to-point integrations needed</div>
+          </div>
+          <div class="stat">
+            <div class="stat-number">∞</div>
+            <div class="stat-label">
+              Subscribers — add without changing anything
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- THE STACK -->
+    <section class="fade-in">
+      <div class="container">
+        <div class="section-label">The Stack</div>
+        <h2>Three projects. One modern solution.</h2>
+        <p class="lead">fn-uns is built on two open foundations — an open standard for structuring manufacturing data, and an open platform for deploying serverless functions.</p>
+
+        <div class="stack-grid">
+          <div class="stack-card">
+            <div class="stack-num">01</div>
+            <h3>UNS Framework</h3>
+            <div class="stack-url">unsframework.com</div>
+            <p>An open standard that defines how to structure manufacturing data in MQTT. It specifies the ISA-95 topic hierarchy, versioned namespaces, payload conventions, and best practices for topic naming and QoS selection. The framework is vendor-neutral — any system that follows the standard can participate in the namespace.</p>
+            <div class="stack-role">Defines the data structure</div>
+          </div>
+          <div class="stack-card">
+            <div class="stack-num">02</div>
+            <h3>fnkit</h3>
+            <div class="stack-url">fnkit.dev</div>
+            <p>A lightweight Functions-as-a-Service platform that runs anywhere Docker runs. Write functions in any language — Go, Node.js, Python — scaffold with one command, deploy via git push. fnkit handles the gateway, routing, TLS, caching, and GitOps workflow. No cloud vendor required.</p>
+            <div class="stack-role">Provides the platform</div>
+          </div>
+          <div class="stack-card">
+            <div class="stack-num">03</div>
+            <h3>fn-uns</h3>
+            <div class="stack-url">This project</div>
+            <p>9 serverless functions that implement a complete UNS data pipeline on fnkit. From machine simulation to KPI computation — capture, process, and report on manufacturing data. Each function follows the UNS Framework standard and deploys through fnkit's GitOps workflow.</p>
+            <div class="stack-role">Delivers the functions</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- HOW IT WORKS -->
+    <section class="fade-in">
+      <div class="container">
+        <div class="section-label">How It Works</div>
+        <h2>One topic hierarchy. Every data point.</h2>
+        <p class="lead">
+          The Unified Namespace organises all factory data using the ISA-95
+          international standard — a structured MQTT topic hierarchy that's
+          self-describing and machine-readable.
+        </p>
+
+        <div class="how-grid">
+          <div class="how-text">
+            <h3>What is MQTT?</h3>
+            <p>
+              MQTT is a lightweight publish/subscribe messaging protocol.
+              Machines publish data to topics. Applications subscribe to the
+              topics they need. The broker handles delivery — no direct
+              connections between systems.
+            </p>
+            <ul>
+              <li>
+                <strong>Publish/Subscribe</strong> — Producers and consumers are
+                completely decoupled
+              </li>
+              <li>
+                <strong>Wildcard subscriptions</strong> — Subscribe to
+                <code
+                  style="
+                    font-family: var(--font-mono);
+                    font-size: 12px;
+                    background: var(--grey-100);
+                    padding: 2px 6px;
+                    border-radius: 4px;
+                  "
+                  >v1.0/#</code
+                >
+                for everything, or filter by area
+              </li>
+              <li>
+                <strong>Retained messages</strong> — New subscribers get the
+                last known value immediately
+              </li>
+              <li>
+                <strong>Industry standard</strong> — Supported by every major
+                PLC, gateway, and cloud platform
+              </li>
+            </ul>
+
+            <h3>What is the UNS?</h3>
+            <p>
+              The Unified Namespace is a design pattern: organise all your
+              operational data into a single MQTT topic tree that mirrors your
+              physical plant hierarchy. Every machine, every sensor, every data
+              point has one canonical address.
+            </p>
+            <p>
+              fn-uns implements this pattern with 9 serverless functions that
+              capture, process, and report on the data flowing through the
+              namespace.
+            </p>
+          </div>
+
+          <div>
+            <div class="topic-tree">
+              <div>
+                <span class="sep">v1.0 /</span>
+                <span class="value">enterprise</span> <span class="sep">/</span>
+                <span class="value">site1</span> <span class="sep">/</span>
+                <span class="value">area1</span> <span class="sep">/</span>
+                <span class="value">cnc-01</span> <span class="sep">/</span>
+                <span class="value">status</span>
+              </div>
+              <div><span class="level"> └─ namespace version</span></div>
+              <div><span class="level"> └─ company / business unit</span></div>
+              <div><span class="level"> └─ factory / physical site</span></div>
+              <div><span class="level"> └─ production area</span></div>
+              <div><span class="level"> └─ individual machine</span></div>
+              <div><span class="level"> └─ data point</span></div>
+            </div>
+            <p
+              style="
+                font-size: 13px;
+                color: var(--grey-400);
+                margin-top: 16px;
+                line-height: 1.6;
+              "
+            >
+              The hierarchy is self-describing. Any consumer can parse the topic
+              path to understand
+              <strong style="color: var(--grey-600)">where</strong> the data
+              comes from — no mapping tables, no configuration, no documentation
+              required.
+            </p>
+            <p
+              style="
+                font-size: 13px;
+                color: var(--grey-400);
+                margin-top: 12px;
+                line-height: 1.6;
+              "
+            >
+              Adding a new machine? Just publish to a new topic path. The entire
+              pipeline — caching, state tracking, KPI computation — picks it up
+              automatically.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- ARCHITECTURE -->
+    <section class="fade-in">
+      <div class="container">
+        <div class="section-label">Architecture</div>
+        <h2>Capture. Process. Report.</h2>
+        <p class="lead">
+          Data flows through three stages. Each stage is independent and
+          composable — built from small functions that do one thing well.
+        </p>
+
+        <div class="arch-pipeline">
+          <div class="arch-stage">
+            <div class="arch-stage-num">STAGE 01</div>
+            <h3>Capture</h3>
+            <p>
+              Machines publish status, program, and tool data to MQTT every 3
+              seconds. The framework subscribes to the entire namespace and
+              caches every message in Valkey — current value and previous value,
+              for change detection.
+            </p>
+            <div class="arch-tags">
+              <span>uns-sim</span><span>uns-framework</span><span>MQTT</span
+              ><span>Valkey</span>
+            </div>
+          </div>
+          <div class="arch-arrow">→</div>
+          <div class="arch-stage">
+            <div class="arch-stage-num">STAGE 02</div>
+            <h3>Process</h3>
+            <p>
+              HTTP functions poll the cache, detect changes, and write
+              structured records to PostgreSQL — state durations, stoppage
+              classifications, production runs, and operator input.
+            </p>
+            <div class="arch-tags">
+              <span>uns-state</span><span>uns-stoppage</span
+              ><span>uns-productivity</span><span>uns-log</span
+              ><span>uns-input</span>
+            </div>
+          </div>
+          <div class="arch-arrow">→</div>
+          <div class="arch-stage">
+            <div class="arch-stage-num">STAGE 03</div>
+            <h3>Report</h3>
+            <p>
+              KPI functions query all PostgreSQL tables and compute
+              manufacturing metrics on demand — utilisation, availability,
+              throughput, MTBF, MTTR, and stoppage pareto.
+            </p>
+            <div class="arch-tags">
+              <span>uns-kpi</span><span>uns-cache</span><span>PostgreSQL</span>
+            </div>
+          </div>
+        </div>
+
+        <p class="arch-detail">
+          All functions run as <strong>Docker containers</strong> on a shared
+          network. External access goes through
+          <strong>Caddy</strong> (automatic TLS) →
+          <strong>fnkit-gateway</strong> (auth, routing, rate limiting).
+          Internal communication happens directly between containers. Deployed
+          via <strong>git push</strong> using fnkit's GitOps workflow.
+        </p>
+      </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- COMPONENTS -->
+    <section class="fade-in">
+      <div class="container">
+        <div class="section-label">Components</div>
+        <h2>Limitless functions. Zero coupling.</h2>
+        <p class="lead">
+          Each function is a standard Go or Node.js program — its own container,
+          its own repo, its own deploy lifecycle. They compose through shared
+          infrastructure, not through each other.
+        </p>
+
+        <div class="component-grid">
+          <div class="component-card">
+            <div class="card-header">
+              <span class="card-name">uns-sim</span
+              ><span class="card-badge">Node.js · MQTT</span>
+            </div>
+            <div class="card-desc">
+              Simulates 4 CNC machines publishing realistic status, program, and
+              tool data every 3 seconds
+            </div>
+          </div>
+          <div class="component-card">
+            <div class="card-header">
+              <span class="card-name">uns-framework</span
+              ><span class="card-badge">Go · MQTT</span>
+            </div>
+            <div class="card-desc">
+              Subscribes to the entire namespace, caches every message with
+              current/previous value tracking
+            </div>
+          </div>
+          <div class="component-card">
+            <div class="card-header">
+              <span class="card-name">uns-cache</span
+              ><span class="card-badge">Node.js · HTTP</span>
+            </div>
+            <div class="card-desc">
+              Read API for cached topics — returns JSON with change detection
+              and metadata
+            </div>
+          </div>
+          <div class="component-card">
+            <div class="card-header">
+              <span class="card-name">uns-log</span
+              ><span class="card-badge">Go · HTTP</span>
+            </div>
+            <div class="card-desc">
+              Logs data snapshots to PostgreSQL whenever a topic value changes
+            </div>
+          </div>
+          <div class="component-card">
+            <div class="card-header">
+              <span class="card-name">uns-state</span
+              ><span class="card-badge">Go · HTTP</span>
+            </div>
+            <div class="card-desc">
+              Tracks machine state transitions and logs precise durations — the
+              foundation for all time-based KPIs
+            </div>
+          </div>
+          <div class="component-card">
+            <div class="card-header">
+              <span class="card-name">uns-stoppage</span
+              ><span class="card-badge">Node.js · HTTP</span>
+            </div>
+            <div class="card-desc">
+              Auto-classifies why machines aren't running, with manual operator
+              override for real reasons
+            </div>
+          </div>
+          <div class="component-card">
+            <div class="card-header">
+              <span class="card-name">uns-productivity</span
+              ><span class="card-badge">Go · HTTP</span>
+            </div>
+            <div class="card-desc">
+              Tracks production runs — parts completed, target attainment,
+              throughput per hour
+            </div>
+          </div>
+          <div class="component-card">
+            <div class="card-header">
+              <span class="card-name">uns-input</span
+              ><span class="card-badge">Node.js · HTTP</span>
+            </div>
+            <div class="card-desc">
+              Manual operator data entry — scrap counts, quality notes, shift
+              handover information
+            </div>
+          </div>
+          <div class="component-card">
+            <div class="card-header">
+              <span class="card-name">uns-kpi</span
+              ><span class="card-badge">Go · HTTP</span>
+            </div>
+            <div class="card-desc">
+              Pure read function — queries all tables and computes manufacturing
+              KPIs on demand via a single API call
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- WHO IT'S FOR -->
+    <section class="fade-in">
+      <div class="container">
+        <div class="section-label">Who It's For</div>
+        <h2>Value for every role on the floor.</h2>
+        <p class="lead">
+          The UNS isn't just a technical architecture — it's a business tool.
+          Different teams get different value from the same underlying data.
+        </p>
+
+        <div class="value-grid">
+          <div class="value-card">
+            <h3>Operations Managers</h3>
+            <p>
+              Real-time dashboards showing machine utilisation, production
+              progress, and stoppage reasons across the entire shop floor. No
+              more walking the floor to check machine status.
+            </p>
+          </div>
+          <div class="value-card">
+            <h3>Maintenance Teams</h3>
+            <p>
+              Automatic MTBF and MTTR calculations per machine. Alarm history
+              with durations. Stoppage pareto charts showing exactly where to
+              focus improvement efforts.
+            </p>
+          </div>
+          <div class="value-card">
+            <h3>Production Planners</h3>
+            <p>
+              Actual throughput data — parts per hour, target attainment —
+              compared against planned schedules. Identify bottleneck machines
+              and underperforming programs.
+            </p>
+          </div>
+          <div class="value-card">
+            <h3>Quality Engineers</h3>
+            <p>
+              Scrap tracking linked to specific machines, programs, and
+              operators. Quality check pass rates over time. Correlation between
+              machine conditions and quality outcomes.
+            </p>
+          </div>
+          <div class="value-card">
+            <h3>Continuous Improvement</h3>
+            <p>
+              Data-driven kaizen. Every state change, every stoppage, every
+              production run is recorded with timestamps and durations. The data
+              tells you exactly where time is being lost.
+            </p>
+          </div>
+          <div class="value-card">
+            <h3>IT &amp; Engineering</h3>
+            <p>
+              A clean, maintainable architecture. Each function is independent,
+              version-controlled, and deployable via git push. No monolithic
+              platforms. No vendor lock-in. Standard tools.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- CODE-FIRST -->
+    <section class="fade-in">
+      <div class="container">
+        <div class="section-label">Code-First</div>
+        <h2>Readable. Testable. Reviewable.</h2>
+        <p class="lead">
+          No drag-and-drop flow builders. No visual wiring. No opaque
+          configuration UIs. Just code that any developer can read, review, and
+          extend.
+        </p>
+
+        <div class="code-layout">
+          <div class="code-block">
+            <span class="cm">// State changed — log the completed state</span>
+            <span class="kw">if</span> currentState != tracked.State { duration
+            := now.Sub(tracked.EnteredAt).Seconds() uns := parseTopic(topic)
+
+            <span class="cm">// Insert to PostgreSQL</span>
+            err = insertStateRow( config.Table, uns, tracked.State,
+            <span class="cm">// previous state</span> tracked.EnteredAt,
+            <span class="cm">// when it started</span> now,
+            <span class="cm">// when it ended</span> duration,
+            <span class="cm">// how long</span> currentState,
+            <span class="cm">// what it changed to</span>
+            )
+
+            <span class="cm">// Update in-memory tracker</span>
+            machineStates[topic] = &amp;machineState{ State: currentState,
+            EnteredAt: now, } }
+          </div>
+          <div class="code-annotation">
+            <h3>This is the entire state tracking logic.</h3>
+            <p>
+              When a machine changes state — from ACTIVE to IDLE, from SETUP to
+              ACTIVE, from ALARM to IDLE — this code logs the completed state
+              with its precise duration to PostgreSQL.
+            </p>
+            <p>
+              That single table becomes the foundation for utilisation,
+              availability, MTBF, MTTR, and downtime analysis. One function, one
+              responsibility, one table.
+            </p>
+            <p>
+              Version controlled. Code reviewed. Unit tested. Deployed with
+              <code
+                style="
+                  font-family: var(--font-mono);
+                  font-size: 13px;
+                  background: var(--grey-100);
+                  padding: 2px 8px;
+                  border-radius: 4px;
+                "
+                >git push</code
+              >.
+            </p>
+            <div class="stat-line">
+              uns-state/function.go — the complete state tracking engine
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- KPIs -->
+    <section class="fade-in">
+      <div class="container">
+        <div class="section-label">Manufacturing KPIs</div>
+        <h2>Real-time metrics. One API call.</h2>
+        <p class="lead">
+          Utilisation, availability, throughput, reliability, stoppage analysis
+          — all computed on demand from the data flowing through the UNS
+          pipeline. No pre-aggregation, no stale reports.
+        </p>
+
+        <div class="kpi-grid">
+          <div class="kpi-card">
+            <div class="kpi-val">72%</div>
+            <div class="kpi-label">Utilisation</div>
+            <div class="kpi-sub">ACTIVE time ÷ total tracked time</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-val">94%</div>
+            <div class="kpi-label">Availability</div>
+            <div class="kpi-sub">Excluding unplanned downtime only</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-val">48/hr</div>
+            <div class="kpi-label">Throughput</div>
+            <div class="kpi-sub">Parts per hour with target attainment</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-val">142m</div>
+            <div class="kpi-label">MTBF</div>
+            <div class="kpi-sub">Mean time between failures</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-val">8.3m</div>
+            <div class="kpi-label">MTTR</div>
+            <div class="kpi-sub">Mean time to repair</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-val">Pareto</div>
+            <div class="kpi-label">Stoppages</div>
+            <div class="kpi-sub">Top reasons ranked by total duration</div>
+          </div>
+        </div>
+        <div class="api-line">
+          <span class="url">GET /uns-kpi?hours=8&amp;machine=cnc-01</span> —
+          filter by machine, area, or time range
+        </div>
+      </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- COMPARISON -->
+    <section class="fade-in">
+      <div class="container">
+        <div class="section-label">Why This Approach</div>
+        <h2>Code beats configuration.</h2>
+        <p class="lead">
+          Traditional manufacturing software relies on monolithic platforms,
+          drag-and-drop flow builders, or heavyweight MES systems. fn-uns takes
+          a fundamentally different approach.
+        </p>
+
+        <div class="compare">
+          <div class="compare-col">
+            <h3>Traditional Platforms</h3>
+            <ul>
+              <li>
+                <span class="icon-x">✕</span>Vendor-locked platforms with
+                proprietary formats
+              </li>
+              <li>
+                <span class="icon-x">✕</span>Drag-and-drop flow UIs that become
+                unreadable spaghetti
+              </li>
+              <li>
+                <span class="icon-x">✕</span>No version control — flows live in
+                runtime databases
+              </li>
+              <li>
+                <span class="icon-x">✕</span>No code review, no pull requests,
+                no diffs
+              </li>
+              <li>
+                <span class="icon-x">✕</span>Impossible to unit test or run
+                CI/CD
+              </li>
+              <li>
+                <span class="icon-x">✕</span>Six-figure licence fees or
+                per-device subscriptions
+              </li>
+              <li>
+                <span class="icon-x">✕</span>Monolithic deployments — one bad
+                change breaks everything
+              </li>
+              <li>
+                <span class="icon-x">✕</span>Manual rollback — risky and
+                time-consuming
+              </li>
+            </ul>
+          </div>
+          <div class="compare-col">
+            <h3>fn-uns + fnkit</h3>
+            <ul>
+              <li>
+                <span class="icon-check">✓</span>Open source, self-hosted, your
+                infrastructure
+              </li>
+              <li>
+                <span class="icon-check">✓</span>Code-first — readable,
+                auditable, maintainable
+              </li>
+              <li>
+                <span class="icon-check">✓</span>Full git history — every change
+                tracked with author and date
+              </li>
+              <li>
+                <span class="icon-check">✓</span>Pull requests, diffs, and code
+                review for every change
+              </li>
+              <li>
+                <span class="icon-check">✓</span>Unit tests, integration tests,
+                CI/CD pipelines
+              </li>
+              <li>
+                <span class="icon-check">✓</span>Infrastructure cost only — no
+                licence fees
+              </li>
+              <li>
+                <span class="icon-check">✓</span>Independent microservices —
+                deploy each function separately
+              </li>
+              <li>
+                <span class="icon-check">✓</span>git revert + push — instant,
+                safe rollback
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- GET STARTED -->
+    <section class="fade-in">
+      <div class="container">
+        <div class="section-label">Get Started</div>
+        <h2>Running in 5 minutes.</h2>
+        <p class="lead">
+          Clone the repo, start the infrastructure, and verify data is flowing.
+          The full UNS pipeline — from simulated machines to KPI APIs — runs
+          locally with Docker.
+        </p>
+
+        <div class="start-terminal">
+          <div>
+            <span class="comment"># Clone and set up the shared network</span>
+          </div>
+          <div>
+            <span class="prompt">$</span>
+            <span class="cmd"
+              >git clone https://github.com/maxbaines/fn-uns.git && cd
+              fn-uns</span
+            >
+          </div>
+          <div>
+            <span class="prompt">$</span>
+            <span class="cmd">docker network create fnkit-network</span>
+          </div>
+          <div>
+            <span class="prompt">$</span>
+            <span class="cmd">fnkit cache start</span>
+          </div>
+          <div>&nbsp;</div>
+          <div>
+            <span class="comment"># Start the UNS capture pipeline</span>
+          </div>
+          <div>
+            <span class="prompt">$</span>
+            <span class="cmd"
+              >cd uns-framework && docker compose up -d && cd ..</span
+            >
+          </div>
+          <div>
+            <span class="prompt">$</span>
+            <span class="cmd">cd uns-sim && docker compose up -d && cd ..</span>
+          </div>
+          <div>
+            <span class="prompt">$</span>
+            <span class="cmd"
+              >cd uns-cache && docker compose up -d && cd ..</span
+            >
+          </div>
+          <div>&nbsp;</div>
+          <div>
+            <span class="comment"># Verify real-time data is flowing</span>
+          </div>
+          <div>
+            <span class="prompt">$</span>
+            <span class="cmd">curl http://localhost:8080/uns-cache | jq</span>
+          </div>
+          <div>
+            <span class="comment"
+              ># → JSON with live data from 4 simulated CNC machines</span
+            >
+          </div>
+        </div>
+
+        <div class="cta-group">
+          <a href="#" class="btn-primary">Full Documentation →</a>
+          <a href="#" class="btn-secondary">View on GitHub</a>
+        </div>
+      </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- FOOTER -->
+    <footer>
+      <div class="container">
+        <span
+          >fn-uns — Built with
+          <a href="https://functionkit.github.io/fnkit/">fnkit</a></span
+        >
+        <div class="footer-links">
+          <a href="#">Docs</a>
+          <a href="#">GitHub</a>
+          <a href="#">fnkit</a>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      const o = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((e) => {
+            if (e.isIntersecting) {
+              e.target.classList.add('visible')
+              o.unobserve(e.target)
+            }
+          })
+        },
+        { threshold: 0.08, rootMargin: '0px 0px -40px 0px' },
+      )
+      document.querySelectorAll('.fade-in').forEach((el) => o.observe(el))
+    </script>
+  </body>
+</html>

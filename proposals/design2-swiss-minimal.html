@@ -1,0 +1,702 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>fn-uns — Design 2: Swiss Minimal</title>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700;800&display=swap');
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      :root {
+        --black: #1a1a1a;
+        --grey-900: #2a2a2a;
+        --grey-700: #555555;
+        --grey-500: #888888;
+        --grey-400: #aaaaaa;
+        --grey-300: #cccccc;
+        --grey-200: #e0e0e0;
+        --grey-100: #f0f0f0;
+        --grey-50: #f8f8f8;
+        --white: #ffffff;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        font-family: 'JetBrains Mono', monospace;
+
+        background: var(--white);
+        color: var(--black);
+        font-size: 16px;
+        line-height: 1.6;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      /* ── NAV ── */
+      nav {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 100;
+        padding: 0 80px;
+        height: 64px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: rgba(255, 255, 255, 0.9);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border-bottom: 1px solid var(--grey-200);
+      }
+
+      nav .logo {
+        font-weight: 600;
+        font-size: 15px;
+        letter-spacing: -0.01em;
+        color: var(--black);
+      }
+
+      nav .links {
+        display: flex;
+        gap: 36px;
+      }
+
+      nav .links a {
+        color: var(--grey-700);
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 400;
+        transition: color 0.2s;
+      }
+
+      nav .links a:hover {
+        color: var(--black);
+      }
+
+      /* ── CONTAINER ── */
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 80px;
+      }
+
+      /* ── HERO ── */
+      .hero {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding-top: 64px;
+      }
+
+      .hero .container {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 80px;
+        align-items: center;
+      }
+
+      .hero h1 {
+        font-size: 56px;
+        font-weight: 700;
+        line-height: 1.08;
+        letter-spacing: -0.035em;
+        color: var(--black);
+        margin-bottom: 24px;
+      }
+
+      .hero .subtitle {
+        font-size: 18px;
+        font-weight: 300;
+        color: var(--grey-500);
+        line-height: 1.6;
+        margin-bottom: 40px;
+      }
+
+      .hero .cta-group {
+        display: flex;
+        gap: 16px;
+      }
+
+      .btn-primary {
+        display: inline-flex;
+        align-items: center;
+        padding: 12px 28px;
+        background: var(--black);
+        color: var(--white);
+        font-size: 14px;
+        font-weight: 500;
+        text-decoration: none;
+        border-radius: 6px;
+        transition: background 0.2s;
+      }
+
+      .btn-primary:hover {
+        background: var(--grey-900);
+      }
+
+      .btn-secondary {
+        display: inline-flex;
+        align-items: center;
+        padding: 12px 28px;
+        background: transparent;
+        color: var(--black);
+        font-size: 14px;
+        font-weight: 500;
+        text-decoration: none;
+        border-radius: 6px;
+        border: 1px solid var(--grey-300);
+        transition: all 0.2s;
+      }
+
+      .btn-secondary:hover {
+        border-color: var(--black);
+      }
+
+      .hero-visual {
+        background: var(--grey-50);
+        border: 1px solid var(--grey-200);
+        border-radius: 12px;
+        padding: 32px;
+        font-family: 'SF Mono', 'Fira Code', monospace;
+        font-size: 13px;
+        line-height: 1.8;
+        color: var(--grey-700);
+      }
+
+      .hero-visual .line-accent {
+        color: var(--black);
+        font-weight: 500;
+      }
+
+      /* ── SECTION ── */
+      section {
+        padding: 140px 0;
+      }
+
+      section.alt {
+        background: var(--grey-50);
+        border-top: 1px solid var(--grey-200);
+        border-bottom: 1px solid var(--grey-200);
+      }
+
+      .section-label {
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--grey-400);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        margin-bottom: 16px;
+      }
+
+      section h2 {
+        font-size: 42px;
+        font-weight: 700;
+        line-height: 1.1;
+        letter-spacing: -0.03em;
+        color: var(--black);
+        margin-bottom: 20px;
+      }
+
+      section .lead {
+        font-size: 18px;
+        font-weight: 300;
+        color: var(--grey-500);
+        max-width: 560px;
+        line-height: 1.6;
+        margin-bottom: 64px;
+      }
+
+      /* ── TOPIC TREE ── */
+      .topic-tree {
+        background: var(--white);
+        border: 1px solid var(--grey-200);
+        border-radius: 12px;
+        padding: 48px;
+        font-family: 'SF Mono', monospace;
+        font-size: 14px;
+        line-height: 2.2;
+        max-width: 600px;
+      }
+
+      .topic-tree .level {
+        color: var(--grey-400);
+      }
+      .topic-tree .value {
+        color: var(--black);
+        font-weight: 500;
+      }
+      .topic-tree .sep {
+        color: var(--grey-300);
+      }
+
+      /* ── STATS ROW ── */
+      .stats-row {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1px;
+        background: var(--grey-200);
+        border: 1px solid var(--grey-200);
+        border-radius: 12px;
+        overflow: hidden;
+        margin-top: 64px;
+      }
+
+      .stat {
+        background: var(--white);
+        padding: 40px 32px;
+        text-align: center;
+      }
+
+      .stat-number {
+        font-size: 48px;
+        font-weight: 700;
+        letter-spacing: -0.03em;
+        color: var(--black);
+        line-height: 1;
+        margin-bottom: 8px;
+      }
+
+      .stat-label {
+        font-size: 13px;
+        color: var(--grey-500);
+        font-weight: 400;
+      }
+
+      /* ── COMPONENT GRID ── */
+      .component-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1px;
+        background: var(--grey-200);
+        border: 1px solid var(--grey-200);
+        border-radius: 12px;
+        overflow: hidden;
+      }
+
+      .component-card {
+        background: var(--white);
+        padding: 36px;
+        transition: background 0.2s;
+      }
+
+      .component-card:hover {
+        background: var(--grey-50);
+      }
+
+      .card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 16px;
+      }
+
+      .card-name {
+        font-weight: 600;
+        font-size: 15px;
+        color: var(--black);
+      }
+
+      .card-badge {
+        font-size: 11px;
+        font-weight: 500;
+        color: var(--grey-500);
+        background: var(--grey-100);
+        padding: 3px 10px;
+        border-radius: 100px;
+      }
+
+      .card-desc {
+        font-size: 14px;
+        color: var(--grey-500);
+        line-height: 1.5;
+      }
+
+      /* ── COMPARISON ── */
+      .comparison-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 48px;
+      }
+
+      .comparison-table th {
+        text-align: left;
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--grey-400);
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        padding: 16px 24px;
+        border-bottom: 2px solid var(--grey-200);
+      }
+
+      .comparison-table td {
+        padding: 16px 24px;
+        font-size: 14px;
+        border-bottom: 1px solid var(--grey-100);
+        color: var(--grey-700);
+      }
+
+      .comparison-table td:last-child {
+        color: var(--black);
+        font-weight: 500;
+      }
+
+      .comparison-table tr:last-child td {
+        border-bottom: none;
+      }
+
+      .check {
+        opacity: 1;
+      }
+      .cross {
+        opacity: 0.3;
+      }
+
+      /* ── FOOTER ── */
+      footer {
+        padding: 48px 0;
+        border-top: 1px solid var(--grey-200);
+      }
+
+      footer .container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 13px;
+        color: var(--grey-400);
+      }
+
+      footer a {
+        color: var(--grey-700);
+        text-decoration: none;
+      }
+
+      /* ── RESPONSIVE ── */
+      @media (max-width: 960px) {
+        nav {
+          padding: 0 32px;
+        }
+        .container {
+          padding: 0 32px;
+        }
+        .hero .container {
+          grid-template-columns: 1fr;
+          gap: 48px;
+        }
+        .hero h1 {
+          font-size: 40px;
+        }
+        .stats-row {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        .component-grid {
+          grid-template-columns: 1fr;
+        }
+        section h2 {
+          font-size: 32px;
+        }
+      }
+
+      @media (max-width: 600px) {
+        nav {
+          padding: 0 20px;
+        }
+        .container {
+          padding: 0 20px;
+        }
+        section {
+          padding: 80px 0;
+        }
+        .stats-row {
+          grid-template-columns: 1fr;
+        }
+        .stat-number {
+          font-size: 36px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <nav>
+      <div class="logo">fn-uns</div>
+      <div class="links">
+        <a href="#">Documentation</a>
+        <a href="#">GitHub</a>
+        <a href="#">fnkit</a>
+      </div>
+    </nav>
+
+    <div class="hero">
+      <div class="container">
+        <div>
+          <h1>The manufacturing data backbone.</h1>
+          <p class="subtitle">
+            Serverless functions, MQTT, and GitOps — composing a complete
+            Unified Namespace for real-time factory data.
+          </p>
+          <div class="cta-group">
+            <a href="#" class="btn-primary">Read the Docs</a>
+            <a href="#" class="btn-secondary">View on GitHub</a>
+          </div>
+        </div>
+        <div class="hero-visual">
+          <div>
+            <span class="line-accent">v1.0</span
+            >/enterprise/site1/area1/cnc-01/status
+          </div>
+          <div>→ { "state": "ACTIVE", "program": "OP-4521" }</div>
+          <div>&nbsp;</div>
+          <div>
+            <span class="line-accent">v1.0</span
+            >/enterprise/site1/area1/cnc-02/status
+          </div>
+          <div>→ { "state": "IDLE", "duration": "4m 12s" }</div>
+          <div>&nbsp;</div>
+          <div>
+            <span class="line-accent">v1.0</span
+            >/enterprise/site1/area2/cnc-03/tool
+          </div>
+          <div>→ { "tool": "T12", "life": 82, "offset": 0.003 }</div>
+        </div>
+      </div>
+    </div>
+
+    <section class="alt">
+      <div class="container">
+        <div class="section-label">The Problem</div>
+        <h2>
+          Manufacturing data is fragmented across dozens of disconnected
+          systems.
+        </h2>
+        <p class="lead">
+          SCADA knows machine status but not production targets. MES knows
+          orders but not real-time state. The UNS creates a single source of
+          truth.
+        </p>
+
+        <div class="stats-row">
+          <div class="stat">
+            <div class="stat-number">9</div>
+            <div class="stat-label">Independent functions</div>
+          </div>
+          <div class="stat">
+            <div class="stat-number">&lt;1s</div>
+            <div class="stat-label">Data latency</div>
+          </div>
+          <div class="stat">
+            <div class="stat-number">0</div>
+            <div class="stat-label">Vendor lock-in</div>
+          </div>
+          <div class="stat">
+            <div class="stat-number">∞</div>
+            <div class="stat-label">Subscribers</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="container">
+        <div class="section-label">ISA-95 Topic Hierarchy</div>
+        <h2>Structured, self-describing, real-time.</h2>
+        <p class="lead">
+          Every data point follows the ISA-95 standard. Any consumer can parse
+          the topic path to understand where data comes from.
+        </p>
+
+        <div class="topic-tree">
+          <div>
+            <span class="sep">v1.0 /</span>
+            <span class="value">enterprise</span> <span class="sep">/</span>
+            <span class="value">site1</span> <span class="sep">/</span>
+            <span class="value">area1</span> <span class="sep">/</span>
+            <span class="value">cnc-01</span> <span class="sep">/</span>
+            <span class="value">status</span>
+          </div>
+          <div><span class="level"> └─ version</span></div>
+          <div><span class="level"> └─ company</span></div>
+          <div><span class="level"> └─ factory</span></div>
+          <div><span class="level"> └─ department</span></div>
+          <div><span class="level"> └─ machine</span></div>
+          <div><span class="level"> └─ data point</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="alt">
+      <div class="container">
+        <div class="section-label">Components</div>
+        <h2>Limitless functions. One system.</h2>
+        <p class="lead">
+          Each function does one thing well — capture, process, or report. They
+          compose through shared infrastructure.
+        </p>
+
+        <div class="component-grid">
+          <div class="component-card">
+            <div class="card-header">
+              <span class="card-name">uns-sim</span>
+              <span class="card-badge">Node.js · MQTT</span>
+            </div>
+            <div class="card-desc">
+              Simulates 4 CNC machines publishing realistic data every 3 seconds
+            </div>
+          </div>
+          <div class="component-card">
+            <div class="card-header">
+              <span class="card-name">uns-framework</span>
+              <span class="card-badge">Go · MQTT</span>
+            </div>
+            <div class="card-desc">
+              Monitors all topics, caches every message to Valkey
+            </div>
+          </div>
+          <div class="component-card">
+            <div class="card-header">
+              <span class="card-name">uns-cache</span>
+              <span class="card-badge">Node.js · HTTP</span>
+            </div>
+            <div class="card-desc">
+              Reads cached topics, returns JSON with change detection
+            </div>
+          </div>
+          <div class="component-card">
+            <div class="card-header">
+              <span class="card-name">uns-log</span>
+              <span class="card-badge">Go · HTTP</span>
+            </div>
+            <div class="card-desc">
+              Logs snapshot rows to PostgreSQL on data change
+            </div>
+          </div>
+          <div class="component-card">
+            <div class="card-header">
+              <span class="card-name">uns-state</span>
+              <span class="card-badge">Go · HTTP</span>
+            </div>
+            <div class="card-desc">
+              Tracks machine state transitions and durations
+            </div>
+          </div>
+          <div class="component-card">
+            <div class="card-header">
+              <span class="card-name">uns-stoppage</span>
+              <span class="card-badge">Node.js · HTTP</span>
+            </div>
+            <div class="card-desc">Classifies why machines aren't running</div>
+          </div>
+          <div class="component-card">
+            <div class="card-header">
+              <span class="card-name">uns-productivity</span>
+              <span class="card-badge">Go · HTTP</span>
+            </div>
+            <div class="card-desc">
+              Tracks production runs and throughput metrics
+            </div>
+          </div>
+          <div class="component-card">
+            <div class="card-header">
+              <span class="card-name">uns-input</span>
+              <span class="card-badge">Node.js · HTTP</span>
+            </div>
+            <div class="card-desc">
+              Manual operator data entry for scrap and notes
+            </div>
+          </div>
+          <div class="component-card">
+            <div class="card-header">
+              <span class="card-name">uns-kpi</span>
+              <span class="card-badge">Go · HTTP</span>
+            </div>
+            <div class="card-desc">
+              Computes manufacturing KPIs from all accumulated data
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="container">
+        <div class="section-label">Comparison</div>
+        <h2>Why code, not config.</h2>
+        <p class="lead">
+          Traditional manufacturing software relies on monolithic platforms.
+          This project takes a fundamentally different approach.
+        </p>
+
+        <table class="comparison-table">
+          <thead>
+            <tr>
+              <th>Capability</th>
+              <th>Flow Tools</th>
+              <th>Web Platforms</th>
+              <th>fn-uns + fnkit</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Version control</td>
+              <td class="cross">✕</td>
+              <td class="cross">✕</td>
+              <td class="check">Full git history</td>
+            </tr>
+            <tr>
+              <td>Code review</td>
+              <td class="cross">✕</td>
+              <td class="cross">✕</td>
+              <td class="check">Pull requests & diffs</td>
+            </tr>
+            <tr>
+              <td>Testability</td>
+              <td class="cross">✕</td>
+              <td class="cross">✕</td>
+              <td class="check">Unit & integration tests</td>
+            </tr>
+            <tr>
+              <td>Self-hosted</td>
+              <td class="check">✓</td>
+              <td class="cross">✕</td>
+              <td class="check">Your infrastructure</td>
+            </tr>
+            <tr>
+              <td>Vendor lock-in</td>
+              <td>Medium</td>
+              <td>High</td>
+              <td class="check">None</td>
+            </tr>
+            <tr>
+              <td>Cost model</td>
+              <td>Licence</td>
+              <td>Subscription</td>
+              <td class="check">Infrastructure only</td>
+            </tr>
+            <tr>
+              <td>Deployment</td>
+              <td>Manual</td>
+              <td>Vendor-managed</td>
+              <td class="check">git push</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <footer>
+      <div class="container">
+        <span>fn-uns — Built with <a href="#">fnkit</a></span>
+        <span>Design Proposal 2: Swiss Minimal</span>
+      </div>
+    </footer>
+  </body>
+</html>

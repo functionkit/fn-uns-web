@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Page Not Found — UNS Framework</title>
+    <meta name="robots" content="noindex" />
+    <link rel="stylesheet" href="/style.css" />
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>" />
+    <style>
+      .error-page {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 56px 24px;
+      }
+      .error-code {
+        font-family: var(--font-mono);
+        font-size: clamp(64px, 12vw, 120px);
+        font-weight: 800;
+        letter-spacing: -0.04em;
+        line-height: 1;
+        color: var(--grey-200);
+        margin-bottom: 16px;
+      }
+      .error-page h1 {
+        font-size: clamp(24px, 4vw, 36px);
+        font-weight: 700;
+        letter-spacing: -0.02em;
+        margin-bottom: 12px;
+      }
+      .error-page p {
+        font-size: 16px;
+        color: var(--grey-700);
+        line-height: 1.6;
+        margin-bottom: 32px;
+        max-width: 420px;
+      }
+      .error-links {
+        display: flex;
+        gap: 12px;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+    </style>
+  </head>
+  <body>
+    <nav>
+      <a href="/" class="logo">UNS Framework</a>
+      <div class="links">
+        <a href="/framework/">Standard v1.0</a>
+        <a href="/fn-uns/">fn-uns</a>
+        <a href="https://github.com/unsframework" target="_blank">GitHub</a>
+        <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+          <div class="toggle-thumb">
+            <span class="toggle-icon-sun">☀</span>
+            <span class="toggle-icon-moon">☾</span>
+          </div>
+        </button>
+      </div>
+    </nav>
+
+    <div class="error-page">
+      <div>
+        <div class="error-code">404</div>
+        <h1>Page not found</h1>
+        <p>The page you're looking for doesn't exist or has been moved.</p>
+        <div class="error-links">
+          <a href="/" class="btn-primary">Back to Home →</a>
+          <a href="/docs/" class="btn-secondary">Documentation</a>
+        </div>
+      </div>
+    </div>
+
+    <script src="/shared.js"></script>
+  </body>
+</html>

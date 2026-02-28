@@ -1,0 +1,28 @@
+# UNS Framework
+
+> An open-source ecosystem for building a Unified Namespace (UNS) in manufacturing — a single, shared data layer that replaces point-to-point integrations between factory systems.
+
+The UNS Framework consists of three projects:
+
+1. **UNS Framework Standard** — An open standard that defines how to structure manufacturing data in MQTT using YAML files. ISA-95 topic hierarchy, versioned namespaces, payload conventions.
+2. **fnkit** — A lightweight Functions-as-a-Service platform that runs anywhere containers run. Write functions in Go, Node.js, or Python. Deploy via git push.
+3. **fn-uns** — Serverless functions that implement a complete UNS data pipeline on fnkit. Capture, process, and report on real-time factory data.
+
+## Key Links
+
+- [Homepage](https://unsframework.com/)
+- [What is a UNS?](https://unsframework.com/docs/what-is-uns.html)
+- [Why UNS Matters](https://unsframework.com/docs/why-uns.html)
+- [UNS Framework Standard v1.0](https://unsframework.com/framework/)
+- [fn-uns — Reference Implementation](https://unsframework.com/fn-uns/)
+- [Documentation](https://unsframework.com/docs/)
+- [Architecture](https://unsframework.com/docs/architecture.html)
+- [Components](https://unsframework.com/docs/components.html)
+- [Manufacturing KPIs](https://unsframework.com/docs/manufacturing-kpis.html)
+- [API Reference](https://unsframework.com/docs/api-reference.html)
+- [Getting Started](https://unsframework.com/docs/getting-started.html)
+- [GitHub](https://github.com/unsframework)
+
+## Optional
+
+- [Full LLM context](https://unsframework.com/llms-full.txt)

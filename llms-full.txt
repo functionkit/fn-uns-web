@@ -1,0 +1,181 @@
+# UNS Framework — Full Context
+
+> An open-source ecosystem for building a Unified Namespace (UNS) in manufacturing — a single, shared data layer that replaces point-to-point integrations between factory systems.
+
+Website: https://unsframework.com
+GitHub: https://github.com/unsframework
+License: Open Source
+
+---
+
+## What is a Unified Namespace?
+
+A Unified Namespace (UNS) replaces point-to-point integrations with a single, shared data layer. Every system — machines, sensors, applications, databases — publishes and subscribes to a common MQTT topic hierarchy. Instead of building custom integrations between each pair of systems, every system connects to one broker.
+
+Key properties:
+- Real-time data (sub-second latency, not batch)
+- Single source of truth for all systems
+- Zero point-to-point integrations needed
+- Unlimited subscribers — add consumers without changing anything
+- Data organised using the ISA-95 international standard
+
+Topic structure: `v1.0 / site / area / line / cell / equipment / sensor`
+
+---
+
+## The Three Projects
+
+### 1. UNS Framework Standard (v1.0)
+
+An open standard that defines how to structure manufacturing data in MQTT using YAML files. It is not a software product but a descriptive standard.
+
+- **uns.yml** — Describes the namespace: version, region, timezone, topic structure, topic standard (ISA-95), information model
+- **site.yml** — Describes the physical factory: sites, areas, lines, cells, equipment, sensors
+
+Core definitions:
+- **UNS** — Unified Namespace configuration
+- **Site** — Physical or logical site (factory)
+- **Area** — Building, floor, room, or partition
+- **Line** — Production line within an area
+- **Cell** — Workstation or unit in a line
+- **Equipment** — Machine, device, or hardware
+- **Sensor** — Temperature, pressure, humidity, etc.
+- **Function** — Self-contained code block
+- **Producer** — Entity that sends information
+- **Consumer** — Entity that receives information
+- **MQTT** — Broker configuration
+- **Database** — Storage configuration
+- **Artifact** — Static data
+
+Standard pages:
+- [Introduction](https://unsframework.com/framework/)
+- [Core Definitions](https://unsframework.com/framework/core-definitions.html)
+- [UNS](https://unsframework.com/framework/uns.html)
+- [Site](https://unsframework.com/framework/site.html)
+- [Area](https://unsframework.com/framework/area.html)
+- [Line](https://unsframework.com/framework/line.html)
+- [Cell](https://unsframework.com/framework/cell.html)
+- [Equipment](https://unsframework.com/framework/equipment.html)
+- [Sensor](https://unsframework.com/framework/sensor.html)
+- [Function](https://unsframework.com/framework/function.html)
+- [Producer](https://unsframework.com/framework/producer.html)
+- [Consumer](https://unsframework.com/framework/consumer.html)
+- [MQTT](https://unsframework.com/framework/mqtt.html)
+- [Database](https://unsframework.com/framework/database.html)
+- [Artifact](https://unsframework.com/framework/artifact.html)
+- [Example](https://unsframework.com/framework/example.html)
+
+### 2. fnkit
+
+A lightweight Functions-as-a-Service platform that runs anywhere containers run. Write functions in any language (Go, Node.js, Python), scaffold with one command, deploy via git push. No cloud vendor required. Self-hosted.
+
+Website: https://functionkit.github.io/fnkit/
+
+### 3. fn-uns
+
+Serverless functions that implement a complete UNS data pipeline on fnkit. From machine simulation to KPI computation — capture, process, and report on manufacturing data using the UNS Framework standard.
+
+Website: https://unsframework.com/fn-uns/
+
+---
+
+## fn-uns Architecture
+
+Data flows through three stages:
+
+### Stage 1: Capture
+Machines publish status, program, and tool data to MQTT every 3 seconds. The framework subscribes to the entire namespace and caches every message in Valkey (Redis-compatible) — current value and previous value, for change detection.
+
+Components: uns-sim, uns-framework, MQTT, Valkey
+
+### Stage 2: Process
+HTTP functions poll the cache, detect changes, and write structured records to PostgreSQL — state durations, stoppage classifications, production runs, and operator input.
+
+Components: uns-state, uns-stoppage, uns-productivity, uns-log, uns-input
+
+### Stage 3: Report
+KPI functions query all PostgreSQL tables and compute manufacturing metrics on demand — utilisation, availability, throughput, MTBF, MTTR, and stoppage pareto.
+
+Components: uns-kpi, uns-cache, PostgreSQL
+
+---
+
+## fn-uns Components
+
+| Component | Language | Type | Description |
+|---|---|---|---|
+| uns-sim | Node.js | MQTT | Simulates 4 CNC machines publishing realistic status, program, and tool data every 3 seconds |
+| uns-framework | Go | MQTT | Subscribes to the entire namespace, caches every message with current/previous value tracking |
+| uns-cache | Node.js | HTTP | Read API for cached topics — returns JSON with change detection and metadata |
+| uns-log | Go | HTTP | Logs data snapshots to PostgreSQL whenever a topic value changes |
+| uns-state | Go | HTTP | Tracks machine state transitions and logs precise durations — foundation for all time-based KPIs |
+| uns-stoppage | Node.js | HTTP | Auto-classifies why machines aren't running, with manual operator override |
+| uns-productivity | Go | HTTP | Tracks production runs — parts completed, target attainment, throughput per hour |
+| uns-input | Node.js | HTTP | Manual operator data entry — scrap counts, quality notes, shift handover |
+| uns-kpi | Go | HTTP | Pure read function — queries all tables and computes manufacturing KPIs on demand |
+
+---
+
+## Manufacturing KPIs
+
+All computed on demand from the data flowing through the UNS pipeline:
+
+- **Utilisation** — ACTIVE time ÷ total tracked time
+- **Availability** — Excluding unplanned downtime only
+- **Throughput** — Parts per hour with target attainment
+- **MTBF** — Mean time between failures
+- **MTTR** — Mean time to repair
+- **Stoppage Pareto** — Top reasons ranked by total duration
+
+API: `GET /uns-kpi?hours=8&machine=cnc-01` — filter by machine, area, or time range
+
+---
+
+## Database Schema
+
+Four PostgreSQL tables:
+1. State log — machine state transitions with durations
+2. Stoppage log — downtime events with classification
+3. Production log — production runs with part counts
+4. Data log — raw topic value snapshots
+
+---
+
+## Key Design Principles
+
+- **Code-first** — No drag-and-drop flow builders. Readable, testable, reviewable code.
+- **GitOps** — Deploy with `git push`, roll back with `git revert`. Full audit trail.
+- **Independent functions** — Each function is its own container, repo, and deploy lifecycle. They compose through shared infrastructure, not through each other.
+- **Open source** — Self-hosted, your infrastructure. No licence fees, no vendor lock-in.
+- **Standard-based** — ISA-95 topic hierarchy. MQTT pub/sub. PostgreSQL. Standard tools.
+
+---
+
+## Who Benefits
+
+- **Operations Managers** — Real-time dashboards showing machine utilisation, production progress, and stoppage reasons
+- **Maintenance Teams** — Automatic MTBF and MTTR calculations, alarm history, stoppage pareto charts
+- **Production Planners** — Actual throughput data compared against planned schedules, bottleneck identification
+- **Quality Engineers** — Scrap tracking linked to specific machines, programs, and operators
+- **Continuous Improvement** — Data-driven kaizen with every state change, stoppage, and production run recorded
+- **IT & Engineering** — Clean, maintainable architecture with independent, version-controlled functions
+
+---
+
+## Documentation
+
+- [What is a UNS?](https://unsframework.com/docs/what-is-uns.html)
+- [Why UNS Matters](https://unsframework.com/docs/why-uns.html)
+- [Why Functions-as-a-Service?](https://unsframework.com/docs/why-faas.html)
+- [Architecture](https://unsframework.com/docs/architecture.html)
+- [Getting Started](https://unsframework.com/docs/getting-started.html)
+- [First Deployment](https://unsframework.com/docs/first-deployment.html)
+- [fnkit Basics](https://unsframework.com/docs/fnkit-basics.html)
+- [Components Overview](https://unsframework.com/docs/components.html)
+- [Configuration](https://unsframework.com/docs/configuration.html)
+- [Manufacturing KPIs](https://unsframework.com/docs/manufacturing-kpis.html)
+- [API Reference](https://unsframework.com/docs/api-reference.html)
+- [Database Schema](https://unsframework.com/docs/database-schema.html)
+- [Code Patterns](https://unsframework.com/docs/code-patterns.html)
+- [Extending](https://unsframework.com/docs/extending.html)
+- [Changelog](https://unsframework.com/changelog.html)

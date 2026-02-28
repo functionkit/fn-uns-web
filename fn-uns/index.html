@@ -34,7 +34,7 @@
         --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
         --font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', monospace;
       }
-      [data-theme="dark"] {
+      [data-theme='dark'] {
         --black: #f5f5f5;
         --grey-950: #141414;
         --grey-900: #1a1a1a;
@@ -223,29 +223,63 @@
       }
       /* Infographic animations */
       @keyframes pulse-dot {
-        0%, 100% { opacity: 0.35; }
-        50% { opacity: 1; }
+        0%,
+        100% {
+          opacity: 0.35;
+        }
+        50% {
+          opacity: 1;
+        }
       }
       @keyframes flow-dash {
-        to { stroke-dashoffset: -12; }
+        to {
+          stroke-dashoffset: -12;
+        }
       }
       @keyframes data-packet {
-        0% { offset-distance: 0%; opacity: 0; }
-        10% { opacity: 1; }
-        90% { opacity: 1; }
-        100% { offset-distance: 100%; opacity: 0; }
+        0% {
+          offset-distance: 0%;
+          opacity: 0;
+        }
+        10% {
+          opacity: 1;
+        }
+        90% {
+          opacity: 1;
+        }
+        100% {
+          offset-distance: 100%;
+          opacity: 0;
+        }
       }
       @keyframes fade-up-in {
-        0% { opacity: 0; transform: translateY(8px); }
-        100% { opacity: 1; transform: translateY(0); }
+        0% {
+          opacity: 0;
+          transform: translateY(8px);
+        }
+        100% {
+          opacity: 1;
+          transform: translateY(0);
+        }
       }
       @keyframes glow-border {
-        0%, 100% { stroke: #e5e5e5; }
-        50% { stroke: #0a0a0a; }
+        0%,
+        100% {
+          stroke: #e5e5e5;
+        }
+        50% {
+          stroke: #0a0a0a;
+        }
       }
       @keyframes kpi-count {
-        0% { opacity: 0; transform: translateY(4px); }
-        100% { opacity: 1; transform: translateY(0); }
+        0% {
+          opacity: 0;
+          transform: translateY(4px);
+        }
+        100% {
+          opacity: 1;
+          transform: translateY(0);
+        }
       }
       .ig-flow-line {
         stroke-dasharray: 4 8;
@@ -254,37 +288,73 @@
       .ig-pulse {
         animation: pulse-dot 2.4s ease-in-out infinite;
       }
-      .ig-pulse-d1 { animation-delay: 0s; }
-      .ig-pulse-d2 { animation-delay: 0.6s; }
-      .ig-pulse-d3 { animation-delay: 1.2s; }
-      .ig-pulse-d4 { animation-delay: 1.8s; }
+      .ig-pulse-d1 {
+        animation-delay: 0s;
+      }
+      .ig-pulse-d2 {
+        animation-delay: 0.6s;
+      }
+      .ig-pulse-d3 {
+        animation-delay: 1.2s;
+      }
+      .ig-pulse-d4 {
+        animation-delay: 1.8s;
+      }
       /* Data packet dots travelling along paths */
       .ig-packet {
         offset-rotate: 0deg;
         animation: data-packet 2.4s ease-in-out infinite;
       }
-      .ig-packet-d1 { animation-delay: 0s; }
-      .ig-packet-d2 { animation-delay: 0.8s; }
-      .ig-packet-d3 { animation-delay: 1.6s; }
-      .ig-packet-d4 { animation-delay: 0.4s; }
-      .ig-packet-d5 { animation-delay: 1.2s; }
+      .ig-packet-d1 {
+        animation-delay: 0s;
+      }
+      .ig-packet-d2 {
+        animation-delay: 0.8s;
+      }
+      .ig-packet-d3 {
+        animation-delay: 1.6s;
+      }
+      .ig-packet-d4 {
+        animation-delay: 0.4s;
+      }
+      .ig-packet-d5 {
+        animation-delay: 1.2s;
+      }
       /* Function card highlight on "process" */
       .ig-fn-highlight {
         animation: glow-border 3s ease-in-out infinite;
       }
-      .ig-fn-highlight:nth-child(2) { animation-delay: 0.6s; }
-      .ig-fn-highlight:nth-child(3) { animation-delay: 1.2s; }
-      .ig-fn-highlight:nth-child(4) { animation-delay: 1.8s; }
-      .ig-fn-highlight:nth-child(5) { animation-delay: 2.4s; }
+      .ig-fn-highlight:nth-child(2) {
+        animation-delay: 0.6s;
+      }
+      .ig-fn-highlight:nth-child(3) {
+        animation-delay: 1.2s;
+      }
+      .ig-fn-highlight:nth-child(4) {
+        animation-delay: 1.8s;
+      }
+      .ig-fn-highlight:nth-child(5) {
+        animation-delay: 2.4s;
+      }
       /* KPI values fade in staggered */
       .ig-kpi-row {
         animation: kpi-count 0.6s ease-out both;
       }
-      .ig-kpi-d1 { animation-delay: 2.0s; }
-      .ig-kpi-d2 { animation-delay: 2.2s; }
-      .ig-kpi-d3 { animation-delay: 2.4s; }
-      .ig-kpi-d4 { animation-delay: 2.6s; }
-      .ig-kpi-d5 { animation-delay: 2.8s; }
+      .ig-kpi-d1 {
+        animation-delay: 2s;
+      }
+      .ig-kpi-d2 {
+        animation-delay: 2.2s;
+      }
+      .ig-kpi-d3 {
+        animation-delay: 2.4s;
+      }
+      .ig-kpi-d4 {
+        animation-delay: 2.6s;
+      }
+      .ig-kpi-d5 {
+        animation-delay: 2.8s;
+      }
 
       /* Fullscreen overlay for hero graphic */
       .hero-visual {
@@ -344,63 +414,138 @@
       .ig-stage-label {
         animation: fade-up-in 0.5s ease-out both;
       }
-      .ig-stage-l1 { animation-delay: 0.1s; }
-      .ig-stage-l2 { animation-delay: 0.3s; }
-      .ig-stage-l3 { animation-delay: 0.5s; }
+      .ig-stage-l1 {
+        animation-delay: 0.1s;
+      }
+      .ig-stage-l2 {
+        animation-delay: 0.3s;
+      }
+      .ig-stage-l3 {
+        animation-delay: 0.5s;
+      }
       /* Machine cards stagger in */
       .ig-machine-card {
         animation: fade-up-in 0.4s ease-out both;
       }
-      .ig-mc-d1 { animation-delay: 0.2s; }
-      .ig-mc-d2 { animation-delay: 0.35s; }
-      .ig-mc-d3 { animation-delay: 0.5s; }
-      .ig-mc-d4 { animation-delay: 0.65s; }
+      .ig-mc-d1 {
+        animation-delay: 0.2s;
+      }
+      .ig-mc-d2 {
+        animation-delay: 0.35s;
+      }
+      .ig-mc-d3 {
+        animation-delay: 0.5s;
+      }
+      .ig-mc-d4 {
+        animation-delay: 0.65s;
+      }
 
       /* ── Problem section animations ── */
       @keyframes spaghetti-arrow-pulse {
-        0%, 100% { color: var(--grey-300); }
-        50% { color: var(--black); }
+        0%,
+        100% {
+          color: var(--grey-300);
+        }
+        50% {
+          color: var(--black);
+        }
       }
       @keyframes spoke-border-flash {
-        0%, 100% { border-color: transparent; background: var(--grey-50); }
-        50% { border-color: var(--black); background: var(--white); }
+        0%,
+        100% {
+          border-color: transparent;
+          background: var(--grey-50);
+        }
+        50% {
+          border-color: var(--black);
+          background: var(--white);
+        }
       }
       @keyframes spaghetti-line-slide {
-        0% { opacity: 0; transform: translateX(-12px); }
-        100% { opacity: 1; transform: translateX(0); }
+        0% {
+          opacity: 0;
+          transform: translateX(-12px);
+        }
+        100% {
+          opacity: 1;
+          transform: translateX(0);
+        }
       }
       .problem-section-animated .spaghetti-line .arrow {
         animation: spaghetti-arrow-pulse 2s ease-in-out infinite;
       }
-      .problem-section-animated .spaghetti-line:nth-child(1) .arrow { animation-delay: 0s; }
-      .problem-section-animated .spaghetti-line:nth-child(2) .arrow { animation-delay: 0.3s; }
-      .problem-section-animated .spaghetti-line:nth-child(3) .arrow { animation-delay: 0.6s; }
-      .problem-section-animated .spaghetti-line:nth-child(4) .arrow { animation-delay: 0.9s; }
-      .problem-section-animated .spaghetti-line:nth-child(5) .arrow { animation-delay: 1.2s; }
-      .problem-section-animated .spaghetti-line:nth-child(6) .arrow { animation-delay: 1.5s; }
+      .problem-section-animated .spaghetti-line:nth-child(1) .arrow {
+        animation-delay: 0s;
+      }
+      .problem-section-animated .spaghetti-line:nth-child(2) .arrow {
+        animation-delay: 0.3s;
+      }
+      .problem-section-animated .spaghetti-line:nth-child(3) .arrow {
+        animation-delay: 0.6s;
+      }
+      .problem-section-animated .spaghetti-line:nth-child(4) .arrow {
+        animation-delay: 0.9s;
+      }
+      .problem-section-animated .spaghetti-line:nth-child(5) .arrow {
+        animation-delay: 1.2s;
+      }
+      .problem-section-animated .spaghetti-line:nth-child(6) .arrow {
+        animation-delay: 1.5s;
+      }
       .problem-section-animated .spaghetti-line {
         animation: spaghetti-line-slide 0.5s ease-out both;
       }
-      .problem-section-animated .spaghetti-line:nth-child(1) { animation-delay: 0.1s; }
-      .problem-section-animated .spaghetti-line:nth-child(2) { animation-delay: 0.2s; }
-      .problem-section-animated .spaghetti-line:nth-child(3) { animation-delay: 0.3s; }
-      .problem-section-animated .spaghetti-line:nth-child(4) { animation-delay: 0.4s; }
-      .problem-section-animated .spaghetti-line:nth-child(5) { animation-delay: 0.5s; }
-      .problem-section-animated .spaghetti-line:nth-child(6) { animation-delay: 0.6s; }
+      .problem-section-animated .spaghetti-line:nth-child(1) {
+        animation-delay: 0.1s;
+      }
+      .problem-section-animated .spaghetti-line:nth-child(2) {
+        animation-delay: 0.2s;
+      }
+      .problem-section-animated .spaghetti-line:nth-child(3) {
+        animation-delay: 0.3s;
+      }
+      .problem-section-animated .spaghetti-line:nth-child(4) {
+        animation-delay: 0.4s;
+      }
+      .problem-section-animated .spaghetti-line:nth-child(5) {
+        animation-delay: 0.5s;
+      }
+      .problem-section-animated .spaghetti-line:nth-child(6) {
+        animation-delay: 0.6s;
+      }
       .problem-section-animated .spoke {
         border: 1px solid transparent;
         transition: all 0.3s ease;
         animation: spoke-border-flash 3s ease-in-out infinite;
       }
-      .problem-section-animated .spoke:nth-child(1) { animation-delay: 0s; }
-      .problem-section-animated .spoke:nth-child(2) { animation-delay: 0.5s; }
-      .problem-section-animated .spoke:nth-child(3) { animation-delay: 1.0s; }
-      .problem-section-animated .spoke:nth-child(4) { animation-delay: 1.5s; }
-      .problem-section-animated .spoke:nth-child(5) { animation-delay: 2.0s; }
-      .problem-section-animated .spoke:nth-child(6) { animation-delay: 2.5s; }
+      .problem-section-animated .spoke:nth-child(1) {
+        animation-delay: 0s;
+      }
+      .problem-section-animated .spoke:nth-child(2) {
+        animation-delay: 0.5s;
+      }
+      .problem-section-animated .spoke:nth-child(3) {
+        animation-delay: 1s;
+      }
+      .problem-section-animated .spoke:nth-child(4) {
+        animation-delay: 1.5s;
+      }
+      .problem-section-animated .spoke:nth-child(5) {
+        animation-delay: 2s;
+      }
+      .problem-section-animated .spoke:nth-child(6) {
+        animation-delay: 2.5s;
+      }
       @keyframes uns-hub-pulse {
-        0%, 100% { border-color: var(--black); box-shadow: 0 0 0 0 rgba(10,10,10,0); }
-        50% { border-color: var(--black); box-shadow: 0 0 0 6px rgba(10,10,10,0.06); }
+        0%,
+        100% {
+          border-color: var(--black);
+          box-shadow: 0 0 0 0 rgba(10, 10, 10, 0);
+        }
+        50% {
+          border-color: var(--black);
+          box-shadow: 0 0 0 6px rgba(10, 10, 10, 0.06);
+        }
       }
       .problem-section-animated .uns-hub {
         animation: uns-hub-pulse 3s ease-in-out infinite;
@@ -1011,43 +1156,85 @@
         align-items: center;
         justify-content: center;
         font-size: 10px;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
       }
-      [data-theme="dark"] .theme-toggle {
+      [data-theme='dark'] .theme-toggle {
         background: var(--grey-200);
       }
-      [data-theme="dark"] .theme-toggle .toggle-thumb {
+      [data-theme='dark'] .theme-toggle .toggle-thumb {
         transform: translateX(18px);
         background: var(--grey-50);
       }
-      .toggle-icon-sun, .toggle-icon-moon {
+      .toggle-icon-sun,
+      .toggle-icon-moon {
         pointer-events: none;
         line-height: 1;
       }
-      .toggle-icon-moon { display: none; }
-      [data-theme="dark"] .toggle-icon-sun { display: none; }
-      [data-theme="dark"] .toggle-icon-moon { display: block; }
+      .toggle-icon-moon {
+        display: none;
+      }
+      [data-theme='dark'] .toggle-icon-sun {
+        display: none;
+      }
+      [data-theme='dark'] .toggle-icon-moon {
+        display: block;
+      }
 
       /* Dark mode SVG overrides */
-      [data-theme="dark"] .hero-visual svg rect[fill="#fafafa"] { fill: #141414; }
-      [data-theme="dark"] .hero-visual svg rect[fill="#ffffff"] { fill: #1a1a1a; }
-      [data-theme="dark"] .hero-visual svg rect[fill="#0a0a0a"] { fill: #f5f5f5; }
-      [data-theme="dark"] .hero-visual svg rect[stroke="#e5e5e5"] { stroke: #262626; }
-      [data-theme="dark"] .hero-visual svg rect[stroke="#0a0a0a"] { stroke: #f5f5f5; }
-      [data-theme="dark"] .hero-visual svg line[stroke="#e5e5e5"] { stroke: #262626; }
-      [data-theme="dark"] .hero-visual svg line[stroke="#d4d4d4"] { stroke: #404040; }
-      [data-theme="dark"] .hero-visual svg line[stroke="#f5f5f5"] { stroke: #1a1a1a; }
-      [data-theme="dark"] .hero-visual svg path[stroke="#d4d4d4"] { stroke: #404040; }
-      [data-theme="dark"] .hero-visual svg circle[fill="#0a0a0a"] { fill: #f5f5f5; }
-      [data-theme="dark"] .hero-visual svg circle[fill="#ffffff"] { fill: #0a0a0a; }
-      [data-theme="dark"] .hero-visual svg text[fill="#0a0a0a"] { fill: #f5f5f5; }
-      [data-theme="dark"] .hero-visual svg text[fill="#737373"] { fill: #a3a3a3; }
-      [data-theme="dark"] .hero-visual svg text[fill="#a3a3a3"] { fill: #737373; }
-      [data-theme="dark"] .hero-visual svg text[fill="#ffffff"] { fill: #0a0a0a; }
+      [data-theme='dark'] .hero-visual svg rect[fill='#fafafa'] {
+        fill: #141414;
+      }
+      [data-theme='dark'] .hero-visual svg rect[fill='#ffffff'] {
+        fill: #1a1a1a;
+      }
+      [data-theme='dark'] .hero-visual svg rect[fill='#0a0a0a'] {
+        fill: #f5f5f5;
+      }
+      [data-theme='dark'] .hero-visual svg rect[stroke='#e5e5e5'] {
+        stroke: #262626;
+      }
+      [data-theme='dark'] .hero-visual svg rect[stroke='#0a0a0a'] {
+        stroke: #f5f5f5;
+      }
+      [data-theme='dark'] .hero-visual svg line[stroke='#e5e5e5'] {
+        stroke: #262626;
+      }
+      [data-theme='dark'] .hero-visual svg line[stroke='#d4d4d4'] {
+        stroke: #404040;
+      }
+      [data-theme='dark'] .hero-visual svg line[stroke='#f5f5f5'] {
+        stroke: #1a1a1a;
+      }
+      [data-theme='dark'] .hero-visual svg path[stroke='#d4d4d4'] {
+        stroke: #404040;
+      }
+      [data-theme='dark'] .hero-visual svg circle[fill='#0a0a0a'] {
+        fill: #f5f5f5;
+      }
+      [data-theme='dark'] .hero-visual svg circle[fill='#ffffff'] {
+        fill: #0a0a0a;
+      }
+      [data-theme='dark'] .hero-visual svg text[fill='#0a0a0a'] {
+        fill: #f5f5f5;
+      }
+      [data-theme='dark'] .hero-visual svg text[fill='#737373'] {
+        fill: #a3a3a3;
+      }
+      [data-theme='dark'] .hero-visual svg text[fill='#a3a3a3'] {
+        fill: #737373;
+      }
+      [data-theme='dark'] .hero-visual svg text[fill='#ffffff'] {
+        fill: #0a0a0a;
+      }
 
       /* Transition for smooth theme switching */
-      body, nav, .hero-fullscreen-overlay {
-        transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+      body,
+      nav,
+      .hero-fullscreen-overlay {
+        transition:
+          background-color 0.3s ease,
+          color 0.3s ease,
+          border-color 0.3s ease;
       }
 
       /* RESPONSIVE — TABLET */
@@ -1473,12 +1660,16 @@
   </head>
   <body>
     <nav>
-      <a href="/" class="logo" style="text-decoration:none;">fn-uns</a>
+      <a href="/" class="logo" style="text-decoration: none">fn-uns</a>
       <div class="links">
         <a href="/framework/">Standard</a>
         <a href="https://github.com/orgs/functionkit/repositories">GitHub</a>
         <a href="https://functionkit.github.io/fnkit/">fnkit</a>
-        <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+        <button
+          class="theme-toggle"
+          id="themeToggle"
+          aria-label="Toggle dark mode"
+        >
           <div class="toggle-thumb">
             <span class="toggle-icon-sun">☀</span>
             <span class="toggle-icon-moon">☾</span>
@@ -1491,7 +1682,7 @@
     <div class="hero">
       <div class="container">
         <div class="hero-content">
-          <h1>9&nbsp;functions. One&nbsp;UNS pipeline. Deploy with git&nbsp;push.</h1>
+          <h1>Limitless functions. One UNS.</h1>
           <p class="subtitle">
             fn-uns is a complete Unified Namespace implementation — serverless
             functions that capture, process, and report on real-time factory
@@ -1499,202 +1690,1002 @@
           </p>
           <div class="cta-group">
             <a href="/docs/" class="btn-primary">Read the Docs →</a>
-            <a href="https://github.com/orgs/functionkit/repositories" class="btn-secondary">View on GitHub</a>
+            <a
+              href="https://github.com/orgs/functionkit/repositories"
+              class="btn-secondary"
+              >View on GitHub</a
+            >
           </div>
         </div>
         <div class="hero-visual">
-          <svg viewBox="0 0 520 480" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <svg
+            viewBox="0 0 520 480"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
             <!-- Background card -->
-            <rect x="0" y="0" width="520" height="480" rx="16" fill="#fafafa" stroke="#e5e5e5" stroke-width="1"/>
+            <rect
+              x="0"
+              y="0"
+              width="520"
+              height="480"
+              rx="16"
+              fill="#fafafa"
+              stroke="#e5e5e5"
+              stroke-width="1"
+            />
 
             <!-- ═══ STAGE LABELS ═══ -->
-            <text x="60" y="32" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="600" fill="#a3a3a3" letter-spacing="0.08em" class="ig-stage-label ig-stage-l1">CAPTURE</text>
-            <text x="222" y="32" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="600" fill="#a3a3a3" letter-spacing="0.08em" class="ig-stage-label ig-stage-l2">PROCESS</text>
-            <text x="410" y="32" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="600" fill="#a3a3a3" letter-spacing="0.08em" class="ig-stage-label ig-stage-l3">REPORT</text>
+            <text
+              x="60"
+              y="32"
+              font-family="'JetBrains Mono', monospace"
+              font-size="9"
+              font-weight="600"
+              fill="#a3a3a3"
+              letter-spacing="0.08em"
+              class="ig-stage-label ig-stage-l1"
+            >
+              CAPTURE
+            </text>
+            <text
+              x="222"
+              y="32"
+              font-family="'JetBrains Mono', monospace"
+              font-size="9"
+              font-weight="600"
+              fill="#a3a3a3"
+              letter-spacing="0.08em"
+              class="ig-stage-label ig-stage-l2"
+            >
+              PROCESS
+            </text>
+            <text
+              x="410"
+              y="32"
+              font-family="'JetBrains Mono', monospace"
+              font-size="9"
+              font-weight="600"
+              fill="#a3a3a3"
+              letter-spacing="0.08em"
+              class="ig-stage-label ig-stage-l3"
+            >
+              REPORT
+            </text>
 
             <!-- Vertical stage dividers -->
-            <line x1="180" y1="20" x2="180" y2="390" stroke="#e5e5e5" stroke-width="1" stroke-dasharray="4 4"/>
-            <line x1="370" y1="20" x2="370" y2="390" stroke="#e5e5e5" stroke-width="1" stroke-dasharray="4 4"/>
+            <line
+              x1="180"
+              y1="20"
+              x2="180"
+              y2="390"
+              stroke="#e5e5e5"
+              stroke-width="1"
+              stroke-dasharray="4 4"
+            />
+            <line
+              x1="370"
+              y1="20"
+              x2="370"
+              y2="390"
+              stroke="#e5e5e5"
+              stroke-width="1"
+              stroke-dasharray="4 4"
+            />
 
             <!-- ═══ DATA PACKET PATHS (invisible, used for offset-path) ═══ -->
             <defs>
               <!-- Machine → MQTT vertical path -->
-              <path id="path-m-mqtt" d="M 90 108 L 90 324"/>
+              <path id="path-m-mqtt" d="M 90 108 L 90 324" />
               <!-- MQTT → Valkey L-shaped path -->
-              <path id="path-mqtt-valkey" d="M 156 350 L 175 350 Q 185 350 185 340 L 185 84 Q 185 74 195 74 L 275 74"/>
+              <path
+                id="path-mqtt-valkey"
+                d="M 156 350 L 175 350 Q 185 350 185 340 L 185 84 Q 185 74 195 74 L 275 74"
+              />
               <!-- Valkey → Functions vertical path -->
-              <path id="path-valkey-fn" d="M 275 112 L 275 352"/>
+              <path id="path-valkey-fn" d="M 275 112 L 275 352" />
               <!-- Functions → PostgreSQL path -->
-              <path id="path-fn-pg" d="M 352 200 L 365 200 Q 375 200 375 190 L 375 84 Q 375 74 385 74 L 442 74"/>
+              <path
+                id="path-fn-pg"
+                d="M 352 200 L 365 200 Q 375 200 375 190 L 375 84 Q 375 74 385 74 L 442 74"
+              />
               <!-- PostgreSQL → KPI path -->
-              <path id="path-pg-kpi" d="M 442 112 L 442 174"/>
+              <path id="path-pg-kpi" d="M 442 112 L 442 174" />
               <!-- KPI → Output path -->
-              <path id="path-kpi-out" d="M 442 200 L 442 302"/>
+              <path id="path-kpi-out" d="M 442 200 L 442 302" />
             </defs>
 
             <!-- ═══ TRAVELLING DATA PACKETS ═══ -->
             <!-- Machines → MQTT -->
-            <circle r="3" fill="#0a0a0a" style="offset-path: path('M 90 108 L 90 324');" class="ig-packet ig-packet-d1"/>
-            <circle r="3" fill="#0a0a0a" style="offset-path: path('M 90 108 L 90 324');" class="ig-packet ig-packet-d3"/>
+            <circle
+              r="3"
+              fill="#0a0a0a"
+              style="offset-path: path('M 90 108 L 90 324')"
+              class="ig-packet ig-packet-d1"
+            />
+            <circle
+              r="3"
+              fill="#0a0a0a"
+              style="offset-path: path('M 90 108 L 90 324')"
+              class="ig-packet ig-packet-d3"
+            />
             <!-- MQTT → Valkey -->
-            <circle r="3" fill="#0a0a0a" style="offset-path: path('M 156 350 L 175 350 Q 185 350 185 340 L 185 84 Q 185 74 195 74 L 275 74');" class="ig-packet ig-packet-d2"/>
-            <circle r="3" fill="#0a0a0a" style="offset-path: path('M 156 350 L 175 350 Q 185 350 185 340 L 185 84 Q 185 74 195 74 L 275 74');" class="ig-packet ig-packet-d4"/>
+            <circle
+              r="3"
+              fill="#0a0a0a"
+              style="
+                offset-path: path(
+                  'M 156 350 L 175 350 Q 185 350 185 340 L 185 84 Q 185 74 195 74 L 275 74'
+                );
+              "
+              class="ig-packet ig-packet-d2"
+            />
+            <circle
+              r="3"
+              fill="#0a0a0a"
+              style="
+                offset-path: path(
+                  'M 156 350 L 175 350 Q 185 350 185 340 L 185 84 Q 185 74 195 74 L 275 74'
+                );
+              "
+              class="ig-packet ig-packet-d4"
+            />
             <!-- Valkey → Functions -->
-            <circle r="2.5" fill="#0a0a0a" style="offset-path: path('M 275 112 L 275 352');" class="ig-packet ig-packet-d1"/>
-            <circle r="2.5" fill="#0a0a0a" style="offset-path: path('M 275 112 L 275 352');" class="ig-packet ig-packet-d5"/>
+            <circle
+              r="2.5"
+              fill="#0a0a0a"
+              style="offset-path: path('M 275 112 L 275 352')"
+              class="ig-packet ig-packet-d1"
+            />
+            <circle
+              r="2.5"
+              fill="#0a0a0a"
+              style="offset-path: path('M 275 112 L 275 352')"
+              class="ig-packet ig-packet-d5"
+            />
             <!-- Functions → PostgreSQL -->
-            <circle r="2.5" fill="#0a0a0a" style="offset-path: path('M 352 200 L 365 200 Q 375 200 375 190 L 375 84 Q 375 74 385 74 L 442 74');" class="ig-packet ig-packet-d3"/>
-            <circle r="2.5" fill="#0a0a0a" style="offset-path: path('M 352 200 L 365 200 Q 375 200 375 190 L 375 84 Q 375 74 385 74 L 442 74');" class="ig-packet ig-packet-d5"/>
+            <circle
+              r="2.5"
+              fill="#0a0a0a"
+              style="
+                offset-path: path(
+                  'M 352 200 L 365 200 Q 375 200 375 190 L 375 84 Q 375 74 385 74 L 442 74'
+                );
+              "
+              class="ig-packet ig-packet-d3"
+            />
+            <circle
+              r="2.5"
+              fill="#0a0a0a"
+              style="
+                offset-path: path(
+                  'M 352 200 L 365 200 Q 375 200 375 190 L 375 84 Q 375 74 385 74 L 442 74'
+                );
+              "
+              class="ig-packet ig-packet-d5"
+            />
             <!-- PostgreSQL → KPI -->
-            <circle r="2.5" fill="#ffffff" style="offset-path: path('M 442 112 L 442 174');" class="ig-packet ig-packet-d2"/>
+            <circle
+              r="2.5"
+              fill="#ffffff"
+              style="offset-path: path('M 442 112 L 442 174')"
+              class="ig-packet ig-packet-d2"
+            />
             <!-- KPI → Output -->
-            <circle r="2.5" fill="#0a0a0a" style="offset-path: path('M 442 200 L 442 302');" class="ig-packet ig-packet-d4"/>
+            <circle
+              r="2.5"
+              fill="#0a0a0a"
+              style="offset-path: path('M 442 200 L 442 302')"
+              class="ig-packet ig-packet-d4"
+            />
 
             <!-- ═══ MACHINES (left column) ═══ -->
             <!-- CNC-01 -->
-            <rect x="24" y="56" width="132" height="52" rx="8" fill="#ffffff" stroke="#e5e5e5" stroke-width="1" class="ig-machine-card ig-mc-d1"/>
-            <circle cx="42" cy="82" r="5" fill="#0a0a0a" class="ig-pulse ig-pulse-d1"/>
-            <text x="54" y="78" font-family="'JetBrains Mono', monospace" font-size="11" font-weight="600" fill="#0a0a0a">cnc-01</text>
-            <text x="54" y="94" font-family="'JetBrains Mono', monospace" font-size="9" fill="#737373">ACTIVE</text>
+            <rect
+              x="24"
+              y="56"
+              width="132"
+              height="52"
+              rx="8"
+              fill="#ffffff"
+              stroke="#e5e5e5"
+              stroke-width="1"
+              class="ig-machine-card ig-mc-d1"
+            />
+            <circle
+              cx="42"
+              cy="82"
+              r="5"
+              fill="#0a0a0a"
+              class="ig-pulse ig-pulse-d1"
+            />
+            <text
+              x="54"
+              y="78"
+              font-family="'JetBrains Mono', monospace"
+              font-size="11"
+              font-weight="600"
+              fill="#0a0a0a"
+            >
+              cnc-01
+            </text>
+            <text
+              x="54"
+              y="94"
+              font-family="'JetBrains Mono', monospace"
+              font-size="9"
+              fill="#737373"
+            >
+              ACTIVE
+            </text>
 
             <!-- CNC-02 -->
-            <rect x="24" y="120" width="132" height="52" rx="8" fill="#ffffff" stroke="#e5e5e5" stroke-width="1"/>
-            <circle cx="42" cy="146" r="5" fill="#0a0a0a" class="ig-pulse ig-pulse-d2"/>
-            <text x="54" y="142" font-family="'JetBrains Mono', monospace" font-size="11" font-weight="600" fill="#0a0a0a">cnc-02</text>
-            <text x="54" y="158" font-family="'JetBrains Mono', monospace" font-size="9" fill="#737373">IDLE</text>
+            <rect
+              x="24"
+              y="120"
+              width="132"
+              height="52"
+              rx="8"
+              fill="#ffffff"
+              stroke="#e5e5e5"
+              stroke-width="1"
+            />
+            <circle
+              cx="42"
+              cy="146"
+              r="5"
+              fill="#0a0a0a"
+              class="ig-pulse ig-pulse-d2"
+            />
+            <text
+              x="54"
+              y="142"
+              font-family="'JetBrains Mono', monospace"
+              font-size="11"
+              font-weight="600"
+              fill="#0a0a0a"
+            >
+              cnc-02
+            </text>
+            <text
+              x="54"
+              y="158"
+              font-family="'JetBrains Mono', monospace"
+              font-size="9"
+              fill="#737373"
+            >
+              IDLE
+            </text>
 
             <!-- CNC-03 -->
-            <rect x="24" y="184" width="132" height="52" rx="8" fill="#ffffff" stroke="#e5e5e5" stroke-width="1"/>
-            <circle cx="42" cy="210" r="5" fill="#0a0a0a" class="ig-pulse ig-pulse-d3"/>
-            <text x="54" y="206" font-family="'JetBrains Mono', monospace" font-size="11" font-weight="600" fill="#0a0a0a">cnc-03</text>
-            <text x="54" y="222" font-family="'JetBrains Mono', monospace" font-size="9" fill="#737373">ACTIVE</text>
+            <rect
+              x="24"
+              y="184"
+              width="132"
+              height="52"
+              rx="8"
+              fill="#ffffff"
+              stroke="#e5e5e5"
+              stroke-width="1"
+            />
+            <circle
+              cx="42"
+              cy="210"
+              r="5"
+              fill="#0a0a0a"
+              class="ig-pulse ig-pulse-d3"
+            />
+            <text
+              x="54"
+              y="206"
+              font-family="'JetBrains Mono', monospace"
+              font-size="11"
+              font-weight="600"
+              fill="#0a0a0a"
+            >
+              cnc-03
+            </text>
+            <text
+              x="54"
+              y="222"
+              font-family="'JetBrains Mono', monospace"
+              font-size="9"
+              fill="#737373"
+            >
+              ACTIVE
+            </text>
 
             <!-- CNC-04 -->
-            <rect x="24" y="248" width="132" height="52" rx="8" fill="#ffffff" stroke="#e5e5e5" stroke-width="1"/>
-            <circle cx="42" cy="274" r="5" fill="#0a0a0a" class="ig-pulse ig-pulse-d4"/>
-            <text x="54" y="270" font-family="'JetBrains Mono', monospace" font-size="11" font-weight="600" fill="#0a0a0a">cnc-04</text>
-            <text x="54" y="286" font-family="'JetBrains Mono', monospace" font-size="9" fill="#737373">ALARM</text>
+            <rect
+              x="24"
+              y="248"
+              width="132"
+              height="52"
+              rx="8"
+              fill="#ffffff"
+              stroke="#e5e5e5"
+              stroke-width="1"
+            />
+            <circle
+              cx="42"
+              cy="274"
+              r="5"
+              fill="#0a0a0a"
+              class="ig-pulse ig-pulse-d4"
+            />
+            <text
+              x="54"
+              y="270"
+              font-family="'JetBrains Mono', monospace"
+              font-size="11"
+              font-weight="600"
+              fill="#0a0a0a"
+            >
+              cnc-04
+            </text>
+            <text
+              x="54"
+              y="286"
+              font-family="'JetBrains Mono', monospace"
+              font-size="9"
+              fill="#737373"
+            >
+              ALARM
+            </text>
 
             <!-- ═══ MQTT BROKER (centre-left) ═══ -->
-            <rect x="24" y="324" width="132" height="52" rx="8" fill="#0a0a0a"/>
-            <text x="90" y="347" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="600" fill="#ffffff" text-anchor="middle">MQTT</text>
-            <text x="90" y="363" font-family="'JetBrains Mono', monospace" font-size="8" fill="#a3a3a3" text-anchor="middle">Broker</text>
+            <rect
+              x="24"
+              y="324"
+              width="132"
+              height="52"
+              rx="8"
+              fill="#0a0a0a"
+            />
+            <text
+              x="90"
+              y="347"
+              font-family="'JetBrains Mono', monospace"
+              font-size="10"
+              font-weight="600"
+              fill="#ffffff"
+              text-anchor="middle"
+            >
+              MQTT
+            </text>
+            <text
+              x="90"
+              y="363"
+              font-family="'JetBrains Mono', monospace"
+              font-size="8"
+              fill="#a3a3a3"
+              text-anchor="middle"
+            >
+              Broker
+            </text>
 
             <!-- Flow lines: machines → MQTT -->
-            <line x1="90" y1="108" x2="90" y2="120" stroke="#d4d4d4" stroke-width="1" class="ig-flow-line"/>
-            <line x1="90" y1="172" x2="90" y2="184" stroke="#d4d4d4" stroke-width="1" class="ig-flow-line"/>
-            <line x1="90" y1="236" x2="90" y2="248" stroke="#d4d4d4" stroke-width="1" class="ig-flow-line"/>
-            <line x1="90" y1="300" x2="90" y2="324" stroke="#d4d4d4" stroke-width="1" class="ig-flow-line"/>
+            <line
+              x1="90"
+              y1="108"
+              x2="90"
+              y2="120"
+              stroke="#d4d4d4"
+              stroke-width="1"
+              class="ig-flow-line"
+            />
+            <line
+              x1="90"
+              y1="172"
+              x2="90"
+              y2="184"
+              stroke="#d4d4d4"
+              stroke-width="1"
+              class="ig-flow-line"
+            />
+            <line
+              x1="90"
+              y1="236"
+              x2="90"
+              y2="248"
+              stroke="#d4d4d4"
+              stroke-width="1"
+              class="ig-flow-line"
+            />
+            <line
+              x1="90"
+              y1="300"
+              x2="90"
+              y2="324"
+              stroke="#d4d4d4"
+              stroke-width="1"
+              class="ig-flow-line"
+            />
 
             <!-- ═══ VALKEY CACHE (centre) ═══ -->
-            <rect x="198" y="56" width="154" height="56" rx="8" fill="#ffffff" stroke="#0a0a0a" stroke-width="1.5"/>
-            <text x="275" y="79" font-family="'JetBrains Mono', monospace" font-size="11" font-weight="600" fill="#0a0a0a" text-anchor="middle">Valkey Cache</text>
-            <text x="275" y="97" font-family="'JetBrains Mono', monospace" font-size="8" fill="#737373" text-anchor="middle">uns:data:* · uns:prev:*</text>
+            <rect
+              x="198"
+              y="56"
+              width="154"
+              height="56"
+              rx="8"
+              fill="#ffffff"
+              stroke="#0a0a0a"
+              stroke-width="1.5"
+            />
+            <text
+              x="275"
+              y="79"
+              font-family="'JetBrains Mono', monospace"
+              font-size="11"
+              font-weight="600"
+              fill="#0a0a0a"
+              text-anchor="middle"
+            >
+              Valkey Cache
+            </text>
+            <text
+              x="275"
+              y="97"
+              font-family="'JetBrains Mono', monospace"
+              font-size="8"
+              fill="#737373"
+              text-anchor="middle"
+            >
+              uns:data:* · uns:prev:*
+            </text>
 
             <!-- Flow line: MQTT → Valkey (via uns-framework) -->
-            <path d="M 156 350 L 175 350 Q 185 350 185 340 L 185 84 Q 185 74 195 74 L 198 74" stroke="#d4d4d4" stroke-width="1" fill="none" class="ig-flow-line"/>
-            <text x="170" y="345" font-family="'JetBrains Mono', monospace" font-size="7" fill="#a3a3a3" transform="rotate(-90 170 345)">uns-framework</text>
+            <path
+              d="M 156 350 L 175 350 Q 185 350 185 340 L 185 84 Q 185 74 195 74 L 198 74"
+              stroke="#d4d4d4"
+              stroke-width="1"
+              fill="none"
+              class="ig-flow-line"
+            />
+            <text
+              x="170"
+              y="345"
+              font-family="'JetBrains Mono', monospace"
+              font-size="7"
+              fill="#a3a3a3"
+              transform="rotate(-90 170 345)"
+            >
+              uns-framework
+            </text>
 
             <!-- ═══ PROCESSING FUNCTIONS (centre column) ═══ -->
             <!-- uns-state -->
-            <rect x="198" y="132" width="154" height="40" rx="6" fill="#ffffff" stroke="#e5e5e5" stroke-width="1" class="ig-fn-highlight"/>
-            <text x="214" y="157" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="500" fill="#0a0a0a">uns-state</text>
-            <text x="336" y="157" font-family="'JetBrains Mono', monospace" font-size="8" fill="#a3a3a3" text-anchor="end">Go</text>
+            <rect
+              x="198"
+              y="132"
+              width="154"
+              height="40"
+              rx="6"
+              fill="#ffffff"
+              stroke="#e5e5e5"
+              stroke-width="1"
+              class="ig-fn-highlight"
+            />
+            <text
+              x="214"
+              y="157"
+              font-family="'JetBrains Mono', monospace"
+              font-size="10"
+              font-weight="500"
+              fill="#0a0a0a"
+            >
+              uns-state
+            </text>
+            <text
+              x="336"
+              y="157"
+              font-family="'JetBrains Mono', monospace"
+              font-size="8"
+              fill="#a3a3a3"
+              text-anchor="end"
+            >
+              Go
+            </text>
 
             <!-- uns-stoppage -->
-            <rect x="198" y="182" width="154" height="40" rx="6" fill="#ffffff" stroke="#e5e5e5" stroke-width="1" class="ig-fn-highlight" style="animation-delay: 0.6s"/>
-            <text x="214" y="207" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="500" fill="#0a0a0a">uns-stoppage</text>
-            <text x="336" y="207" font-family="'JetBrains Mono', monospace" font-size="8" fill="#a3a3a3" text-anchor="end">Node</text>
+            <rect
+              x="198"
+              y="182"
+              width="154"
+              height="40"
+              rx="6"
+              fill="#ffffff"
+              stroke="#e5e5e5"
+              stroke-width="1"
+              class="ig-fn-highlight"
+              style="animation-delay: 0.6s"
+            />
+            <text
+              x="214"
+              y="207"
+              font-family="'JetBrains Mono', monospace"
+              font-size="10"
+              font-weight="500"
+              fill="#0a0a0a"
+            >
+              uns-stoppage
+            </text>
+            <text
+              x="336"
+              y="207"
+              font-family="'JetBrains Mono', monospace"
+              font-size="8"
+              fill="#a3a3a3"
+              text-anchor="end"
+            >
+              Node
+            </text>
 
             <!-- uns-productivity -->
-            <rect x="198" y="232" width="154" height="40" rx="6" fill="#ffffff" stroke="#e5e5e5" stroke-width="1" class="ig-fn-highlight" style="animation-delay: 1.2s"/>
-            <text x="214" y="257" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="500" fill="#0a0a0a">uns-productivity</text>
-            <text x="336" y="257" font-family="'JetBrains Mono', monospace" font-size="8" fill="#a3a3a3" text-anchor="end">Go</text>
+            <rect
+              x="198"
+              y="232"
+              width="154"
+              height="40"
+              rx="6"
+              fill="#ffffff"
+              stroke="#e5e5e5"
+              stroke-width="1"
+              class="ig-fn-highlight"
+              style="animation-delay: 1.2s"
+            />
+            <text
+              x="214"
+              y="257"
+              font-family="'JetBrains Mono', monospace"
+              font-size="10"
+              font-weight="500"
+              fill="#0a0a0a"
+            >
+              uns-productivity
+            </text>
+            <text
+              x="336"
+              y="257"
+              font-family="'JetBrains Mono', monospace"
+              font-size="8"
+              fill="#a3a3a3"
+              text-anchor="end"
+            >
+              Go
+            </text>
 
             <!-- uns-log -->
-            <rect x="198" y="282" width="154" height="40" rx="6" fill="#ffffff" stroke="#e5e5e5" stroke-width="1" class="ig-fn-highlight" style="animation-delay: 1.8s"/>
-            <text x="214" y="307" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="500" fill="#0a0a0a">uns-log</text>
-            <text x="336" y="307" font-family="'JetBrains Mono', monospace" font-size="8" fill="#a3a3a3" text-anchor="end">Go</text>
+            <rect
+              x="198"
+              y="282"
+              width="154"
+              height="40"
+              rx="6"
+              fill="#ffffff"
+              stroke="#e5e5e5"
+              stroke-width="1"
+              class="ig-fn-highlight"
+              style="animation-delay: 1.8s"
+            />
+            <text
+              x="214"
+              y="307"
+              font-family="'JetBrains Mono', monospace"
+              font-size="10"
+              font-weight="500"
+              fill="#0a0a0a"
+            >
+              uns-log
+            </text>
+            <text
+              x="336"
+              y="307"
+              font-family="'JetBrains Mono', monospace"
+              font-size="8"
+              fill="#a3a3a3"
+              text-anchor="end"
+            >
+              Go
+            </text>
 
             <!-- uns-input -->
-            <rect x="198" y="332" width="154" height="40" rx="6" fill="#ffffff" stroke="#e5e5e5" stroke-width="1" class="ig-fn-highlight" style="animation-delay: 2.4s"/>
-            <text x="214" y="357" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="500" fill="#0a0a0a">uns-input</text>
-            <text x="336" y="357" font-family="'JetBrains Mono', monospace" font-size="8" fill="#a3a3a3" text-anchor="end">Node</text>
+            <rect
+              x="198"
+              y="332"
+              width="154"
+              height="40"
+              rx="6"
+              fill="#ffffff"
+              stroke="#e5e5e5"
+              stroke-width="1"
+              class="ig-fn-highlight"
+              style="animation-delay: 2.4s"
+            />
+            <text
+              x="214"
+              y="357"
+              font-family="'JetBrains Mono', monospace"
+              font-size="10"
+              font-weight="500"
+              fill="#0a0a0a"
+            >
+              uns-input
+            </text>
+            <text
+              x="336"
+              y="357"
+              font-family="'JetBrains Mono', monospace"
+              font-size="8"
+              fill="#a3a3a3"
+              text-anchor="end"
+            >
+              Node
+            </text>
 
             <!-- Flow lines: Valkey → processing functions -->
-            <line x1="275" y1="112" x2="275" y2="132" stroke="#d4d4d4" stroke-width="1" class="ig-flow-line"/>
-            <line x1="275" y1="172" x2="275" y2="182" stroke="#d4d4d4" stroke-width="1" class="ig-flow-line"/>
-            <line x1="275" y1="222" x2="275" y2="232" stroke="#d4d4d4" stroke-width="1" class="ig-flow-line"/>
-            <line x1="275" y1="272" x2="275" y2="282" stroke="#d4d4d4" stroke-width="1" class="ig-flow-line"/>
-            <line x1="275" y1="322" x2="275" y2="332" stroke="#d4d4d4" stroke-width="1" class="ig-flow-line"/>
+            <line
+              x1="275"
+              y1="112"
+              x2="275"
+              y2="132"
+              stroke="#d4d4d4"
+              stroke-width="1"
+              class="ig-flow-line"
+            />
+            <line
+              x1="275"
+              y1="172"
+              x2="275"
+              y2="182"
+              stroke="#d4d4d4"
+              stroke-width="1"
+              class="ig-flow-line"
+            />
+            <line
+              x1="275"
+              y1="222"
+              x2="275"
+              y2="232"
+              stroke="#d4d4d4"
+              stroke-width="1"
+              class="ig-flow-line"
+            />
+            <line
+              x1="275"
+              y1="272"
+              x2="275"
+              y2="282"
+              stroke="#d4d4d4"
+              stroke-width="1"
+              class="ig-flow-line"
+            />
+            <line
+              x1="275"
+              y1="322"
+              x2="275"
+              y2="332"
+              stroke="#d4d4d4"
+              stroke-width="1"
+              class="ig-flow-line"
+            />
 
             <!-- ═══ POSTGRESQL (right column, top) ═══ -->
-            <rect x="388" y="56" width="108" height="56" rx="8" fill="#ffffff" stroke="#0a0a0a" stroke-width="1.5"/>
-            <text x="442" y="79" font-family="'JetBrains Mono', monospace" font-size="11" font-weight="600" fill="#0a0a0a" text-anchor="middle">PostgreSQL</text>
-            <text x="442" y="97" font-family="'JetBrains Mono', monospace" font-size="8" fill="#737373" text-anchor="middle">4 tables</text>
+            <rect
+              x="388"
+              y="56"
+              width="108"
+              height="56"
+              rx="8"
+              fill="#ffffff"
+              stroke="#0a0a0a"
+              stroke-width="1.5"
+            />
+            <text
+              x="442"
+              y="79"
+              font-family="'JetBrains Mono', monospace"
+              font-size="11"
+              font-weight="600"
+              fill="#0a0a0a"
+              text-anchor="middle"
+            >
+              PostgreSQL
+            </text>
+            <text
+              x="442"
+              y="97"
+              font-family="'JetBrains Mono', monospace"
+              font-size="8"
+              fill="#737373"
+              text-anchor="middle"
+            >
+              4 tables
+            </text>
 
             <!-- Flow lines: processing → PostgreSQL -->
-            <path d="M 352 152 L 365 152 Q 375 152 375 142 L 375 84 Q 375 74 385 74 L 388 74" stroke="#d4d4d4" stroke-width="1" fill="none" class="ig-flow-line"/>
-            <path d="M 352 202 L 365 202 Q 375 202 375 192 L 375 90 Q 375 80 385 80 L 388 80" stroke="#d4d4d4" stroke-width="1" fill="none" class="ig-flow-line"/>
-            <path d="M 352 252 L 365 252 Q 375 252 375 242 L 375 92 Q 375 82 385 82 L 388 82" stroke="#d4d4d4" stroke-width="1" fill="none" class="ig-flow-line"/>
-            <path d="M 352 302 L 365 302 Q 375 302 375 292 L 375 94 Q 375 84 385 84 L 388 84" stroke="#d4d4d4" stroke-width="1" fill="none" class="ig-flow-line"/>
+            <path
+              d="M 352 152 L 365 152 Q 375 152 375 142 L 375 84 Q 375 74 385 74 L 388 74"
+              stroke="#d4d4d4"
+              stroke-width="1"
+              fill="none"
+              class="ig-flow-line"
+            />
+            <path
+              d="M 352 202 L 365 202 Q 375 202 375 192 L 375 90 Q 375 80 385 80 L 388 80"
+              stroke="#d4d4d4"
+              stroke-width="1"
+              fill="none"
+              class="ig-flow-line"
+            />
+            <path
+              d="M 352 252 L 365 252 Q 375 252 375 242 L 375 92 Q 375 82 385 82 L 388 82"
+              stroke="#d4d4d4"
+              stroke-width="1"
+              fill="none"
+              class="ig-flow-line"
+            />
+            <path
+              d="M 352 302 L 365 302 Q 375 302 375 292 L 375 94 Q 375 84 385 84 L 388 84"
+              stroke="#d4d4d4"
+              stroke-width="1"
+              fill="none"
+              class="ig-flow-line"
+            />
 
             <!-- ═══ UNS-KPI (right column, centre) ═══ -->
-            <rect x="388" y="148" width="108" height="52" rx="8" fill="#0a0a0a"/>
-            <text x="442" y="171" font-family="'JetBrains Mono', monospace" font-size="11" font-weight="600" fill="#ffffff" text-anchor="middle">uns-kpi</text>
-            <text x="442" y="187" font-family="'JetBrains Mono', monospace" font-size="8" fill="#a3a3a3" text-anchor="middle">Go · HTTP</text>
+            <rect
+              x="388"
+              y="148"
+              width="108"
+              height="52"
+              rx="8"
+              fill="#0a0a0a"
+            />
+            <text
+              x="442"
+              y="171"
+              font-family="'JetBrains Mono', monospace"
+              font-size="11"
+              font-weight="600"
+              fill="#ffffff"
+              text-anchor="middle"
+            >
+              uns-kpi
+            </text>
+            <text
+              x="442"
+              y="187"
+              font-family="'JetBrains Mono', monospace"
+              font-size="8"
+              fill="#a3a3a3"
+              text-anchor="middle"
+            >
+              Go · HTTP
+            </text>
 
             <!-- Flow line: PostgreSQL → uns-kpi -->
-            <line x1="442" y1="112" x2="442" y2="148" stroke="#d4d4d4" stroke-width="1" class="ig-flow-line"/>
+            <line
+              x1="442"
+              y1="112"
+              x2="442"
+              y2="148"
+              stroke="#d4d4d4"
+              stroke-width="1"
+              class="ig-flow-line"
+            />
 
             <!-- ═══ KPI OUTPUT (right column, bottom) ═══ -->
-            <rect x="388" y="224" width="108" height="156" rx="8" fill="#ffffff" stroke="#e5e5e5" stroke-width="1"/>
+            <rect
+              x="388"
+              y="224"
+              width="108"
+              height="156"
+              rx="8"
+              fill="#ffffff"
+              stroke="#e5e5e5"
+              stroke-width="1"
+            />
 
             <!-- Flow line: uns-kpi → KPI output -->
-            <line x1="442" y1="200" x2="442" y2="224" stroke="#d4d4d4" stroke-width="1" class="ig-flow-line"/>
+            <line
+              x1="442"
+              y1="200"
+              x2="442"
+              y2="224"
+              stroke="#d4d4d4"
+              stroke-width="1"
+              class="ig-flow-line"
+            />
 
             <g class="ig-kpi-row ig-kpi-d1">
-              <text x="404" y="248" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="600" fill="#0a0a0a">72%</text>
-              <text x="444" y="248" font-family="'JetBrains Mono', monospace" font-size="8" fill="#737373">Utilisation</text>
+              <text
+                x="404"
+                y="248"
+                font-family="'JetBrains Mono', monospace"
+                font-size="9"
+                font-weight="600"
+                fill="#0a0a0a"
+              >
+                72%
+              </text>
+              <text
+                x="444"
+                y="248"
+                font-family="'JetBrains Mono', monospace"
+                font-size="8"
+                fill="#737373"
+              >
+                Utilisation
+              </text>
             </g>
 
-            <line x1="404" y1="258" x2="480" y2="258" stroke="#f5f5f5" stroke-width="1"/>
+            <line
+              x1="404"
+              y1="258"
+              x2="480"
+              y2="258"
+              stroke="#f5f5f5"
+              stroke-width="1"
+            />
 
             <g class="ig-kpi-row ig-kpi-d2">
-              <text x="404" y="276" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="600" fill="#0a0a0a">94%</text>
-              <text x="444" y="276" font-family="'JetBrains Mono', monospace" font-size="7" fill="#737373">Availability</text>
+              <text
+                x="404"
+                y="276"
+                font-family="'JetBrains Mono', monospace"
+                font-size="9"
+                font-weight="600"
+                fill="#0a0a0a"
+              >
+                94%
+              </text>
+              <text
+                x="444"
+                y="276"
+                font-family="'JetBrains Mono', monospace"
+                font-size="7"
+                fill="#737373"
+              >
+                Availability
+              </text>
             </g>
 
-            <line x1="404" y1="286" x2="480" y2="286" stroke="#f5f5f5" stroke-width="1"/>
+            <line
+              x1="404"
+              y1="286"
+              x2="480"
+              y2="286"
+              stroke="#f5f5f5"
+              stroke-width="1"
+            />
 
             <g class="ig-kpi-row ig-kpi-d3">
-              <text x="404" y="304" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="600" fill="#0a0a0a">48/hr</text>
-              <text x="444" y="304" font-family="'JetBrains Mono', monospace" font-size="8" fill="#737373">Throughput</text>
+              <text
+                x="404"
+                y="304"
+                font-family="'JetBrains Mono', monospace"
+                font-size="9"
+                font-weight="600"
+                fill="#0a0a0a"
+              >
+                48/hr
+              </text>
+              <text
+                x="444"
+                y="304"
+                font-family="'JetBrains Mono', monospace"
+                font-size="8"
+                fill="#737373"
+              >
+                Throughput
+              </text>
             </g>
 
-            <line x1="404" y1="314" x2="480" y2="314" stroke="#f5f5f5" stroke-width="1"/>
+            <line
+              x1="404"
+              y1="314"
+              x2="480"
+              y2="314"
+              stroke="#f5f5f5"
+              stroke-width="1"
+            />
 
             <g class="ig-kpi-row ig-kpi-d4">
-              <text x="404" y="332" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="600" fill="#0a0a0a">142m</text>
-              <text x="444" y="332" font-family="'JetBrains Mono', monospace" font-size="8" fill="#737373">MTBF</text>
+              <text
+                x="404"
+                y="332"
+                font-family="'JetBrains Mono', monospace"
+                font-size="9"
+                font-weight="600"
+                fill="#0a0a0a"
+              >
+                142m
+              </text>
+              <text
+                x="444"
+                y="332"
+                font-family="'JetBrains Mono', monospace"
+                font-size="8"
+                fill="#737373"
+              >
+                MTBF
+              </text>
             </g>
 
-            <line x1="404" y1="342" x2="480" y2="342" stroke="#f5f5f5" stroke-width="1"/>
+            <line
+              x1="404"
+              y1="342"
+              x2="480"
+              y2="342"
+              stroke="#f5f5f5"
+              stroke-width="1"
+            />
 
             <g class="ig-kpi-row ig-kpi-d5">
-              <text x="404" y="360" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="600" fill="#0a0a0a">8.3m</text>
-              <text x="444" y="360" font-family="'JetBrains Mono', monospace" font-size="8" fill="#737373">MTTR</text>
+              <text
+                x="404"
+                y="360"
+                font-family="'JetBrains Mono', monospace"
+                font-size="9"
+                font-weight="600"
+                fill="#0a0a0a"
+              >
+                8.3m
+              </text>
+              <text
+                x="444"
+                y="360"
+                font-family="'JetBrains Mono', monospace"
+                font-size="8"
+                fill="#737373"
+              >
+                MTTR
+              </text>
             </g>
 
-            <line x1="404" y1="370" x2="480" y2="370" stroke="#f5f5f5" stroke-width="1"/>
+            <line
+              x1="404"
+              y1="370"
+              x2="480"
+              y2="370"
+              stroke="#f5f5f5"
+              stroke-width="1"
+            />
 
             <!-- ═══ TOPIC PATH (bottom bar) ═══ -->
-            <rect x="24" y="404" width="472" height="52" rx="8" fill="#0a0a0a"/>
-            <text x="260" y="426" font-family="'JetBrains Mono', monospace" font-size="9" fill="#737373" text-anchor="middle">ISA-95 TOPIC HIERARCHY</text>
-            <text x="260" y="444" font-family="'JetBrains Mono', monospace" font-size="10" fill="#ffffff" text-anchor="middle">v1.0 / enterprise / site1 / area1 / cnc-01 / status</text>
+            <rect
+              x="24"
+              y="404"
+              width="472"
+              height="52"
+              rx="8"
+              fill="#0a0a0a"
+            />
+            <text
+              x="260"
+              y="426"
+              font-family="'JetBrains Mono', monospace"
+              font-size="9"
+              fill="#737373"
+              text-anchor="middle"
+            >
+              ISA-95 TOPIC HIERARCHY
+            </text>
+            <text
+              x="260"
+              y="444"
+              font-family="'JetBrains Mono', monospace"
+              font-size="10"
+              fill="#ffffff"
+              text-anchor="middle"
+            >
+              v1.0 / enterprise / site1 / area1 / cnc-01 / status
+            </text>
 
             <!-- ═══ DEPLOY BADGE ═══ -->
-            <rect x="24" y="466" width="472" height="0" rx="0" fill="none"/>
+            <rect x="24" y="466" width="472" height="0" rx="0" fill="none" />
           </svg>
         </div>
       </div>
@@ -2266,8 +3257,12 @@
         </div>
 
         <div class="cta-group">
-            <a href="/docs/" class="btn-primary">Full Documentation →</a>
-          <a href="https://github.com/orgs/functionkit/repositories" class="btn-secondary">View on GitHub</a>
+          <a href="/docs/" class="btn-primary">Full Documentation →</a>
+          <a
+            href="https://github.com/orgs/functionkit/repositories"
+            class="btn-secondary"
+            >View on GitHub</a
+          >
         </div>
       </div>
     </section>
@@ -2306,14 +3301,36 @@
 
       // ── KPI number cycling animation ──
       const kpiData = [
-        { el: null, values: ['72%', '68%', '74%', '71%', '73%', '69%'], suffix: '' },
-        { el: null, values: ['94%', '92%', '95%', '93%', '96%', '94%'], suffix: '' },
-        { el: null, values: ['48/hr', '45/hr', '51/hr', '47/hr', '50/hr', '46/hr'], suffix: '' },
-        { el: null, values: ['142m', '138m', '145m', '140m', '147m', '136m'], suffix: '' },
-        { el: null, values: ['8.3m', '7.9m', '8.6m', '8.1m', '9.0m', '8.4m'], suffix: '' },
+        {
+          el: null,
+          values: ['72%', '68%', '74%', '71%', '73%', '69%'],
+          suffix: '',
+        },
+        {
+          el: null,
+          values: ['94%', '92%', '95%', '93%', '96%', '94%'],
+          suffix: '',
+        },
+        {
+          el: null,
+          values: ['48/hr', '45/hr', '51/hr', '47/hr', '50/hr', '46/hr'],
+          suffix: '',
+        },
+        {
+          el: null,
+          values: ['142m', '138m', '145m', '140m', '147m', '136m'],
+          suffix: '',
+        },
+        {
+          el: null,
+          values: ['8.3m', '7.9m', '8.6m', '8.1m', '9.0m', '8.4m'],
+          suffix: '',
+        },
       ]
       const kpiEls = document.querySelectorAll('.kpi-val')
-      kpiData.forEach((d, i) => { d.el = kpiEls[i] })
+      kpiData.forEach((d, i) => {
+        d.el = kpiEls[i]
+      })
 
       // ── Hero graphic fullscreen on click ──
       const heroVisual = document.querySelector('.hero-visual')
@@ -2326,10 +3343,12 @@
 
         // Use innerHTML to properly clone SVG with namespace
         const svgWrapper = document.createElement('div')
-        svgWrapper.style.cssText = 'max-width:90vw;max-height:90vh;width:90vw;aspect-ratio:520/480;display:flex;align-items:center;justify-content:center;'
+        svgWrapper.style.cssText =
+          'max-width:90vw;max-height:90vh;width:90vw;aspect-ratio:520/480;display:flex;align-items:center;justify-content:center;'
         svgWrapper.innerHTML = heroSvg.outerHTML
         const svgEl = svgWrapper.querySelector('svg')
-        svgEl.style.cssText = 'width:100%;height:100%;display:block;filter:drop-shadow(0 24px 48px rgba(0,0,0,0.08));'
+        svgEl.style.cssText =
+          'width:100%;height:100%;display:block;filter:drop-shadow(0 24px 48px rgba(0,0,0,0.08));'
         overlay.appendChild(svgWrapper)
 
         // Close button
@@ -2350,10 +3369,14 @@
         // Close handlers
         function closeOverlay() {
           overlay.classList.remove('active')
-          overlay.addEventListener('transitionend', () => {
-            overlay.remove()
-            document.body.style.overflow = ''
-          }, { once: true })
+          overlay.addEventListener(
+            'transitionend',
+            () => {
+              overlay.remove()
+              document.body.style.overflow = ''
+            },
+            { once: true },
+          )
         }
 
         closeBtn.addEventListener('click', (e) => {

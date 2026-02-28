@@ -7,6 +7,131 @@
 <meta name="description" content="Welcome to the UNS Framework, an open-source initiative for MQTT and Unified Namespace management through YAML files."/>
 <link rel="stylesheet" href="../style.css"/>
 <link rel="stylesheet" href="../docs.css"/>
+<style>
+/* YAML PREVIEW */
+.yaml-preview {
+  background: var(--grey-950);
+  color: var(--grey-300);
+  padding: 28px;
+  border-radius: 12px;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  line-height: 1.8;
+  overflow-x: auto;
+  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.08);
+  margin: 24px 0 32px;
+}
+.yaml-preview .yk { color: #e5e5e5; font-weight: 500; }
+.yaml-preview .yv { color: #a3a3a3; }
+.yaml-preview .yc { color: #525252; }
+
+/* YAML line-by-line reveal */
+.yaml-preview .yaml-line {
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity 0.4s ease-out, transform 0.4s ease-out;
+}
+.yaml-preview.animate-active .yaml-line {
+  opacity: 1;
+  transform: translateY(0);
+}
+.yaml-preview.animate-active .yaml-line:nth-child(1)  { transition-delay: 0s; }
+.yaml-preview.animate-active .yaml-line:nth-child(2)  { transition-delay: 0.06s; }
+.yaml-preview.animate-active .yaml-line:nth-child(3)  { transition-delay: 0.12s; }
+.yaml-preview.animate-active .yaml-line:nth-child(4)  { transition-delay: 0.18s; }
+.yaml-preview.animate-active .yaml-line:nth-child(5)  { transition-delay: 0.24s; }
+.yaml-preview.animate-active .yaml-line:nth-child(6)  { transition-delay: 0.30s; }
+.yaml-preview.animate-active .yaml-line:nth-child(7)  { transition-delay: 0.36s; }
+.yaml-preview.animate-active .yaml-line:nth-child(8)  { transition-delay: 0.42s; }
+.yaml-preview.animate-active .yaml-line:nth-child(9)  { transition-delay: 0.48s; }
+.yaml-preview.animate-active .yaml-line:nth-child(10) { transition-delay: 0.54s; }
+.yaml-preview.animate-active .yaml-line:nth-child(11) { transition-delay: 0.60s; }
+.yaml-preview.animate-active .yaml-line:nth-child(12) { transition-delay: 0.66s; }
+.yaml-preview.animate-active .yaml-line:nth-child(13) { transition-delay: 0.72s; }
+.yaml-preview.animate-active .yaml-line:nth-child(14) { transition-delay: 0.78s; }
+.yaml-preview.animate-active .yaml-line:nth-child(15) { transition-delay: 0.84s; }
+.yaml-preview.animate-active .yaml-line:nth-child(16) { transition-delay: 0.90s; }
+.yaml-preview.animate-active .yaml-line:nth-child(17) { transition-delay: 0.96s; }
+.yaml-preview.animate-active .yaml-line:nth-child(18) { transition-delay: 1.02s; }
+.yaml-preview.animate-active .yaml-line:nth-child(19) { transition-delay: 1.08s; }
+
+/* DEFINITIONS PREVIEW */
+.def-preview {
+  border: 1px solid var(--grey-200);
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--white);
+  margin: 24px 0 32px;
+}
+.def-preview-header {
+  padding: 16px 24px;
+  background: var(--grey-50);
+  border-bottom: 1px solid var(--grey-200);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--grey-500);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.def-preview-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 24px;
+  border-bottom: 1px solid var(--grey-100);
+  font-size: 14px;
+  text-decoration: none;
+  transition: background 0.15s;
+}
+.def-preview-item:last-child { border-bottom: none; }
+.def-preview-item:hover { background: var(--grey-50); }
+.def-preview-item .def-name {
+  font-family: var(--font-mono);
+  font-weight: 500;
+  color: var(--black);
+  font-size: 13px;
+}
+.def-preview-item .def-desc {
+  color: var(--grey-700);
+  font-size: 13px;
+}
+.def-preview-item .def-arrow {
+  color: var(--grey-400);
+  font-size: 14px;
+}
+
+/* ANIMATED FLOW */
+@keyframes flow-pulse {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 1; }
+}
+.flow-dots {
+  display: flex;
+  gap: 6px;
+  margin: 24px 0;
+}
+.flow-dot {
+  width: 8px;
+  height: 8px;
+  background: var(--black);
+  border-radius: 50%;
+  animation: flow-pulse 2s ease-in-out infinite;
+}
+.flow-dot:nth-child(2) { animation-delay: 0.3s; }
+.flow-dot:nth-child(3) { animation-delay: 0.6s; }
+.flow-dot:nth-child(4) { animation-delay: 0.9s; }
+.flow-dot:nth-child(5) { animation-delay: 1.2s; }
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .yaml-preview .yaml-line {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}
+</style>
 </head>
 <body>
 
@@ -67,16 +192,54 @@
       <span>We're just getting started. <a href="mailto:max@cncdata.co.uk?subject=Join%20Us" style="color:var(--black);border-bottom:1px solid var(--grey-300);">Join us</a>, and stay tuned for more updates soon!</span>
     </div>
 
+    <h2>Describe What You Have</h2>
     <p>
-      Early in its design, the UNS Framework emphasises <strong>describing what you have without
+      The UNS Framework emphasises <strong>describing what you have without
       changing what or how you do it</strong>, ensuring seamless integration with your existing systems.
       Inspired by standards like Docker and Kubernetes, the UNS Framework establishes a universal
       standard that is both <strong>human-readable</strong> and <strong>machine-readable</strong>.
     </p>
     <p>
-      By articulating your UNS with our framework, you enable seamless integration and understanding
+      It is not a software product but a descriptive standard that seamlessly integrates
+      with any new or existing UNS deployments. It complements existing standards like Sparkplug,
+      OPC/UA, and MT Connect by focusing on <strong>describing what you have</strong>.
+    </p>
+    <p>
+      By articulating your UNS with the framework, you enable seamless integration and understanding
       across documentation, applications, analytics, security tools, and AI systems.
     </p>
+
+    <div class="flow-dots">
+      <div class="flow-dot"></div>
+      <div class="flow-dot"></div>
+      <div class="flow-dot"></div>
+      <div class="flow-dot"></div>
+      <div class="flow-dot"></div>
+    </div>
+
+    <!-- YAML PREVIEW -->
+    <div class="yaml-preview" data-animate>
+      <div class="yaml-line"><span class="yc"># uns.yml — describe your namespace</span></div>
+      <div class="yaml-line"><span class="yk">version:</span> <span class="yv">'1.0'</span></div>
+      <div class="yaml-line"><span class="yk">uns:</span></div>
+      <div class="yaml-line">  <span class="yk">name:</span> <span class="yv">'UNS Framework'</span></div>
+      <div class="yaml-line">  <span class="yk">region:</span> <span class="yv">'UK'</span></div>
+      <div class="yaml-line">  <span class="yk">timezone:</span> <span class="yv">'UTC'</span></div>
+      <div class="yaml-line">  <span class="yk">topic_structure:</span> <span class="yv">'version/site/area/...'</span></div>
+      <div class="yaml-line">  <span class="yk">topic_standard:</span> <span class="yv">'ISA95'</span></div>
+      <div class="yaml-line">  <span class="yk">information_model:</span> <span class="yv">'User Defined'</span></div>
+      <div class="yaml-line">&nbsp;</div>
+      <div class="yaml-line"><span class="yc"># site.yml — describe your factory</span></div>
+      <div class="yaml-line"><span class="yk">site:</span></div>
+      <div class="yaml-line">  - <span class="yk">name:</span> <span class="yv">UK</span></div>
+      <div class="yaml-line">    <span class="yk">id:</span> <span class="yv">UK</span></div>
+      <div class="yaml-line">    <span class="yk">area:</span></div>
+      <div class="yaml-line">      - <span class="yk">name:</span> <span class="yv">Area 1</span></div>
+      <div class="yaml-line">        <span class="yk">line:</span></div>
+      <div class="yaml-line">          - <span class="yk">name:</span> <span class="yv">Line 1</span></div>
+      <div class="yaml-line">            <span class="yk">cell:</span></div>
+      <div class="yaml-line">              - <span class="yk">name:</span> <span class="yv">Cell 1</span></div>
+    </div>
 
     <h2>Overview</h2>
     <p>
@@ -114,6 +277,86 @@
       simplifies the process, making it more accessible and adaptable to a wide range of use cases.
     </p>
 
+    <h2>Core Definitions</h2>
+    <p>
+      The UNS Framework configuration encompasses sites, areas, lines,
+      cells, equipment, sensors, functions, producers, consumers, MQTT
+      brokers, and databases — everything described in YAML.
+    </p>
+
+    <div class="def-preview">
+      <div class="def-preview-header">UNS Framework V1.0 — Definitions</div>
+      <a href="/framework/uns.html" class="def-preview-item"
+        ><span class="def-name">UNS</span
+        ><span class="def-desc">Unified Namespace configuration</span
+        ><span class="def-arrow">→</span></a
+      >
+      <a href="/framework/site.html" class="def-preview-item"
+        ><span class="def-name">Site</span
+        ><span class="def-desc">Physical or logical site</span
+        ><span class="def-arrow">→</span></a
+      >
+      <a href="/framework/area.html" class="def-preview-item"
+        ><span class="def-name">Area</span
+        ><span class="def-desc">Building, floor, room, or partition</span
+        ><span class="def-arrow">→</span></a
+      >
+      <a href="/framework/line.html" class="def-preview-item"
+        ><span class="def-name">Line</span
+        ><span class="def-desc">Production line within an area</span
+        ><span class="def-arrow">→</span></a
+      >
+      <a href="/framework/cell.html" class="def-preview-item"
+        ><span class="def-name">Cell</span
+        ><span class="def-desc">Workstation or unit in a line</span
+        ><span class="def-arrow">→</span></a
+      >
+      <a href="/framework/equipment.html" class="def-preview-item"
+        ><span class="def-name">Equipment</span
+        ><span class="def-desc">Machine, device, or hardware</span
+        ><span class="def-arrow">→</span></a
+      >
+      <a href="/framework/sensor.html" class="def-preview-item"
+        ><span class="def-name">Sensor</span
+        ><span class="def-desc">Temperature, pressure, humidity, etc.</span
+        ><span class="def-arrow">→</span></a
+      >
+      <a href="/framework/function.html" class="def-preview-item"
+        ><span class="def-name">Function</span
+        ><span class="def-desc">Self-contained code block</span
+        ><span class="def-arrow">→</span></a
+      >
+      <a href="/framework/producer.html" class="def-preview-item"
+        ><span class="def-name">Producer</span
+        ><span class="def-desc">Entity that sends information</span
+        ><span class="def-arrow">→</span></a
+      >
+      <a href="/framework/consumer.html" class="def-preview-item"
+        ><span class="def-name">Consumer</span
+        ><span class="def-desc">Entity that receives information</span
+        ><span class="def-arrow">→</span></a
+      >
+      <a href="/framework/mqtt.html" class="def-preview-item"
+        ><span class="def-name">MQTT</span
+        ><span class="def-desc">Broker configuration</span
+        ><span class="def-arrow">→</span></a
+      >
+      <a href="/framework/database.html" class="def-preview-item"
+        ><span class="def-name">Database</span
+        ><span class="def-desc">Storage configuration</span
+        ><span class="def-arrow">→</span></a
+      >
+      <a href="/framework/artifact.html" class="def-preview-item"
+        ><span class="def-name">Artifact</span
+        ><span class="def-desc">Static data</span
+        ><span class="def-arrow">→</span></a
+      >
+    </div>
+
+    <div>
+      <a href="/framework/core-definitions.html" style="color:var(--black);border-bottom:1px solid var(--grey-300);text-decoration:none;font-size:14px;font-weight:500;">View all definitions →</a>
+    </div>
+
     <div class="docs-nav-buttons">
       <div></div>
       <a href="/framework/core-definitions.html" class="docs-nav-btn next">
@@ -125,5 +368,20 @@
 </div>
 
 <script src="../shared.js"></script>
+<script>
+  // Scroll-triggered animations for [data-animate] elements
+  const animateObserver = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((e) => {
+        if (e.isIntersecting) {
+          e.target.classList.add('animate-active')
+          animateObserver.unobserve(e.target)
+        }
+      })
+    },
+    { threshold: 0.15, rootMargin: '0px 0px -20px 0px' },
+  )
+  document.querySelectorAll('[data-animate]').forEach((el) => animateObserver.observe(el))
+</script>
 </body>
 </html>

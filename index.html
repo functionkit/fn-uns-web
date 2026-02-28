@@ -6,7 +6,7 @@
     <title>UNS Framework — Unified Namespace for Manufacturing</title>
     <meta
       name="description"
-      content="Simplifying MQTT and Unified Namespace management through standardisation, transparency, and collaboration. Open source. Self-hosted. Zero vendor lock-in."
+      content="Manufacturing data is trapped. We fix that. Three open-source projects that give every machine on your shop floor a voice. Open source. Self-hosted. Zero vendor lock-in."
     />
     <link rel="stylesheet" href="style.css" />
     <style>
@@ -54,7 +54,7 @@
         color: var(--grey-700);
         line-height: 1.65;
         margin-bottom: 40px;
-        max-width: 600px;
+        max-width: 640px;
         margin-left: auto;
         margin-right: auto;
       }
@@ -193,14 +193,6 @@
           opacity: 1;
         }
       }
-      @keyframes h-scan {
-        0% {
-          transform: translateX(-100%);
-        }
-        100% {
-          transform: translateX(200%);
-        }
-      }
 
       .h-flow-line {
         stroke-dasharray: 4 8;
@@ -335,106 +327,208 @@
         margin-bottom: 56px;
       }
 
-      /* OVERVIEW SECTION */
-      .overview-section {
-        padding: 120px 0;
-        background: var(--grey-50);
-        border-top: 1px solid var(--grey-200);
-        border-bottom: 1px solid var(--grey-200);
-      }
-      .overview-grid {
+      /* PROBLEM SECTION */
+      .problem-grid {
         display: grid;
         grid-template-columns: 1fr 1fr;
         gap: 64px;
         align-items: start;
       }
-      .overview-text h3 {
-        font-size: 22px;
-        font-weight: 700;
-        letter-spacing: -0.02em;
-        margin-bottom: 12px;
+      .problem-before {
+        padding: 36px;
+        background: var(--grey-50);
+        border: 1px solid var(--grey-200);
+        border-radius: 12px;
       }
-      .overview-text p {
-        font-size: 15px;
+      .problem-before h3 {
+        font-size: 14px;
+        font-weight: 600;
         color: var(--grey-700);
-        line-height: 1.7;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
         margin-bottom: 20px;
       }
-      .overview-text p strong {
-        color: var(--black);
+      .spaghetti-line {
+        font-family: var(--font-mono);
+        font-size: 13px;
+        color: var(--grey-700);
+        padding: 8px 0;
+        border-bottom: 1px solid var(--grey-100);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .spaghetti-line:last-child {
+        border-bottom: none;
+      }
+      .spaghetti-line .arrow {
+        color: var(--grey-600);
+      }
+      .problem-after h3 {
+        font-size: 14px;
         font-weight: 600;
+        color: var(--black);
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        margin-bottom: 20px;
+      }
+      .uns-hub {
+        text-align: center;
+        padding: 36px;
+        border: 2px solid var(--black);
+        border-radius: 12px;
+        margin-bottom: 24px;
+      }
+      .uns-hub-label {
+        font-family: var(--font-mono);
+        font-size: 15px;
+        font-weight: 600;
+        color: var(--black);
+      }
+      .uns-hub-sub {
+        font-size: 13px;
+        color: var(--grey-700);
+        margin-top: 4px;
+      }
+      .spoke-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+      }
+      .spoke {
+        text-align: center;
+        padding: 12px;
+        background: var(--grey-50);
+        border-radius: 8px;
+        font-size: 12px;
+        color: var(--grey-700);
       }
 
-      /* DEFINITIONS PREVIEW */
-      .def-preview {
+      /* Problem section animations */
+      @keyframes spaghetti-arrow-pulse {
+        0%, 100% { color: var(--grey-300); }
+        50% { color: var(--black); }
+      }
+      @keyframes spoke-border-flash {
+        0%, 100% { border-color: transparent; background: var(--grey-50); }
+        50% { border-color: var(--black); background: var(--white); }
+      }
+      @keyframes spaghetti-line-slide {
+        0% { opacity: 0; transform: translateX(-12px); }
+        100% { opacity: 1; transform: translateX(0); }
+      }
+      @keyframes uns-hub-pulse {
+        0%, 100% { border-color: var(--black); box-shadow: 0 0 0 0 rgba(10,10,10,0); }
+        50% { border-color: var(--black); box-shadow: 0 0 0 6px rgba(10,10,10,0.06); }
+      }
+      .problem-section-animated .spaghetti-line .arrow {
+        animation: spaghetti-arrow-pulse 2s ease-in-out infinite;
+      }
+      .problem-section-animated .spaghetti-line:nth-child(1) .arrow { animation-delay: 0s; }
+      .problem-section-animated .spaghetti-line:nth-child(2) .arrow { animation-delay: 0.3s; }
+      .problem-section-animated .spaghetti-line:nth-child(3) .arrow { animation-delay: 0.6s; }
+      .problem-section-animated .spaghetti-line:nth-child(4) .arrow { animation-delay: 0.9s; }
+      .problem-section-animated .spaghetti-line:nth-child(5) .arrow { animation-delay: 1.2s; }
+      .problem-section-animated .spaghetti-line {
+        animation: spaghetti-line-slide 0.5s ease-out both;
+      }
+      .problem-section-animated .spaghetti-line:nth-child(1) { animation-delay: 0.1s; }
+      .problem-section-animated .spaghetti-line:nth-child(2) { animation-delay: 0.2s; }
+      .problem-section-animated .spaghetti-line:nth-child(3) { animation-delay: 0.3s; }
+      .problem-section-animated .spaghetti-line:nth-child(4) { animation-delay: 0.4s; }
+      .problem-section-animated .spaghetti-line:nth-child(5) { animation-delay: 0.5s; }
+      .problem-section-animated .spoke {
+        border: 1px solid transparent;
+        transition: all 0.3s ease;
+        animation: spoke-border-flash 3s ease-in-out infinite;
+      }
+      .problem-section-animated .spoke:nth-child(1) { animation-delay: 0s; }
+      .problem-section-animated .spoke:nth-child(2) { animation-delay: 0.5s; }
+      .problem-section-animated .spoke:nth-child(3) { animation-delay: 1.0s; }
+      .problem-section-animated .spoke:nth-child(4) { animation-delay: 1.5s; }
+      .problem-section-animated .spoke:nth-child(5) { animation-delay: 2.0s; }
+      .problem-section-animated .spoke:nth-child(6) { animation-delay: 2.5s; }
+      .problem-section-animated .uns-hub {
+        animation: uns-hub-pulse 3s ease-in-out infinite;
+      }
+
+      /* WHY UNS SECTION */
+      .why-uns-section {
+        padding: 120px 0;
+        background: var(--grey-50);
+        border-top: 1px solid var(--grey-200);
+        border-bottom: 1px solid var(--grey-200);
+      }
+
+      /* OUTCOMES TABLE */
+      .outcomes-table {
+        width: 100%;
         border: 1px solid var(--grey-200);
         border-radius: 12px;
         overflow: hidden;
-        background: var(--white);
+        border-collapse: separate;
+        border-spacing: 0;
+        margin: 32px 0;
       }
-      .def-preview-header {
-        padding: 16px 24px;
-        background: var(--grey-50);
-        border-bottom: 1px solid var(--grey-200);
+      .outcomes-table th {
+        text-align: left;
         font-family: var(--font-mono);
         font-size: 11px;
         font-weight: 600;
         color: var(--grey-500);
         letter-spacing: 0.06em;
         text-transform: uppercase;
+        padding: 14px 24px;
+        background: var(--grey-50);
+        border-bottom: 1px solid var(--grey-200);
       }
-      .def-preview-item {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 12px 24px;
-        border-bottom: 1px solid var(--grey-100);
+      .outcomes-table td {
+        padding: 14px 24px;
         font-size: 14px;
-        text-decoration: none;
-        transition: background 0.15s;
+        border-bottom: 1px solid var(--grey-100);
+        color: var(--grey-700);
+        vertical-align: top;
       }
-      .def-preview-item:last-child {
+      .outcomes-table tr:last-child td {
         border-bottom: none;
       }
-      .def-preview-item:hover {
-        background: var(--grey-50);
-      }
-      .def-preview-item .def-name {
-        font-family: var(--font-mono);
+      .outcomes-table td:first-child {
         font-weight: 500;
         color: var(--black);
-        font-size: 13px;
       }
-      .def-preview-item .def-desc {
-        color: var(--grey-700);
-        font-size: 13px;
+      .outcomes-table td.before {
+        color: var(--grey-500);
       }
-      .def-preview-item .def-arrow {
-        color: var(--grey-400);
-        font-size: 14px;
-      }
-
-      /* YAML PREVIEW */
-      .yaml-preview {
-        background: var(--grey-950);
-        color: var(--grey-300);
-        padding: 28px;
-        border-radius: 12px;
-        font-family: var(--font-mono);
-        font-size: 13px;
-        line-height: 1.8;
-        overflow-x: auto;
-        box-shadow: 0 24px 48px rgba(0, 0, 0, 0.08);
-      }
-      .yaml-preview .yk {
-        color: #e5e5e5;
+      .outcomes-table td.after {
+        color: var(--black);
         font-weight: 500;
       }
-      .yaml-preview .yv {
-        color: #a3a3a3;
+
+      /* WHO BENEFITS */
+      .benefits-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1px;
+        background: var(--grey-200);
+        border: 1px solid var(--grey-200);
+        border-radius: 12px;
+        overflow: hidden;
+        margin-top: 48px;
       }
-      .yaml-preview .yc {
-        color: #525252;
+      .benefit-card {
+        background: var(--white);
+        padding: 32px;
+      }
+      .benefit-card h3 {
+        font-size: 16px;
+        font-weight: 700;
+        letter-spacing: -0.01em;
+        margin-bottom: 8px;
+      }
+      .benefit-card p {
+        font-size: 13px;
+        color: var(--grey-700);
+        line-height: 1.6;
       }
 
       /* TOPIC TREE */
@@ -458,72 +552,7 @@
         color: var(--grey-300);
       }
 
-      /* ANIMATED FLOW */
-      @keyframes flow-pulse {
-        0%,
-        100% {
-          opacity: 0.3;
-        }
-        50% {
-          opacity: 1;
-        }
-      }
-      .flow-dots {
-        display: flex;
-        gap: 6px;
-        margin: 24px 0;
-      }
-      .flow-dot {
-        width: 8px;
-        height: 8px;
-        background: var(--black);
-        border-radius: 50%;
-        animation: flow-pulse 2s ease-in-out infinite;
-      }
-      .flow-dot:nth-child(2) {
-        animation-delay: 0.3s;
-      }
-      .flow-dot:nth-child(3) {
-        animation-delay: 0.6s;
-      }
-      .flow-dot:nth-child(4) {
-        animation-delay: 0.9s;
-      }
-      .flow-dot:nth-child(5) {
-        animation-delay: 1.2s;
-      }
-
       /* ═══ SCROLL-TRIGGERED ANIMATIONS ═══ */
-
-      /* YAML Preview — line-by-line reveal */
-      .yaml-preview .yaml-line {
-        opacity: 0;
-        transform: translateY(6px);
-        transition: opacity 0.4s ease-out, transform 0.4s ease-out;
-      }
-      .yaml-preview.animate-active .yaml-line {
-        opacity: 1;
-        transform: translateY(0);
-      }
-      .yaml-preview.animate-active .yaml-line:nth-child(1)  { transition-delay: 0s; }
-      .yaml-preview.animate-active .yaml-line:nth-child(2)  { transition-delay: 0.06s; }
-      .yaml-preview.animate-active .yaml-line:nth-child(3)  { transition-delay: 0.12s; }
-      .yaml-preview.animate-active .yaml-line:nth-child(4)  { transition-delay: 0.18s; }
-      .yaml-preview.animate-active .yaml-line:nth-child(5)  { transition-delay: 0.24s; }
-      .yaml-preview.animate-active .yaml-line:nth-child(6)  { transition-delay: 0.30s; }
-      .yaml-preview.animate-active .yaml-line:nth-child(7)  { transition-delay: 0.36s; }
-      .yaml-preview.animate-active .yaml-line:nth-child(8)  { transition-delay: 0.42s; }
-      .yaml-preview.animate-active .yaml-line:nth-child(9)  { transition-delay: 0.48s; }
-      .yaml-preview.animate-active .yaml-line:nth-child(10) { transition-delay: 0.54s; }
-      .yaml-preview.animate-active .yaml-line:nth-child(11) { transition-delay: 0.60s; }
-      .yaml-preview.animate-active .yaml-line:nth-child(12) { transition-delay: 0.66s; }
-      .yaml-preview.animate-active .yaml-line:nth-child(13) { transition-delay: 0.72s; }
-      .yaml-preview.animate-active .yaml-line:nth-child(14) { transition-delay: 0.78s; }
-      .yaml-preview.animate-active .yaml-line:nth-child(15) { transition-delay: 0.84s; }
-      .yaml-preview.animate-active .yaml-line:nth-child(16) { transition-delay: 0.90s; }
-      .yaml-preview.animate-active .yaml-line:nth-child(17) { transition-delay: 0.96s; }
-      .yaml-preview.animate-active .yaml-line:nth-child(18) { transition-delay: 1.02s; }
-      .yaml-preview.animate-active .yaml-line:nth-child(19) { transition-delay: 1.08s; }
 
       /* Topic Tree — sequential path illumination */
       .topic-tree-animated .tt-segment {
@@ -580,7 +609,6 @@
 
       /* Respect reduced motion */
       @media (prefers-reduced-motion: reduce) {
-        .yaml-preview .yaml-line,
         .topic-tree-animated .tt-segment,
         .topic-tree-animated .tt-desc,
         .stats-row-animated .stat {
@@ -592,12 +620,11 @@
 
       /* RESPONSIVE */
       @media (max-width: 960px) {
-        .overview-grid {
+        .problem-grid {
           grid-template-columns: 1fr;
         }
-        .topic-bar {
-          font-size: 12px;
-          padding: 16px 20px;
+        .benefits-grid {
+          grid-template-columns: repeat(2, 1fr);
         }
       }
       @media (max-width: 600px) {
@@ -607,15 +634,47 @@
         .hero .subtitle {
           font-size: 15px;
         }
-        .topic-bar {
-          font-size: 10px;
-          padding: 12px 16px;
-        }
-        .overview-section {
+        .why-uns-section {
           padding: 56px 0;
         }
         .projects-section {
           padding: 56px 0;
+        }
+        .problem-grid {
+          gap: 24px;
+        }
+        .problem-before {
+          padding: 20px;
+        }
+        .spaghetti-line {
+          font-size: 11px;
+        }
+        .benefits-grid {
+          display: flex;
+          overflow-x: auto;
+          -webkit-overflow-scrolling: touch;
+          gap: 12px;
+          background: none;
+          border: none;
+          border-radius: 0;
+          padding-bottom: 8px;
+          scroll-snap-type: x mandatory;
+        }
+        .benefit-card {
+          min-width: 260px;
+          max-width: 280px;
+          flex-shrink: 0;
+          border: 1px solid var(--grey-200);
+          border-radius: 10px;
+          scroll-snap-align: start;
+        }
+        .outcomes-table {
+          font-size: 12px;
+        }
+        .outcomes-table th,
+        .outcomes-table td {
+          padding: 10px 14px;
+          font-size: 12px;
         }
       }
     </style>
@@ -643,14 +702,24 @@
     <!-- HERO -->
     <div class="hero">
       <div class="container">
-        <h1>UNS Framework</h1>
+        <div class="hero-badge">
+          <span class="dot"></span> Open Source · Three Projects · One Unified Solution
+        </div>
+        <h1>Manufacturing data is&nbsp;trapped. We&nbsp;fix&nbsp;that.</h1>
 
         <p class="subtitle">
-          Manufacturing data is&nbsp;trapped. We&nbsp;fix&nbsp;that. A YAML standard
-          for describing your factory, serverless functions for computing KPIs,
-          and an open platform to run it all. Three open-source projects that
-          give every machine on your shop floor a&nbsp;voice.
+          Every factory generates vast amounts of data — but it's fragmented
+          across disconnected systems that don't talk to each other. The Unified
+          Namespace changes that. Three open-source projects that give every
+          machine on your shop floor a&nbsp;voice.
         </p>
+
+        <div class="cta-group" style="justify-content: center">
+          <a href="/docs/what-is-uns.html" class="btn-primary">What is a UNS? →</a>
+          <a href="/docs/why-uns.html" class="btn-secondary">Why it Matters</a>
+          <a href="/fn-uns/" class="btn-secondary">View fn-uns</a>
+        </div>
+
         <!-- ANIMATED INFOGRAPHIC -->
         <div class="hero-visual-wrap">
           <svg viewBox="0 0 880 440" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -667,19 +736,16 @@
             <line x1="620" y1="18" x2="620" y2="390" stroke="#e5e5e5" stroke-width="1" stroke-dasharray="4 4"/>
 
             <!-- ═══ PRODUCERS (left) ═══ -->
-            <!-- Machine: 5-Axis CNC -->
             <rect x="20" y="48" width="230" height="44" rx="8" fill="#ffffff" stroke="#e5e5e5" stroke-width="1" class="h-fade h-fade-d1"/>
             <circle cx="38" cy="70" r="5" fill="#0a0a0a" class="h-pulse h-pulse-d1"/>
             <text x="52" y="66" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="600" fill="#0a0a0a">5-Axis CNC</text>
             <text x="52" y="80" font-family="'JetBrains Mono', monospace" font-size="8" fill="#737373">ACTIVE · OP-7842</text>
 
-            <!-- Machine: Turning Centre -->
             <rect x="20" y="100" width="230" height="44" rx="8" fill="#ffffff" stroke="#e5e5e5" stroke-width="1" class="h-fade h-fade-d2"/>
             <circle cx="38" cy="122" r="5" fill="#0a0a0a" class="h-pulse h-pulse-d2"/>
             <text x="52" y="118" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="600" fill="#0a0a0a">Turning Centre</text>
             <text x="52" y="132" font-family="'JetBrains Mono', monospace" font-size="8" fill="#737373">IDLE · TOOL CHANGE</text>
 
-            <!-- Machine: CMM -->
             <rect x="20" y="152" width="230" height="44" rx="8" fill="#ffffff" stroke="#e5e5e5" stroke-width="1" class="h-fade h-fade-d3"/>
             <circle cx="38" cy="174" r="5" fill="#0a0a0a" class="h-pulse h-pulse-d3"/>
             <text x="52" y="170" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="600" fill="#0a0a0a">CMM</text>
@@ -690,7 +756,7 @@
             <line x1="135" y1="144" x2="135" y2="152" stroke="#d4d4d4" stroke-width="1" class="h-flow-line"/>
             <line x1="135" y1="196" x2="135" y2="212" stroke="#d4d4d4" stroke-width="1" class="h-flow-line"/>
 
-            <!-- ═══ MQTT BROKER (centre of left column) ═══ -->
+            <!-- ═══ MQTT BROKER ═══ -->
             <rect x="20" y="212" width="230" height="48" rx="8" fill="#0a0a0a"/>
             <text x="135" y="233" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="600" fill="#ffffff" text-anchor="middle">MQTT Broker</text>
             <text x="135" y="248" font-family="'JetBrains Mono', monospace" font-size="8" fill="#a3a3a3" text-anchor="middle">Pub/Sub · Real-time</text>
@@ -699,18 +765,15 @@
             <circle r="3" fill="#0a0a0a" style="offset-path: path('M 135 92 L 135 212');" class="h-packet h-packet-d1"/>
             <circle r="3" fill="#0a0a0a" style="offset-path: path('M 135 92 L 135 212');" class="h-packet h-packet-d3"/>
 
-            <!-- ═══ BIDIRECTIONAL SYSTEMS (below MQTT) ═══ -->
-            <!-- MES -->
+            <!-- ═══ BIDIRECTIONAL SYSTEMS ═══ -->
             <rect x="20" y="276" width="230" height="36" rx="6" fill="#ffffff" stroke="#e5e5e5" stroke-width="1" class="h-fade h-fade-d4"/>
             <text x="36" y="298" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="500" fill="#0a0a0a">MES</text>
             <text x="234" y="298" font-family="'JetBrains Mono', monospace" font-size="8" fill="#a3a3a3" text-anchor="end">↑ programs · ↓ production</text>
 
-            <!-- ERP -->
             <rect x="20" y="320" width="230" height="36" rx="6" fill="#ffffff" stroke="#e5e5e5" stroke-width="1" class="h-fade h-fade-d5"/>
             <text x="36" y="342" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="500" fill="#0a0a0a">ERP</text>
             <text x="234" y="342" font-family="'JetBrains Mono', monospace" font-size="8" fill="#a3a3a3" text-anchor="end">↑ orders · ↓ completions</text>
 
-            <!-- Quality -->
             <rect x="20" y="364" width="230" height="36" rx="6" fill="#ffffff" stroke="#e5e5e5" stroke-width="1" class="h-fade h-fade-d5"/>
             <text x="36" y="386" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="500" fill="#0a0a0a">Quality</text>
             <text x="234" y="386" font-family="'JetBrains Mono', monospace" font-size="8" fill="#a3a3a3" text-anchor="end">↑ specs · ↓ results</text>
@@ -720,15 +783,11 @@
             <line x1="135" y1="312" x2="135" y2="320" stroke="#d4d4d4" stroke-width="1" class="h-flow-line"/>
             <line x1="135" y1="356" x2="135" y2="364" stroke="#d4d4d4" stroke-width="1" class="h-flow-line"/>
 
-            <!-- Bidirectional data packets (upward — systems publishing to MQTT) -->
             <circle r="2.5" fill="#0a0a0a" style="offset-path: path('M 135 400 L 135 260');" class="h-packet h-packet-d2"/>
             <circle r="2.5" fill="#0a0a0a" style="offset-path: path('M 135 400 L 135 260');" class="h-packet h-packet-d4"/>
 
             <!-- ═══ UNS FRAMEWORK (centre) ═══ -->
-
-            <!-- Flow: MQTT → UNS Standard -->
             <path d="M 250 236 L 270 236 Q 280 236 280 226 L 280 72 Q 280 62 290 62 L 300 62" stroke="#d4d4d4" stroke-width="1" fill="none" class="h-flow-line"/>
-            <!-- Data packets: MQTT → UNS -->
             <circle r="3" fill="#0a0a0a" style="offset-path: path('M 250 236 L 270 236 Q 280 236 280 226 L 280 72 Q 280 62 290 62 L 300 62');" class="h-packet h-packet-d2"/>
             <circle r="3" fill="#0a0a0a" style="offset-path: path('M 250 236 L 270 236 Q 280 236 280 226 L 280 72 Q 280 62 290 62 L 300 62');" class="h-packet h-packet-d4"/>
 
@@ -737,11 +796,10 @@
             <text x="450" y="70" font-family="'JetBrains Mono', monospace" font-size="11" font-weight="600" fill="#0a0a0a" text-anchor="middle">uns.yml + site.yml</text>
             <text x="450" y="86" font-family="'JetBrains Mono', monospace" font-size="8" fill="#737373" text-anchor="middle">ISA-95 · v1.0 · YAML Standard</text>
 
-            <!-- Compact topic hierarchy (single bar) -->
+            <!-- Compact topic hierarchy -->
             <rect x="300" y="112" width="300" height="28" rx="6" fill="#ffffff" stroke="#e5e5e5" stroke-width="1" class="h-glow"/>
             <text x="450" y="130" font-family="'JetBrains Mono', monospace" font-size="8" fill="#737373" text-anchor="middle">site / area / line / cell / equipment / sensor</text>
 
-            <!-- Flow: standard → functions -->
             <line x1="450" y1="100" x2="450" y2="112" stroke="#d4d4d4" stroke-width="1" class="h-flow-line"/>
             <line x1="450" y1="140" x2="450" y2="158" stroke="#d4d4d4" stroke-width="1" class="h-flow-line"/>
 
@@ -762,7 +820,6 @@
             <text x="316" y="312" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="500" fill="#0a0a0a">uns-kpi</text>
             <text x="584" y="312" font-family="'JetBrains Mono', monospace" font-size="8" fill="#a3a3a3" text-anchor="end">real-time metrics</text>
 
-            <!-- Flow lines between functions -->
             <line x1="450" y1="194" x2="450" y2="202" stroke="#d4d4d4" stroke-width="1" class="h-flow-line"/>
             <line x1="450" y1="238" x2="450" y2="246" stroke="#d4d4d4" stroke-width="1" class="h-flow-line"/>
             <line x1="450" y1="282" x2="450" y2="290" stroke="#d4d4d4" stroke-width="1" class="h-flow-line"/>
@@ -774,15 +831,11 @@
             <rect x="456" y="340" width="144" height="32" rx="6" fill="#0a0a0a"/>
             <text x="528" y="360" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="500" fill="#ffffff" text-anchor="middle">Database</text>
 
-            <!-- Flow: functions → infrastructure -->
             <line x1="400" y1="326" x2="400" y2="340" stroke="#d4d4d4" stroke-width="1" class="h-flow-line"/>
             <line x1="500" y1="326" x2="500" y2="340" stroke="#d4d4d4" stroke-width="1" class="h-flow-line"/>
 
             <!-- ═══ CONSUMERS (right) ═══ -->
-
-            <!-- Flow: Functions → KPI Dashboard -->
             <path d="M 600 290 L 620 290 Q 630 290 630 280 L 630 66 Q 630 56 640 56 L 650 56" stroke="#d4d4d4" stroke-width="1" fill="none" class="h-flow-line"/>
-            <!-- Data packets: Functions → KPIs -->
             <circle r="2.5" fill="#0a0a0a" style="offset-path: path('M 600 290 L 620 290 Q 630 290 630 280 L 630 66 Q 630 56 640 56 L 650 56');" class="h-packet h-packet-d1"/>
 
             <!-- KPI Dashboard -->
@@ -818,7 +871,7 @@
               <text x="806" y="172" font-family="'JetBrains Mono', monospace" font-size="7" fill="#737373">Stops</text>
             </g>
 
-            <!-- Consumer systems (bidirectional — they also produce) -->
+            <!-- Consumer systems -->
             <rect x="640" y="204" width="220" height="36" rx="6" fill="#ffffff" stroke="#e5e5e5" stroke-width="1" class="h-fade h-fade-d4"/>
             <text x="656" y="226" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="500" fill="#0a0a0a">MES</text>
             <text x="844" y="226" font-family="'JetBrains Mono', monospace" font-size="8" fill="#a3a3a3" text-anchor="end">← schedules · → data</text>
@@ -841,9 +894,8 @@
             <path d="M 600 260 L 620 260 Q 630 260 630 266 L 630 266 Q 630 266 640 266" stroke="#d4d4d4" stroke-width="1" fill="none" class="h-flow-line"/>
             <path d="M 600 300 L 620 300 Q 630 300 630 310 L 630 310 Q 630 310 640 310" stroke="#d4d4d4" stroke-width="1" fill="none" class="h-flow-line"/>
 
-            <!-- Bidirectional flow: Consumers → back to MQTT (via UNS) -->
+            <!-- Bidirectional flow -->
             <path d="M 640 230 L 625 230 Q 615 230 615 240 L 615 380 Q 615 390 605 390 L 280 390 Q 270 390 270 380 L 270 250 Q 270 240 260 240 L 250 240" stroke="#d4d4d4" stroke-width="1" fill="none" class="h-flow-line"/>
-            <!-- Reverse data packets (consumers publishing back) -->
             <circle r="2.5" fill="#0a0a0a" style="offset-path: path('M 640 230 L 625 230 Q 615 230 615 240 L 615 380 Q 615 390 605 390 L 280 390 Q 270 390 270 380 L 270 250 Q 270 240 260 240 L 250 240');" class="h-packet h-packet-d3"/>
 
             <!-- ═══ TOPIC PATH (bottom bar) ═══ -->
@@ -851,16 +903,236 @@
             <text x="440" y="427" font-family="'JetBrains Mono', monospace" font-size="9" fill="#ffffff" text-anchor="middle">v1.0 / site / area / line / cell / equipment / sensor</text>
           </svg>
         </div>
-
-        <div class="cta-group" style="margin-top: 36px">
-          <a href="/framework/" class="btn-primary">Read the Standard →</a>
-          <a href="/fn-uns/" class="btn-secondary">View fn-uns</a>
-        </div>
-        <div class="hero-badge" style="margin-top: 36px">
-          <span class="dot"></span> Standard v1.0
-        </div>
       </div>
     </div>
+
+    <div class="divider"></div>
+
+    <!-- WHAT IS A UNS? — THE PROBLEM -->
+    <section class="fade-in problem-section-animated">
+      <div class="container">
+        <div class="section-label">What is a Unified Namespace?</div>
+        <h2>One data layer replaces a hundred integrations.</h2>
+        <p class="lead">
+          The Unified Namespace (UNS) replaces point-to-point integrations with
+          a single, shared data layer. Every system — machines, sensors,
+          applications, databases — publishes and subscribes to a common MQTT
+          topic hierarchy.
+        </p>
+
+        <div class="problem-grid">
+          <div class="problem-before">
+            <h3>Today: Point-to-Point Spaghetti</h3>
+            <div class="spaghetti-line">
+              PLC <span class="arrow">→</span> SCADA
+              <span class="arrow">→</span> Historian
+            </div>
+            <div class="spaghetti-line">
+              PLC <span class="arrow">→</span> MES
+              <span class="arrow">→</span> ERP
+            </div>
+            <div class="spaghetti-line">
+              PLC <span class="arrow">→</span> Custom Dashboard
+            </div>
+            <div class="spaghetti-line">
+              Sensor <span class="arrow">→</span> Cloud Platform
+            </div>
+            <div class="spaghetti-line">
+              Sensor <span class="arrow">→</span> Another Custom App
+            </div>
+            <p
+              style="
+                font-size: 13px;
+                color: var(--grey-700);
+                margin-top: 16px;
+                line-height: 1.5;
+              "
+            >
+              Every new connection adds complexity. Every system has its own
+              data model. Getting a simple answer — "what's the utilisation of
+              cnc-01 this shift?" — requires pulling data from multiple systems.
+            </p>
+          </div>
+
+          <div class="problem-after">
+            <h3>With UNS: One Data Layer</h3>
+            <div class="uns-hub">
+              <div class="uns-hub-label">MQTT Broker</div>
+              <div class="uns-hub-sub">
+                Unified Namespace — single source of truth
+              </div>
+            </div>
+            <div class="spoke-grid">
+              <div class="spoke">PLCs</div>
+              <div class="spoke">Sensors</div>
+              <div class="spoke">SCADA</div>
+              <div class="spoke">MES</div>
+              <div class="spoke">Dashboards</div>
+              <div class="spoke">Analytics</div>
+            </div>
+            <p
+              style="
+                font-size: 13px;
+                color: var(--grey-700);
+                margin-top: 16px;
+                line-height: 1.5;
+              "
+            >
+              Any system can publish data. Any system can subscribe. No
+              point-to-point wiring. No vendor lock-in. Adding a new consumer
+              means subscribing to existing topics — not building a new
+              integration.
+            </p>
+          </div>
+        </div>
+
+        <!-- ISA-95 Topic Hierarchy -->
+        <div style="margin-top: 64px">
+          <h3 style="font-size: 18px; font-weight: 700; letter-spacing: -0.01em; margin-bottom: 16px;">ISA-95 Topic Structure</h3>
+          <p style="font-size: 15px; color: var(--grey-700); line-height: 1.7; margin-bottom: 24px; max-width: 600px;">
+            Data is organised using the ISA-95 international standard — a structured path from enterprise down to individual data points. The hierarchy is self-describing.
+          </p>
+          <div class="topic-tree topic-tree-animated" data-animate style="max-width: 600px">
+            <div>
+              <span class="tt-segment"><span class="sep">v1.0</span></span><span class="tt-segment"><span class="sep"> / </span></span><span class="tt-segment"><span class="value">enterprise</span></span><span class="tt-segment"><span class="sep"> / </span></span><span class="tt-segment"><span class="value">site1</span></span><span class="tt-segment"><span class="sep"> / </span></span><span class="tt-segment"><span class="value">area1</span></span><span class="tt-segment"><span class="sep"> / </span></span><span class="tt-segment"><span class="value">cnc-01</span></span><span class="tt-segment"><span class="sep"> / </span></span><span class="tt-segment"><span class="value">status</span></span>
+            </div>
+            <div class="tt-desc"><span class="level"> └─ namespace version</span></div>
+            <div class="tt-desc"><span class="level"> └─ company / business unit</span></div>
+            <div class="tt-desc"><span class="level"> └─ factory / physical site</span></div>
+            <div class="tt-desc"><span class="level"> └─ production area</span></div>
+            <div class="tt-desc"><span class="level"> └─ individual machine</span></div>
+            <div class="tt-desc"><span class="level"> └─ data point</span></div>
+          </div>
+        </div>
+
+        <div class="stats-row stats-row-animated" data-animate style="margin-top: 48px">
+          <div class="stat">
+            <div class="stat-number">&lt;1s</div>
+            <div class="stat-label">Data latency — real-time, not batch</div>
+          </div>
+          <div class="stat">
+            <div class="stat-number">1</div>
+            <div class="stat-label">Source of truth for all systems</div>
+          </div>
+          <div class="stat">
+            <div class="stat-number">0</div>
+            <div class="stat-label">Point-to-point integrations needed</div>
+          </div>
+          <div class="stat">
+            <div class="stat-number">∞</div>
+            <div class="stat-label">
+              Subscribers — add without changing anything
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top: 36px">
+          <a href="/docs/what-is-uns.html" class="btn-secondary">Learn more about the UNS →</a>
+        </div>
+      </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- WHY UNS MATTERS — BUSINESS VALUE -->
+    <section class="why-uns-section fade-in">
+      <div class="container">
+        <div class="section-label">Why UNS Matters</div>
+        <h2>The business case for a Unified Namespace.</h2>
+        <p class="lead">
+          The UNS isn't just a technical architecture — it's a business tool.
+          Real-time visibility, reduced integration cost, and faster time to
+          insight for every role on the factory floor.
+        </p>
+
+        <table class="outcomes-table">
+          <thead>
+            <tr>
+              <th>Metric</th>
+              <th>Before UNS</th>
+              <th>With UNS</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Time to answer "what's machine utilisation?"</td>
+              <td class="before">Hours (manual data pull)</td>
+              <td class="after">Seconds (API call)</td>
+            </tr>
+            <tr>
+              <td>New integration setup</td>
+              <td class="before">Weeks (custom development)</td>
+              <td class="after">Minutes (subscribe to topic)</td>
+            </tr>
+            <tr>
+              <td>Data freshness</td>
+              <td class="before">Hours/days (batch)</td>
+              <td class="after">Real-time (&lt; 1 second)</td>
+            </tr>
+            <tr>
+              <td>Systems with access to machine data</td>
+              <td class="before">1-2 (SCADA, historian)</td>
+              <td class="after">Unlimited (any MQTT subscriber)</td>
+            </tr>
+            <tr>
+              <td>Cost of adding a new KPI</td>
+              <td class="before">Significant (cross-system)</td>
+              <td class="after">Minimal (new SQL query)</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- Who Benefits -->
+        <div class="benefits-grid">
+          <div class="benefit-card">
+            <h3>Operations Managers</h3>
+            <p>
+              Real-time dashboards showing machine utilisation, production
+              progress, and stoppage reasons across the entire shop floor.
+            </p>
+          </div>
+          <div class="benefit-card">
+            <h3>Maintenance Teams</h3>
+            <p>
+              Automatic MTBF and MTTR calculations per machine. Alarm history
+              with durations. Stoppage pareto charts showing where to focus.
+            </p>
+          </div>
+          <div class="benefit-card">
+            <h3>Production Planners</h3>
+            <p>
+              Actual throughput data — parts per hour, target attainment —
+              compared against planned schedules. Identify bottleneck machines.
+            </p>
+          </div>
+          <div class="benefit-card">
+            <h3>Quality Engineers</h3>
+            <p>
+              Scrap tracking linked to specific machines, programs, and
+              operators. Quality check pass rates over time.
+            </p>
+          </div>
+          <div class="benefit-card">
+            <h3>Continuous Improvement</h3>
+            <p>
+              Data-driven kaizen. Every state change, every stoppage, every
+              production run is recorded with timestamps and durations.
+            </p>
+          </div>
+          <div class="benefit-card">
+            <h3>IT &amp; Engineering</h3>
+            <p>
+              A clean, maintainable architecture. Each function is independent,
+              version-controlled, and deployable via git push. No vendor lock-in.
+            </p>
+          </div>
+        </div>
+
+        <div style="margin-top: 36px">
+          <a href="/docs/why-uns.html" class="btn-secondary">Read the full business case →</a>
+        </div>
+      </div>
+    </section>
 
     <div class="divider"></div>
 
@@ -931,221 +1203,19 @@
 
     <div class="divider"></div>
 
-    <!-- OVERVIEW -->
-    <section class="overview-section fade-in">
-      <div class="container">
-        <div class="overview-grid">
-          <div class="overview-text">
-            <div class="section-label">What is UNS Framework?</div>
-            <h3>
-              Describe what you have — without changing what or how you do it.
-            </h3>
-            <p>
-              The <strong>UNS Framework</strong> is an open-source initiative
-              that offers a technically-driven approach to MQTT and Unified
-              Namespace through the use of YAML files. Inspired by standards
-              like Docker and Kubernetes, it establishes a universal standard
-              that is both <strong>human-readable</strong> and
-              <strong>machine-readable</strong>.
-            </p>
-            <p>
-              It is not a software product but a descriptive standard that
-              seamlessly integrates with any new or existing UNS deployments. It
-              complements existing standards like Sparkplug, OPC/UA, and MT
-              Connect by focusing on
-              <strong>describing what you have</strong>.
-            </p>
-            <p>
-              By articulating your UNS with the framework, you enable seamless
-              integration across documentation, applications, analytics,
-              security tools, and AI systems.
-            </p>
-            <div class="flow-dots">
-              <div class="flow-dot"></div>
-              <div class="flow-dot"></div>
-              <div class="flow-dot"></div>
-              <div class="flow-dot"></div>
-              <div class="flow-dot"></div>
-            </div>
-            <a href="/framework/" class="btn-primary">Explore the Standard →</a>
-          </div>
-          <div>
-            <div class="yaml-preview" data-animate>
-              <div class="yaml-line"><span class="yc"># uns.yml — describe your namespace</span></div>
-              <div class="yaml-line"><span class="yk">version:</span> <span class="yv">'1.0'</span></div>
-              <div class="yaml-line"><span class="yk">uns:</span></div>
-              <div class="yaml-line">  <span class="yk">name:</span> <span class="yv">'UNS Framework'</span></div>
-              <div class="yaml-line">  <span class="yk">region:</span> <span class="yv">'UK'</span></div>
-              <div class="yaml-line">  <span class="yk">timezone:</span> <span class="yv">'UTC'</span></div>
-              <div class="yaml-line">  <span class="yk">topic_structure:</span> <span class="yv">'version/site/area/...'</span></div>
-              <div class="yaml-line">  <span class="yk">topic_standard:</span> <span class="yv">'ISA95'</span></div>
-              <div class="yaml-line">  <span class="yk">information_model:</span> <span class="yv">'User Defined'</span></div>
-              <div class="yaml-line">&nbsp;</div>
-              <div class="yaml-line"><span class="yc"># site.yml — describe your factory</span></div>
-              <div class="yaml-line"><span class="yk">site:</span></div>
-              <div class="yaml-line">  - <span class="yk">name:</span> <span class="yv">UK</span></div>
-              <div class="yaml-line">    <span class="yk">id:</span> <span class="yv">UK</span></div>
-              <div class="yaml-line">    <span class="yk">area:</span></div>
-              <div class="yaml-line">      - <span class="yk">name:</span> <span class="yv">Area 1</span></div>
-              <div class="yaml-line">        <span class="yk">line:</span></div>
-              <div class="yaml-line">          - <span class="yk">name:</span> <span class="yv">Line 1</span></div>
-              <div class="yaml-line">            <span class="yk">cell:</span></div>
-              <div class="yaml-line">              - <span class="yk">name:</span> <span class="yv">Cell 1</span></div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- CORE DEFINITIONS PREVIEW -->
-    <section class="fade-in">
-      <div class="container">
-        <div class="section-label">Core Definitions</div>
-        <h2>Everything described in YAML.</h2>
-        <p class="lead">
-          The UNS Framework configuration encompasses sites, areas, lines,
-          cells, equipment, sensors, functions, producers, consumers, MQTT
-          brokers, and databases.
-        </p>
-
-        <div class="def-preview">
-          <div class="def-preview-header">UNS Framework V1.0 — Definitions</div>
-          <a href="/framework/uns.html" class="def-preview-item"
-            ><span class="def-name">UNS</span
-            ><span class="def-desc">Unified Namespace configuration</span
-            ><span class="def-arrow">→</span></a
-          >
-          <a href="/framework/site.html" class="def-preview-item"
-            ><span class="def-name">Site</span
-            ><span class="def-desc">Physical or logical site</span
-            ><span class="def-arrow">→</span></a
-          >
-          <a href="/framework/area.html" class="def-preview-item"
-            ><span class="def-name">Area</span
-            ><span class="def-desc">Building, floor, room, or partition</span
-            ><span class="def-arrow">→</span></a
-          >
-          <a href="/framework/line.html" class="def-preview-item"
-            ><span class="def-name">Line</span
-            ><span class="def-desc">Production line within an area</span
-            ><span class="def-arrow">→</span></a
-          >
-          <a href="/framework/cell.html" class="def-preview-item"
-            ><span class="def-name">Cell</span
-            ><span class="def-desc">Workstation or unit in a line</span
-            ><span class="def-arrow">→</span></a
-          >
-          <a href="/framework/equipment.html" class="def-preview-item"
-            ><span class="def-name">Equipment</span
-            ><span class="def-desc">Machine, device, or hardware</span
-            ><span class="def-arrow">→</span></a
-          >
-          <a href="/framework/sensor.html" class="def-preview-item"
-            ><span class="def-name">Sensor</span
-            ><span class="def-desc">Temperature, pressure, humidity, etc.</span
-            ><span class="def-arrow">→</span></a
-          >
-          <a href="/framework/function.html" class="def-preview-item"
-            ><span class="def-name">Function</span
-            ><span class="def-desc">Self-contained code block</span
-            ><span class="def-arrow">→</span></a
-          >
-          <a href="/framework/producer.html" class="def-preview-item"
-            ><span class="def-name">Producer</span
-            ><span class="def-desc">Entity that sends information</span
-            ><span class="def-arrow">→</span></a
-          >
-          <a href="/framework/consumer.html" class="def-preview-item"
-            ><span class="def-name">Consumer</span
-            ><span class="def-desc">Entity that receives information</span
-            ><span class="def-arrow">→</span></a
-          >
-          <a href="/framework/mqtt.html" class="def-preview-item"
-            ><span class="def-name">MQTT</span
-            ><span class="def-desc">Broker configuration</span
-            ><span class="def-arrow">→</span></a
-          >
-          <a href="/framework/database.html" class="def-preview-item"
-            ><span class="def-name">Database</span
-            ><span class="def-desc">Storage configuration</span
-            ><span class="def-arrow">→</span></a
-          >
-          <a href="/framework/artifact.html" class="def-preview-item"
-            ><span class="def-name">Artifact</span
-            ><span class="def-desc">Static data</span
-            ><span class="def-arrow">→</span></a
-          >
-        </div>
-
-        <div style="margin-top: 32px">
-          <a href="/framework/core-definitions.html" class="btn-secondary"
-            >View all definitions →</a
-          >
-        </div>
-      </div>
-    </section>
-
-    <div class="divider"></div>
-
-    <!-- TOPIC HIERARCHY -->
-    <section class="fade-in">
-      <div class="container">
-        <div class="section-label">ISA-95 Topic Hierarchy</div>
-        <h2>Structured, self-describing, real-time.</h2>
-        <p class="lead">
-          Every data point follows the ISA-95 standard. Any consumer can parse
-          the topic path to understand where data comes from — no mapping tables
-          or documentation required.
-        </p>
-
-        <div class="topic-tree topic-tree-animated" data-animate style="max-width: 600px">
-          <div>
-            <span class="tt-segment"><span class="sep">v1.0</span></span><span class="tt-segment"><span class="sep"> / </span></span><span class="tt-segment"><span class="value">enterprise</span></span><span class="tt-segment"><span class="sep"> / </span></span><span class="tt-segment"><span class="value">site1</span></span><span class="tt-segment"><span class="sep"> / </span></span><span class="tt-segment"><span class="value">area1</span></span><span class="tt-segment"><span class="sep"> / </span></span><span class="tt-segment"><span class="value">cnc-01</span></span><span class="tt-segment"><span class="sep"> / </span></span><span class="tt-segment"><span class="value">status</span></span>
-          </div>
-          <div class="tt-desc"><span class="level"> └─ namespace version</span></div>
-          <div class="tt-desc"><span class="level"> └─ company / business unit</span></div>
-          <div class="tt-desc"><span class="level"> └─ factory / physical site</span></div>
-          <div class="tt-desc"><span class="level"> └─ production area</span></div>
-          <div class="tt-desc"><span class="level"> └─ individual machine</span></div>
-          <div class="tt-desc"><span class="level"> └─ data point</span></div>
-        </div>
-
-        <div class="stats-row stats-row-animated" data-animate style="margin-top: 48px">
-          <div class="stat">
-            <div class="stat-number">&lt;1s</div>
-            <div class="stat-label">Data latency — real-time, not batch</div>
-          </div>
-          <div class="stat">
-            <div class="stat-number">1</div>
-            <div class="stat-label">Source of truth for all systems</div>
-          </div>
-          <div class="stat">
-            <div class="stat-number">0</div>
-            <div class="stat-label">Point-to-point integrations needed</div>
-          </div>
-          <div class="stat">
-            <div class="stat-number">∞</div>
-            <div class="stat-label">
-              Subscribers — add without changing anything
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <div class="divider"></div>
-
     <!-- GET STARTED -->
     <section class="fade-in">
       <div class="container" style="text-align: center">
         <div class="section-label">Get Started</div>
-        <h2>Start describing your UNS today.</h2>
+        <h2>Start building your UNS today.</h2>
         <p class="lead" style="margin-left: auto; margin-right: auto">
-          Read the standard, explore the YAML definitions, or dive straight into
-          the fn-uns reference implementation with real serverless functions.
+          Learn what a Unified Namespace is, read the open standard, or dive
+          straight into the fn-uns reference implementation with real serverless
+          functions.
         </p>
         <div class="cta-group" style="justify-content: center">
-          <a href="/framework/" class="btn-primary">Read the Standard →</a>
+          <a href="/docs/what-is-uns.html" class="btn-primary">What is a UNS? →</a>
+          <a href="/framework/" class="btn-secondary">Read the Standard →</a>
           <a href="/fn-uns/" class="btn-secondary">Explore fn-uns →</a>
           <a
             href="https://github.com/unsframework"

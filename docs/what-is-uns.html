@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>What is the UNS? — fn-uns Docs</title>
+<meta name="description" content="A single, structured, real-time data layer for your entire manufacturing operation."/>
+<link rel="stylesheet" href="../style.css"/>
+<link rel="stylesheet" href="../docs.css"/>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="logo">UNS Framework</a>
+  <div class="links">
+    <a href="/framework/">Standard v1.0</a>
+    <a href="/fn-uns/">fn-uns</a>
+    <a href="https://github.com/unsframework" target="_blank">GitHub</a>
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+      <div class="toggle-thumb"><span class="toggle-icon-sun">☀</span><span class="toggle-icon-moon">☾</span></div>
+    </button>
+  </div>
+</nav>
+
+<div class="docs-layout">
+  <aside class="docs-sidebar">
+    <div class="sidebar-section">
+      <div class="sidebar-title">fn-uns</div>
+      <a href="/docs/">Overview</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-title">Introduction</div>
+      <a href="/docs/what-is-uns.html" class="active">What is the UNS?</a>
+      <a href="/docs/why-uns.html">Why UNS Matters</a>
+      <a href="/docs/why-faas.html">Why FaaS &amp; GitOps?</a>
+      <a href="/docs/architecture.html">Architecture</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-title">Getting Started</div>
+      <a href="/docs/getting-started.html">Quick Start</a>
+      <a href="/docs/fnkit-basics.html">fnkit Basics</a>
+      <a href="/docs/first-deployment.html">First Deployment</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-title">Components</div>
+      <a href="/docs/components.html">Overview</a>
+      <a href="/docs/uns-sim.html">uns-sim</a>
+      <a href="/docs/uns-framework.html">uns-framework</a>
+      <a href="/docs/uns-cache.html">uns-cache</a>
+      <a href="/docs/uns-log.html">uns-log</a>
+      <a href="/docs/uns-state.html">uns-state</a>
+      <a href="/docs/uns-stoppage.html">uns-stoppage</a>
+      <a href="/docs/uns-productivity.html">uns-productivity</a>
+      <a href="/docs/uns-input.html">uns-input</a>
+      <a href="/docs/uns-kpi.html">uns-kpi</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-title">Guides</div>
+      <a href="/docs/configuration.html">Configuration</a>
+      <a href="/docs/manufacturing-kpis.html">Manufacturing KPIs</a>
+      <a href="/docs/api-reference.html">API Reference</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-title">Developer</div>
+      <a href="/docs/code-patterns.html">Code Patterns</a>
+      <a href="/docs/extending.html">Extending</a>
+      <a href="/docs/database-schema.html">Database Schema</a>
+    </div>
+  </aside>
+
+  <main class="docs-content">
+    <h1>What is the Unified Namespace?</h1>
+    <p class="page-desc">A single, structured, real-time data layer for your entire operation.</p>
+
+    <h2>The Problem</h2>
+    <p>
+      Manufacturing data is trapped. Machine PLCs talk proprietary protocols. SCADA systems store data in siloed historians. MES platforms lock information behind vendor APIs. ERP systems hold planning data that never reaches the shop floor in real time.
+    </p>
+    <p>
+      The result: <strong>dozens of point-to-point integrations</strong>, each brittle, expensive to maintain, and impossible to scale.
+    </p>
+    <div class="yaml-block">
+<pre style="margin:0;font:inherit;white-space:pre">PLC  →  SCADA  →  Historian
+PLC  →  MES  →  ERP
+PLC  →  Custom App
+Sensor  →  Another Custom App
+Sensor  →  Cloud Platform</pre>
+    </div>
+    <p>
+      Every new connection adds complexity. Every system has its own data model. Getting a simple answer — "what's the utilisation of machine cnc-01 over the last shift?" — requires pulling data from multiple systems and hoping the timestamps align.
+    </p>
+
+    <h2>The Solution: Unified Namespace</h2>
+    <p>
+      The <strong>Unified Namespace (UNS)</strong> replaces point-to-point integrations with a single, shared data layer. Every system — machines, sensors, applications, databases — publishes and subscribes to a common MQTT topic hierarchy.
+    </p>
+    <p>
+      Any system can publish data. Any system can subscribe. No point-to-point wiring. No vendor lock-in.
+    </p>
+
+    <h2>ISA-95 Topic Structure</h2>
+    <p>
+      The UNS organises data using the <strong>ISA-95</strong> hierarchy — the international standard for manufacturing systems integration. Topics follow a structured path:
+    </p>
+    <div class="yaml-block">
+<pre style="margin:0;font:inherit;white-space:pre">v1.0/{enterprise}/{site}/{area}/{machine}/{tag}</pre>
+    </div>
+
+    <table class="def-table">
+      <thead><tr><th>Level</th><th>Description</th><th>Example</th></tr></thead>
+      <tbody>
+        <tr><td>v1.0</td><td>Namespace version</td><td>v1.0</td></tr>
+        <tr><td>enterprise</td><td>Company or business unit</td><td>acme</td></tr>
+        <tr><td>site</td><td>Physical location / factory</td><td>factory1</td></tr>
+        <tr><td>area</td><td>Production area or department</td><td>machining</td></tr>
+        <tr><td>machine</td><td>Individual machine or cell</td><td>cnc-01</td></tr>
+        <tr><td>tag</td><td>Data point</td><td>status, program, tool</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Real Examples from This Project</h3>
+    <div class="yaml-block">
+<pre style="margin:0;font:inherit;white-space:pre">v1.0/enterprise/site1/area1/cnc-01/status   → machine state (ACTIVE, IDLE, ALARM...)
+v1.0/enterprise/site1/area1/cnc-01/program   → current program, parts count, progress
+v1.0/enterprise/site1/area1/cnc-01/tool      → active tool, tool life, offset
+v1.0/enterprise/site1/area2/cnc-03/status    → different area, same structure</pre>
+    </div>
+    <p>
+      The hierarchy is self-describing. Any consumer can parse the topic path to understand <strong>where</strong> the data comes from without needing a separate mapping table.
+    </p>
+
+    <h2>Why MQTT?</h2>
+    <p><strong>MQTT</strong> is the messaging protocol that powers the UNS:</p>
+    <table class="def-table">
+      <thead><tr><th>Feature</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td>Lightweight</td><td>Runs on constrained devices and edge hardware</td></tr>
+        <tr><td>Pub/Sub</td><td>Decouples producers from consumers</td></tr>
+        <tr><td>Wildcards</td><td>Subscribe to v1.0/# to get everything, or filter by area</td></tr>
+        <tr><td>QoS levels</td><td>At-most-once, at-least-once, exactly-once delivery</td></tr>
+        <tr><td>Retained</td><td>New subscribers get the last known value immediately</td></tr>
+        <tr><td>TLS</td><td>Encrypted connections for secure data transport</td></tr>
+        <tr><td>Standard</td><td>Supported by every major PLC, gateway, and cloud platform</td></tr>
+      </tbody>
+    </table>
+
+    <h2>The UNS Framework</h2>
+    <p>
+      This project follows the <a href="/framework/" style="color:var(--black);border-bottom:1px solid var(--grey-300);">UNS Framework</a> — an open standard for structuring manufacturing data in MQTT. The framework defines topic hierarchy based on ISA-95 levels, versioned namespaces, payload conventions, and best practices for topic naming and QoS selection.
+    </p>
+
+    <h2>What This Project Builds</h2>
+    <p>Using the UNS as the foundation, this project adds a complete data processing pipeline:</p>
+    <table class="def-table">
+      <thead><tr><th>Stage</th><th>What Happens</th></tr></thead>
+      <tbody>
+        <tr><td>Machines publish</td><td>Status, program, and tool data to MQTT topics</td></tr>
+        <tr><td>UNS captures</td><td>All data cached to Valkey with current/previous tracking</td></tr>
+        <tr><td>Functions process</td><td>State durations, stoppages, production runs logged to PostgreSQL</td></tr>
+        <tr><td>APIs serve</td><td>KPIs, reports, and queries computed on demand</td></tr>
+      </tbody>
+    </table>
+    <p>
+      The result: a complete, working manufacturing data platform — built entirely from small, independent, version-controlled functions.
+    </p>
+
+    <div class="docs-nav-buttons">
+      <a href="/docs/" class="docs-nav-btn">
+        <span class="nav-label">Previous</span>
+        <span class="nav-title">Overview</span>
+      </a>
+      <a href="/docs/why-uns.html" class="docs-nav-btn next">
+        <span class="nav-label">Next</span>
+        <span class="nav-title">Why UNS Matters</span>
+      </a>
+    </div>
+  </main>
+</div>
+
+<script src="../shared.js"></script>
+</body>
+</html>

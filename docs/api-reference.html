@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>API Reference — fn-uns Docs</title>
+<meta name="description" content="All HTTP endpoints across the UNS functions."/>
+<link rel="stylesheet" href="../style.css"/>
+<link rel="stylesheet" href="../docs.css"/>
+</head>
+<body>
+<nav>
+  <a href="/" class="logo">UNS Framework</a>
+  <div class="links">
+    <a href="/framework/">Standard v1.0</a><a href="/fn-uns/">fn-uns</a><a href="https://github.com/unsframework" target="_blank">GitHub</a>
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode"><div class="toggle-thumb"><span class="toggle-icon-sun">☀</span><span class="toggle-icon-moon">☾</span></div></button>
+  </div>
+</nav>
+<div class="docs-layout">
+  <aside class="docs-sidebar">
+    <div class="sidebar-section"><div class="sidebar-title">fn-uns</div><a href="/docs/">Overview</a></div>
+    <div class="sidebar-section"><div class="sidebar-title">Introduction</div><a href="/docs/what-is-uns.html">What is the UNS?</a><a href="/docs/why-uns.html">Why UNS Matters</a><a href="/docs/why-faas.html">Why FaaS &amp; GitOps?</a><a href="/docs/architecture.html">Architecture</a></div>
+    <div class="sidebar-section"><div class="sidebar-title">Getting Started</div><a href="/docs/getting-started.html">Quick Start</a><a href="/docs/fnkit-basics.html">fnkit Basics</a><a href="/docs/first-deployment.html">First Deployment</a></div>
+    <div class="sidebar-section"><div class="sidebar-title">Components</div><a href="/docs/components.html">Overview</a><a href="/docs/uns-sim.html">uns-sim</a><a href="/docs/uns-framework.html">uns-framework</a><a href="/docs/uns-cache.html">uns-cache</a><a href="/docs/uns-log.html">uns-log</a><a href="/docs/uns-state.html">uns-state</a><a href="/docs/uns-stoppage.html">uns-stoppage</a><a href="/docs/uns-productivity.html">uns-productivity</a><a href="/docs/uns-input.html">uns-input</a><a href="/docs/uns-kpi.html">uns-kpi</a></div>
+    <div class="sidebar-section"><div class="sidebar-title">Guides</div><a href="/docs/configuration.html">Configuration</a><a href="/docs/manufacturing-kpis.html">Manufacturing KPIs</a><a href="/docs/api-reference.html" class="active">API Reference</a></div>
+    <div class="sidebar-section"><div class="sidebar-title">Developer</div><a href="/docs/code-patterns.html">Code Patterns</a><a href="/docs/extending.html">Extending</a><a href="/docs/database-schema.html">Database Schema</a></div>
+  </aside>
+  <main class="docs-content">
+    <h1>API Reference</h1>
+    <p class="page-desc">All HTTP endpoints across the UNS functions.</p>
+
+    <h2>Endpoints</h2>
+    <table class="def-table"><thead><tr><th>Method</th><th>Path</th><th>Description</th></tr></thead><tbody>
+    <tr><td>GET</td><td>/uns-cache</td><td>All cached topics</td></tr>
+    <tr><td>POST</td><td>/uns-cache</td><td>Specific topics</td></tr>
+    <tr><td>GET/POST</td><td>/uns-log</td><td>Check changes, log to DB</td></tr>
+    <tr><td>GET/POST</td><td>/uns-state</td><td>Poll state changes</td></tr>
+    <tr><td>GET</td><td>/uns-stoppage</td><td>Auto-classify + query</td></tr>
+    <tr><td>POST</td><td>/uns-stoppage</td><td>Manual override</td></tr>
+    <tr><td>GET/POST</td><td>/uns-productivity</td><td>Poll production runs</td></tr>
+    <tr><td>GET</td><td>/uns-input</td><td>Query entries</td></tr>
+    <tr><td>POST</td><td>/uns-input</td><td>Submit entry</td></tr>
+    <tr><td>DELETE</td><td>/uns-input?id=N</td><td>Delete entry</td></tr>
+    <tr><td>GET</td><td>/uns-kpi</td><td>Compute all KPIs</td></tr></tbody></table>
+    <h2>uns-kpi Parameters</h2>
+    <table class="def-table"><thead><tr><th>Param</th><th>Default</th><th>Description</th></tr></thead><tbody>
+    <tr><td>machine</td><td>(all)</td><td>Filter by machine</td></tr><tr><td>area</td><td>(all)</td><td>Filter by area</td></tr>
+    <tr><td>hours</td><td>24</td><td>Last N hours</td></tr><tr><td>from/to</td><td>-</td><td>RFC3339 range</td></tr></tbody></table>
+    <h2>Response Codes</h2>
+    <table class="def-table"><thead><tr><th>Code</th><th>Meaning</th></tr></thead><tbody>
+    <tr><td>200</td><td>Success</td></tr><tr><td>400</td><td>Bad request</td></tr>
+    <tr><td>404</td><td>Not found</td></tr><tr><td>500</td><td>Internal error</td></tr></tbody></table>
+
+    <div class="docs-nav-buttons">
+      <a href="/docs/manufacturing-kpis.html" class="docs-nav-btn"><span class="nav-label">Previous</span><span class="nav-title">Manufacturing KPIs</span></a>
+      <a href="/docs/code-patterns.html" class="docs-nav-btn next"><span class="nav-label">Next</span><span class="nav-title">Code Patterns</span></a>
+    </div>
+  </main>
+</div>
+<script src="../shared.js"></script>
+</body>
+</html>

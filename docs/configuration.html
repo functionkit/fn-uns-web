@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Configuration Guide — fn-uns Docs</title>
+<meta name="description" content="How runtime configuration works — Valkey config, environment variables, and multi-instance deployment."/>
+<link rel="stylesheet" href="../style.css"/>
+<link rel="stylesheet" href="../docs.css"/>
+</head>
+<body>
+<nav>
+  <a href="/" class="logo">UNS Framework</a>
+  <div class="links">
+    <a href="/framework/">Standard v1.0</a><a href="/fn-uns/">fn-uns</a><a href="https://github.com/unsframework" target="_blank">GitHub</a>
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode"><div class="toggle-thumb"><span class="toggle-icon-sun">☀</span><span class="toggle-icon-moon">☾</span></div></button>
+  </div>
+</nav>
+<div class="docs-layout">
+  <aside class="docs-sidebar">
+    <div class="sidebar-section"><div class="sidebar-title">fn-uns</div><a href="/docs/">Overview</a></div>
+    <div class="sidebar-section"><div class="sidebar-title">Introduction</div><a href="/docs/what-is-uns.html">What is the UNS?</a><a href="/docs/why-uns.html">Why UNS Matters</a><a href="/docs/why-faas.html">Why FaaS &amp; GitOps?</a><a href="/docs/architecture.html">Architecture</a></div>
+    <div class="sidebar-section"><div class="sidebar-title">Getting Started</div><a href="/docs/getting-started.html">Quick Start</a><a href="/docs/fnkit-basics.html">fnkit Basics</a><a href="/docs/first-deployment.html">First Deployment</a></div>
+    <div class="sidebar-section"><div class="sidebar-title">Components</div><a href="/docs/components.html">Overview</a><a href="/docs/uns-sim.html">uns-sim</a><a href="/docs/uns-framework.html">uns-framework</a><a href="/docs/uns-cache.html">uns-cache</a><a href="/docs/uns-log.html">uns-log</a><a href="/docs/uns-state.html">uns-state</a><a href="/docs/uns-stoppage.html">uns-stoppage</a><a href="/docs/uns-productivity.html">uns-productivity</a><a href="/docs/uns-input.html">uns-input</a><a href="/docs/uns-kpi.html">uns-kpi</a></div>
+    <div class="sidebar-section"><div class="sidebar-title">Guides</div><a href="/docs/configuration.html" class="active">Configuration</a><a href="/docs/manufacturing-kpis.html">Manufacturing KPIs</a><a href="/docs/api-reference.html">API Reference</a></div>
+    <div class="sidebar-section"><div class="sidebar-title">Developer</div><a href="/docs/code-patterns.html">Code Patterns</a><a href="/docs/extending.html">Extending</a><a href="/docs/database-schema.html">Database Schema</a></div>
+  </aside>
+  <main class="docs-content">
+    <h1>Configuration Guide</h1>
+    <p class="page-desc">How runtime configuration works — Valkey config, environment variables, and multi-instance deployment.</p>
+
+    <h2>Two Layers</h2>
+    <table class="def-table"><thead><tr><th>Layer</th><th>Stored in</th><th>Contains</th><th>Changes require</th></tr></thead><tbody>
+    <tr><td>Connection</td><td>.env file</td><td>DB URLs, cache URLs, broker</td><td>Container restart</td></tr>
+    <tr><td>Business</td><td>Valkey cache</td><td>Topics, table names</td><td>Nothing (hot reload)</td></tr></tbody></table>
+    <h2>Environment Variables</h2>
+    <table class="def-table"><thead><tr><th>Variable</th><th>Description</th></tr></thead><tbody>
+    <tr><td>FUNCTION_TARGET</td><td>Function name = Valkey config key</td></tr>
+    <tr><td>DATABASE_URL</td><td>PostgreSQL connection</td></tr>
+    <tr><td>CACHE_URL</td><td>Valkey connection</td></tr>
+    <tr><td>MQTT_BROKER</td><td>MQTT broker URL</td></tr></tbody></table>
+    <h2>Valkey Config Pattern</h2>
+    <div class="yaml-block"><pre style="margin:0;font:inherit;white-space:pre">docker exec fnkit-cache valkey-cli SET fnkit:config:uns-state \
+  '{"table":"uns_state","topics":["v1.0/.../cnc-01/status"]}'</pre></div>
+    <p>Config cached in-memory for 30 seconds. Change topics without redeploying.</p>
+    <h2>Which Functions Use Valkey Config?</h2>
+    <table class="def-table"><thead><tr><th>Function</th><th>Config Key</th></tr></thead><tbody>
+    <tr><td>uns-log</td><td>fnkit:config:uns-log</td></tr>
+    <tr><td>uns-state</td><td>fnkit:config:uns-state</td></tr>
+    <tr><td>uns-productivity</td><td>fnkit:config:uns-productivity</td></tr></tbody></table>
+    <p>Others don't need Valkey config: uns-sim (config.yaml), uns-framework (env), uns-cache, uns-stoppage, uns-input, uns-kpi.</p>
+
+    <div class="docs-nav-buttons">
+      <a href="/docs/uns-kpi.html" class="docs-nav-btn"><span class="nav-label">Previous</span><span class="nav-title">uns-kpi</span></a>
+      <a href="/docs/manufacturing-kpis.html" class="docs-nav-btn next"><span class="nav-label">Next</span><span class="nav-title">Manufacturing KPIs</span></a>
+    </div>
+  </main>
+</div>
+<script src="../shared.js"></script>
+</body>
+</html>

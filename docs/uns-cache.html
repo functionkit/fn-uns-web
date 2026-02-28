@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>uns-cache — Cache Reader API — fn-uns Docs</title>
+<meta name="description" content="Reads UNS topic data from Valkey and returns JSON with change detection."/>
+<link rel="stylesheet" href="../style.css"/>
+<link rel="stylesheet" href="../docs.css"/>
+</head>
+<body>
+<nav>
+  <a href="/" class="logo">UNS Framework</a>
+  <div class="links">
+    <a href="/framework/">Standard v1.0</a><a href="/fn-uns/">fn-uns</a><a href="https://github.com/unsframework" target="_blank">GitHub</a>
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode"><div class="toggle-thumb"><span class="toggle-icon-sun">☀</span><span class="toggle-icon-moon">☾</span></div></button>
+  </div>
+</nav>
+<div class="docs-layout">
+  <aside class="docs-sidebar">
+    <div class="sidebar-section"><div class="sidebar-title">fn-uns</div><a href="/docs/">Overview</a></div>
+    <div class="sidebar-section"><div class="sidebar-title">Introduction</div><a href="/docs/what-is-uns.html">What is the UNS?</a><a href="/docs/why-uns.html">Why UNS Matters</a><a href="/docs/why-faas.html">Why FaaS &amp; GitOps?</a><a href="/docs/architecture.html">Architecture</a></div>
+    <div class="sidebar-section"><div class="sidebar-title">Getting Started</div><a href="/docs/getting-started.html">Quick Start</a><a href="/docs/fnkit-basics.html">fnkit Basics</a><a href="/docs/first-deployment.html">First Deployment</a></div>
+    <div class="sidebar-section"><div class="sidebar-title">Components</div><a href="/docs/components.html">Overview</a><a href="/docs/uns-sim.html">uns-sim</a><a href="/docs/uns-framework.html">uns-framework</a><a href="/docs/uns-cache.html" class="active">uns-cache</a><a href="/docs/uns-log.html">uns-log</a><a href="/docs/uns-state.html">uns-state</a><a href="/docs/uns-stoppage.html">uns-stoppage</a><a href="/docs/uns-productivity.html">uns-productivity</a><a href="/docs/uns-input.html">uns-input</a><a href="/docs/uns-kpi.html">uns-kpi</a></div>
+    <div class="sidebar-section"><div class="sidebar-title">Guides</div><a href="/docs/configuration.html">Configuration</a><a href="/docs/manufacturing-kpis.html">Manufacturing KPIs</a><a href="/docs/api-reference.html">API Reference</a></div>
+    <div class="sidebar-section"><div class="sidebar-title">Developer</div><a href="/docs/code-patterns.html">Code Patterns</a><a href="/docs/extending.html">Extending</a><a href="/docs/database-schema.html">Database Schema</a></div>
+  </aside>
+  <main class="docs-content">
+    <h1>uns-cache — Cache Reader API</h1>
+    <p class="page-desc">Reads UNS topic data from Valkey and returns JSON with change detection.</p>
+    <table class="def-table"><tbody>
+        <tr><td>Language</td><td>Node.js</td></tr>
+        <tr><td>Type</td><td>HTTP function</td></tr>
+        <tr><td>Scaffolded with</td><td>fnkit node</td></tr>
+        <tr><td>Depends on</td><td>Valkey cache</td></tr>
+    </tbody></table>
+
+    <h2>What It Does</h2>
+    <p>Reads cached UNS topic data from Valkey. Compares current vs previous values to detect changes.</p>
+    <h2>API Usage</h2>
+    <div class="yaml-block"><pre style="margin:0;font:inherit;white-space:pre">curl https://api.fnkit.dev/uns-cache
+curl -d '{"topics":["v1.0/.../cnc-01/status"]}' https://api.fnkit.dev/uns-cache\</pre\>\</div\>
+    <h2>Response</h2>
+    <div class="yaml-block"><pre style="margin:0;font:inherit;white-space:pre">{ "topic_count": 12, "changed_count": 3,
+  "topics": [{ "topic":"...", "value":{}, "previous_value":{}, "changed":true }],
+  "changes": [{ /* only changed topics */ }] }</pre></div>
+    <h2>Quick Start</h2>
+    <div class="yaml-block"><pre style="margin:0;font:inherit;white-space:pre">cd uns-cache && cp .env.example .env && docker compose up -d
+curl http://localhost:8080/uns-cache | jq</pre></div>
+
+    <div class="docs-nav-buttons">
+      <a href="/docs/uns-framework.html" class="docs-nav-btn"><span class="nav-label">Previous</span><span class="nav-title">uns-framework</span></a>
+      <a href="/docs/uns-log.html" class="docs-nav-btn next"><span class="nav-label">Next</span><span class="nav-title">uns-log</span></a>
+    </div>
+  </main>
+</div>
+<script src="../shared.js"></script>
+</body>
+</html>

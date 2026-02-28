@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Why UNS Matters — fn-uns Docs</title>
+<meta name="description" content="The business case for a Unified Namespace in manufacturing."/>
+<link rel="stylesheet" href="../style.css"/>
+<link rel="stylesheet" href="../docs.css"/>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="logo">UNS Framework</a>
+  <div class="links">
+    <a href="/framework/">Standard v1.0</a>
+    <a href="/fn-uns/">fn-uns</a>
+    <a href="https://github.com/unsframework" target="_blank">GitHub</a>
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+      <div class="toggle-thumb"><span class="toggle-icon-sun">☀</span><span class="toggle-icon-moon">☾</span></div>
+    </button>
+  </div>
+</nav>
+
+<div class="docs-layout">
+  <aside class="docs-sidebar">
+    <div class="sidebar-section">
+      <div class="sidebar-title">fn-uns</div>
+      <a href="/docs/">Overview</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-title">Introduction</div>
+      <a href="/docs/what-is-uns.html">What is the UNS?</a>
+      <a href="/docs/why-uns.html" class="active">Why UNS Matters</a>
+      <a href="/docs/why-faas.html">Why FaaS &amp; GitOps?</a>
+      <a href="/docs/architecture.html">Architecture</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-title">Getting Started</div>
+      <a href="/docs/getting-started.html">Quick Start</a>
+      <a href="/docs/fnkit-basics.html">fnkit Basics</a>
+      <a href="/docs/first-deployment.html">First Deployment</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-title">Components</div>
+      <a href="/docs/components.html">Overview</a>
+      <a href="/docs/uns-sim.html">uns-sim</a>
+      <a href="/docs/uns-framework.html">uns-framework</a>
+      <a href="/docs/uns-cache.html">uns-cache</a>
+      <a href="/docs/uns-log.html">uns-log</a>
+      <a href="/docs/uns-state.html">uns-state</a>
+      <a href="/docs/uns-stoppage.html">uns-stoppage</a>
+      <a href="/docs/uns-productivity.html">uns-productivity</a>
+      <a href="/docs/uns-input.html">uns-input</a>
+      <a href="/docs/uns-kpi.html">uns-kpi</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-title">Guides</div>
+      <a href="/docs/configuration.html">Configuration</a>
+      <a href="/docs/manufacturing-kpis.html">Manufacturing KPIs</a>
+      <a href="/docs/api-reference.html">API Reference</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-title">Developer</div>
+      <a href="/docs/code-patterns.html">Code Patterns</a>
+      <a href="/docs/extending.html">Extending</a>
+      <a href="/docs/database-schema.html">Database Schema</a>
+    </div>
+  </aside>
+
+  <main class="docs-content">
+    <h1>Why UNS Matters</h1>
+    <p class="page-desc">The business case for a Unified Namespace in manufacturing.</p>
+
+    <h2>The Cost of Data Silos</h2>
+    <p>
+      Every manufacturing operation generates vast amounts of data — machine states, production counts, quality measurements, maintenance logs. But in most factories, this data is <strong>fragmented across disconnected systems</strong>:
+    </p>
+    <table class="def-table">
+      <thead><tr><th>System</th><th>Knows</th><th>Doesn't Know</th></tr></thead>
+      <tbody>
+        <tr><td>SCADA</td><td>Machine status</td><td>Production targets</td></tr>
+        <tr><td>MES</td><td>Production orders</td><td>Real-time machine state</td></tr>
+        <tr><td>ERP</td><td>Planned schedules</td><td>Actual throughput</td></tr>
+        <tr><td>Maintenance</td><td>Work orders</td><td>Machine alarm history</td></tr>
+        <tr><td>Quality</td><td>Inspection results</td><td>Which machine/operator was involved</td></tr>
+      </tbody>
+    </table>
+    <p>
+      Getting a complete picture requires manual data extraction, spreadsheet merging, and significant engineering effort. By the time the data is assembled, it's already stale.
+    </p>
+
+    <h2>What the UNS Enables</h2>
+
+    <h3>Real-time Visibility</h3>
+    <p>
+      Every data point is available the moment it's published. No batch exports, no overnight ETL jobs, no waiting for reports. A machine goes into ALARM — every subscribed system knows immediately.
+    </p>
+
+    <h3>Single Source of Truth</h3>
+    <p>
+      One topic, one current value. No conflicting data between systems. <code style="font-family:var(--font-mono);font-size:13px;background:var(--grey-100);padding:2px 8px;border-radius:4px;">v1.0/enterprise/site1/area1/cnc-01/status</code> always reflects the machine's actual state.
+    </p>
+
+    <h3>Reduced Integration Cost</h3>
+    <p>
+      Adding a new consumer (dashboard, analytics tool, AI model) means subscribing to existing topics. No new point-to-point connections. No API development. No vendor negotiations.
+    </p>
+
+    <h3>Faster Time to Insight</h3>
+    <p>
+      With all data flowing through a common structure, building new analytics is straightforward. This project computes utilisation, availability, throughput, MTBF, MTTR, and stoppage pareto — all from the same UNS data, using simple SQL queries.
+    </p>
+
+    <h3>Scalability</h3>
+    <p>
+      The UNS scales horizontally. Add more machines — they publish to new topics. Add more consumers — they subscribe. The architecture doesn't change.
+    </p>
+
+    <h2>Measurable Outcomes</h2>
+    <table class="def-table">
+      <thead><tr><th>Metric</th><th>Before UNS</th><th>With UNS</th></tr></thead>
+      <tbody>
+        <tr><td>Time to answer "what's machine utilisation?"</td><td>Hours (manual data pull)</td><td>Seconds (API call)</td></tr>
+        <tr><td>New integration setup</td><td>Weeks (custom development)</td><td>Minutes (subscribe to topic)</td></tr>
+        <tr><td>Data freshness</td><td>Hours/days (batch)</td><td>Real-time (&lt; 1 second)</td></tr>
+        <tr><td>Systems with access to machine data</td><td>1-2 (SCADA, historian)</td><td>Unlimited (any MQTT subscriber)</td></tr>
+        <tr><td>Cost of adding a new KPI</td><td>Significant (cross-system)</td><td>Minimal (new SQL query)</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Who Benefits</h2>
+    <table class="def-table">
+      <thead><tr><th>Role</th><th>Value</th></tr></thead>
+      <tbody>
+        <tr><td>Operations Managers</td><td>Real-time dashboards showing utilisation, production progress, and stoppage reasons across the entire shop floor</td></tr>
+        <tr><td>Maintenance Teams</td><td>Automatic MTBF and MTTR calculations. Alarm history with durations. Stoppage pareto charts</td></tr>
+        <tr><td>Production Planners</td><td>Actual throughput data compared against planned schedules. Identify bottleneck machines</td></tr>
+        <tr><td>Quality Engineers</td><td>Scrap tracking linked to specific machines, programs, and operators</td></tr>
+        <tr><td>Continuous Improvement</td><td>Data-driven kaizen. Every state change, stoppage, and production run recorded with timestamps</td></tr>
+        <tr><td>IT &amp; Engineering</td><td>Clean, maintainable architecture. Independent functions, version-controlled, deployable via git push</td></tr>
+      </tbody>
+    </table>
+
+    <div class="docs-nav-buttons">
+      <a href="/docs/what-is-uns.html" class="docs-nav-btn">
+        <span class="nav-label">Previous</span>
+        <span class="nav-title">What is the UNS?</span>
+      </a>
+      <a href="/docs/why-faas.html" class="docs-nav-btn next">
+        <span class="nav-label">Next</span>
+        <span class="nav-title">Why FaaS &amp; GitOps?</span>
+      </a>
+    </div>
+  </main>
+</div>
+
+<script src="../shared.js"></script>
+</body>
+</html>

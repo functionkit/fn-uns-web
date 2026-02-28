@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Code Patterns — fn-uns Docs</title>
+<meta name="description" content="Common patterns shared across all UNS functions."/>
+<link rel="stylesheet" href="../style.css"/>
+<link rel="stylesheet" href="../docs.css"/>
+</head>
+<body>
+<nav>
+  <a href="/" class="logo">UNS Framework</a>
+  <div class="links">
+    <a href="/framework/">Standard v1.0</a><a href="/fn-uns/">fn-uns</a><a href="https://github.com/unsframework" target="_blank">GitHub</a>
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode"><div class="toggle-thumb"><span class="toggle-icon-sun">☀</span><span class="toggle-icon-moon">☾</span></div></button>
+  </div>
+</nav>
+<div class="docs-layout">
+  <aside class="docs-sidebar">
+    <div class="sidebar-section"><div class="sidebar-title">fn-uns</div><a href="/docs/">Overview</a></div>
+    <div class="sidebar-section"><div class="sidebar-title">Introduction</div><a href="/docs/what-is-uns.html">What is the UNS?</a><a href="/docs/why-uns.html">Why UNS Matters</a><a href="/docs/why-faas.html">Why FaaS &amp; GitOps?</a><a href="/docs/architecture.html">Architecture</a></div>
+    <div class="sidebar-section"><div class="sidebar-title">Getting Started</div><a href="/docs/getting-started.html">Quick Start</a><a href="/docs/fnkit-basics.html">fnkit Basics</a><a href="/docs/first-deployment.html">First Deployment</a></div>
+    <div class="sidebar-section"><div class="sidebar-title">Components</div><a href="/docs/components.html">Overview</a><a href="/docs/uns-sim.html">uns-sim</a><a href="/docs/uns-framework.html">uns-framework</a><a href="/docs/uns-cache.html">uns-cache</a><a href="/docs/uns-log.html">uns-log</a><a href="/docs/uns-state.html">uns-state</a><a href="/docs/uns-stoppage.html">uns-stoppage</a><a href="/docs/uns-productivity.html">uns-productivity</a><a href="/docs/uns-input.html">uns-input</a><a href="/docs/uns-kpi.html">uns-kpi</a></div>
+    <div class="sidebar-section"><div class="sidebar-title">Guides</div><a href="/docs/configuration.html">Configuration</a><a href="/docs/manufacturing-kpis.html">Manufacturing KPIs</a><a href="/docs/api-reference.html">API Reference</a></div>
+    <div class="sidebar-section"><div class="sidebar-title">Developer</div><a href="/docs/code-patterns.html" class="active">Code Patterns</a><a href="/docs/extending.html">Extending</a><a href="/docs/database-schema.html">Database Schema</a></div>
+  </aside>
+  <main class="docs-content">
+    <h1>Code Patterns</h1>
+    <p class="page-desc">Common patterns shared across all UNS functions.</p>
+
+    <h2>Valkey Config Loading</h2>
+    <div class="yaml-block"><pre style="margin:0;font:inherit;white-space:pre"><span class="yaml-comment">// Go — cached 30 seconds</span>
+key := "fnkit:config:" + os.Getenv("FUNCTION_TARGET")
+val, _ := rdb.Get(ctx, key).Result()
+json.Unmarshal([]byte(val), &amp;config)
+
+<span class="yaml-comment">// Node.js</span>
+const raw = await redis.get(`fnkit:config:${process.env.FUNCTION_TARGET}`);
+const config = JSON.parse(raw);</pre></div>
+    <h2>Auto-Table Creation</h2>
+    <div class="yaml-block"><pre style="margin:0;font:inherit;white-space:pre">CREATE TABLE IF NOT EXISTS uns_state ( ... );</pre></div>
+    <p>Runs once per container lifetime. No migration scripts.</p>
+    <h2>UNS Topic Path Parsing</h2>
+    <div class="yaml-block"><pre style="margin:0;font:inherit;white-space:pre">v1.0 / enterprise / site1 / area1 / cnc-01 / status
+ [0]      [1]        [2]     [3]     [4]      [5]
+
+parts := strings.Split(topic, "/")
+enterprise, site, area, machine := parts[1], parts[2], parts[3], parts[4]</pre></div>
+    <h2>In-Memory State Tracking</h2>
+    <p>uns-state and uns-productivity maintain in-memory trackers. State lost on restart but re-initialises from cache on next poll.</p>
+    <h2>Lazy Connections</h2>
+    <p>DB and cache connections created on first request, not startup.</p>
+    <h2>JSON Response Pattern</h2>
+    <div class="yaml-block"><pre style="margin:0;font:inherit;white-space:pre">w.Header().Set("Content-Type", "application/json")
+json.NewEncoder(w).Encode(result)</pre></div>
+
+    <div class="docs-nav-buttons">
+      <a href="/docs/api-reference.html" class="docs-nav-btn"><span class="nav-label">Previous</span><span class="nav-title">API Reference</span></a>
+      <a href="/docs/extending.html" class="docs-nav-btn next"><span class="nav-label">Next</span><span class="nav-title">Extending</span></a>
+    </div>
+  </main>
+</div>
+<script src="../shared.js"></script>
+</body>
+</html>

@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Components — fn-uns Docs</title>
+<meta name="description" content="The 9 functions that make up the UNS pipeline."/>
+<link rel="stylesheet" href="../style.css"/>
+<link rel="stylesheet" href="../docs.css"/>
+</head>
+<body>
+<nav>
+  <a href="/" class="logo">UNS Framework</a>
+  <div class="links">
+    <a href="/framework/">Standard v1.0</a><a href="/fn-uns/">fn-uns</a><a href="https://github.com/unsframework" target="_blank">GitHub</a>
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode"><div class="toggle-thumb"><span class="toggle-icon-sun">☀</span><span class="toggle-icon-moon">☾</span></div></button>
+  </div>
+</nav>
+<div class="docs-layout">
+  <aside class="docs-sidebar">
+    <div class="sidebar-section"><div class="sidebar-title">fn-uns</div><a href="/docs/">Overview</a></div>
+    <div class="sidebar-section"><div class="sidebar-title">Introduction</div><a href="/docs/what-is-uns.html">What is the UNS?</a><a href="/docs/why-uns.html">Why UNS Matters</a><a href="/docs/why-faas.html">Why FaaS &amp; GitOps?</a><a href="/docs/architecture.html">Architecture</a></div>
+    <div class="sidebar-section"><div class="sidebar-title">Getting Started</div><a href="/docs/getting-started.html">Quick Start</a><a href="/docs/fnkit-basics.html">fnkit Basics</a><a href="/docs/first-deployment.html">First Deployment</a></div>
+    <div class="sidebar-section"><div class="sidebar-title">Components</div><a href="/docs/components.html" class="active">Overview</a><a href="/docs/uns-sim.html">uns-sim</a><a href="/docs/uns-framework.html">uns-framework</a><a href="/docs/uns-cache.html">uns-cache</a><a href="/docs/uns-log.html">uns-log</a><a href="/docs/uns-state.html">uns-state</a><a href="/docs/uns-stoppage.html">uns-stoppage</a><a href="/docs/uns-productivity.html">uns-productivity</a><a href="/docs/uns-input.html">uns-input</a><a href="/docs/uns-kpi.html">uns-kpi</a></div>
+    <div class="sidebar-section"><div class="sidebar-title">Guides</div><a href="/docs/configuration.html">Configuration</a><a href="/docs/manufacturing-kpis.html">Manufacturing KPIs</a><a href="/docs/api-reference.html">API Reference</a></div>
+    <div class="sidebar-section"><div class="sidebar-title">Developer</div><a href="/docs/code-patterns.html">Code Patterns</a><a href="/docs/extending.html">Extending</a><a href="/docs/database-schema.html">Database Schema</a></div>
+  </aside>
+  <main class="docs-content">
+    <h1>Components</h1>
+    <p class="page-desc">The 9 functions that make up the UNS pipeline. They communicate through shared infrastructure — not through direct calls to each other.</p>
+
+    <h2>Data Pipeline</h2>
+    <div class="yaml-block">
+<pre style="margin:0;font:inherit;white-space:pre">┌─────────────────────────────────────────────────────────────┐
+│                        CAPTURE                               │
+│  uns-sim ──→ MQTT Broker ──→ uns-framework ──→ Valkey Cache │
+└──────────────────────────────────┬──────────────────────────┘
+                                   │
+┌──────────────────────────────────┼──────────────────────────┐
+│                        PROCESS   │                           │
+│  uns-cache ← reads ─────────────┤                           │
+│  uns-log ← reads ───────────────┤                           │
+│  uns-state ← reads ─────────────┘                           │
+│       │                                                      │
+│       ▼                                                      │
+│  uns-stoppage ← reads uns_state table                       │
+│  uns-productivity ← reads Valkey /program topics            │
+│  uns-input ← receives HTTP POST from operators              │
+└──────────────────────────────────┬──────────────────────────┘
+                                   │
+┌──────────────────────────────────┼──────────────────────────┐
+│                        REPORT    │                           │
+│  uns-kpi ← reads all PostgreSQL tables ──→ JSON KPI response│
+└─────────────────────────────────────────────────────────────┘</pre>
+    </div>
+
+    <h2>Capture Layer</h2>
+    <table class="def-table">
+      <thead><tr><th>Component</th><th>Language</th><th>Type</th><th>Purpose</th></tr></thead>
+      <tbody>
+        <tr><td><a href="/docs/uns-sim.html">uns-sim</a></td><td>Node.js</td><td>MQTT publisher</td><td>Simulates 4 CNC machines across 2 areas</td></tr>
+        <tr><td><a href="/docs/uns-framework.html">uns-framework</a></td><td>Go</td><td>MQTT subscriber</td><td>Caches all UNS topics to Valkey</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Processing Layer</h2>
+    <table class="def-table">
+      <thead><tr><th>Component</th><th>Language</th><th>Type</th><th>Purpose</th></tr></thead>
+      <tbody>
+        <tr><td><a href="/docs/uns-cache.html">uns-cache</a></td><td>Node.js</td><td>HTTP</td><td>Reads cached topics with change detection</td></tr>
+        <tr><td><a href="/docs/uns-log.html">uns-log</a></td><td>Go</td><td>HTTP</td><td>Logs change snapshots to PostgreSQL</td></tr>
+        <tr><td><a href="/docs/uns-state.html">uns-state</a></td><td>Go</td><td>HTTP</td><td>Tracks machine state durations</td></tr>
+        <tr><td><a href="/docs/uns-stoppage.html">uns-stoppage</a></td><td>Node.js</td><td>HTTP</td><td>Classifies stoppage reasons</td></tr>
+        <tr><td><a href="/docs/uns-productivity.html">uns-productivity</a></td><td>Go</td><td>HTTP</td><td>Tracks production runs and throughput</td></tr>
+        <tr><td><a href="/docs/uns-input.html">uns-input</a></td><td>Node.js</td><td>HTTP</td><td>Manual operator data entry</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Reporting Layer</h2>
+    <table class="def-table">
+      <thead><tr><th>Component</th><th>Language</th><th>Type</th><th>Purpose</th></tr></thead>
+      <tbody>
+        <tr><td><a href="/docs/uns-kpi.html">uns-kpi</a></td><td>Go</td><td>HTTP</td><td>Computes manufacturing KPIs from all data</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Shared Patterns</h2>
+    <p>All functions follow consistent patterns:</p>
+    <table class="def-table">
+      <thead><tr><th>Pattern</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td>Valkey config</td><td>Runtime configuration stored in fnkit:config:*, cached 30s</td></tr>
+        <tr><td>Auto-create tables</td><td>PostgreSQL tables created on first run, no migrations</td></tr>
+        <tr><td>UNS path parsing</td><td>Hierarchy (enterprise/site/area/machine) extracted from topic path</td></tr>
+        <tr><td>JSON responses</td><td>All HTTP functions return structured JSON</td></tr>
+        <tr><td>Docker containers</td><td>Each function runs in its own container on fnkit-network</td></tr>
+        <tr><td>Independent deploy</td><td>Update one function without affecting others</td></tr>
+      </tbody>
+    </table>
+    <p>See <a href="/docs/code-patterns.html" style="color:var(--black);border-bottom:1px solid var(--grey-300);">Code Patterns</a> for implementation details.</p>
+
+    <div class="docs-nav-buttons">
+      <a href="/docs/first-deployment.html" class="docs-nav-btn">
+        <span class="nav-label">Previous</span>
+        <span class="nav-title">First Deployment</span>
+      </a>
+      <a href="/docs/uns-sim.html" class="docs-nav-btn next">
+        <span class="nav-label">Next</span>
+        <span class="nav-title">uns-sim</span>
+      </a>
+    </div>
+  </main>
+</div>
+<script src="../shared.js"></script>
+</body>
+</html>

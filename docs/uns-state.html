@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>uns-state — State Duration Tracker — fn-uns Docs</title>
+<meta name="description" content="Tracks machine state transitions and logs completed state durations to PostgreSQL."/>
+<link rel="stylesheet" href="../style.css"/>
+<link rel="stylesheet" href="../docs.css"/>
+</head>
+<body>
+<nav>
+  <a href="/" class="logo">UNS Framework</a>
+  <div class="links">
+    <a href="/framework/">Standard v1.0</a><a href="/fn-uns/">fn-uns</a><a href="https://github.com/unsframework" target="_blank">GitHub</a>
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode"><div class="toggle-thumb"><span class="toggle-icon-sun">☀</span><span class="toggle-icon-moon">☾</span></div></button>
+  </div>
+</nav>
+<div class="docs-layout">
+  <aside class="docs-sidebar">
+    <div class="sidebar-section"><div class="sidebar-title">fn-uns</div><a href="/docs/">Overview</a></div>
+    <div class="sidebar-section"><div class="sidebar-title">Introduction</div><a href="/docs/what-is-uns.html">What is the UNS?</a><a href="/docs/why-uns.html">Why UNS Matters</a><a href="/docs/why-faas.html">Why FaaS &amp; GitOps?</a><a href="/docs/architecture.html">Architecture</a></div>
+    <div class="sidebar-section"><div class="sidebar-title">Getting Started</div><a href="/docs/getting-started.html">Quick Start</a><a href="/docs/fnkit-basics.html">fnkit Basics</a><a href="/docs/first-deployment.html">First Deployment</a></div>
+    <div class="sidebar-section"><div class="sidebar-title">Components</div><a href="/docs/components.html">Overview</a><a href="/docs/uns-sim.html">uns-sim</a><a href="/docs/uns-framework.html">uns-framework</a><a href="/docs/uns-cache.html">uns-cache</a><a href="/docs/uns-log.html">uns-log</a><a href="/docs/uns-state.html" class="active">uns-state</a><a href="/docs/uns-stoppage.html">uns-stoppage</a><a href="/docs/uns-productivity.html">uns-productivity</a><a href="/docs/uns-input.html">uns-input</a><a href="/docs/uns-kpi.html">uns-kpi</a></div>
+    <div class="sidebar-section"><div class="sidebar-title">Guides</div><a href="/docs/configuration.html">Configuration</a><a href="/docs/manufacturing-kpis.html">Manufacturing KPIs</a><a href="/docs/api-reference.html">API Reference</a></div>
+    <div class="sidebar-section"><div class="sidebar-title">Developer</div><a href="/docs/code-patterns.html">Code Patterns</a><a href="/docs/extending.html">Extending</a><a href="/docs/database-schema.html">Database Schema</a></div>
+  </aside>
+  <main class="docs-content">
+    <h1>uns-state — State Duration Tracker</h1>
+    <p class="page-desc">Tracks machine state transitions and logs completed state durations to PostgreSQL.</p>
+    <table class="def-table"><tbody>
+        <tr><td>Language</td><td>Go</td></tr>
+        <tr><td>Type</td><td>HTTP function (polled)</td></tr>
+        <tr><td>Scaffolded with</td><td>fnkit go</td></tr>
+        <tr><td>Depends on</td><td>Valkey, PostgreSQL</td></tr>
+    </tbody></table>
+
+    <h2>What It Does</h2>
+    <p>Reads /status topics, maintains in-memory state tracker per machine. On state change, logs completed state with exact duration. <strong>Foundation</strong> for all time-based KPIs.</p>
+    <div class="yaml-block"><pre style="margin:0;font:inherit;white-space:pre">cnc-01: ACTIVE -> IDLE   -> logs: state=ACTIVE, duration=120s, next=IDLE
+cnc-01: IDLE -> SETUP     -> logs: state=IDLE, duration=45s, next=SETUP</pre></div>
+    <h2>Machine States</h2>
+    <table class="def-table"><thead><tr><th>State</th><th>Category</th></tr></thead><tbody>
+    <tr><td>ACTIVE</td><td>Running</td></tr><tr><td>IDLE</td><td>Stopped</td></tr><tr><td>WAITING</td><td>Stopped</td></tr>
+    <tr><td>ALARM</td><td>Stopped</td></tr><tr><td>SETUP</td><td>Stopped</td></tr><tr><td>OFFLINE</td><td>Stopped</td></tr></tbody></table>
+    <h2>Useful Queries</h2>
+    <div class="yaml-block"><pre style="margin:0;font:inherit;white-space:pre">SELECT machine,
+  ROUND(SUM(CASE WHEN state='ACTIVE' THEN duration_s ELSE 0 END) /
+  SUM(duration_s) * 100, 1) AS utilisation_pct
+FROM uns_state WHERE started_at >= NOW() - INTERVAL '24 hours' GROUP BY machine;</pre></div>
+    <h2>Quick Start</h2>
+    <div class="yaml-block"><pre style="margin:0;font:inherit;white-space:pre">cd uns-state && cp .env.example .env && docker compose up -d
+while true; do curl -s http://localhost:8080/uns-state | jq; sleep 5; done</pre></div>
+
+    <div class="docs-nav-buttons">
+      <a href="/docs/uns-log.html" class="docs-nav-btn"><span class="nav-label">Previous</span><span class="nav-title">uns-log</span></a>
+      <a href="/docs/uns-stoppage.html" class="docs-nav-btn next"><span class="nav-label">Next</span><span class="nav-title">uns-stoppage</span></a>
+    </div>
+  </main>
+</div>
+<script src="../shared.js"></script>
+</body>
+</html>

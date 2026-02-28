@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>fnkit Basics — fn-uns Docs</title>
+<meta name="description" content="A primer on the fnkit CLI — scaffolding, developing, and deploying functions."/>
+<link rel="stylesheet" href="../style.css"/>
+<link rel="stylesheet" href="../docs.css"/>
+</head>
+<body>
+<nav>
+  <a href="/" class="logo">UNS Framework</a>
+  <div class="links">
+    <a href="/framework/">Standard v1.0</a><a href="/fn-uns/">fn-uns</a><a href="https://github.com/unsframework" target="_blank">GitHub</a>
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode"><div class="toggle-thumb"><span class="toggle-icon-sun">☀</span><span class="toggle-icon-moon">☾</span></div></button>
+  </div>
+</nav>
+<div class="docs-layout">
+  <aside class="docs-sidebar">
+    <div class="sidebar-section"><div class="sidebar-title">fn-uns</div><a href="/docs/">Overview</a></div>
+    <div class="sidebar-section"><div class="sidebar-title">Introduction</div><a href="/docs/what-is-uns.html">What is the UNS?</a><a href="/docs/why-uns.html">Why UNS Matters</a><a href="/docs/why-faas.html">Why FaaS &amp; GitOps?</a><a href="/docs/architecture.html">Architecture</a></div>
+    <div class="sidebar-section"><div class="sidebar-title">Getting Started</div><a href="/docs/getting-started.html">Quick Start</a><a href="/docs/fnkit-basics.html" class="active">fnkit Basics</a><a href="/docs/first-deployment.html">First Deployment</a></div>
+    <div class="sidebar-section"><div class="sidebar-title">Components</div><a href="/docs/components.html">Overview</a><a href="/docs/uns-sim.html">uns-sim</a><a href="/docs/uns-framework.html">uns-framework</a><a href="/docs/uns-cache.html">uns-cache</a><a href="/docs/uns-log.html">uns-log</a><a href="/docs/uns-state.html">uns-state</a><a href="/docs/uns-stoppage.html">uns-stoppage</a><a href="/docs/uns-productivity.html">uns-productivity</a><a href="/docs/uns-input.html">uns-input</a><a href="/docs/uns-kpi.html">uns-kpi</a></div>
+    <div class="sidebar-section"><div class="sidebar-title">Guides</div><a href="/docs/configuration.html">Configuration</a><a href="/docs/manufacturing-kpis.html">Manufacturing KPIs</a><a href="/docs/api-reference.html">API Reference</a></div>
+    <div class="sidebar-section"><div class="sidebar-title">Developer</div><a href="/docs/code-patterns.html">Code Patterns</a><a href="/docs/extending.html">Extending</a><a href="/docs/database-schema.html">Database Schema</a></div>
+  </aside>
+  <main class="docs-content">
+    <h1>fnkit Basics</h1>
+    <p class="page-desc">A primer on the fnkit CLI — scaffolding, developing, and deploying functions.</p>
+
+    <h2>What is fnkit?</h2>
+    <p><a href="https://functionkit.github.io/fnkit/" style="color:var(--black);border-bottom:1px solid var(--grey-300);">fnkit</a> is a CLI tool for building and deploying serverless functions. It handles scaffolding, Docker packaging, networking, caching, and GitOps deployment — so you focus on writing business logic.</p>
+
+    <h2>Scaffolding Functions</h2>
+    <p>fnkit supports four function types:</p>
+    <div class="yaml-block">
+<pre style="margin:0;font:inherit;white-space:pre"><span class="yaml-comment"># Go HTTP function</span>
+fnkit go my-function
+
+<span class="yaml-comment"># Node.js HTTP function</span>
+fnkit node my-function
+
+<span class="yaml-comment"># Go MQTT function</span>
+fnkit go-mqtt my-function
+
+<span class="yaml-comment"># Node.js MQTT function</span>
+fnkit node-mqtt my-function</pre>
+    </div>
+    <p>Each command creates a directory with everything you need:</p>
+    <div class="yaml-block">
+<pre style="margin:0;font:inherit;white-space:pre">my-function/
+├── function.go (or index.js)   <span class="yaml-comment"># Your handler code</span>
+├── cmd/main.go                 <span class="yaml-comment"># Entry point (Go only)</span>
+├── Dockerfile                  <span class="yaml-comment"># Container build</span>
+├── docker-compose.yml          <span class="yaml-comment"># Service definition</span>
+├── .env.example                <span class="yaml-comment"># Environment template</span>
+├── .gitignore
+├── go.mod / package.json       <span class="yaml-comment"># Dependencies</span>
+└── README.md                   <span class="yaml-comment"># Documentation</span></pre>
+    </div>
+
+    <h2>HTTP Functions</h2>
+    <p>HTTP functions handle incoming requests and return responses. Triggered by the gateway, a cron job, or direct HTTP calls.</p>
+    <p><strong>Go HTTP</strong> (<code style="font-family:var(--font-mono);font-size:13px;background:var(--grey-100);padding:2px 8px;border-radius:4px;">fnkit go</code>):</p>
+    <div class="yaml-block">
+<pre style="margin:0;font:inherit;white-space:pre"><span class="yaml-key">func</span> MyFunction(w http.ResponseWriter, r *http.Request) {
+    w.Header().Set(<span class="yaml-val">"Content-Type"</span>, <span class="yaml-val">"application/json"</span>)
+    json.NewEncoder(w).Encode(map[string]string{<span class="yaml-val">"status"</span>: <span class="yaml-val">"ok"</span>})
+}</pre>
+    </div>
+    <p><strong>Node.js HTTP</strong> (<code style="font-family:var(--font-mono);font-size:13px;background:var(--grey-100);padding:2px 8px;border-radius:4px;">fnkit node</code>):</p>
+    <div class="yaml-block">
+<pre style="margin:0;font:inherit;white-space:pre"><span class="yaml-key">const</span> handler = (req, res) => {
+    res.json({ status: <span class="yaml-val">'ok'</span> });
+};
+module.exports = handler;</pre>
+    </div>
+
+    <h2>MQTT Functions</h2>
+    <p>MQTT functions subscribe to topics and process messages as they arrive. They run continuously.</p>
+    <p><strong>Go MQTT</strong> (<code style="font-family:var(--font-mono);font-size:13px;background:var(--grey-100);padding:2px 8px;border-radius:4px;">fnkit go-mqtt</code>):</p>
+    <div class="yaml-block">
+<pre style="margin:0;font:inherit;white-space:pre"><span class="yaml-key">func</span> MyFunction(ctx context.Context, msg mqtt.Message) error {
+    topic := msg.Topic()
+    payload := msg.Payload()
+    <span class="yaml-comment">// Process message...</span>
+    <span class="yaml-key">return</span> nil
+}</pre>
+    </div>
+
+    <h2>Infrastructure Commands</h2>
+    <table class="def-table">
+      <thead><tr><th>Command</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td>docker network create fnkit-network</td><td>Create shared network for all functions</td></tr>
+        <tr><td>fnkit cache start</td><td>Start the shared Valkey cache</td></tr>
+        <tr><td>fnkit cache stop</td><td>Stop the cache</td></tr>
+        <tr><td>docker exec -it fnkit-cache valkey-cli</td><td>Access the cache CLI</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Local Development</h2>
+    <div class="yaml-block">
+<pre style="margin:0;font:inherit;white-space:pre">cd my-function
+
+<span class="yaml-comment"># Copy environment template</span>
+cp .env.example .env
+<span class="yaml-comment"># Edit .env with your settings</span>
+
+<span class="yaml-comment"># Build and start</span>
+docker compose up -d
+
+<span class="yaml-comment"># View logs</span>
+docker logs -f my-function
+
+<span class="yaml-comment"># Test</span>
+curl http://localhost:8080/my-function
+
+<span class="yaml-comment"># Stop</span>
+docker compose down</pre>
+    </div>
+
+    <h2>Deployment</h2>
+    <h3>Remote Deployment (GitOps)</h3>
+    <div class="yaml-block">
+<pre style="margin:0;font:inherit;white-space:pre"><span class="yaml-comment"># Set up remote deployment (one-time)</span>
+fnkit deploy remote --host root@your-server.com
+
+<span class="yaml-comment"># Deploy</span>
+git add . && git commit -m "update function"
+git push deploy main</pre>
+    </div>
+    <p>fnkit sets up a bare git repo on the server with a post-receive hook that checks out the code, builds the Docker image, restarts the container, and connects to fnkit-network.</p>
+
+    <h2>Gateway</h2>
+    <p>The fnkit gateway provides a single entry point for all HTTP functions:</p>
+    <div class="yaml-block">
+<pre style="margin:0;font:inherit;white-space:pre">https://api.fnkit.dev/my-function  →  my-function container:8080
+https://api.fnkit.dev/uns-kpi      →  uns-kpi container:8080
+https://api.fnkit.dev/uns-cache    →  uns-cache container:8080</pre>
+    </div>
+    <p>Features: <strong>Authentication</strong> (Bearer token), <strong>Routing</strong> (URL path → container), <strong>Rate limiting</strong> (per-client).</p>
+
+    <h2>Environment Variables</h2>
+    <table class="def-table">
+      <thead><tr><th>Variable</th><th>Description</th><th>Example</th></tr></thead>
+      <tbody>
+        <tr><td>FUNCTION_TARGET</td><td>Function name (config lookup key)</td><td>uns-state</td></tr>
+        <tr><td>CACHE_URL</td><td>Valkey connection</td><td>redis://fnkit-cache:6379</td></tr>
+        <tr><td>DATABASE_URL</td><td>PostgreSQL connection</td><td>postgres://fnkit:fnkit@fnkit-postgres:5432/fnkit</td></tr>
+        <tr><td>MQTT_BROKER</td><td>MQTT broker URL</td><td>mqtts://mqtt.example.com:8883</td></tr>
+      </tbody>
+    </table>
+    <p>Business configuration (topics, tables, etc.) lives in Valkey, not in environment variables. See <a href="/docs/configuration.html" style="color:var(--black);border-bottom:1px solid var(--grey-300);">Configuration Guide</a>.</p>
+
+    <div class="docs-nav-buttons">
+      <a href="/docs/getting-started.html" class="docs-nav-btn">
+        <span class="nav-label">Previous</span>
+        <span class="nav-title">Quick Start</span>
+      </a>
+      <a href="/docs/first-deployment.html" class="docs-nav-btn next">
+        <span class="nav-label">Next</span>
+        <span class="nav-title">First Deployment</span>
+      </a>
+    </div>
+  </main>
+</div>
+<script src="../shared.js"></script>
+</body>
+</html>

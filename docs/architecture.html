@@ -1,0 +1,237 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Architecture — fn-uns Docs</title>
+<meta name="description" content="How all the pieces fit together — from machine data to KPI APIs."/>
+<link rel="stylesheet" href="../style.css"/>
+<link rel="stylesheet" href="../docs.css"/>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="logo">UNS Framework</a>
+  <div class="links">
+    <a href="/framework/">Standard v1.0</a>
+    <a href="/fn-uns/">fn-uns</a>
+    <a href="https://github.com/unsframework" target="_blank">GitHub</a>
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+      <div class="toggle-thumb"><span class="toggle-icon-sun">☀</span><span class="toggle-icon-moon">☾</span></div>
+    </button>
+  </div>
+</nav>
+
+<div class="docs-layout">
+  <aside class="docs-sidebar">
+    <div class="sidebar-section">
+      <div class="sidebar-title">fn-uns</div>
+      <a href="/docs/">Overview</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-title">Introduction</div>
+      <a href="/docs/what-is-uns.html">What is the UNS?</a>
+      <a href="/docs/why-uns.html">Why UNS Matters</a>
+      <a href="/docs/why-faas.html">Why FaaS &amp; GitOps?</a>
+      <a href="/docs/architecture.html" class="active">Architecture</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-title">Getting Started</div>
+      <a href="/docs/getting-started.html">Quick Start</a>
+      <a href="/docs/fnkit-basics.html">fnkit Basics</a>
+      <a href="/docs/first-deployment.html">First Deployment</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-title">Components</div>
+      <a href="/docs/components.html">Overview</a>
+      <a href="/docs/uns-sim.html">uns-sim</a>
+      <a href="/docs/uns-framework.html">uns-framework</a>
+      <a href="/docs/uns-cache.html">uns-cache</a>
+      <a href="/docs/uns-log.html">uns-log</a>
+      <a href="/docs/uns-state.html">uns-state</a>
+      <a href="/docs/uns-stoppage.html">uns-stoppage</a>
+      <a href="/docs/uns-productivity.html">uns-productivity</a>
+      <a href="/docs/uns-input.html">uns-input</a>
+      <a href="/docs/uns-kpi.html">uns-kpi</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-title">Guides</div>
+      <a href="/docs/configuration.html">Configuration</a>
+      <a href="/docs/manufacturing-kpis.html">Manufacturing KPIs</a>
+      <a href="/docs/api-reference.html">API Reference</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-title">Developer</div>
+      <a href="/docs/code-patterns.html">Code Patterns</a>
+      <a href="/docs/extending.html">Extending</a>
+      <a href="/docs/database-schema.html">Database Schema</a>
+    </div>
+  </aside>
+
+  <main class="docs-content">
+    <h1>Architecture</h1>
+    <p class="page-desc">How all the pieces fit together — from machine data to KPI APIs.</p>
+
+    <h2>System Overview</h2>
+    <div class="yaml-block">
+<pre style="margin:0;font:inherit;white-space:pre">Internet
+    │
+    ▼
+┌──────────────────────────────────────────────────────┐
+│  Caddy (TLS termination, reverse proxy)              │
+└──────────────────────┬───────────────────────────────┘
+                       │
+                       ▼
+┌──────────────────────────────────────────────────────┐
+│  fnkit-gateway (authentication, routing, rate limit)  │
+└──────────────────────┬───────────────────────────────┘
+                       │
+          ┌────────────┼────────────────────┐
+          │            │                    │
+          ▼            ▼                    ▼
+    HTTP Functions   MQTT Functions    Shared Services
+    (uns-cache,      (uns-sim,         (fnkit-cache,
+     uns-log,         uns-framework)    fnkit-postgres,
+     uns-state,                         MQTT broker)
+     uns-stoppage,
+     uns-productivity,
+     uns-input,
+     uns-kpi)</pre>
+    </div>
+    <p>
+      All containers run on a shared Docker network (<code style="font-family:var(--font-mono);font-size:13px;background:var(--grey-100);padding:2px 8px;border-radius:4px;">fnkit-network</code>). External access goes through Caddy → gateway. Internal communication happens directly between containers.
+    </p>
+
+    <h2>Data Flow</h2>
+    <p>The system processes data in three stages: <strong>capture</strong>, <strong>process</strong>, and <strong>report</strong>.</p>
+
+    <h3>Stage 1: Capture</h3>
+    <table class="def-table">
+      <thead><tr><th>Component</th><th>Role</th></tr></thead>
+      <tbody>
+        <tr><td>uns-sim</td><td>Publishes machine data (status, program, tool) to MQTT every 3 seconds</td></tr>
+        <tr><td>MQTT Broker</td><td>Distributes messages to all subscribers</td></tr>
+        <tr><td>uns-framework</td><td>Subscribes to v1.0/# and caches every message to Valkey</td></tr>
+      </tbody>
+    </table>
+    <p>For each message: current value → <code style="font-family:var(--font-mono);font-size:13px;background:var(--grey-100);padding:2px 8px;border-radius:4px;">uns:data:&lt;topic&gt;</code>, previous value → <code style="font-family:var(--font-mono);font-size:13px;background:var(--grey-100);padding:2px 8px;border-radius:4px;">uns:prev:&lt;topic&gt;</code></p>
+
+    <h3>Stage 2: Process</h3>
+    <p>Processing functions read from Valkey and write to PostgreSQL:</p>
+    <table class="def-table">
+      <thead><tr><th>Function</th><th>Reads</th><th>Writes</th></tr></thead>
+      <tbody>
+        <tr><td>uns-state</td><td>/status topics from Valkey</td><td>State durations → uns_state table</td></tr>
+        <tr><td>uns-stoppage</td><td>uns_state table</td><td>Classified stoppages → uns_stoppage table</td></tr>
+        <tr><td>uns-productivity</td><td>/program topics from Valkey</td><td>Production runs → uns_productivity table</td></tr>
+        <tr><td>uns-input</td><td>HTTP POST body</td><td>Manual entries → uns_input table</td></tr>
+        <tr><td>uns-log</td><td>Any topics from Valkey</td><td>Change snapshots → uns_log table</td></tr>
+        <tr><td>uns-cache</td><td>Any topics from Valkey</td><td>JSON response (no DB write)</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Stage 3: Report</h3>
+    <p>
+      <strong>uns-kpi</strong> is a pure read function. It queries all 4 PostgreSQL tables and computes manufacturing KPIs on demand — utilisation, availability, throughput, MTBF/MTTR, stoppage pareto, and scrap.
+    </p>
+
+    <h2>Infrastructure Components</h2>
+
+    <h3>fnkit-network</h3>
+    <p>A Docker bridge network that all containers join. Functions communicate by container name:</p>
+    <div class="yaml-block">
+<pre style="margin:0;font:inherit;white-space:pre">fnkit-cache:6379      → Valkey (Redis-compatible cache)
+fnkit-postgres:5432   → PostgreSQL database
+mqtt-broker:1883      → MQTT broker (internal)
+mqtt-broker:8883      → MQTT broker (TLS)</pre>
+    </div>
+
+    <h3>fnkit-cache (Valkey)</h3>
+    <p><strong>Valkey</strong> — an open-source Redis-compatible cache. Used for:</p>
+    <table class="def-table">
+      <thead><tr><th>Purpose</th><th>Key Pattern</th></tr></thead>
+      <tbody>
+        <tr><td>UNS topic data — current and previous values</td><td>uns:data:*, uns:prev:*</td></tr>
+        <tr><td>Topic registry — set of all discovered topics</td><td>uns:topics</td></tr>
+        <tr><td>Function config — runtime configuration</td><td>fnkit:config:*</td></tr>
+        <tr><td>Metadata — message counts, timestamps</td><td>uns:meta:*</td></tr>
+      </tbody>
+    </table>
+
+    <h3>fnkit-postgres (PostgreSQL)</h3>
+    <p>Stores all persistent data. All tables are auto-created on first run:</p>
+    <table class="def-table">
+      <thead><tr><th>Table</th><th>Written by</th><th>Purpose</th></tr></thead>
+      <tbody>
+        <tr><td>uns_log</td><td>uns-log</td><td>Change snapshots with full hierarchy</td></tr>
+        <tr><td>uns_state</td><td>uns-state</td><td>Machine state durations</td></tr>
+        <tr><td>uns_stoppage</td><td>uns-stoppage</td><td>Classified stoppage reasons</td></tr>
+        <tr><td>uns_productivity</td><td>uns-productivity</td><td>Production run metrics</td></tr>
+        <tr><td>uns_input</td><td>uns-input</td><td>Manual operator entries</td></tr>
+      </tbody>
+    </table>
+
+    <h3>fnkit-gateway</h3>
+    <p>The API gateway handles authentication (Bearer token), routing (URL paths → function containers), and rate limiting.</p>
+    <div class="yaml-block">
+<pre style="margin:0;font:inherit;white-space:pre">GET  /uns-cache         → uns-cache container
+POST /uns-log           → uns-log container
+GET  /uns-kpi?hours=8   → uns-kpi container
+POST /uns-input         → uns-input container</pre>
+    </div>
+
+    <h3>Caddy</h3>
+    <p>Provides automatic TLS (Let's Encrypt), reverse proxy, and HTTP/2 support.</p>
+
+    <h2>Function Types</h2>
+    <table class="def-table">
+      <thead><tr><th>Type</th><th>Scaffold Command</th><th>Trigger</th><th>Used by</th></tr></thead>
+      <tbody>
+        <tr><td>Go HTTP</td><td>fnkit go</td><td>HTTP request</td><td>uns-log, uns-state, uns-productivity, uns-kpi</td></tr>
+        <tr><td>Node.js HTTP</td><td>fnkit node</td><td>HTTP request</td><td>uns-cache, uns-stoppage, uns-input</td></tr>
+        <tr><td>Go MQTT</td><td>fnkit go-mqtt</td><td>MQTT message</td><td>uns-framework</td></tr>
+        <tr><td>Node.js MQTT</td><td>fnkit node-mqtt</td><td>MQTT message</td><td>uns-sim</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Configuration Pattern</h2>
+    <p>All runtime configuration is stored in Valkey, not in environment files:</p>
+    <div class="yaml-block">
+<pre style="margin:0;font:inherit;white-space:pre">fnkit:config:uns-log          → {"table":"uns_log","topics":[...]}
+fnkit:config:uns-state        → {"table":"uns_state","topics":[...]}
+fnkit:config:uns-productivity → {"table":"uns_productivity","topics":[...]}</pre>
+    </div>
+    <p>
+      Each function reads its config using <code style="font-family:var(--font-mono);font-size:13px;background:var(--grey-100);padding:2px 8px;border-radius:4px;">FUNCTION_TARGET</code> as the key. Config is cached in-memory for 30 seconds. You can change what topics a function monitors without redeploying the container.
+    </p>
+
+    <h2>Deployment Model</h2>
+    <div class="yaml-block">
+<pre style="margin:0;font:inherit;white-space:pre"><span class="yaml-comment"># Local development</span>
+docker compose up -d
+curl http://localhost:8080/
+
+<span class="yaml-comment"># Remote deployment (GitOps)</span>
+fnkit deploy remote --host root@server
+git push deploy main</pre>
+    </div>
+    <p>
+      Each function is independently deployable. Updating <code style="font-family:var(--font-mono);font-size:13px;background:var(--grey-100);padding:2px 8px;border-radius:4px;">uns-kpi</code> doesn't affect <code style="font-family:var(--font-mono);font-size:13px;background:var(--grey-100);padding:2px 8px;border-radius:4px;">uns-state</code>. Rolling back <code style="font-family:var(--font-mono);font-size:13px;background:var(--grey-100);padding:2px 8px;border-radius:4px;">uns-stoppage</code> doesn't touch <code style="font-family:var(--font-mono);font-size:13px;background:var(--grey-100);padding:2px 8px;border-radius:4px;">uns-productivity</code>.
+    </p>
+
+    <div class="docs-nav-buttons">
+      <a href="/docs/why-faas.html" class="docs-nav-btn">
+        <span class="nav-label">Previous</span>
+        <span class="nav-title">Why FaaS &amp; GitOps?</span>
+      </a>
+      <a href="/docs/getting-started.html" class="docs-nav-btn next">
+        <span class="nav-label">Next</span>
+        <span class="nav-title">Getting Started</span>
+      </a>
+    </div>
+  </main>
+</div>
+
+<script src="../shared.js"></script>
+</body>
+</html>

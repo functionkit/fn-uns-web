@@ -1,0 +1,407 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>fn-uns Docs — Unified Namespace for Manufacturing</title>
+<meta name="description" content="Complete documentation for fn-uns — serverless functions that implement a UNS data pipeline for manufacturing."/>
+<link rel="stylesheet" href="../style.css"/>
+<link rel="stylesheet" href="../docs.css"/>
+<style>
+/* Docs-specific infographic styles */
+@keyframes ig-flow { to { stroke-dashoffset: -12; } }
+@keyframes ig-pulse { 0%,100% { opacity: 0.3; } 50% { opacity: 1; } }
+@keyframes ig-packet { 0% { offset-distance: 0%; opacity: 0; } 10% { opacity: 1; } 90% { opacity: 1; } 100% { offset-distance: 100%; opacity: 0; } }
+@keyframes ig-glow { 0%,100% { stroke: var(--grey-200); } 50% { stroke: var(--black); } }
+@keyframes ig-count { 0% { opacity: 0; } 100% { opacity: 1; } }
+.ig-flow-line { stroke-dasharray: 4 8; animation: ig-flow 1.2s linear infinite; }
+.ig-pulse { animation: ig-pulse 2.4s ease-in-out infinite; }
+.ig-pulse-d1 { animation-delay: 0s; } .ig-pulse-d2 { animation-delay: 0.6s; }
+.ig-pulse-d3 { animation-delay: 1.2s; } .ig-pulse-d4 { animation-delay: 1.8s; }
+.ig-packet { offset-rotate: 0deg; animation: ig-packet 2.8s ease-in-out infinite; }
+.ig-packet-d1 { animation-delay: 0s; } .ig-packet-d2 { animation-delay: 0.7s; }
+.ig-packet-d3 { animation-delay: 1.4s; } .ig-packet-d4 { animation-delay: 2.1s; }
+.ig-glow { animation: ig-glow 3s ease-in-out infinite; }
+.ig-kpi { animation: ig-count 0.6s ease-out both; }
+.ig-kpi-d1 { animation-delay: 1.8s; } .ig-kpi-d2 { animation-delay: 2s; }
+.ig-kpi-d3 { animation-delay: 2.2s; }
+
+/* Infographic wrapper */
+.docs-infographic {
+  margin: 32px 0 48px;
+  border: 1px solid var(--grey-200);
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--grey-50);
+}
+.docs-infographic svg { width: 100%; height: auto; display: block; }
+
+/* Dark mode SVG overrides */
+[data-theme="dark"] .docs-infographic svg rect[fill="#fafafa"] { fill: #141414; }
+[data-theme="dark"] .docs-infographic svg rect[fill="#ffffff"] { fill: #1a1a1a; }
+[data-theme="dark"] .docs-infographic svg rect[fill="#0a0a0a"] { fill: #f5f5f5; }
+[data-theme="dark"] .docs-infographic svg rect[stroke="#e5e5e5"] { stroke: #262626; }
+[data-theme="dark"] .docs-infographic svg rect[stroke="#0a0a0a"] { stroke: #f5f5f5; }
+[data-theme="dark"] .docs-infographic svg line[stroke="#e5e5e5"] { stroke: #262626; }
+[data-theme="dark"] .docs-infographic svg line[stroke="#d4d4d4"] { stroke: #404040; }
+[data-theme="dark"] .docs-infographic svg line[stroke="#f5f5f5"] { stroke: #1a1a1a; }
+[data-theme="dark"] .docs-infographic svg path[stroke="#d4d4d4"] { stroke: #404040; }
+[data-theme="dark"] .docs-infographic svg circle[fill="#0a0a0a"] { fill: #f5f5f5; }
+[data-theme="dark"] .docs-infographic svg text[fill="#0a0a0a"] { fill: #f5f5f5; }
+[data-theme="dark"] .docs-infographic svg text[fill="#737373"] { fill: #a3a3a3; }
+[data-theme="dark"] .docs-infographic svg text[fill="#a3a3a3"] { fill: #737373; }
+[data-theme="dark"] .docs-infographic svg text[fill="#ffffff"] { fill: #0a0a0a; }
+
+/* Component link cards in docs */
+.docs-component-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px;
+  background: var(--grey-200);
+  border: 1px solid var(--grey-200);
+  border-radius: 10px;
+  overflow: hidden;
+  margin: 24px 0 32px;
+}
+.docs-component-card {
+  background: var(--white);
+  padding: 16px 20px;
+  text-decoration: none;
+  transition: background 0.15s;
+  display: block;
+}
+.docs-component-card:hover { background: var(--grey-50); }
+.docs-component-card .cc-name {
+  font-family: var(--font-mono);
+  font-weight: 600;
+  font-size: 13px;
+  color: var(--black);
+  margin-bottom: 4px;
+}
+.docs-component-card .cc-meta {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--grey-500);
+  margin-bottom: 6px;
+}
+.docs-component-card .cc-desc {
+  font-size: 13px;
+  color: var(--grey-700);
+  line-height: 1.5;
+}
+
+@media (max-width: 600px) {
+  .docs-component-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="logo">UNS Framework</a>
+  <div class="links">
+    <a href="/framework/">Standard v1.0</a>
+    <a href="/fn-uns/">fn-uns</a>
+    <a href="https://github.com/unsframework" target="_blank">GitHub</a>
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+      <div class="toggle-thumb"><span class="toggle-icon-sun">☀</span><span class="toggle-icon-moon">☾</span></div>
+    </button>
+  </div>
+</nav>
+
+<div class="docs-layout">
+  <aside class="docs-sidebar">
+    <div class="sidebar-section">
+      <div class="sidebar-title">fn-uns</div>
+      <a href="/docs/" class="active">Overview</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-title">Introduction</div>
+      <a href="/docs/what-is-uns.html">What is the UNS?</a>
+      <a href="/docs/why-uns.html">Why UNS Matters</a>
+      <a href="/docs/why-faas.html">Why FaaS &amp; GitOps?</a>
+      <a href="/docs/architecture.html">Architecture</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-title">Getting Started</div>
+      <a href="/docs/getting-started.html">Quick Start</a>
+      <a href="/docs/fnkit-basics.html">fnkit Basics</a>
+      <a href="/docs/first-deployment.html">First Deployment</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-title">Components</div>
+      <a href="/docs/components.html">Overview</a>
+      <a href="/docs/uns-sim.html">uns-sim</a>
+      <a href="/docs/uns-framework.html">uns-framework</a>
+      <a href="/docs/uns-cache.html">uns-cache</a>
+      <a href="/docs/uns-log.html">uns-log</a>
+      <a href="/docs/uns-state.html">uns-state</a>
+      <a href="/docs/uns-stoppage.html">uns-stoppage</a>
+      <a href="/docs/uns-productivity.html">uns-productivity</a>
+      <a href="/docs/uns-input.html">uns-input</a>
+      <a href="/docs/uns-kpi.html">uns-kpi</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-title">Guides</div>
+      <a href="/docs/configuration.html">Configuration</a>
+      <a href="/docs/manufacturing-kpis.html">Manufacturing KPIs</a>
+      <a href="/docs/api-reference.html">API Reference</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-title">Developer</div>
+      <a href="/docs/code-patterns.html">Code Patterns</a>
+      <a href="/docs/extending.html">Extending</a>
+      <a href="/docs/database-schema.html">Database Schema</a>
+    </div>
+  </aside>
+
+  <main class="docs-content">
+    <h1>fn-uns Documentation</h1>
+    <p class="page-desc">
+      Build a manufacturing data backbone using serverless functions, MQTT, and GitOps.
+      9 independent functions that capture, process, and report on real-time factory data.
+    </p>
+
+    <!-- ANIMATED INFOGRAPHIC — Capture → Process → Report pipeline -->
+    <div class="docs-infographic">
+      <svg viewBox="0 0 720 280" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- Background -->
+        <rect x="0" y="0" width="720" height="280" rx="0" fill="#fafafa"/>
+
+        <!-- Stage labels -->
+        <text x="80" y="24" font-family="'JetBrains Mono', monospace" font-size="8" font-weight="600" fill="#a3a3a3" letter-spacing="0.08em">CAPTURE</text>
+        <text x="310" y="24" font-family="'JetBrains Mono', monospace" font-size="8" font-weight="600" fill="#a3a3a3" letter-spacing="0.08em">PROCESS</text>
+        <text x="580" y="24" font-family="'JetBrains Mono', monospace" font-size="8" font-weight="600" fill="#a3a3a3" letter-spacing="0.08em">REPORT</text>
+
+        <!-- Vertical dividers -->
+        <line x1="220" y1="14" x2="220" y2="266" stroke="#e5e5e5" stroke-width="1" stroke-dasharray="4 4"/>
+        <line x1="500" y1="14" x2="500" y2="266" stroke="#e5e5e5" stroke-width="1" stroke-dasharray="4 4"/>
+
+        <!-- ═══ MACHINES ═══ -->
+        <rect x="16" y="40" width="180" height="36" rx="6" fill="#ffffff" stroke="#e5e5e5" stroke-width="1"/>
+        <circle cx="32" cy="58" r="4" fill="#0a0a0a" class="ig-pulse ig-pulse-d1"/>
+        <text x="42" y="55" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="600" fill="#0a0a0a">cnc-01</text>
+        <text x="42" y="67" font-family="'JetBrains Mono', monospace" font-size="7" fill="#737373">ACTIVE</text>
+        <text x="180" y="62" font-family="'JetBrains Mono', monospace" font-size="7" fill="#a3a3a3" text-anchor="end">status</text>
+
+        <rect x="16" y="82" width="180" height="36" rx="6" fill="#ffffff" stroke="#e5e5e5" stroke-width="1"/>
+        <circle cx="32" cy="100" r="4" fill="#0a0a0a" class="ig-pulse ig-pulse-d2"/>
+        <text x="42" y="97" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="600" fill="#0a0a0a">cnc-02</text>
+        <text x="42" y="109" font-family="'JetBrains Mono', monospace" font-size="7" fill="#737373">IDLE</text>
+        <text x="180" y="104" font-family="'JetBrains Mono', monospace" font-size="7" fill="#a3a3a3" text-anchor="end">program</text>
+
+        <rect x="16" y="124" width="180" height="36" rx="6" fill="#ffffff" stroke="#e5e5e5" stroke-width="1"/>
+        <circle cx="32" cy="142" r="4" fill="#0a0a0a" class="ig-pulse ig-pulse-d3"/>
+        <text x="42" y="139" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="600" fill="#0a0a0a">cnc-03</text>
+        <text x="42" y="151" font-family="'JetBrains Mono', monospace" font-size="7" fill="#737373">ACTIVE</text>
+        <text x="180" y="146" font-family="'JetBrains Mono', monospace" font-size="7" fill="#a3a3a3" text-anchor="end">tool</text>
+
+        <rect x="16" y="166" width="180" height="36" rx="6" fill="#ffffff" stroke="#e5e5e5" stroke-width="1"/>
+        <circle cx="32" cy="184" r="4" fill="#0a0a0a" class="ig-pulse ig-pulse-d4"/>
+        <text x="42" y="181" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="600" fill="#0a0a0a">cnc-04</text>
+        <text x="42" y="193" font-family="'JetBrains Mono', monospace" font-size="7" fill="#737373">ALARM</text>
+
+        <!-- Flow lines between machines -->
+        <line x1="106" y1="76" x2="106" y2="82" stroke="#d4d4d4" stroke-width="1" class="ig-flow-line"/>
+        <line x1="106" y1="118" x2="106" y2="124" stroke="#d4d4d4" stroke-width="1" class="ig-flow-line"/>
+        <line x1="106" y1="160" x2="106" y2="166" stroke="#d4d4d4" stroke-width="1" class="ig-flow-line"/>
+
+        <!-- MQTT Broker -->
+        <rect x="16" y="216" width="180" height="40" rx="6" fill="#0a0a0a"/>
+        <text x="106" y="234" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="600" fill="#ffffff" text-anchor="middle">MQTT Broker</text>
+        <text x="106" y="247" font-family="'JetBrains Mono', monospace" font-size="7" fill="#a3a3a3" text-anchor="middle">v1.0/enterprise/site1/#</text>
+
+        <!-- Flow: machines → MQTT -->
+        <line x1="106" y1="202" x2="106" y2="216" stroke="#d4d4d4" stroke-width="1" class="ig-flow-line"/>
+
+        <!-- Data packets: machines → MQTT -->
+        <circle r="2.5" fill="#0a0a0a" style="offset-path: path('M 106 76 L 106 216');" class="ig-packet ig-packet-d1"/>
+        <circle r="2.5" fill="#0a0a0a" style="offset-path: path('M 106 76 L 106 216');" class="ig-packet ig-packet-d3"/>
+
+        <!-- ═══ PROCESS COLUMN ═══ -->
+
+        <!-- Flow: MQTT → Valkey -->
+        <path d="M 196 236 L 215 236 Q 225 236 225 226 L 225 52 Q 225 42 235 42 L 240 42" stroke="#d4d4d4" stroke-width="1" fill="none" class="ig-flow-line"/>
+        <circle r="2.5" fill="#0a0a0a" style="offset-path: path('M 196 236 L 215 236 Q 225 236 225 226 L 225 52 Q 225 42 235 42 L 240 42');" class="ig-packet ig-packet-d2"/>
+        <circle r="2.5" fill="#0a0a0a" style="offset-path: path('M 196 236 L 215 236 Q 225 236 225 226 L 225 52 Q 225 42 235 42 L 240 42');" class="ig-packet ig-packet-d4"/>
+
+        <!-- Valkey Cache -->
+        <rect x="240" y="36" width="240" height="40" rx="6" fill="#ffffff" stroke="#0a0a0a" stroke-width="1.5"/>
+        <text x="360" y="53" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="600" fill="#0a0a0a" text-anchor="middle">Valkey Cache</text>
+        <text x="360" y="66" font-family="'JetBrains Mono', monospace" font-size="7" fill="#737373" text-anchor="middle">uns:data:* · uns:prev:* · uns:meta:*</text>
+
+        <!-- Flow: Valkey → functions -->
+        <line x1="360" y1="76" x2="360" y2="92" stroke="#d4d4d4" stroke-width="1" class="ig-flow-line"/>
+
+        <!-- Processing functions -->
+        <rect x="240" y="92" width="240" height="30" rx="5" fill="#ffffff" stroke="#e5e5e5" stroke-width="1" class="ig-glow"/>
+        <text x="256" y="111" font-family="'JetBrains Mono', monospace" font-size="8" font-weight="500" fill="#0a0a0a">uns-state</text>
+        <text x="464" y="111" font-family="'JetBrains Mono', monospace" font-size="7" fill="#a3a3a3" text-anchor="end">Go · state durations</text>
+
+        <rect x="240" y="128" width="240" height="30" rx="5" fill="#ffffff" stroke="#e5e5e5" stroke-width="1" class="ig-glow" style="animation-delay:0.6s"/>
+        <text x="256" y="147" font-family="'JetBrains Mono', monospace" font-size="8" font-weight="500" fill="#0a0a0a">uns-stoppage</text>
+        <text x="464" y="147" font-family="'JetBrains Mono', monospace" font-size="7" fill="#a3a3a3" text-anchor="end">Node · classification</text>
+
+        <rect x="240" y="164" width="240" height="30" rx="5" fill="#ffffff" stroke="#e5e5e5" stroke-width="1" class="ig-glow" style="animation-delay:1.2s"/>
+        <text x="256" y="183" font-family="'JetBrains Mono', monospace" font-size="8" font-weight="500" fill="#0a0a0a">uns-productivity</text>
+        <text x="464" y="183" font-family="'JetBrains Mono', monospace" font-size="7" fill="#a3a3a3" text-anchor="end">Go · production runs</text>
+
+        <rect x="240" y="200" width="240" height="30" rx="5" fill="#ffffff" stroke="#e5e5e5" stroke-width="1" class="ig-glow" style="animation-delay:1.8s"/>
+        <text x="256" y="219" font-family="'JetBrains Mono', monospace" font-size="8" font-weight="500" fill="#0a0a0a">uns-log · uns-input · uns-cache</text>
+
+        <!-- Flow between functions -->
+        <line x1="360" y1="122" x2="360" y2="128" stroke="#d4d4d4" stroke-width="1" class="ig-flow-line"/>
+        <line x1="360" y1="158" x2="360" y2="164" stroke="#d4d4d4" stroke-width="1" class="ig-flow-line"/>
+        <line x1="360" y1="194" x2="360" y2="200" stroke="#d4d4d4" stroke-width="1" class="ig-flow-line"/>
+
+        <!-- PostgreSQL -->
+        <rect x="240" y="244" width="240" height="28" rx="5" fill="#0a0a0a"/>
+        <text x="360" y="262" font-family="'JetBrains Mono', monospace" font-size="8" font-weight="500" fill="#ffffff" text-anchor="middle">PostgreSQL — 5 tables</text>
+
+        <!-- Flow: functions → PostgreSQL -->
+        <line x1="360" y1="230" x2="360" y2="244" stroke="#d4d4d4" stroke-width="1" class="ig-flow-line"/>
+
+        <!-- ═══ REPORT COLUMN ═══ -->
+
+        <!-- Flow: PostgreSQL → uns-kpi -->
+        <path d="M 480 258 L 495 258 Q 505 258 505 248 L 505 52 Q 505 42 515 42 L 520 42" stroke="#d4d4d4" stroke-width="1" fill="none" class="ig-flow-line"/>
+        <circle r="2.5" fill="#0a0a0a" style="offset-path: path('M 480 258 L 495 258 Q 505 258 505 248 L 505 52 Q 505 42 515 42 L 520 42');" class="ig-packet ig-packet-d1"/>
+
+        <!-- uns-kpi -->
+        <rect x="520" y="36" width="184" height="40" rx="6" fill="#0a0a0a"/>
+        <text x="612" y="53" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="600" fill="#ffffff" text-anchor="middle">uns-kpi</text>
+        <text x="612" y="66" font-family="'JetBrains Mono', monospace" font-size="7" fill="#a3a3a3" text-anchor="middle">Go · HTTP · read-only</text>
+
+        <!-- Flow: uns-kpi → KPI output -->
+        <line x1="612" y1="76" x2="612" y2="92" stroke="#d4d4d4" stroke-width="1" class="ig-flow-line"/>
+
+        <!-- KPI Output card -->
+        <rect x="520" y="92" width="184" height="164" rx="6" fill="#ffffff" stroke="#e5e5e5" stroke-width="1"/>
+
+        <g class="ig-kpi ig-kpi-d1">
+          <text x="536" y="116" font-family="'JetBrains Mono', monospace" font-size="16" font-weight="700" fill="#0a0a0a">72%</text>
+          <text x="580" y="116" font-family="'JetBrains Mono', monospace" font-size="8" fill="#737373">Utilisation</text>
+        </g>
+        <line x1="536" y1="124" x2="688" y2="124" stroke="#f5f5f5" stroke-width="1"/>
+
+        <g class="ig-kpi ig-kpi-d2">
+          <text x="536" y="144" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="600" fill="#0a0a0a">94%</text>
+          <text x="568" y="144" font-family="'JetBrains Mono', monospace" font-size="7" fill="#737373">Avail</text>
+          <text x="620" y="144" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="600" fill="#0a0a0a">48/hr</text>
+          <text x="656" y="144" font-family="'JetBrains Mono', monospace" font-size="7" fill="#737373">Thru</text>
+        </g>
+        <line x1="536" y1="152" x2="688" y2="152" stroke="#f5f5f5" stroke-width="1"/>
+
+        <g class="ig-kpi ig-kpi-d3">
+          <text x="536" y="172" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="600" fill="#0a0a0a">142m</text>
+          <text x="572" y="172" font-family="'JetBrains Mono', monospace" font-size="7" fill="#737373">MTBF</text>
+          <text x="620" y="172" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="600" fill="#0a0a0a">8.3m</text>
+          <text x="652" y="172" font-family="'JetBrains Mono', monospace" font-size="7" fill="#737373">MTTR</text>
+        </g>
+        <line x1="536" y1="180" x2="688" y2="180" stroke="#f5f5f5" stroke-width="1"/>
+
+        <text x="536" y="200" font-family="'JetBrains Mono', monospace" font-size="7" font-weight="600" fill="#a3a3a3" letter-spacing="0.06em">STOPPAGE PARETO</text>
+        <text x="536" y="214" font-family="'JetBrains Mono', monospace" font-size="8" fill="#0a0a0a">NO_WORK</text>
+        <text x="688" y="214" font-family="'JetBrains Mono', monospace" font-size="8" fill="#737373" text-anchor="end">240m</text>
+        <text x="536" y="228" font-family="'JetBrains Mono', monospace" font-size="8" fill="#0a0a0a">SETUP</text>
+        <text x="688" y="228" font-family="'JetBrains Mono', monospace" font-size="8" fill="#737373" text-anchor="end">120m</text>
+        <text x="536" y="242" font-family="'JetBrains Mono', monospace" font-size="8" fill="#0a0a0a">FAULT</text>
+        <text x="688" y="242" font-family="'JetBrains Mono', monospace" font-size="8" fill="#737373" text-anchor="end">30m</text>
+
+        <!-- Topic path bar -->
+        <rect x="520" y="262" width="184" height="10" rx="2" fill="#0a0a0a"/>
+        <text x="612" y="270" font-family="'JetBrains Mono', monospace" font-size="5" fill="#ffffff" text-anchor="middle">GET /uns-kpi?hours=8&amp;machine=cnc-01</text>
+      </svg>
+    </div>
+
+    <h2>What is fn-uns?</h2>
+    <p>
+      This project implements a complete <strong>Unified Namespace (UNS)</strong> — the modern approach to manufacturing data integration — using <a href="https://functionkit.github.io/fnkit/" style="color:var(--black);border-bottom:1px solid var(--grey-300);">fnkit</a> as the development and deployment platform.
+    </p>
+    <p>
+      Instead of point-to-point integrations between machines, databases, and dashboards, the UNS creates a <strong>single source of truth</strong> for all operational data. Every machine, sensor, and system publishes to a shared MQTT topic hierarchy, and lightweight serverless functions process, store, and report on that data.
+    </p>
+
+    <h2>The 9 Components</h2>
+    <p>Each function does <strong>one thing well</strong> — they compose through shared infrastructure (MQTT, Valkey, PostgreSQL), not through each other.</p>
+
+    <div class="docs-component-grid">
+      <a href="/docs/uns-sim.html" class="docs-component-card">
+        <div class="cc-name">uns-sim</div>
+        <div class="cc-meta">Node.js · MQTT</div>
+        <div class="cc-desc">Simulates 4 CNC machines publishing realistic data</div>
+      </a>
+      <a href="/docs/uns-framework.html" class="docs-component-card">
+        <div class="cc-name">uns-framework</div>
+        <div class="cc-meta">Go · MQTT</div>
+        <div class="cc-desc">Monitors all topics, caches everything to Valkey</div>
+      </a>
+      <a href="/docs/uns-cache.html" class="docs-component-card">
+        <div class="cc-name">uns-cache</div>
+        <div class="cc-meta">Node.js · HTTP</div>
+        <div class="cc-desc">Reads cached topics, returns JSON with change detection</div>
+      </a>
+      <a href="/docs/uns-log.html" class="docs-component-card">
+        <div class="cc-name">uns-log</div>
+        <div class="cc-meta">Go · HTTP</div>
+        <div class="cc-desc">Logs snapshot rows to PostgreSQL on change</div>
+      </a>
+      <a href="/docs/uns-state.html" class="docs-component-card">
+        <div class="cc-name">uns-state</div>
+        <div class="cc-meta">Go · HTTP</div>
+        <div class="cc-desc">Tracks machine state durations</div>
+      </a>
+      <a href="/docs/uns-stoppage.html" class="docs-component-card">
+        <div class="cc-name">uns-stoppage</div>
+        <div class="cc-meta">Node.js · HTTP</div>
+        <div class="cc-desc">Classifies why machines aren't running</div>
+      </a>
+      <a href="/docs/uns-productivity.html" class="docs-component-card">
+        <div class="cc-name">uns-productivity</div>
+        <div class="cc-meta">Go · HTTP</div>
+        <div class="cc-desc">Tracks production runs and throughput</div>
+      </a>
+      <a href="/docs/uns-input.html" class="docs-component-card">
+        <div class="cc-name">uns-input</div>
+        <div class="cc-meta">Node.js · HTTP</div>
+        <div class="cc-desc">Manual operator data entry</div>
+      </a>
+      <a href="/docs/uns-kpi.html" class="docs-component-card">
+        <div class="cc-name">uns-kpi</div>
+        <div class="cc-meta">Go · HTTP</div>
+        <div class="cc-desc">Computes manufacturing KPIs from all data</div>
+      </a>
+    </div>
+
+    <h2>Architecture at a Glance</h2>
+    <p>
+      Data flows through three stages: <strong>Capture</strong> (machines publish to MQTT, framework caches to Valkey), <strong>Process</strong> (functions detect changes and write to PostgreSQL), and <strong>Report</strong> (KPI function queries all tables on demand).
+    </p>
+    <p>
+      All functions run as Docker containers on a shared <code style="font-family:var(--font-mono);font-size:13px;background:var(--grey-100);padding:2px 8px;border-radius:4px;">fnkit-network</code>. Deployed via <code style="font-family:var(--font-mono);font-size:13px;background:var(--grey-100);padding:2px 8px;border-radius:4px;">git push</code> using fnkit's GitOps workflow.
+    </p>
+
+    <h2>Get Started</h2>
+    <table class="def-table">
+      <thead><tr><th>Step</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td><a href="/docs/what-is-uns.html">What is the UNS?</a></td><td>Understand the Unified Namespace concept</td></tr>
+        <tr><td><a href="/docs/why-faas.html">Why FaaS &amp; GitOps?</a></td><td>Why serverless functions beat flow-based tools</td></tr>
+        <tr><td><a href="/docs/getting-started.html">Getting Started</a></td><td>Deploy the full stack in minutes</td></tr>
+        <tr><td><a href="/docs/components.html">Components</a></td><td>Deep dive into each function</td></tr>
+      </tbody>
+    </table>
+
+    <div class="docs-nav-buttons">
+      <div></div>
+      <a href="/docs/what-is-uns.html" class="docs-nav-btn next">
+        <span class="nav-label">Next</span>
+        <span class="nav-title">What is the UNS?</span>
+      </a>
+    </div>
+  </main>
+</div>
+
+<script src="../shared.js"></script>
+</body>
+</html>

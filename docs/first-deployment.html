@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>First Deployment — fn-uns Docs</title>
+<meta name="description" content="Deploy all 9 UNS components and see KPIs flowing."/>
+<link rel="stylesheet" href="../style.css"/>
+<link rel="stylesheet" href="../docs.css"/>
+</head>
+<body>
+<nav>
+  <a href="/" class="logo">UNS Framework</a>
+  <div class="links">
+    <a href="/framework/">Standard v1.0</a><a href="/fn-uns/">fn-uns</a><a href="https://github.com/unsframework" target="_blank">GitHub</a>
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode"><div class="toggle-thumb"><span class="toggle-icon-sun">☀</span><span class="toggle-icon-moon">☾</span></div></button>
+  </div>
+</nav>
+<div class="docs-layout">
+  <aside class="docs-sidebar">
+    <div class="sidebar-section"><div class="sidebar-title">fn-uns</div><a href="/docs/">Overview</a></div>
+    <div class="sidebar-section"><div class="sidebar-title">Introduction</div><a href="/docs/what-is-uns.html">What is the UNS?</a><a href="/docs/why-uns.html">Why UNS Matters</a><a href="/docs/why-faas.html">Why FaaS &amp; GitOps?</a><a href="/docs/architecture.html">Architecture</a></div>
+    <div class="sidebar-section"><div class="sidebar-title">Getting Started</div><a href="/docs/getting-started.html">Quick Start</a><a href="/docs/fnkit-basics.html">fnkit Basics</a><a href="/docs/first-deployment.html" class="active">First Deployment</a></div>
+    <div class="sidebar-section"><div class="sidebar-title">Components</div><a href="/docs/components.html">Overview</a><a href="/docs/uns-sim.html">uns-sim</a><a href="/docs/uns-framework.html">uns-framework</a><a href="/docs/uns-cache.html">uns-cache</a><a href="/docs/uns-log.html">uns-log</a><a href="/docs/uns-state.html">uns-state</a><a href="/docs/uns-stoppage.html">uns-stoppage</a><a href="/docs/uns-productivity.html">uns-productivity</a><a href="/docs/uns-input.html">uns-input</a><a href="/docs/uns-kpi.html">uns-kpi</a></div>
+    <div class="sidebar-section"><div class="sidebar-title">Guides</div><a href="/docs/configuration.html">Configuration</a><a href="/docs/manufacturing-kpis.html">Manufacturing KPIs</a><a href="/docs/api-reference.html">API Reference</a></div>
+    <div class="sidebar-section"><div class="sidebar-title">Developer</div><a href="/docs/code-patterns.html">Code Patterns</a><a href="/docs/extending.html">Extending</a><a href="/docs/database-schema.html">Database Schema</a></div>
+  </aside>
+  <main class="docs-content">
+    <h1>First Deployment</h1>
+    <p class="page-desc">Deploy all 9 UNS components and see KPIs flowing.</p>
+
+    <h2>Overview</h2>
+    <p>Each component builds on the previous one:</p>
+    <div class="yaml-block">
+<pre style="margin:0;font:inherit;white-space:pre">1. Infrastructure  →  2. Capture  →  3. Process  →  4. Report
+   (network,           (sim,          (state,        (kpi)
+    cache,              framework)     stoppage,
+    postgres)                          productivity,
+                                       input, log,
+                                       cache)</pre>
+    </div>
+
+    <h2>Step 1: Infrastructure</h2>
+    <div class="yaml-block">
+<pre style="margin:0;font:inherit;white-space:pre"><span class="yaml-comment"># Create shared network</span>
+docker network create fnkit-network 2>/dev/null || true
+
+<span class="yaml-comment"># Start Valkey cache</span>
+fnkit cache start
+
+<span class="yaml-comment"># Start PostgreSQL</span>
+docker run -d --name fnkit-postgres \
+  --network fnkit-network \
+  -e POSTGRES_USER=fnkit \
+  -e POSTGRES_PASSWORD=fnkit \
+  -e POSTGRES_DB=fnkit \
+  -p 5432:5432 \
+  postgres:17</pre>
+    </div>
+
+    <h2>Step 2: UNS Capture Layer</h2>
+    <div class="yaml-block">
+<pre style="margin:0;font:inherit;white-space:pre"><span class="yaml-comment"># uns-framework (topic monitor) — start first</span>
+cd uns-framework
+cp .env.example .env
+<span class="yaml-comment"># Edit .env — set MQTT_BROKER</span>
+docker compose up -d
+cd ..
+
+<span class="yaml-comment"># uns-sim (machine simulator)</span>
+cd uns-sim
+cp .env.example .env
+<span class="yaml-comment"># Edit .env — set MQTT_BROKER</span>
+docker compose up -d
+cd ..
+
+<span class="yaml-comment"># Verify data is being cached</span>
+docker exec fnkit-cache valkey-cli SMEMBERS uns:topics
+<span class="yaml-comment"># → 12 topics (4 machines × 3 tags)</span></pre>
+    </div>
+
+    <h2>Step 3: Processing Functions</h2>
+    <h3>Set Valkey Configs</h3>
+    <div class="yaml-block">
+<pre style="margin:0;font:inherit;white-space:pre"><span class="yaml-comment"># uns-state config (watches /status topics)</span>
+docker exec fnkit-cache valkey-cli SET fnkit:config:uns-state \
+  '{"table":"uns_state","topics":["v1.0/enterprise/site1/area1/cnc-01/status","v1.0/enterprise/site1/area1/cnc-02/status","v1.0/enterprise/site1/area2/cnc-03/status","v1.0/enterprise/site1/area2/cnc-04/status"]}'
+
+<span class="yaml-comment"># uns-productivity config (watches /program topics)</span>
+docker exec fnkit-cache valkey-cli SET fnkit:config:uns-productivity \
+  '{"table":"uns_productivity","topics":["v1.0/enterprise/site1/area1/cnc-01/program","v1.0/enterprise/site1/area1/cnc-02/program","v1.0/enterprise/site1/area2/cnc-03/program","v1.0/enterprise/site1/area2/cnc-04/program"]}'</pre>
+    </div>
+
+    <h3>Start Processing Functions</h3>
+    <div class="yaml-block">
+<pre style="margin:0;font:inherit;white-space:pre"><span class="yaml-comment"># Start each function</span>
+for fn in uns-state uns-stoppage uns-productivity uns-input uns-log uns-cache; do
+  cd $fn && cp .env.example .env && docker compose up -d && cd ..
+done</pre>
+    </div>
+
+    <h3>Start Polling</h3>
+    <div class="yaml-block">
+<pre style="margin:0;font:inherit;white-space:pre"><span class="yaml-comment"># Poll uns-state every 5 seconds</span>
+while true; do curl -s http://localhost:8080/uns-state > /dev/null; sleep 5; done &
+
+<span class="yaml-comment"># Poll uns-productivity every 10 seconds</span>
+while true; do curl -s http://localhost:8080/uns-productivity > /dev/null; sleep 10; done &
+
+<span class="yaml-comment"># Poll uns-stoppage every 15 seconds</span>
+while true; do curl -s http://localhost:8080/uns-stoppage > /dev/null; sleep 15; done &</pre>
+    </div>
+    <div class="info-banner">
+      <span class="info-icon">i</span>
+      <span>In production, use the fnkit gateway orchestrator or a cron job instead of shell loops.</span>
+    </div>
+
+    <h2>Step 4: KPI Reporter</h2>
+    <div class="yaml-block">
+<pre style="margin:0;font:inherit;white-space:pre">cd uns-kpi
+cp .env.example .env
+docker compose up -d
+
+<span class="yaml-comment"># Wait a few minutes for data, then query KPIs</span>
+curl "http://localhost:8080/uns-kpi?hours=1" | jq</pre>
+    </div>
+
+    <h2>Step 5: Verify Everything</h2>
+    <h3>Check Data in PostgreSQL</h3>
+    <div class="yaml-block">
+<pre style="margin:0;font:inherit;white-space:pre"><span class="yaml-comment"># State durations</span>
+docker exec fnkit-postgres psql -U fnkit -c \
+  "SELECT machine, state, duration_s FROM uns_state ORDER BY id DESC LIMIT 5"
+
+<span class="yaml-comment"># Stoppages</span>
+docker exec fnkit-postgres psql -U fnkit -c \
+  "SELECT machine, reason_code, category FROM uns_stoppage ORDER BY id DESC LIMIT 5"
+
+<span class="yaml-comment"># Production runs</span>
+docker exec fnkit-postgres psql -U fnkit -c \
+  "SELECT machine, program_name, parts_completed FROM uns_productivity ORDER BY id DESC LIMIT 5"</pre>
+    </div>
+
+    <h3>Test Manual Input</h3>
+    <div class="yaml-block">
+<pre style="margin:0;font:inherit;white-space:pre"><span class="yaml-comment"># Submit a scrap entry</span>
+curl -X POST -H "Content-Type: application/json" \
+  -d '{"type":"scrap","machine":"cnc-01","operator":"John","data":{"quantity":2,"reason":"burr"}}' \
+  http://localhost:8080/uns-input | jq</pre>
+    </div>
+
+    <h2>Remote Deployment</h2>
+    <p>Once everything works locally, deploy to a server:</p>
+    <div class="yaml-block">
+<pre style="margin:0;font:inherit;white-space:pre"><span class="yaml-comment"># Set up remote (one-time per function)</span>
+cd uns-state
+fnkit deploy remote --host root@your-server.com
+git add . && git commit -m "init" && git push deploy main
+
+<span class="yaml-comment"># Repeat for each function...</span></pre>
+    </div>
+
+    <div class="docs-nav-buttons">
+      <a href="/docs/fnkit-basics.html" class="docs-nav-btn">
+        <span class="nav-label">Previous</span>
+        <span class="nav-title">fnkit Basics</span>
+      </a>
+      <a href="/docs/components.html" class="docs-nav-btn next">
+        <span class="nav-label">Next</span>
+        <span class="nav-title">Components</span>
+      </a>
+    </div>
+  </main>
+</div>
+<script src="../shared.js"></script>
+</body>
+</html>

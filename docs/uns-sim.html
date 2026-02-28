@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>uns-sim — Machine Simulator — fn-uns Docs</title>
+<meta name="description" content="A configurable CNC machine simulator that publishes realistic data to MQTT."/>
+<link rel="stylesheet" href="../style.css"/>
+<link rel="stylesheet" href="../docs.css"/>
+</head>
+<body>
+<nav>
+  <a href="/" class="logo">UNS Framework</a>
+  <div class="links">
+    <a href="/framework/">Standard v1.0</a><a href="/fn-uns/">fn-uns</a><a href="https://github.com/unsframework" target="_blank">GitHub</a>
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode"><div class="toggle-thumb"><span class="toggle-icon-sun">☀</span><span class="toggle-icon-moon">☾</span></div></button>
+  </div>
+</nav>
+<div class="docs-layout">
+  <aside class="docs-sidebar">
+    <div class="sidebar-section"><div class="sidebar-title">fn-uns</div><a href="/docs/">Overview</a></div>
+    <div class="sidebar-section"><div class="sidebar-title">Introduction</div><a href="/docs/what-is-uns.html">What is the UNS?</a><a href="/docs/why-uns.html">Why UNS Matters</a><a href="/docs/why-faas.html">Why FaaS &amp; GitOps?</a><a href="/docs/architecture.html">Architecture</a></div>
+    <div class="sidebar-section"><div class="sidebar-title">Getting Started</div><a href="/docs/getting-started.html">Quick Start</a><a href="/docs/fnkit-basics.html">fnkit Basics</a><a href="/docs/first-deployment.html">First Deployment</a></div>
+    <div class="sidebar-section"><div class="sidebar-title">Components</div><a href="/docs/components.html">Overview</a><a href="/docs/uns-sim.html" class="active">uns-sim</a><a href="/docs/uns-framework.html">uns-framework</a><a href="/docs/uns-cache.html">uns-cache</a><a href="/docs/uns-log.html">uns-log</a><a href="/docs/uns-state.html">uns-state</a><a href="/docs/uns-stoppage.html">uns-stoppage</a><a href="/docs/uns-productivity.html">uns-productivity</a><a href="/docs/uns-input.html">uns-input</a><a href="/docs/uns-kpi.html">uns-kpi</a></div>
+    <div class="sidebar-section"><div class="sidebar-title">Guides</div><a href="/docs/configuration.html">Configuration</a><a href="/docs/manufacturing-kpis.html">Manufacturing KPIs</a><a href="/docs/api-reference.html">API Reference</a></div>
+    <div class="sidebar-section"><div class="sidebar-title">Developer</div><a href="/docs/code-patterns.html">Code Patterns</a><a href="/docs/extending.html">Extending</a><a href="/docs/database-schema.html">Database Schema</a></div>
+  </aside>
+  <main class="docs-content">
+    <h1>uns-sim — Machine Simulator</h1>
+    <p class="page-desc">A configurable CNC machine simulator that publishes realistic data to MQTT.</p>
+    <table class="def-table"><tbody>
+        <tr><td>Language</td><td>Node.js</td></tr>
+        <tr><td>Type</td><td>MQTT publisher</td></tr>
+        <tr><td>Scaffolded with</td><td>fnkit node-mqtt</td></tr>
+        <tr><td>Depends on</td><td>MQTT broker</td></tr>
+    </tbody></table>
+
+    <h2>What It Does</h2>
+    <p>Simulates 4 CNC machines across 2 production areas, each publishing <strong>status</strong>, <strong>program</strong>, and <strong>tool</strong> data every 3 seconds.</p>
+    <h2>Topics Published</h2>
+    <div class="yaml-block"><pre style="margin:0;font:inherit;white-space:pre">v1.0/enterprise/site1/area1/cnc-01/status  ...program  ...tool
+v1.0/enterprise/site1/area1/cnc-02/status  ...program  ...tool
+v1.0/enterprise/site1/area2/cnc-03/status  ...program  ...tool
+v1.0/enterprise/site1/area2/cnc-04/status  ...program  ...tool</pre></div>
+    <p>12 topics total — 4 machines x 3 data tags.</p>
+    <h2>Machine States</h2>
+    <table class="def-table"><thead><tr><th>State</th><th>Description</th></tr></thead><tbody>
+    <tr><td>ACTIVE</td><td>Running a program, spindle on</td></tr><tr><td>IDLE</td><td>Powered on, no program</td></tr>
+    <tr><td>WAITING</td><td>Waiting for operator/material</td></tr><tr><td>ALARM</td><td>Fault condition</td></tr>
+    <tr><td>SETUP</td><td>Tool change / program loading</td></tr><tr><td>OFFLINE</td><td>Machine powered down</td></tr></tbody></table>
+    <h2>Simulated Machines</h2>
+    <table class="def-table"><thead><tr><th>Machine</th><th>Name</th><th>Area</th></tr></thead><tbody>
+    <tr><td>cnc-01</td><td>Haas VF-2 Mill</td><td>area1</td></tr><tr><td>cnc-02</td><td>DMG Mori NLX 2500</td><td>area1</td></tr>
+    <tr><td>cnc-03</td><td>Mazak Integrex i-200</td><td>area2</td></tr><tr><td>cnc-04</td><td>Okuma LB3000 EX II</td><td>area2</td></tr></tbody></table>
+    <h2>Quick Start</h2>
+    <div class="yaml-block"><pre style="margin:0;font:inherit;white-space:pre">cd uns-sim && cp .env.example .env
+docker compose up -d && docker logs -f uns-sim</pre></div>
+    <h2>Replacing with Real Machines</h2>
+    <p>In production, replace with <strong>OPC UA gateway</strong>, <strong>Sparkplug B</strong>, or a <strong>custom edge agent</strong>. The rest of the pipeline works identically.</p>
+
+    <div class="docs-nav-buttons">
+      <a href="/docs/components.html" class="docs-nav-btn"><span class="nav-label">Previous</span><span class="nav-title">Components</span></a>
+      <a href="/docs/uns-framework.html" class="docs-nav-btn next"><span class="nav-label">Next</span><span class="nav-title">uns-framework</span></a>
+    </div>
+  </main>
+</div>
+<script src="../shared.js"></script>
+</body>
+</html>

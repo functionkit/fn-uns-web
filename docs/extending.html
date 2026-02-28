@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Extending the System — fn-uns Docs</title>
+<meta name="description" content="How to add new functions, KPIs, and data sources."/>
+<link rel="stylesheet" href="../style.css"/>
+<link rel="stylesheet" href="../docs.css"/>
+</head>
+<body>
+<nav>
+  <a href="/" class="logo">UNS Framework</a>
+  <div class="links">
+    <a href="/framework/">Standard v1.0</a><a href="/fn-uns/">fn-uns</a><a href="https://github.com/unsframework" target="_blank">GitHub</a>
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode"><div class="toggle-thumb"><span class="toggle-icon-sun">☀</span><span class="toggle-icon-moon">☾</span></div></button>
+  </div>
+</nav>
+<div class="docs-layout">
+  <aside class="docs-sidebar">
+    <div class="sidebar-section"><div class="sidebar-title">fn-uns</div><a href="/docs/">Overview</a></div>
+    <div class="sidebar-section"><div class="sidebar-title">Introduction</div><a href="/docs/what-is-uns.html">What is the UNS?</a><a href="/docs/why-uns.html">Why UNS Matters</a><a href="/docs/why-faas.html">Why FaaS &amp; GitOps?</a><a href="/docs/architecture.html">Architecture</a></div>
+    <div class="sidebar-section"><div class="sidebar-title">Getting Started</div><a href="/docs/getting-started.html">Quick Start</a><a href="/docs/fnkit-basics.html">fnkit Basics</a><a href="/docs/first-deployment.html">First Deployment</a></div>
+    <div class="sidebar-section"><div class="sidebar-title">Components</div><a href="/docs/components.html">Overview</a><a href="/docs/uns-sim.html">uns-sim</a><a href="/docs/uns-framework.html">uns-framework</a><a href="/docs/uns-cache.html">uns-cache</a><a href="/docs/uns-log.html">uns-log</a><a href="/docs/uns-state.html">uns-state</a><a href="/docs/uns-stoppage.html">uns-stoppage</a><a href="/docs/uns-productivity.html">uns-productivity</a><a href="/docs/uns-input.html">uns-input</a><a href="/docs/uns-kpi.html">uns-kpi</a></div>
+    <div class="sidebar-section"><div class="sidebar-title">Guides</div><a href="/docs/configuration.html">Configuration</a><a href="/docs/manufacturing-kpis.html">Manufacturing KPIs</a><a href="/docs/api-reference.html">API Reference</a></div>
+    <div class="sidebar-section"><div class="sidebar-title">Developer</div><a href="/docs/code-patterns.html">Code Patterns</a><a href="/docs/extending.html" class="active">Extending</a><a href="/docs/database-schema.html">Database Schema</a></div>
+  </aside>
+  <main class="docs-content">
+    <h1>Extending the System</h1>
+    <p class="page-desc">How to add new functions, KPIs, and data sources.</p>
+
+    <h2>Adding a New Function</h2>
+    <div class="yaml-block"><pre style="margin:0;font:inherit;white-space:pre"><span class="yaml-comment"># 1. Scaffold</span>
+fnkit go uns-alerts
+
+<span class="yaml-comment"># 2. Connect to infrastructure (.env)</span>
+FUNCTION_TARGET=uns-alerts
+CACHE_URL=redis://fnkit-cache:6379
+DATABASE_URL=postgres://fnkit:fnkit@fnkit-postgres:5432/fnkit
+
+<span class="yaml-comment"># 3. Write handler (follow patterns)</span>
+<span class="yaml-comment"># 4. Set Valkey config</span>
+docker exec fnkit-cache valkey-cli SET fnkit:config:uns-alerts \
+  '{"topics":["v1.0/.../cnc-01/status"],"threshold":300}'
+
+<span class="yaml-comment"># 5. Deploy</span>
+docker compose up -d</pre></div>
+    <h2>Adding a New KPI</h2>
+    <p>Write SQL query, add to uns-kpi/function.go, include in response.</p>
+    <h2>Adding Real Data Sources</h2>
+    <table class="def-table"><thead><tr><th>Option</th><th>Description</th></tr></thead><tbody>
+    <tr><td>OPC UA gateway</td><td>Publish PLC data to UNS topics</td></tr>
+    <tr><td>Custom edge function</td><td>fnkit MQTT function reading machine API</td></tr>
+    <tr><td>Direct MQTT</td><td>Modern PLCs with native MQTT</td></tr></tbody></table>
+
+    <div class="docs-nav-buttons">
+      <a href="/docs/code-patterns.html" class="docs-nav-btn"><span class="nav-label">Previous</span><span class="nav-title">Code Patterns</span></a>
+      <a href="/docs/database-schema.html" class="docs-nav-btn next"><span class="nav-label">Next</span><span class="nav-title">Database Schema</span></a>
+    </div>
+  </main>
+</div>
+<script src="../shared.js"></script>
+</body>
+</html>

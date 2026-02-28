@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>uns-kpi — KPI Reporter — fn-uns Docs</title>
+<meta name="description" content="Computes manufacturing KPIs by querying all PostgreSQL tables. Pure read, no config needed."/>
+<link rel="stylesheet" href="../style.css"/>
+<link rel="stylesheet" href="../docs.css"/>
+</head>
+<body>
+<nav>
+  <a href="/" class="logo">UNS Framework</a>
+  <div class="links">
+    <a href="/framework/">Standard v1.0</a><a href="/fn-uns/">fn-uns</a><a href="https://github.com/unsframework" target="_blank">GitHub</a>
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode"><div class="toggle-thumb"><span class="toggle-icon-sun">☀</span><span class="toggle-icon-moon">☾</span></div></button>
+  </div>
+</nav>
+<div class="docs-layout">
+  <aside class="docs-sidebar">
+    <div class="sidebar-section"><div class="sidebar-title">fn-uns</div><a href="/docs/">Overview</a></div>
+    <div class="sidebar-section"><div class="sidebar-title">Introduction</div><a href="/docs/what-is-uns.html">What is the UNS?</a><a href="/docs/why-uns.html">Why UNS Matters</a><a href="/docs/why-faas.html">Why FaaS &amp; GitOps?</a><a href="/docs/architecture.html">Architecture</a></div>
+    <div class="sidebar-section"><div class="sidebar-title">Getting Started</div><a href="/docs/getting-started.html">Quick Start</a><a href="/docs/fnkit-basics.html">fnkit Basics</a><a href="/docs/first-deployment.html">First Deployment</a></div>
+    <div class="sidebar-section"><div class="sidebar-title">Components</div><a href="/docs/components.html">Overview</a><a href="/docs/uns-sim.html">uns-sim</a><a href="/docs/uns-framework.html">uns-framework</a><a href="/docs/uns-cache.html">uns-cache</a><a href="/docs/uns-log.html">uns-log</a><a href="/docs/uns-state.html">uns-state</a><a href="/docs/uns-stoppage.html">uns-stoppage</a><a href="/docs/uns-productivity.html">uns-productivity</a><a href="/docs/uns-input.html">uns-input</a><a href="/docs/uns-kpi.html" class="active">uns-kpi</a></div>
+    <div class="sidebar-section"><div class="sidebar-title">Guides</div><a href="/docs/configuration.html">Configuration</a><a href="/docs/manufacturing-kpis.html">Manufacturing KPIs</a><a href="/docs/api-reference.html">API Reference</a></div>
+    <div class="sidebar-section"><div class="sidebar-title">Developer</div><a href="/docs/code-patterns.html">Code Patterns</a><a href="/docs/extending.html">Extending</a><a href="/docs/database-schema.html">Database Schema</a></div>
+  </aside>
+  <main class="docs-content">
+    <h1>uns-kpi — KPI Reporter</h1>
+    <p class="page-desc">Computes manufacturing KPIs by querying all PostgreSQL tables. Pure read, no config needed.</p>
+    <table class="def-table"><tbody>
+        <tr><td>Language</td><td>Go</td></tr>
+        <tr><td>Type</td><td>HTTP function (read-only)</td></tr>
+        <tr><td>Scaffolded with</td><td>fnkit go</td></tr>
+        <tr><td>Depends on</td><td>PostgreSQL (all tables)</td></tr>
+    </tbody></table>
+
+    <h2>What It Does</h2>
+    <p>Queries all PostgreSQL tables and computes manufacturing KPIs on demand. No cache, no config — just SQL and JSON.</p>
+    <h2>KPIs</h2>
+    <table class="def-table"><thead><tr><th>KPI</th><th>Source</th><th>Calculation</th></tr></thead><tbody>
+    <tr><td>Utilisation %</td><td>uns_state</td><td>ACTIVE / total time</td></tr>
+    <tr><td>Availability %</td><td>uns_state + uns_stoppage</td><td>(total - unplanned) / total</td></tr>
+    <tr><td>Throughput</td><td>uns_productivity</td><td>parts/hr, target %</td></tr>
+    <tr><td>Stoppage pareto</td><td>uns_stoppage</td><td>Top reasons by duration</td></tr>
+    <tr><td>MTBF</td><td>uns_state</td><td>Avg ACTIVE before ALARM</td></tr>
+    <tr><td>MTTR</td><td>uns_state</td><td>Avg ALARM duration</td></tr>
+    <tr><td>Scrap</td><td>uns_input</td><td>Total scrap per machine</td></tr></tbody></table>
+    <h2>API</h2>
+    <div class="yaml-block"><pre style="margin:0;font:inherit;white-space:pre">GET /uns-kpi                          # all KPIs, 24h
+GET /uns-kpi?hours=8&amp;machine=cnc-01   # filtered
+GET /uns-kpi?area=area1&amp;hours=24      # by area</pre></div>
+    <h2>Parameters</h2>
+    <table class="def-table"><thead><tr><th>Param</th><th>Default</th><th>Description</th></tr></thead><tbody>
+    <tr><td>machine</td><td>(all)</td><td>Filter by machine</td></tr><tr><td>area</td><td>(all)</td><td>Filter by area</td></tr>
+    <tr><td>hours</td><td>24</td><td>Last N hours</td></tr><tr><td>from/to</td><td>-</td><td>RFC3339 time range</td></tr></tbody></table>
+    <h2>Quick Start</h2>
+    <div class="yaml-block"><pre style="margin:0;font:inherit;white-space:pre">cd uns-kpi && cp .env.example .env && docker compose up -d
+curl "http://localhost:8080/uns-kpi?hours=8" | jq</pre></div>
+
+    <div class="docs-nav-buttons">
+      <a href="/docs/uns-input.html" class="docs-nav-btn"><span class="nav-label">Previous</span><span class="nav-title">uns-input</span></a>
+      <a href="/docs/configuration.html" class="docs-nav-btn next"><span class="nav-label">Next</span><span class="nav-title">Configuration</span></a>
+    </div>
+  </main>
+</div>
+<script src="../shared.js"></script>
+</body>
+</html>

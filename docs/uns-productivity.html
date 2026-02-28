@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>uns-productivity — Production Run Logger — fn-uns Docs</title>
+<meta name="description" content="Tracks production runs and logs throughput metrics to PostgreSQL."/>
+<link rel="stylesheet" href="../style.css"/>
+<link rel="stylesheet" href="../docs.css"/>
+</head>
+<body>
+<nav>
+  <a href="/" class="logo">UNS Framework</a>
+  <div class="links">
+    <a href="/framework/">Standard v1.0</a><a href="/fn-uns/">fn-uns</a><a href="https://github.com/unsframework" target="_blank">GitHub</a>
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode"><div class="toggle-thumb"><span class="toggle-icon-sun">☀</span><span class="toggle-icon-moon">☾</span></div></button>
+  </div>
+</nav>
+<div class="docs-layout">
+  <aside class="docs-sidebar">
+    <div class="sidebar-section"><div class="sidebar-title">fn-uns</div><a href="/docs/">Overview</a></div>
+    <div class="sidebar-section"><div class="sidebar-title">Introduction</div><a href="/docs/what-is-uns.html">What is the UNS?</a><a href="/docs/why-uns.html">Why UNS Matters</a><a href="/docs/why-faas.html">Why FaaS &amp; GitOps?</a><a href="/docs/architecture.html">Architecture</a></div>
+    <div class="sidebar-section"><div class="sidebar-title">Getting Started</div><a href="/docs/getting-started.html">Quick Start</a><a href="/docs/fnkit-basics.html">fnkit Basics</a><a href="/docs/first-deployment.html">First Deployment</a></div>
+    <div class="sidebar-section"><div class="sidebar-title">Components</div><a href="/docs/components.html">Overview</a><a href="/docs/uns-sim.html">uns-sim</a><a href="/docs/uns-framework.html">uns-framework</a><a href="/docs/uns-cache.html">uns-cache</a><a href="/docs/uns-log.html">uns-log</a><a href="/docs/uns-state.html">uns-state</a><a href="/docs/uns-stoppage.html">uns-stoppage</a><a href="/docs/uns-productivity.html" class="active">uns-productivity</a><a href="/docs/uns-input.html">uns-input</a><a href="/docs/uns-kpi.html">uns-kpi</a></div>
+    <div class="sidebar-section"><div class="sidebar-title">Guides</div><a href="/docs/configuration.html">Configuration</a><a href="/docs/manufacturing-kpis.html">Manufacturing KPIs</a><a href="/docs/api-reference.html">API Reference</a></div>
+    <div class="sidebar-section"><div class="sidebar-title">Developer</div><a href="/docs/code-patterns.html">Code Patterns</a><a href="/docs/extending.html">Extending</a><a href="/docs/database-schema.html">Database Schema</a></div>
+  </aside>
+  <main class="docs-content">
+    <h1>uns-productivity — Production Run Logger</h1>
+    <p class="page-desc">Tracks production runs and logs throughput metrics to PostgreSQL.</p>
+    <table class="def-table"><tbody>
+        <tr><td>Language</td><td>Go</td></tr>
+        <tr><td>Type</td><td>HTTP function (polled)</td></tr>
+        <tr><td>Scaffolded with</td><td>fnkit go</td></tr>
+        <tr><td>Depends on</td><td>Valkey, PostgreSQL</td></tr>
+    </tbody></table>
+
+    <h2>What It Does</h2>
+    <p>Reads /program topics, tracks active runs per machine. On run completion or change, logs to PostgreSQL with throughput metrics.</p>
+    <h2>Triggers</h2>
+    <table class="def-table"><thead><tr><th>Trigger</th><th>Description</th></tr></thead><tbody>
+    <tr><td>completed</td><td>Parts reached target</td></tr><tr><td>program_changed</td><td>Switched program</td></tr>
+    <tr><td>stopped</td><td>RUNNING -> STOPPED</td></tr></tbody></table>
+    <h2>Quick Start</h2>
+    <div class="yaml-block"><pre style="margin:0;font:inherit;white-space:pre">cd uns-productivity && cp .env.example .env && docker compose up -d
+while true; do curl -s http://localhost:8080/uns-productivity | jq; sleep 10; done</pre></div>
+
+    <div class="docs-nav-buttons">
+      <a href="/docs/uns-stoppage.html" class="docs-nav-btn"><span class="nav-label">Previous</span><span class="nav-title">uns-stoppage</span></a>
+      <a href="/docs/uns-input.html" class="docs-nav-btn next"><span class="nav-label">Next</span><span class="nav-title">uns-input</span></a>
+    </div>
+  </main>
+</div>
+<script src="../shared.js"></script>
+</body>
+</html>

@@ -1491,11 +1491,11 @@
     <div class="hero">
       <div class="container">
         <div class="hero-content">
-          <h1>Manufacturing data is&nbsp;trapped. We fix&nbsp;that.</h1>
+          <h1>9&nbsp;functions. One&nbsp;UNS pipeline. Deploy with git&nbsp;push.</h1>
           <p class="subtitle">
-            fn-uns is an open-source Unified Namespace. Serverless functions
-            that turn fragmented factory data into real-time KPIs. Self-hosted.
-            Version controlled. Deployed with git push.
+            fn-uns is a complete Unified Namespace implementation — serverless
+            functions that capture, process, and report on real-time factory
+            data. Built on fnkit. Follows the UNS Framework standard.
           </p>
           <div class="cta-group">
             <a href="/docs/" class="btn-primary">Read the Docs →</a>
@@ -1699,170 +1699,6 @@
         </div>
       </div>
     </div>
-
-    <div class="divider"></div>
-
-    <!-- THE PROBLEM -->
-    <section class="fade-in problem-section-animated">
-      <div class="container">
-        <div class="section-label">The Problem</div>
-        <h2>Manufacturing data is trapped in silos.</h2>
-        <p class="lead">
-          Every factory generates vast amounts of data — machine states,
-          production counts, quality metrics, maintenance logs. But it's
-          fragmented across disconnected systems that don't talk to each other.
-        </p>
-
-        <div class="problem-grid">
-          <div class="problem-before">
-            <h3>Today: Point-to-Point Spaghetti</h3>
-            <div class="spaghetti-line">
-              PLC <span class="arrow">→</span> SCADA
-              <span class="arrow">→</span> Historian
-            </div>
-            <div class="spaghetti-line">
-              PLC <span class="arrow">→</span> MES
-              <span class="arrow">→</span> ERP
-            </div>
-            <div class="spaghetti-line">
-              PLC <span class="arrow">→</span> Custom Dashboard
-            </div>
-            <div class="spaghetti-line">
-              Sensor <span class="arrow">→</span> Cloud Platform
-            </div>
-            <div class="spaghetti-line">
-              Sensor <span class="arrow">→</span> Another Custom App
-            </div>
-            <div class="spaghetti-line">
-              ERP <span class="arrow">→</span> Spreadsheet
-              <span class="arrow">→</span> Email
-            </div>
-            <p
-              style="
-                font-size: 13px;
-                color: var(--grey-700);
-                margin-top: 16px;
-                line-height: 1.5;
-              "
-            >
-              Every new connection adds complexity. Every system has its own
-              data model. Getting a simple answer — "what's the utilisation of
-              cnc-01 this shift?" — requires pulling data from multiple systems
-              and hoping the timestamps align.
-            </p>
-          </div>
-
-          <div class="problem-after">
-            <h3>With UNS: One Data Layer</h3>
-            <div class="uns-hub">
-              <div class="uns-hub-label">MQTT Broker</div>
-              <div class="uns-hub-sub">
-                Unified Namespace — single source of truth
-              </div>
-            </div>
-            <div class="spoke-grid">
-              <div class="spoke">PLCs</div>
-              <div class="spoke">Sensors</div>
-              <div class="spoke">SCADA</div>
-              <div class="spoke">MES</div>
-              <div class="spoke">Dashboards</div>
-              <div class="spoke">Analytics</div>
-            </div>
-            <p
-              style="
-                font-size: 13px;
-                color: var(--grey-700);
-                margin-top: 16px;
-                line-height: 1.5;
-              "
-            >
-              Any system can publish data. Any system can subscribe. No
-              point-to-point wiring. No vendor lock-in. Adding a new consumer
-              means subscribing to existing topics — not building a new
-              integration.
-            </p>
-          </div>
-        </div>
-
-        <div class="stats-row">
-          <div class="stat">
-            <div class="stat-number">&lt;1s</div>
-            <div class="stat-label">Data latency — real-time, not batch</div>
-          </div>
-          <div class="stat">
-            <div class="stat-number">1</div>
-            <div class="stat-label">Source of truth for all systems</div>
-          </div>
-          <div class="stat">
-            <div class="stat-number">0</div>
-            <div class="stat-label">Point-to-point integrations needed</div>
-          </div>
-          <div class="stat">
-            <div class="stat-number">∞</div>
-            <div class="stat-label">
-              Subscribers — add without changing anything
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <div class="divider"></div>
-
-    <!-- THE STACK -->
-    <section class="fade-in">
-      <div class="container">
-        <div class="section-label">The Stack</div>
-        <h2>Three projects. One unified solution.</h2>
-        <p class="lead">
-          fn-uns is built on two open foundations — an open standard for
-          structuring manufacturing data, and an open platform for deploying
-          serverless functions.
-        </p>
-
-        <div class="stack-grid">
-          <div class="stack-card">
-            <div class="stack-num">01</div>
-            <h3>UNS Framework</h3>
-            <div class="stack-url">unsframework.com</div>
-            <p>
-              An open standard that defines how to structure manufacturing data
-              in MQTT. It specifies the ISA-95 topic hierarchy, versioned
-              namespaces, payload conventions, and best practices for topic
-              naming and QoS selection. The framework is vendor-neutral — any
-              system that follows the standard can participate in the namespace.
-            </p>
-            <div class="stack-role">Defines the data structure</div>
-          </div>
-          <div class="stack-card">
-            <div class="stack-num">02</div>
-            <h3>fnkit</h3>
-            <div class="stack-url">fnkit.dev</div>
-            <p>
-              A lightweight Functions-as-a-Service platform that runs anywhere
-              Containers runs. Write functions in any language — Go, Node.js,
-              Python — scaffold with one command, deploy via git push. fnkit
-              handles the gateway, routing, TLS, caching, and GitOps workflow.
-              No cloud vendor required.
-            </p>
-            <div class="stack-role">Provides the platform</div>
-          </div>
-          <div class="stack-card">
-            <div class="stack-num">03</div>
-            <h3>fn-uns</h3>
-            <div class="stack-url">This project</div>
-            <p>
-              Serverless functions that implement a complete UNS data pipeline
-              on fnkit. From machine simulation to KPI computation — capture,
-              process, and report on manufacturing data. Each function follows
-              the UNS Framework standard and deploys through fnkit's GitOps
-              workflow.
-            </p>
-            <div class="stack-role">Delivers the functions</div>
-          </div>
-        </div>
-      </div>
-    </section>
 
     <div class="divider"></div>
 
@@ -2148,71 +1984,6 @@
               Pure read function — queries all tables and computes manufacturing
               KPIs on demand via a single API call
             </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <div class="divider"></div>
-
-    <!-- WHO IT'S FOR -->
-    <section class="fade-in">
-      <div class="container">
-        <div class="section-label">Who It's For</div>
-        <h2>Value for every role on the floor.</h2>
-        <p class="lead">
-          The UNS isn't just a technical architecture — it's a business tool.
-          Different teams get different value from the same underlying data.
-        </p>
-
-        <div class="value-grid">
-          <div class="value-card">
-            <h3>Operations Managers</h3>
-            <p>
-              Real-time dashboards showing machine utilisation, production
-              progress, and stoppage reasons across the entire shop floor. No
-              more walking the floor to check machine status.
-            </p>
-          </div>
-          <div class="value-card">
-            <h3>Maintenance Teams</h3>
-            <p>
-              Automatic MTBF and MTTR calculations per machine. Alarm history
-              with durations. Stoppage pareto charts showing exactly where to
-              focus improvement efforts.
-            </p>
-          </div>
-          <div class="value-card">
-            <h3>Production Planners</h3>
-            <p>
-              Actual throughput data — parts per hour, target attainment —
-              compared against planned schedules. Identify bottleneck machines
-              and underperforming programs.
-            </p>
-          </div>
-          <div class="value-card">
-            <h3>Quality Engineers</h3>
-            <p>
-              Scrap tracking linked to specific machines, programs, and
-              operators. Quality check pass rates over time. Correlation between
-              machine conditions and quality outcomes.
-            </p>
-          </div>
-          <div class="value-card">
-            <h3>Continuous Improvement</h3>
-            <p>
-              Data-driven kaizen. Every state change, every stoppage, every
-              production run is recorded with timestamps and durations. The data
-              tells you exactly where time is being lost.
-            </p>
-          </div>
-          <div class="value-card">
-            <h3>IT &amp; Engineering</h3>
-            <p>
-              A clean, maintainable architecture. Each function is independent,
-              version-controlled, and deployable via git push. No monolithic
-              platforms. No vendor lock-in. Standard tools.
-            </p>
           </div>
         </div>
       </div>

@@ -1,0 +1,3924 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+      The Unified Namespace — Why Manufacturing Data Needs a Single Source of
+      Truth
+    </title>
+    <meta
+      name="description"
+      content="One simple question. Five systems. Four hours. The Unified Namespace answers it in under a second. Follow one question through a factory to understand why manufacturing needs a shared data layer."
+    />
+    <link rel="canonical" href="https://unsframework.com/uns/" />
+    <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="UNS Framework" />
+    <meta
+      property="og:title"
+      content="The Unified Namespace — One Question, Two Architectures"
+    />
+    <meta
+      property="og:description"
+      content="Follow one question through a factory. See why manufacturing needs a Unified Namespace."
+    />
+    <meta property="og:url" content="https://unsframework.com/uns/" />
+    <meta name="twitter:card" content="summary" />
+    <meta
+      name="twitter:title"
+      content="The Unified Namespace — Manufacturing's Missing Data Layer"
+    />
+    <meta
+      name="twitter:description"
+      content="One simple question. Five systems. Four hours. Or one API call and 0.3 seconds."
+    />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>"
+    />
+
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500;700&display=swap');
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      :root {
+        --black: #0a0a0a;
+        --grey-950: #141414;
+        --grey-900: #1a1a1a;
+        --grey-800: #262626;
+        --grey-700: #404040;
+        --grey-600: #525252;
+        --grey-500: #737373;
+        --grey-400: #a3a3a3;
+        --grey-300: #d4d4d4;
+        --grey-200: #e5e5e5;
+        --grey-100: #f5f5f5;
+        --grey-50: #fafafa;
+        --white: #ffffff;
+        --nav-bg: rgba(255, 255, 255, 0.88);
+        --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+        --font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', monospace;
+      }
+      [data-theme='dark'] {
+        --black: #f5f5f5;
+        --grey-950: #141414;
+        --grey-900: #1a1a1a;
+        --grey-800: #d4d4d4;
+        --grey-700: #a3a3a3;
+        --grey-600: #a3a3a3;
+        --grey-500: #737373;
+        --grey-400: #525252;
+        --grey-300: #404040;
+        --grey-200: #262626;
+        --grey-100: #1a1a1a;
+        --grey-50: #141414;
+        --white: #0a0a0a;
+        --nav-bg: rgba(10, 10, 10, 0.88);
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        font-family: var(--font-sans);
+        background: var(--white);
+        color: var(--black);
+        font-size: 16px;
+        line-height: 1.6;
+        -webkit-font-smoothing: antialiased;
+      }
+      body,
+      nav,
+      footer {
+        transition:
+          background-color 0.3s ease,
+          color 0.3s ease,
+          border-color 0.3s ease;
+      }
+
+      /* NAV */
+      nav {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 100;
+        height: 56px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 48px;
+        background: var(--nav-bg);
+        backdrop-filter: blur(24px);
+        -webkit-backdrop-filter: blur(24px);
+        border-bottom: 1px solid var(--grey-200);
+      }
+      nav .logo {
+        font-family: var(--font-mono);
+        font-weight: 600;
+        font-size: 15px;
+        letter-spacing: -0.02em;
+        color: var(--black);
+        text-decoration: none;
+      }
+      nav .links {
+        display: flex;
+        gap: 32px;
+        align-items: center;
+      }
+      nav .links a {
+        color: var(--grey-700);
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 400;
+        transition: color 0.2s;
+      }
+      nav .links a:hover {
+        color: var(--black);
+      }
+
+      /* LAYOUT */
+      .container {
+        max-width: 1120px;
+        margin: 0 auto;
+        padding: 0 48px;
+      }
+      .divider {
+        width: 100%;
+        height: 1px;
+        background: var(--grey-200);
+      }
+      section {
+        padding: 120px 0;
+      }
+      .section-label {
+        font-family: var(--font-mono);
+        font-size: 12px;
+        font-weight: 500;
+        color: var(--grey-700);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        margin-bottom: 16px;
+      }
+      section h2 {
+        font-size: clamp(28px, 4vw, 42px);
+        font-weight: 700;
+        line-height: 1.12;
+        letter-spacing: -0.03em;
+        margin-bottom: 16px;
+      }
+      section .lead {
+        font-size: 17px;
+        font-weight: 400;
+        color: var(--grey-700);
+        max-width: 600px;
+        line-height: 1.7;
+        margin-bottom: 56px;
+      }
+
+      /* BUTTONS */
+      .btn-primary {
+        display: inline-flex;
+        align-items: center;
+        padding: 12px 28px;
+        background: var(--black);
+        color: var(--white);
+        font-size: 14px;
+        font-weight: 500;
+        text-decoration: none;
+        border-radius: 8px;
+        font-family: var(--font-sans);
+        transition: all 0.2s;
+        border: 1px solid var(--black);
+      }
+      .btn-primary:hover {
+        background: var(--grey-800);
+      }
+      .btn-secondary {
+        display: inline-flex;
+        align-items: center;
+        padding: 12px 28px;
+        background: transparent;
+        color: var(--black);
+        font-size: 14px;
+        font-weight: 500;
+        text-decoration: none;
+        border-radius: 8px;
+        border: 1px solid var(--grey-300);
+        font-family: var(--font-sans);
+        transition: all 0.2s;
+      }
+      .btn-secondary:hover {
+        border-color: var(--black);
+      }
+      .cta-group {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+      }
+
+      /* DARK MODE TOGGLE */
+      .theme-toggle {
+        position: relative;
+        width: 44px;
+        height: 24px;
+        background: var(--grey-200);
+        border: 1px solid var(--grey-300);
+        border-radius: 100px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        padding: 0 3px;
+        flex-shrink: 0;
+      }
+      .theme-toggle:hover {
+        border-color: var(--grey-500);
+      }
+      .theme-toggle .toggle-thumb {
+        width: 18px;
+        height: 18px;
+        background: var(--white);
+        border-radius: 50%;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 10px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+      }
+      [data-theme='dark'] .theme-toggle {
+        background: var(--grey-200);
+      }
+      [data-theme='dark'] .theme-toggle .toggle-thumb {
+        transform: translateX(18px);
+        background: var(--grey-50);
+      }
+      .toggle-icon-sun,
+      .toggle-icon-moon {
+        pointer-events: none;
+        line-height: 1;
+      }
+      .toggle-icon-moon {
+        display: none;
+      }
+      [data-theme='dark'] .toggle-icon-sun {
+        display: none;
+      }
+      [data-theme='dark'] .toggle-icon-moon {
+        display: block;
+      }
+
+      /* FADE */
+      .fade-in {
+        opacity: 0;
+        transform: translateY(16px);
+        transition:
+          opacity 0.6s ease,
+          transform 0.6s ease;
+      }
+      .fade-in.visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      /* ═══ HERO ═══ */
+      .hero {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        padding: 56px 0 0;
+      }
+      .hero .container {
+        max-width: 800px;
+      }
+      .hero h1 {
+        font-size: clamp(36px, 5vw, 58px);
+        font-weight: 800;
+        line-height: 1.06;
+        letter-spacing: -0.04em;
+        margin-bottom: 24px;
+      }
+      .hero h1 .hero-accent {
+        color: var(--grey-500);
+      }
+      .hero .subtitle {
+        font-size: 18px;
+        font-weight: 400;
+        color: var(--grey-700);
+        line-height: 1.7;
+        margin-bottom: 0;
+        max-width: 640px;
+      }
+      .hero .hero-question {
+        font-family: var(--font-mono);
+        font-size: 15px;
+        font-weight: 500;
+        color: var(--black);
+        background: var(--grey-50);
+        border: 1px solid var(--grey-200);
+        border-radius: 8px;
+        padding: 16px 24px;
+        margin-top: 40px;
+        display: inline-block;
+      }
+
+      /* ═══ SVG INFOGRAPHICS ═══ */
+      .info-svg {
+        width: 100%;
+        max-width: 100%;
+      }
+      .info-svg svg {
+        width: 100%;
+        height: auto;
+        display: block;
+      }
+
+      /* Orthogonal flow animations */
+      @keyframes dash-flow {
+        to {
+          stroke-dashoffset: -16;
+        }
+      }
+      @keyframes dot-pulse {
+        0%,
+        100% {
+          opacity: 0.3;
+        }
+        50% {
+          opacity: 1;
+        }
+      }
+      @keyframes pkt-move {
+        0% {
+          offset-distance: 0%;
+          opacity: 0;
+        }
+        8% {
+          opacity: 1;
+        }
+        92% {
+          opacity: 1;
+        }
+        100% {
+          offset-distance: 100%;
+          opacity: 0;
+        }
+      }
+      @keyframes pkt-move-slow {
+        0% {
+          offset-distance: 0%;
+          opacity: 0;
+        }
+        5% {
+          opacity: 1;
+        }
+        95% {
+          opacity: 1;
+        }
+        100% {
+          offset-distance: 100%;
+          opacity: 0;
+        }
+      }
+      @keyframes step-in {
+        0% {
+          opacity: 0;
+          transform: translateY(6px);
+        }
+        100% {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      @keyframes glow-border {
+        0%,
+        100% {
+          stroke: #e5e5e5;
+        }
+        50% {
+          stroke: #0a0a0a;
+        }
+      }
+
+      /* Sequential step activation for SVG #1 — human working through systems */
+      /* 22s total cycle: Step1 ~0.5s, Step2 ~3s, Step3 ~1.5s, Step4 ~4s, Step5 ~6s (hold), reset ~7s pause at end */
+      /* Percentages: S1 0-7%, S2 7-27%, S3 27-34%, S4 34-55%, S5 55-68%, hold 68-100% */
+      /* Once a step is passed, it stays faded in — not hidden again */
+      @keyframes step-activate-1 {
+        0% {
+          opacity: 0.35;
+        }
+        2% {
+          opacity: 1;
+        }
+        7% {
+          opacity: 1;
+        }
+        9% {
+          opacity: 0.7;
+        }
+        100% {
+          opacity: 0.7;
+        }
+      }
+      @keyframes step-activate-2 {
+        0% {
+          opacity: 0.35;
+        }
+        8% {
+          opacity: 1;
+        }
+        27% {
+          opacity: 1;
+        }
+        30% {
+          opacity: 0.7;
+        }
+        100% {
+          opacity: 0.7;
+        }
+      }
+      @keyframes step-activate-3 {
+        0% {
+          opacity: 0.35;
+        }
+        29% {
+          opacity: 1;
+        }
+        36% {
+          opacity: 1;
+        }
+        39% {
+          opacity: 0.7;
+        }
+        100% {
+          opacity: 0.7;
+        }
+      }
+      @keyframes step-activate-4 {
+        0% {
+          opacity: 0.35;
+        }
+        38% {
+          opacity: 1;
+        }
+        58% {
+          opacity: 1;
+        }
+        61% {
+          opacity: 0.7;
+        }
+        100% {
+          opacity: 0.7;
+        }
+      }
+      @keyframes step-activate-5 {
+        0% {
+          opacity: 0.35;
+        }
+        60% {
+          opacity: 1;
+        }
+        100% {
+          opacity: 1;
+        }
+      }
+      /* Sub-card cascade: hidden until parent step activates, then stays visible */
+      @keyframes sub-card-1-a {
+        0%,
+        3% {
+          opacity: 0;
+        }
+        4% {
+          opacity: 1;
+        }
+        100% {
+          opacity: 1;
+        }
+      }
+      @keyframes sub-card-1-b {
+        0%,
+        5% {
+          opacity: 0;
+        }
+        6% {
+          opacity: 1;
+        }
+        100% {
+          opacity: 1;
+        }
+      }
+      @keyframes sub-card-2-a {
+        0%,
+        11% {
+          opacity: 0;
+        }
+        13% {
+          opacity: 1;
+        }
+        100% {
+          opacity: 1;
+        }
+      }
+      @keyframes sub-card-2-b {
+        0%,
+        16% {
+          opacity: 0;
+        }
+        18% {
+          opacity: 1;
+        }
+        100% {
+          opacity: 1;
+        }
+      }
+      @keyframes sub-card-3-a {
+        0%,
+        31% {
+          opacity: 0;
+        }
+        33% {
+          opacity: 1;
+        }
+        100% {
+          opacity: 1;
+        }
+      }
+      @keyframes sub-card-3-b {
+        0%,
+        33% {
+          opacity: 0;
+        }
+        35% {
+          opacity: 1;
+        }
+        100% {
+          opacity: 1;
+        }
+      }
+      @keyframes sub-card-4-a {
+        0%,
+        42% {
+          opacity: 0;
+        }
+        44% {
+          opacity: 1;
+        }
+        100% {
+          opacity: 1;
+        }
+      }
+      @keyframes sub-card-4-b {
+        0%,
+        48% {
+          opacity: 0;
+        }
+        50% {
+          opacity: 1;
+        }
+        100% {
+          opacity: 1;
+        }
+      }
+      @keyframes sub-card-5-a {
+        0%,
+        63% {
+          opacity: 0;
+        }
+        65% {
+          opacity: 1;
+        }
+        100% {
+          opacity: 1;
+        }
+      }
+      @keyframes sub-card-5-b {
+        0%,
+        66% {
+          opacity: 0;
+        }
+        68% {
+          opacity: 1;
+        }
+        100% {
+          opacity: 1;
+        }
+      }
+      .s1-sub-1a {
+        animation: sub-card-1-a 22s ease-in-out infinite;
+      }
+      .s1-sub-1b {
+        animation: sub-card-1-b 22s ease-in-out infinite;
+      }
+      .s1-sub-2a {
+        animation: sub-card-2-a 22s ease-in-out infinite;
+      }
+      .s1-sub-2b {
+        animation: sub-card-2-b 22s ease-in-out infinite;
+      }
+      .s1-sub-3a {
+        animation: sub-card-3-a 22s ease-in-out infinite;
+      }
+      .s1-sub-3b {
+        animation: sub-card-3-b 22s ease-in-out infinite;
+      }
+      .s1-sub-4a {
+        animation: sub-card-4-a 22s ease-in-out infinite;
+      }
+      .s1-sub-4b {
+        animation: sub-card-4-b 22s ease-in-out infinite;
+      }
+      .s1-sub-5a {
+        animation: sub-card-5-a 22s ease-in-out infinite;
+      }
+      .s1-sub-5b {
+        animation: sub-card-5-b 22s ease-in-out infinite;
+      }
+      /* Border glow synced to step activation (22s cycle) */
+      @keyframes step-glow-1 {
+        0% {
+          stroke: #e5e5e5;
+        }
+        2% {
+          stroke: #0a0a0a;
+        }
+        7% {
+          stroke: #0a0a0a;
+        }
+        9% {
+          stroke: #e5e5e5;
+        }
+        100% {
+          stroke: #e5e5e5;
+        }
+      }
+      @keyframes step-glow-2 {
+        0%,
+        7% {
+          stroke: #e5e5e5;
+        }
+        8% {
+          stroke: #0a0a0a;
+        }
+        27% {
+          stroke: #0a0a0a;
+        }
+        30% {
+          stroke: #e5e5e5;
+        }
+        100% {
+          stroke: #e5e5e5;
+        }
+      }
+      @keyframes step-glow-3 {
+        0%,
+        28% {
+          stroke: #e5e5e5;
+        }
+        29% {
+          stroke: #0a0a0a;
+        }
+        36% {
+          stroke: #0a0a0a;
+        }
+        39% {
+          stroke: #e5e5e5;
+        }
+        100% {
+          stroke: #e5e5e5;
+        }
+      }
+      @keyframes step-glow-4 {
+        0%,
+        37% {
+          stroke: #e5e5e5;
+        }
+        38% {
+          stroke: #0a0a0a;
+        }
+        58% {
+          stroke: #0a0a0a;
+        }
+        61% {
+          stroke: #e5e5e5;
+        }
+        100% {
+          stroke: #e5e5e5;
+        }
+      }
+      @keyframes step-glow-5 {
+        0%,
+        59% {
+          stroke: #e5e5e5;
+        }
+        60% {
+          stroke: #0a0a0a;
+        }
+        100% {
+          stroke: #0a0a0a;
+        }
+      }
+      .s1-step-1 {
+        animation: step-activate-1 22s ease-in-out infinite;
+      }
+      .s1-step-2 {
+        animation: step-activate-2 22s ease-in-out infinite;
+      }
+      .s1-step-3 {
+        animation: step-activate-3 22s ease-in-out infinite;
+      }
+      .s1-step-4 {
+        animation: step-activate-4 22s ease-in-out infinite;
+      }
+      .s1-step-5 {
+        animation: step-activate-5 22s ease-in-out infinite;
+      }
+      .s1-glow-1 {
+        animation: step-glow-1 22s ease-in-out infinite;
+      }
+      .s1-glow-2 {
+        animation: step-glow-2 22s ease-in-out infinite;
+      }
+      .s1-glow-3 {
+        animation: step-glow-3 22s ease-in-out infinite;
+      }
+      .s1-glow-4 {
+        animation: step-glow-4 22s ease-in-out infinite;
+      }
+      .s1-glow-5 {
+        animation: step-glow-5 22s ease-in-out infinite;
+      }
+
+      /* Dark mode overrides for step glow */
+      [data-theme='dark'] .s1-glow-1 {
+        animation-name: step-glow-1-dark;
+      }
+      [data-theme='dark'] .s1-glow-2 {
+        animation-name: step-glow-2-dark;
+      }
+      [data-theme='dark'] .s1-glow-3 {
+        animation-name: step-glow-3-dark;
+      }
+      [data-theme='dark'] .s1-glow-4 {
+        animation-name: step-glow-4-dark;
+      }
+      [data-theme='dark'] .s1-glow-5 {
+        animation-name: step-glow-5-dark;
+      }
+      @keyframes step-glow-1-dark {
+        0% {
+          stroke: #262626;
+        }
+        2% {
+          stroke: #f5f5f5;
+        }
+        7% {
+          stroke: #f5f5f5;
+        }
+        9% {
+          stroke: #262626;
+        }
+        100% {
+          stroke: #262626;
+        }
+      }
+      @keyframes step-glow-2-dark {
+        0%,
+        7% {
+          stroke: #262626;
+        }
+        8% {
+          stroke: #f5f5f5;
+        }
+        27% {
+          stroke: #f5f5f5;
+        }
+        30% {
+          stroke: #262626;
+        }
+        100% {
+          stroke: #262626;
+        }
+      }
+      @keyframes step-glow-3-dark {
+        0%,
+        28% {
+          stroke: #262626;
+        }
+        29% {
+          stroke: #f5f5f5;
+        }
+        36% {
+          stroke: #f5f5f5;
+        }
+        39% {
+          stroke: #262626;
+        }
+        100% {
+          stroke: #262626;
+        }
+      }
+      @keyframes step-glow-4-dark {
+        0%,
+        37% {
+          stroke: #262626;
+        }
+        38% {
+          stroke: #f5f5f5;
+        }
+        58% {
+          stroke: #f5f5f5;
+        }
+        61% {
+          stroke: #262626;
+        }
+        100% {
+          stroke: #262626;
+        }
+      }
+      @keyframes step-glow-5-dark {
+        0%,
+        59% {
+          stroke: #262626;
+        }
+        60% {
+          stroke: #f5f5f5;
+        }
+        100% {
+          stroke: #f5f5f5;
+        }
+      }
+
+      .d-flow {
+        stroke-dasharray: 4 8;
+        animation: dash-flow 1.2s linear infinite;
+      }
+      .d-pulse {
+        animation: dot-pulse 2.4s ease-in-out infinite;
+      }
+      .d-pulse-1 {
+        animation-delay: 0s;
+      }
+      .d-pulse-2 {
+        animation-delay: 0.6s;
+      }
+      .d-pulse-3 {
+        animation-delay: 1.2s;
+      }
+      .d-pulse-4 {
+        animation-delay: 1.8s;
+      }
+      .d-pulse-5 {
+        animation-delay: 2.4s;
+      }
+      .d-pkt {
+        offset-rotate: 0deg;
+        animation: pkt-move 2.4s ease-in-out infinite;
+      }
+      .d-pkt-slow {
+        offset-rotate: 0deg;
+        animation: pkt-move-slow 4s ease-in-out infinite;
+      }
+      .d-pkt-1 {
+        animation-delay: 0s;
+      }
+      .d-pkt-2 {
+        animation-delay: 0.6s;
+      }
+      .d-pkt-3 {
+        animation-delay: 1.2s;
+      }
+      .d-pkt-4 {
+        animation-delay: 1.8s;
+      }
+      .d-pkt-5 {
+        animation-delay: 2.4s;
+      }
+      .d-pkt-6 {
+        animation-delay: 0.3s;
+      }
+      .d-pkt-7 {
+        animation-delay: 0.9s;
+      }
+      .d-pkt-8 {
+        animation-delay: 1.5s;
+      }
+      .d-glow {
+        animation: glow-border 3s ease-in-out infinite;
+      }
+      .d-glow-1 {
+        animation-delay: 0s;
+      }
+      .d-glow-2 {
+        animation-delay: 0.5s;
+      }
+      .d-glow-3 {
+        animation-delay: 1s;
+      }
+      .d-glow-4 {
+        animation-delay: 1.5s;
+      }
+      .d-glow-5 {
+        animation-delay: 2s;
+      }
+      .d-glow-6 {
+        animation-delay: 2.5s;
+      }
+
+      /* Dark mode SVG overrides */
+      [data-theme='dark'] .info-svg svg rect[fill='#fafafa'] {
+        fill: #141414;
+      }
+      [data-theme='dark'] .info-svg svg rect[fill='#ffffff'] {
+        fill: #1a1a1a;
+      }
+      [data-theme='dark'] .info-svg svg rect[fill='#f5f5f5'] {
+        fill: #1a1a1a;
+      }
+      [data-theme='dark'] .info-svg svg rect[fill='#0a0a0a'] {
+        fill: #f5f5f5;
+      }
+      [data-theme='dark'] .info-svg svg rect[stroke='#e5e5e5'] {
+        stroke: #262626;
+      }
+      [data-theme='dark'] .info-svg svg rect[stroke='#d4d4d4'] {
+        stroke: #404040;
+      }
+      [data-theme='dark'] .info-svg svg rect[stroke='#0a0a0a'] {
+        stroke: #f5f5f5;
+      }
+      [data-theme='dark'] .info-svg svg line[stroke='#e5e5e5'] {
+        stroke: #262626;
+      }
+      [data-theme='dark'] .info-svg svg line[stroke='#d4d4d4'] {
+        stroke: #404040;
+      }
+      [data-theme='dark'] .info-svg svg line[stroke='#f5f5f5'] {
+        stroke: #1a1a1a;
+      }
+      [data-theme='dark'] .info-svg svg path[stroke='#d4d4d4'] {
+        stroke: #404040;
+      }
+      [data-theme='dark'] .info-svg svg circle[fill='#0a0a0a'] {
+        fill: #f5f5f5;
+      }
+      [data-theme='dark'] .info-svg svg text[fill='#0a0a0a'] {
+        fill: #f5f5f5;
+      }
+      [data-theme='dark'] .info-svg svg text[fill='#737373'] {
+        fill: #a3a3a3;
+      }
+      [data-theme='dark'] .info-svg svg text[fill='#a3a3a3'] {
+        fill: #737373;
+      }
+      [data-theme='dark'] .info-svg svg text[fill='#ffffff'] {
+        fill: #0a0a0a;
+      }
+      [data-theme='dark'] .info-svg svg .d-glow {
+        animation-name: glow-border-dark;
+      }
+      @keyframes glow-border-dark {
+        0%,
+        100% {
+          stroke: #262626;
+        }
+        50% {
+          stroke: #f5f5f5;
+        }
+      }
+
+      /* ═══ N² COUNTER ═══ */
+      .n2-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1px;
+        background: var(--grey-200);
+        border: 1px solid var(--grey-200);
+        border-radius: 12px;
+        overflow: hidden;
+        max-width: 480px;
+      }
+      .n2-cell {
+        background: var(--white);
+        padding: 24px;
+        text-align: center;
+      }
+      .n2-sys {
+        font-family: var(--font-mono);
+        font-size: 32px;
+        font-weight: 700;
+        letter-spacing: -0.03em;
+        line-height: 1;
+        margin-bottom: 4px;
+      }
+      .n2-conn {
+        font-family: var(--font-mono);
+        font-size: 14px;
+        color: var(--grey-700);
+        margin-bottom: 2px;
+      }
+      .n2-label {
+        font-size: 11px;
+        color: var(--grey-500);
+      }
+      /* Staggered entrance */
+      .n2-animated .n2-cell {
+        opacity: 0;
+        transform: translateY(10px);
+        transition:
+          opacity 0.4s ease-out,
+          transform 0.4s ease-out;
+      }
+      .n2-animated.animate-active .n2-cell {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      .n2-animated.animate-active .n2-cell:nth-child(1) {
+        transition-delay: 0.1s;
+      }
+      .n2-animated.animate-active .n2-cell:nth-child(2) {
+        transition-delay: 0.3s;
+      }
+      .n2-animated.animate-active .n2-cell:nth-child(3) {
+        transition-delay: 0.5s;
+      }
+
+      /* ═══ TOPIC TREE ═══ */
+      .topic-tree {
+        border: 1px solid var(--grey-200);
+        border-radius: 12px;
+        padding: 32px;
+        font-family: var(--font-mono);
+        font-size: 13px;
+        line-height: 2.2;
+        background: var(--white);
+      }
+      .topic-tree .level {
+        color: var(--grey-700);
+      }
+      .topic-tree .value {
+        color: var(--black);
+        font-weight: 500;
+      }
+      .topic-tree .sep {
+        color: var(--grey-300);
+      }
+      .topic-tree-animated .tt-segment {
+        opacity: 0;
+        transform: translateX(-4px);
+        transition:
+          opacity 0.35s ease-out,
+          transform 0.35s ease-out;
+      }
+      .topic-tree-animated.animate-active .tt-segment {
+        opacity: 1;
+        transform: translateX(0);
+      }
+      .topic-tree-animated.animate-active .tt-segment:nth-child(1) {
+        transition-delay: 0.05s;
+      }
+      .topic-tree-animated.animate-active .tt-segment:nth-child(2) {
+        transition-delay: 0.15s;
+      }
+      .topic-tree-animated.animate-active .tt-segment:nth-child(3) {
+        transition-delay: 0.25s;
+      }
+      .topic-tree-animated.animate-active .tt-segment:nth-child(4) {
+        transition-delay: 0.35s;
+      }
+      .topic-tree-animated.animate-active .tt-segment:nth-child(5) {
+        transition-delay: 0.45s;
+      }
+      .topic-tree-animated.animate-active .tt-segment:nth-child(6) {
+        transition-delay: 0.55s;
+      }
+      .topic-tree-animated.animate-active .tt-segment:nth-child(7) {
+        transition-delay: 0.65s;
+      }
+      .topic-tree-animated.animate-active .tt-segment:nth-child(8) {
+        transition-delay: 0.75s;
+      }
+      .topic-tree-animated.animate-active .tt-segment:nth-child(9) {
+        transition-delay: 0.85s;
+      }
+      .topic-tree-animated.animate-active .tt-segment:nth-child(10) {
+        transition-delay: 0.95s;
+      }
+      .topic-tree-animated.animate-active .tt-segment:nth-child(11) {
+        transition-delay: 1.05s;
+      }
+      .topic-tree-animated .tt-desc {
+        opacity: 0;
+        transform: translateY(4px);
+        transition:
+          opacity 0.35s ease-out,
+          transform 0.35s ease-out;
+      }
+      .topic-tree-animated.animate-active .tt-desc {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      .topic-tree-animated.animate-active .tt-desc:nth-child(2) {
+        transition-delay: 0.7s;
+      }
+      .topic-tree-animated.animate-active .tt-desc:nth-child(3) {
+        transition-delay: 0.82s;
+      }
+      .topic-tree-animated.animate-active .tt-desc:nth-child(4) {
+        transition-delay: 0.94s;
+      }
+      .topic-tree-animated.animate-active .tt-desc:nth-child(5) {
+        transition-delay: 1.06s;
+      }
+      .topic-tree-animated.animate-active .tt-desc:nth-child(6) {
+        transition-delay: 1.18s;
+      }
+      .topic-tree-animated.animate-active .tt-desc:nth-child(7) {
+        transition-delay: 1.3s;
+      }
+
+      /* ═══ ROLE SCENARIOS ═══ */
+      .scenario {
+        display: grid;
+        grid-template-columns: 200px 1fr;
+        gap: 32px;
+        align-items: start;
+        padding: 40px 0;
+        border-bottom: 1px solid var(--grey-100);
+      }
+      .scenario:last-child {
+        border-bottom: none;
+      }
+      .scenario-role {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        font-weight: 600;
+        color: var(--grey-500);
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        padding-top: 4px;
+      }
+      .scenario-content h3 {
+        font-size: 18px;
+        font-weight: 700;
+        letter-spacing: -0.01em;
+        margin-bottom: 8px;
+        line-height: 1.3;
+      }
+      .scenario-content p {
+        font-size: 14px;
+        color: var(--grey-700);
+        line-height: 1.65;
+        margin-bottom: 12px;
+      }
+      .scenario-api {
+        font-family: var(--font-mono);
+        font-size: 12px;
+        color: var(--grey-500);
+        background: var(--grey-50);
+        border: 1px solid var(--grey-200);
+        border-radius: 6px;
+        padding: 8px 14px;
+        display: inline-block;
+      }
+
+      /* ═══ FOOTER ═══ */
+      footer {
+        padding: 48px 0;
+        border-top: 1px solid var(--grey-200);
+      }
+      footer .container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 13px;
+        color: var(--grey-700);
+      }
+      footer a {
+        color: var(--grey-700);
+        text-decoration: none;
+        transition: color 0.2s;
+      }
+      footer a:hover {
+        color: var(--black);
+      }
+      footer .footer-links {
+        display: flex;
+        gap: 24px;
+      }
+
+      /* ═══ RESPONSIVE — TABLET ═══ */
+      @media (max-width: 960px) {
+        nav {
+          padding: 0 24px;
+        }
+        .container {
+          padding: 0 24px;
+        }
+        section {
+          padding: 80px 0;
+        }
+        .scenario {
+          grid-template-columns: 1fr;
+          gap: 8px;
+        }
+      }
+      /* ═══ RESPONSIVE — MOBILE ═══ */
+      @media (max-width: 600px) {
+        nav {
+          padding: 0 16px;
+        }
+        nav .links {
+          gap: 20px;
+        }
+        nav .links a {
+          font-size: 13px;
+        }
+        .container {
+          padding: 0 16px;
+        }
+        section {
+          padding: 56px 0;
+        }
+        section h2 {
+          font-size: 26px;
+        }
+        section .lead {
+          font-size: 14px;
+          margin-bottom: 32px;
+        }
+        .hero {
+          min-height: auto;
+          padding: 100px 0 56px;
+        }
+        .hero h1 {
+          font-size: 30px;
+        }
+        .hero .subtitle {
+          font-size: 15px;
+        }
+        .hero .hero-question {
+          font-size: 12px;
+          padding: 12px 16px;
+        }
+        .cta-group {
+          flex-direction: column;
+          align-items: stretch;
+        }
+        .btn-primary,
+        .btn-secondary {
+          justify-content: center;
+          padding: 14px 24px;
+          font-size: 15px;
+        }
+        .n2-grid {
+          grid-template-columns: repeat(3, 1fr);
+        }
+        .n2-sys {
+          font-size: 24px;
+        }
+        .n2-conn {
+          font-size: 12px;
+        }
+        .topic-tree {
+          padding: 16px;
+          font-size: 10px;
+          line-height: 1.9;
+          overflow-x: auto;
+          white-space: nowrap;
+        }
+        .scenario {
+          padding: 24px 0;
+        }
+        .scenario-content h3 {
+          font-size: 16px;
+        }
+        .scenario-content p {
+          font-size: 13px;
+        }
+        .scenario-api {
+          font-size: 10px;
+        }
+        footer {
+          padding: 32px 0;
+        }
+        footer .container {
+          flex-direction: column;
+          gap: 12px;
+          text-align: center;
+        }
+        footer .footer-links {
+          justify-content: center;
+        }
+      }
+      /* Reduced motion */
+      @media (prefers-reduced-motion: reduce) {
+        .fade-in,
+        .n2-animated .n2-cell,
+        .topic-tree-animated .tt-segment,
+        .topic-tree-animated .tt-desc {
+          opacity: 1 !important;
+          transform: none !important;
+          transition: none !important;
+        }
+        .d-flow,
+        .d-pulse,
+        .d-pkt,
+        .d-pkt-slow,
+        .d-glow,
+        .s1-step-1,
+        .s1-step-2,
+        .s1-step-3,
+        .s1-step-4,
+        .s1-step-5,
+        .s1-glow-1,
+        .s1-glow-2,
+        .s1-glow-3,
+        .s1-glow-4,
+        .s1-glow-5,
+        .s1-sub-1a,
+        .s1-sub-1b,
+        .s1-sub-2a,
+        .s1-sub-2b,
+        .s1-sub-3a,
+        .s1-sub-3b,
+        .s1-sub-4a,
+        .s1-sub-4b,
+        .s1-sub-5a,
+        .s1-sub-5b {
+          animation: none !important;
+        }
+        .s1-step-1,
+        .s1-step-2,
+        .s1-step-3,
+        .s1-step-4,
+        .s1-step-5,
+        .s1-sub-1a,
+        .s1-sub-1b,
+        .s1-sub-2a,
+        .s1-sub-2b,
+        .s1-sub-3a,
+        .s1-sub-3b,
+        .s1-sub-4a,
+        .s1-sub-4b,
+        .s1-sub-5a,
+        .s1-sub-5b {
+          opacity: 1 !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <nav>
+      <a href="/" class="logo">UNS Framework</a>
+      <div class="links">
+        <a href="/framework/">Standard v1.0</a>
+        <a href="/fn-uns/">fn-uns</a>
+        <a href="https://github.com/unsframework" target="_blank">GitHub</a>
+        <button
+          class="theme-toggle"
+          id="themeToggle"
+          aria-label="Toggle dark mode"
+        >
+          <div class="toggle-thumb">
+            <span class="toggle-icon-sun">☀</span
+            ><span class="toggle-icon-moon">☾</span>
+          </div>
+        </button>
+      </div>
+    </nav>
+
+    <!-- ═══════════════════════════════════════════
+     1. HERO — The Question
+     ═══════════════════════════════════════════ -->
+    <div class="hero">
+      <div class="container">
+        <h1>
+          One simple question.<br /><span class="hero-accent"
+            >Five systems. Four hours. Still&nbsp;not&nbsp;sure.</span
+          >
+        </h1>
+        <p class="subtitle">
+          Every manufacturing operation faces the same problem. Someone asks a
+          straightforward question about the shop floor — and answering it
+          requires pulling data from multiple disconnected systems, exporting to
+          spreadsheets, and hoping the timestamps align. By the time you have an
+          answer, it's already stale.
+        </p>
+        <div class="hero-question">
+          "What was the utilisation of CNC-01 last shift?"
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- ═══════════════════════════════════════════
+     2. HOW YOU ANSWER IT TODAY — Animated SVG #1
+     ═══════════════════════════════════════════ -->
+    <section class="fade-in">
+      <div class="container">
+        <div class="section-label">Today's Reality</div>
+        <h2>Five systems. Five handoffs. No&nbsp;confidence.</h2>
+        <p class="lead">
+          To answer one question about machine utilisation, you traverse five
+          systems, perform three manual exports, and spend hours in a
+          spreadsheet. Here's the actual journey. Watch it to the end, it'll
+          annoy you.
+        </p>
+
+        <div class="info-svg">
+          <svg
+            viewBox="0 0 960 540"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <!-- Background -->
+            <rect
+              x="0"
+              y="0"
+              width="960"
+              height="540"
+              rx="16"
+              fill="#fafafa"
+              stroke="#e5e5e5"
+              stroke-width="1"
+            />
+
+            <!-- Column backgrounds — 5 steps -->
+            <rect
+              x="16"
+              y="16"
+              width="176"
+              height="308"
+              rx="8"
+              fill="#f5f5f5"
+            />
+            <rect
+              x="204"
+              y="16"
+              width="176"
+              height="308"
+              rx="8"
+              fill="#ffffff"
+              stroke="#e5e5e5"
+              stroke-width="1"
+            />
+            <rect
+              x="392"
+              y="16"
+              width="176"
+              height="308"
+              rx="8"
+              fill="#f5f5f5"
+            />
+            <rect
+              x="580"
+              y="16"
+              width="176"
+              height="308"
+              rx="8"
+              fill="#ffffff"
+              stroke="#e5e5e5"
+              stroke-width="1"
+            />
+            <rect
+              x="768"
+              y="16"
+              width="176"
+              height="308"
+              rx="8"
+              fill="#f5f5f5"
+            />
+
+            <!-- Step numbers -->
+            <text
+              x="104"
+              y="44"
+              font-family="'JetBrains Mono',monospace"
+              font-size="9"
+              font-weight="600"
+              fill="#a3a3a3"
+              letter-spacing="0.08em"
+              text-anchor="middle"
+            >
+              STEP 1
+            </text>
+            <text
+              x="292"
+              y="44"
+              font-family="'JetBrains Mono',monospace"
+              font-size="9"
+              font-weight="600"
+              fill="#a3a3a3"
+              letter-spacing="0.08em"
+              text-anchor="middle"
+            >
+              STEP 2
+            </text>
+            <text
+              x="480"
+              y="44"
+              font-family="'JetBrains Mono',monospace"
+              font-size="9"
+              font-weight="600"
+              fill="#a3a3a3"
+              letter-spacing="0.08em"
+              text-anchor="middle"
+            >
+              STEP 3
+            </text>
+            <text
+              x="668"
+              y="44"
+              font-family="'JetBrains Mono',monospace"
+              font-size="9"
+              font-weight="600"
+              fill="#a3a3a3"
+              letter-spacing="0.08em"
+              text-anchor="middle"
+            >
+              STEP 4
+            </text>
+            <text
+              x="856"
+              y="44"
+              font-family="'JetBrains Mono',monospace"
+              font-size="9"
+              font-weight="600"
+              fill="#a3a3a3"
+              letter-spacing="0.08em"
+              text-anchor="middle"
+            >
+              STEP 5
+            </text>
+
+            <!-- ═══ STEP 1: SCADA — sequential activation ═══ -->
+            <g class="s1-step-1">
+              <rect
+                x="28"
+                y="64"
+                width="152"
+                height="72"
+                rx="8"
+                fill="#ffffff"
+                stroke="#e5e5e5"
+                stroke-width="1.5"
+                class="s1-glow-1"
+              />
+              <text
+                x="58"
+                y="82"
+                font-family="'JetBrains Mono',monospace"
+                font-size="11"
+                font-weight="600"
+                fill="#0a0a0a"
+              >
+                SCADA
+              </text>
+              <text
+                x="58"
+                y="98"
+                font-family="'JetBrains Mono',monospace"
+                font-size="8"
+                fill="#737373"
+              >
+                Wonderware
+              </text>
+              <text
+                x="58"
+                y="112"
+                font-family="'JetBrains Mono',monospace"
+                font-size="8"
+                fill="#737373"
+              >
+                Live view only
+              </text>
+              <!-- Time badge -->
+              <rect
+                x="130"
+                y="68"
+                width="44"
+                height="18"
+                rx="4"
+                fill="#f5f5f5"
+                stroke="#e5e5e5"
+                stroke-width="1"
+              />
+              <text
+                x="152"
+                y="80"
+                font-family="'JetBrains Mono',monospace"
+                font-size="7"
+                font-weight="500"
+                fill="#a3a3a3"
+                text-anchor="middle"
+              >
+                2 min
+              </text>
+            </g>
+
+            <g class="s1-sub-1a">
+              <rect
+                x="28"
+                y="148"
+                width="152"
+                height="48"
+                rx="6"
+                fill="#ffffff"
+                stroke="#d4d4d4"
+                stroke-width="1"
+              />
+              <text
+                x="104"
+                y="168"
+                font-family="'JetBrains Mono',monospace"
+                font-size="9"
+                fill="#737373"
+                text-anchor="middle"
+              >
+                Can see cnc-01 is
+              </text>
+              <text
+                x="104"
+                y="184"
+                font-family="'JetBrains Mono',monospace"
+                font-size="9"
+                font-weight="600"
+                fill="#0a0a0a"
+                text-anchor="middle"
+              >
+                ACTIVE right now
+              </text>
+            </g>
+
+            <g class="s1-sub-1b">
+              <rect
+                x="28"
+                y="208"
+                width="152"
+                height="40"
+                rx="6"
+                fill="#0a0a0a"
+              />
+              <text
+                x="104"
+                y="224"
+                font-family="'JetBrains Mono',monospace"
+                font-size="9"
+                fill="#ffffff"
+                text-anchor="middle"
+              >
+                No history
+              </text>
+              <text
+                x="104"
+                y="238"
+                font-family="'JetBrains Mono',monospace"
+                font-size="8"
+                fill="#a3a3a3"
+                text-anchor="middle"
+              >
+                Dead end → next system
+              </text>
+            </g>
+
+            <!-- ═══ STEP 2: HISTORIAN ═══ -->
+            <g class="s1-step-2">
+              <rect
+                x="216"
+                y="64"
+                width="152"
+                height="72"
+                rx="8"
+                fill="#ffffff"
+                stroke="#e5e5e5"
+                stroke-width="1.5"
+                class="s1-glow-2"
+              />
+              <text
+                x="246"
+                y="82"
+                font-family="'JetBrains Mono',monospace"
+                font-size="11"
+                font-weight="600"
+                fill="#0a0a0a"
+              >
+                Historian
+              </text>
+              <text
+                x="246"
+                y="98"
+                font-family="'JetBrains Mono',monospace"
+                font-size="8"
+                fill="#737373"
+              >
+                OSIsoft PI
+              </text>
+              <text
+                x="246"
+                y="112"
+                font-family="'JetBrains Mono',monospace"
+                font-size="8"
+                fill="#737373"
+              >
+                Tag-based archive
+              </text>
+              <!-- Time badge -->
+              <rect
+                x="318"
+                y="68"
+                width="44"
+                height="18"
+                rx="4"
+                fill="#f5f5f5"
+                stroke="#e5e5e5"
+                stroke-width="1"
+              />
+              <text
+                x="340"
+                y="80"
+                font-family="'JetBrains Mono',monospace"
+                font-size="7"
+                font-weight="500"
+                fill="#a3a3a3"
+                text-anchor="middle"
+              >
+                45 min
+              </text>
+            </g>
+
+            <g class="s1-sub-2a">
+              <rect
+                x="216"
+                y="148"
+                width="152"
+                height="48"
+                rx="6"
+                fill="#ffffff"
+                stroke="#d4d4d4"
+                stroke-width="1"
+              />
+              <text
+                x="292"
+                y="168"
+                font-family="'JetBrains Mono',monospace"
+                font-size="9"
+                fill="#737373"
+                text-anchor="middle"
+              >
+                Find correct tag
+              </text>
+              <text
+                x="292"
+                y="184"
+                font-family="'JetBrains Mono',monospace"
+                font-size="9"
+                fill="#737373"
+                text-anchor="middle"
+              >
+                Export 8hr CSV
+              </text>
+            </g>
+
+            <g class="s1-sub-2b">
+              <rect
+                x="216"
+                y="208"
+                width="152"
+                height="40"
+                rx="6"
+                fill="#ffffff"
+                stroke="#d4d4d4"
+                stroke-width="1"
+              />
+              <text
+                x="292"
+                y="224"
+                font-family="'JetBrains Mono',monospace"
+                font-size="9"
+                fill="#737373"
+                text-anchor="middle"
+              >
+                Raw state changes
+              </text>
+              <text
+                x="292"
+                y="238"
+                font-family="'JetBrains Mono',monospace"
+                font-size="8"
+                fill="#a3a3a3"
+                text-anchor="middle"
+              >
+                No shift context
+              </text>
+            </g>
+
+            <!-- ═══ STEP 3: ERP ═══ -->
+            <g class="s1-step-3">
+              <rect
+                x="404"
+                y="64"
+                width="152"
+                height="72"
+                rx="8"
+                fill="#ffffff"
+                stroke="#e5e5e5"
+                stroke-width="1.5"
+                class="s1-glow-3"
+              />
+              <text
+                x="434"
+                y="82"
+                font-family="'JetBrains Mono',monospace"
+                font-size="11"
+                font-weight="600"
+                fill="#0a0a0a"
+              >
+                ERP
+              </text>
+              <text
+                x="434"
+                y="98"
+                font-family="'JetBrains Mono',monospace"
+                font-size="8"
+                fill="#737373"
+              >
+                SAP / Oracle
+              </text>
+              <text
+                x="434"
+                y="112"
+                font-family="'JetBrains Mono',monospace"
+                font-size="8"
+                fill="#737373"
+              >
+                Shift schedules
+              </text>
+              <!-- Time badge -->
+              <rect
+                x="506"
+                y="68"
+                width="44"
+                height="18"
+                rx="4"
+                fill="#f5f5f5"
+                stroke="#e5e5e5"
+                stroke-width="1"
+              />
+              <text
+                x="528"
+                y="80"
+                font-family="'JetBrains Mono',monospace"
+                font-size="7"
+                font-weight="500"
+                fill="#a3a3a3"
+                text-anchor="middle"
+              >
+                15 min
+              </text>
+            </g>
+
+            <g class="s1-sub-3a">
+              <rect
+                x="404"
+                y="148"
+                width="152"
+                height="48"
+                rx="6"
+                fill="#ffffff"
+                stroke="#d4d4d4"
+                stroke-width="1"
+              />
+              <text
+                x="480"
+                y="168"
+                font-family="'JetBrains Mono',monospace"
+                font-size="9"
+                fill="#737373"
+                text-anchor="middle"
+              >
+                Look up shift times
+              </text>
+              <text
+                x="480"
+                y="184"
+                font-family="'JetBrains Mono',monospace"
+                font-size="9"
+                fill="#737373"
+                text-anchor="middle"
+              >
+                06:00 – 14:00
+              </text>
+            </g>
+
+            <g class="s1-sub-3b">
+              <rect
+                x="404"
+                y="208"
+                width="152"
+                height="40"
+                rx="6"
+                fill="#ffffff"
+                stroke="#d4d4d4"
+                stroke-width="1"
+              />
+              <text
+                x="480"
+                y="224"
+                font-family="'JetBrains Mono',monospace"
+                font-size="9"
+                fill="#737373"
+                text-anchor="middle"
+              >
+                Copy start/end times
+              </text>
+              <text
+                x="480"
+                y="238"
+                font-family="'JetBrains Mono',monospace"
+                font-size="8"
+                fill="#a3a3a3"
+                text-anchor="middle"
+              >
+                Manual transcription
+              </text>
+            </g>
+
+            <!-- ═══ STEP 4: SPREADSHEET ═══ -->
+            <g class="s1-step-4">
+              <rect
+                x="592"
+                y="64"
+                width="152"
+                height="72"
+                rx="8"
+                fill="#ffffff"
+                stroke="#e5e5e5"
+                stroke-width="1.5"
+                class="s1-glow-4"
+              />
+              <text
+                x="622"
+                y="82"
+                font-family="'JetBrains Mono',monospace"
+                font-size="11"
+                font-weight="600"
+                fill="#0a0a0a"
+              >
+                Spreadsheet
+              </text>
+              <text
+                x="622"
+                y="98"
+                font-family="'JetBrains Mono',monospace"
+                font-size="8"
+                fill="#737373"
+              >
+                Excel / Sheets
+              </text>
+              <text
+                x="622"
+                y="112"
+                font-family="'JetBrains Mono',monospace"
+                font-size="8"
+                fill="#737373"
+              >
+                Manual calculation
+              </text>
+              <!-- Time badge -->
+              <rect
+                x="694"
+                y="68"
+                width="44"
+                height="18"
+                rx="4"
+                fill="#f5f5f5"
+                stroke="#e5e5e5"
+                stroke-width="1"
+              />
+              <text
+                x="716"
+                y="80"
+                font-family="'JetBrains Mono',monospace"
+                font-size="7"
+                font-weight="500"
+                fill="#a3a3a3"
+                text-anchor="middle"
+              >
+                2 hrs
+              </text>
+            </g>
+
+            <g class="s1-sub-4a">
+              <rect
+                x="592"
+                y="148"
+                width="152"
+                height="48"
+                rx="6"
+                fill="#ffffff"
+                stroke="#d4d4d4"
+                stroke-width="1"
+              />
+              <text
+                x="668"
+                y="168"
+                font-family="'JetBrains Mono',monospace"
+                font-size="9"
+                fill="#737373"
+                text-anchor="middle"
+              >
+                Paste CSV data
+              </text>
+              <text
+                x="668"
+                y="184"
+                font-family="'JetBrains Mono',monospace"
+                font-size="9"
+                fill="#737373"
+                text-anchor="middle"
+              >
+                Filter by shift window
+              </text>
+            </g>
+
+            <g class="s1-sub-4b">
+              <rect
+                x="592"
+                y="208"
+                width="152"
+                height="48"
+                rx="6"
+                fill="#ffffff"
+                stroke="#d4d4d4"
+                stroke-width="1"
+              />
+              <text
+                x="668"
+                y="224"
+                font-family="'JetBrains Mono',monospace"
+                font-size="9"
+                fill="#737373"
+                text-anchor="middle"
+              >
+                SUMIF(state="ACTIVE")
+              </text>
+              <text
+                x="668"
+                y="238"
+                font-family="'JetBrains Mono',monospace"
+                font-size="9"
+                fill="#737373"
+                text-anchor="middle"
+              >
+                ÷ total shift hours
+              </text>
+              <text
+                x="668"
+                y="250"
+                font-family="'JetBrains Mono',monospace"
+                font-size="7"
+                fill="#a3a3a3"
+                text-anchor="middle"
+              >
+                Hope formula is right
+              </text>
+            </g>
+
+            <!-- ═══ STEP 5: THE ANSWER ═══ -->
+            <g class="s1-step-5">
+              <rect
+                x="780"
+                y="64"
+                width="152"
+                height="72"
+                rx="8"
+                fill="#ffffff"
+                stroke="#e5e5e5"
+                stroke-width="1.5"
+                class="s1-glow-5"
+              />
+              <text
+                x="810"
+                y="82"
+                font-family="'JetBrains Mono',monospace"
+                font-size="11"
+                font-weight="600"
+                fill="#0a0a0a"
+              >
+                Answer
+              </text>
+              <text
+                x="810"
+                y="98"
+                font-family="'JetBrains Mono',monospace"
+                font-size="8"
+                fill="#737373"
+              >
+                Maybe correct
+              </text>
+              <text
+                x="810"
+                y="112"
+                font-family="'JetBrains Mono',monospace"
+                font-size="8"
+                fill="#737373"
+              >
+                Already stale
+              </text>
+              <!-- Time badge -->
+              <rect
+                x="882"
+                y="68"
+                width="44"
+                height="18"
+                rx="4"
+                fill="#0a0a0a"
+              />
+              <text
+                x="904"
+                y="80"
+                font-family="'JetBrains Mono',monospace"
+                font-size="7"
+                font-weight="600"
+                fill="#ffffff"
+                text-anchor="middle"
+              >
+                4+ hrs
+              </text>
+            </g>
+
+            <g class="s1-sub-5a">
+              <rect
+                x="780"
+                y="148"
+                width="152"
+                height="48"
+                rx="6"
+                fill="#ffffff"
+                stroke="#0a0a0a"
+                stroke-width="1.5"
+              />
+              <text
+                x="856"
+                y="168"
+                font-family="'JetBrains Mono',monospace"
+                font-size="18"
+                font-weight="700"
+                fill="#0a0a0a"
+                text-anchor="middle"
+              >
+                ~68%
+              </text>
+              <text
+                x="856"
+                y="186"
+                font-family="'JetBrains Mono',monospace"
+                font-size="8"
+                fill="#737373"
+                text-anchor="middle"
+              >
+                Utilisation (estimated)
+              </text>
+            </g>
+
+            <g class="s1-sub-5b">
+              <rect
+                x="780"
+                y="208"
+                width="152"
+                height="48"
+                rx="6"
+                fill="#0a0a0a"
+              />
+              <text
+                x="856"
+                y="224"
+                font-family="'JetBrains Mono',monospace"
+                font-size="9"
+                fill="#ffffff"
+                text-anchor="middle"
+              >
+                But was the tag right?
+              </text>
+              <text
+                x="856"
+                y="238"
+                font-family="'JetBrains Mono',monospace"
+                font-size="8"
+                fill="#a3a3a3"
+                text-anchor="middle"
+              >
+                Shift boundary exact?
+              </text>
+              <text
+                x="856"
+                y="250"
+                font-family="'JetBrains Mono',monospace"
+                font-size="8"
+                fill="#a3a3a3"
+                text-anchor="middle"
+              >
+                Formula correct?
+              </text>
+            </g>
+
+            <!-- ═══ BOTTOM SUMMARY BAR ═══ -->
+            <rect
+              x="16"
+              y="340"
+              width="928"
+              height="48"
+              rx="8"
+              fill="#0a0a0a"
+            />
+            <text
+              x="480"
+              y="360"
+              font-family="'JetBrains Mono',monospace"
+              font-size="10"
+              font-weight="600"
+              fill="#ffffff"
+              text-anchor="middle"
+            >
+              4 hours 12 minutes · 5 systems · 3 manual exports · 1 spreadsheet
+              · 0 confidence
+            </text>
+            <text
+              x="480"
+              y="376"
+              font-family="'JetBrains Mono',monospace"
+              font-size="8"
+              fill="#a3a3a3"
+              text-anchor="middle"
+            >
+              And tomorrow someone will ask the same question about a different
+              machine
+            </text>
+
+            <!-- ═══ CUMULATIVE TIMELINE ═══ -->
+            <!-- Timeline track -->
+            <line
+              x1="28"
+              y1="416"
+              x2="932"
+              y2="416"
+              stroke="#e5e5e5"
+              stroke-width="1"
+            />
+
+            <!-- Tick: 0 min -->
+            <line
+              x1="28"
+              y1="410"
+              x2="28"
+              y2="422"
+              stroke="#d4d4d4"
+              stroke-width="1"
+            />
+            <text
+              x="28"
+              y="436"
+              font-family="'JetBrains Mono',monospace"
+              font-size="8"
+              fill="#a3a3a3"
+              text-anchor="start"
+            >
+              0 min
+            </text>
+
+            <!-- Bar: SCADA (28 → 64, width 36) -->
+            <rect x="28" y="412" width="36" height="8" rx="2" fill="#d4d4d4" />
+
+            <!-- Tick: 2 min -->
+            <line
+              x1="64"
+              y1="410"
+              x2="64"
+              y2="422"
+              stroke="#d4d4d4"
+              stroke-width="1"
+            />
+            <text
+              x="64"
+              y="436"
+              font-family="'JetBrains Mono',monospace"
+              font-size="8"
+              fill="#a3a3a3"
+              text-anchor="middle"
+            >
+              2 min
+            </text>
+
+            <!-- Bar: Historian (64 → 262, width 198) -->
+            <rect x="64" y="412" width="198" height="8" rx="2" fill="#a3a3a3" />
+
+            <!-- Tick: 47 min -->
+            <line
+              x1="262"
+              y1="410"
+              x2="262"
+              y2="422"
+              stroke="#d4d4d4"
+              stroke-width="1"
+            />
+            <text
+              x="262"
+              y="436"
+              font-family="'JetBrains Mono',monospace"
+              font-size="8"
+              fill="#a3a3a3"
+              text-anchor="middle"
+            >
+              47 min
+            </text>
+
+            <!-- Bar: ERP (262 → 328, width 66) -->
+            <rect x="262" y="412" width="66" height="8" rx="2" fill="#d4d4d4" />
+
+            <!-- Tick: 62 min -->
+            <line
+              x1="328"
+              y1="410"
+              x2="328"
+              y2="422"
+              stroke="#d4d4d4"
+              stroke-width="1"
+            />
+            <text
+              x="328"
+              y="436"
+              font-family="'JetBrains Mono',monospace"
+              font-size="8"
+              fill="#a3a3a3"
+              text-anchor="middle"
+            >
+              62 min
+            </text>
+
+            <!-- Bar: Spreadsheet (328 → 820, width 492) -->
+            <rect
+              x="328"
+              y="412"
+              width="492"
+              height="8"
+              rx="2"
+              fill="#737373"
+            />
+
+            <!-- Tick: 3 hrs -->
+            <line
+              x1="820"
+              y1="410"
+              x2="820"
+              y2="422"
+              stroke="#d4d4d4"
+              stroke-width="1"
+            />
+            <text
+              x="820"
+              y="436"
+              font-family="'JetBrains Mono',monospace"
+              font-size="8"
+              fill="#a3a3a3"
+              text-anchor="middle"
+            >
+              3 hrs
+            </text>
+
+            <!-- Bar: Review (820 → 932, width 112) -->
+            <rect
+              x="820"
+              y="412"
+              width="112"
+              height="8"
+              rx="2"
+              fill="#0a0a0a"
+            />
+
+            <!-- Tick: 4 hrs 12 min (end) -->
+            <line
+              x1="932"
+              y1="410"
+              x2="932"
+              y2="422"
+              stroke="#0a0a0a"
+              stroke-width="1.5"
+            />
+            <text
+              x="932"
+              y="436"
+              font-family="'JetBrains Mono',monospace"
+              font-size="8"
+              font-weight="600"
+              fill="#0a0a0a"
+              text-anchor="end"
+            >
+              4 hrs 12 min
+            </text>
+
+            <!-- Timeline segment labels — centered under each bar -->
+            <text
+              x="46"
+              y="454"
+              font-family="'JetBrains Mono',monospace"
+              font-size="7"
+              fill="#a3a3a3"
+              text-anchor="middle"
+            >
+              SCADA
+            </text>
+            <text
+              x="163"
+              y="454"
+              font-family="'JetBrains Mono',monospace"
+              font-size="7"
+              fill="#a3a3a3"
+              text-anchor="middle"
+            >
+              Historian export
+            </text>
+            <text
+              x="295"
+              y="454"
+              font-family="'JetBrains Mono',monospace"
+              font-size="7"
+              fill="#a3a3a3"
+              text-anchor="middle"
+            >
+              ERP
+            </text>
+            <text
+              x="574"
+              y="454"
+              font-family="'JetBrains Mono',monospace"
+              font-size="7"
+              fill="#a3a3a3"
+              text-anchor="middle"
+            >
+              Spreadsheet calculation
+            </text>
+            <text
+              x="876"
+              y="454"
+              font-family="'JetBrains Mono',monospace"
+              font-size="7"
+              fill="#a3a3a3"
+              text-anchor="middle"
+            >
+              Review
+            </text>
+
+            <!-- ═══ BOTTOM QUESTION LABEL ═══ -->
+            <rect
+              x="16"
+              y="476"
+              width="928"
+              height="48"
+              rx="6"
+              fill="#ffffff"
+              stroke="#e5e5e5"
+              stroke-width="1"
+            />
+            <text
+              x="480"
+              y="496"
+              font-family="'JetBrains Mono',monospace"
+              font-size="9"
+              fill="#737373"
+              text-anchor="middle"
+            >
+              "What was the utilisation of CNC-01 last shift?"
+            </text>
+            <text
+              x="480"
+              y="512"
+              font-family="'JetBrains Mono',monospace"
+              font-size="8"
+              fill="#a3a3a3"
+              text-anchor="middle"
+            >
+              Asked at 14:15 · Answered at 18:27 · Confidence: low · Repeatable:
+              no
+            </text>
+          </svg>
+        </div>
+      </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- ═══════════════════════════════════════════
+     3. WHY IT'S ALWAYS THIS HARD
+     ═══════════════════════════════════════════ -->
+    <section class="fade-in">
+      <div class="container">
+        <div class="section-label">The Root Cause</div>
+        <h2>Point-to-point architecture scales&nbsp;quadratically.</h2>
+        <p class="lead">
+          Every system stores its own data in its own format. Connecting any two
+          systems requires a custom integration. The number of possible
+          connections grows with the square of the number of systems — and every
+          one is a bridge that breaks when either end changes.
+        </p>
+
+        <div class="n2-grid n2-animated" data-animate>
+          <div class="n2-cell">
+            <div class="n2-sys">5</div>
+            <div class="n2-conn">10 connections</div>
+            <div class="n2-label">Small factory</div>
+          </div>
+          <div class="n2-cell">
+            <div class="n2-sys">10</div>
+            <div class="n2-conn">45 connections</div>
+            <div class="n2-label">Mid-size operation</div>
+          </div>
+          <div class="n2-cell">
+            <div class="n2-sys">20</div>
+            <div class="n2-conn">190 connections</div>
+            <div class="n2-label">Enterprise</div>
+          </div>
+        </div>
+
+        <p
+          style="
+            font-size: 14px;
+            color: var(--grey-700);
+            margin-top: 32px;
+            line-height: 1.7;
+            max-width: 600px;
+          "
+        >
+          Each connection is custom-built, manually maintained, and breaks when
+          either system updates. The cost isn't just the initial build — it's
+          the ongoing maintenance, the data inconsistencies, and the questions
+          that never get asked because everyone knows the answer would take too
+          long.
+        </p>
+      </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- ═══════════════════════════════════════════
+     4. THE INSIGHT
+     ═══════════════════════════════════════════ -->
+    <section class="fade-in">
+      <div class="container" style="max-width: 800px">
+        <div class="section-label">The Unified Namespace</div>
+        <h2>
+          What if every machine published its data to one shared layer — and any
+          system could&nbsp;read&nbsp;it?
+        </h2>
+        <p
+          style="
+            font-size: 17px;
+            color: var(--grey-700);
+            line-height: 1.7;
+            margin-bottom: 24px;
+            max-width: 640px;
+          "
+        >
+          That's the Unified Namespace. Instead of connecting every system to
+          every other system, every system connects to one MQTT broker. Machines
+          publish their state. Applications subscribe to what they need. The
+          broker handles delivery. Adding a new system means one new connection
+          — not N.
+        </p>
+        <p
+          style="
+            font-size: 17px;
+            color: var(--grey-700);
+            line-height: 1.7;
+            max-width: 640px;
+          "
+        >
+          The same question — "what was the utilisation of CNC-01 last shift?" —
+          becomes a single API call that returns in under a second. Not because
+          the question got simpler, but because the architecture stopped making
+          it hard.
+        </p>
+      </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- ═══════════════════════════════════════════
+     5. HOW THE UNS ANSWERS IT — Animated SVG #2
+     ═══════════════════════════════════════════ -->
+    <section class="fade-in">
+      <div class="container">
+        <div class="section-label">With a Unified Namespace</div>
+        <h2>Same question. One call. 0.3&nbsp;seconds.</h2>
+        <p class="lead">
+          The machine publishes its state every 3 seconds. Functions process the
+          data automatically. The answer is always ready — computed from
+          real-time data, not assembled from stale exports.
+        </p>
+
+        <div class="info-svg">
+          <svg
+            viewBox="0 0 960 420"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <!-- Background -->
+            <rect
+              x="0"
+              y="0"
+              width="960"
+              height="420"
+              rx="16"
+              fill="#fafafa"
+              stroke="#e5e5e5"
+              stroke-width="1"
+            />
+
+            <!-- ═══ TOP ROW: DATA PIPELINE ═══ -->
+            <!-- Pipeline label -->
+            <text
+              x="28"
+              y="32"
+              font-family="'JetBrains Mono',monospace"
+              font-size="8"
+              font-weight="600"
+              fill="#a3a3a3"
+              letter-spacing="0.08em"
+            >
+              DATA PIPELINE — CONTINUOUS
+            </text>
+
+            <!-- Stage backgrounds for pipeline row -->
+            <rect
+              x="16"
+              y="44"
+              width="168"
+              height="140"
+              rx="8"
+              fill="#f5f5f5"
+            />
+            <rect
+              x="196"
+              y="44"
+              width="108"
+              height="140"
+              rx="8"
+              fill="#ffffff"
+              stroke="#e5e5e5"
+              stroke-width="1"
+            />
+            <rect
+              x="316"
+              y="44"
+              width="120"
+              height="140"
+              rx="8"
+              fill="#f5f5f5"
+            />
+            <rect
+              x="448"
+              y="44"
+              width="140"
+              height="140"
+              rx="8"
+              fill="#ffffff"
+              stroke="#e5e5e5"
+              stroke-width="1"
+            />
+            <rect
+              x="600"
+              y="44"
+              width="108"
+              height="140"
+              rx="8"
+              fill="#f5f5f5"
+            />
+
+            <!-- Stage labels -->
+            <text
+              x="100"
+              y="62"
+              font-family="'JetBrains Mono',monospace"
+              font-size="7"
+              font-weight="600"
+              fill="#a3a3a3"
+              letter-spacing="0.08em"
+              text-anchor="middle"
+            >
+              MACHINE
+            </text>
+            <text
+              x="250"
+              y="62"
+              font-family="'JetBrains Mono',monospace"
+              font-size="7"
+              font-weight="600"
+              fill="#a3a3a3"
+              letter-spacing="0.08em"
+              text-anchor="middle"
+            >
+              BROKER
+            </text>
+            <text
+              x="376"
+              y="62"
+              font-family="'JetBrains Mono',monospace"
+              font-size="7"
+              font-weight="600"
+              fill="#a3a3a3"
+              letter-spacing="0.08em"
+              text-anchor="middle"
+            >
+              CACHE
+            </text>
+            <text
+              x="518"
+              y="62"
+              font-family="'JetBrains Mono',monospace"
+              font-size="7"
+              font-weight="600"
+              fill="#a3a3a3"
+              letter-spacing="0.08em"
+              text-anchor="middle"
+            >
+              FUNCTIONS
+            </text>
+            <text
+              x="654"
+              y="62"
+              font-family="'JetBrains Mono',monospace"
+              font-size="7"
+              font-weight="600"
+              fill="#a3a3a3"
+              letter-spacing="0.08em"
+              text-anchor="middle"
+            >
+              DATABASE
+            </text>
+
+            <!-- ═══ MACHINE ═══ -->
+            <rect
+              x="28"
+              y="74"
+              width="144"
+              height="56"
+              rx="8"
+              fill="#ffffff"
+              stroke="#e5e5e5"
+              stroke-width="1"
+              class="d-glow d-glow-1"
+            />
+            <circle
+              cx="44"
+              cy="96"
+              r="5"
+              fill="#0a0a0a"
+              class="d-pulse d-pulse-1"
+            />
+            <text
+              x="56"
+              y="92"
+              font-family="'JetBrains Mono',monospace"
+              font-size="10"
+              font-weight="600"
+              fill="#0a0a0a"
+            >
+              cnc-01
+            </text>
+            <text
+              x="56"
+              y="106"
+              font-family="'JetBrains Mono',monospace"
+              font-size="7"
+              fill="#737373"
+            >
+              ACTIVE · OP-7842 · T12
+            </text>
+            <text
+              x="56"
+              y="120"
+              font-family="'JetBrains Mono',monospace"
+              font-size="7"
+              fill="#a3a3a3"
+            >
+              Publishing every 3s
+            </text>
+
+            <!-- Topic path -->
+            <rect
+              x="28"
+              y="140"
+              width="144"
+              height="24"
+              rx="4"
+              fill="#ffffff"
+              stroke="#e5e5e5"
+              stroke-width="1"
+            />
+            <text
+              x="100"
+              y="156"
+              font-family="'JetBrains Mono',monospace"
+              font-size="6"
+              fill="#737373"
+              text-anchor="middle"
+            >
+              v1.0/acme/site1/area1/cnc-01/status
+            </text>
+
+            <!-- ═══ BROKER ═══ -->
+            <rect x="208" y="74" width="84" height="56" rx="8" fill="#0a0a0a" />
+            <text
+              x="250"
+              y="96"
+              font-family="'JetBrains Mono',monospace"
+              font-size="10"
+              font-weight="600"
+              fill="#ffffff"
+              text-anchor="middle"
+            >
+              MQTT
+            </text>
+            <text
+              x="250"
+              y="110"
+              font-family="'JetBrains Mono',monospace"
+              font-size="7"
+              fill="#a3a3a3"
+              text-anchor="middle"
+            >
+              Broker · Pub/Sub
+            </text>
+
+            <!-- Flow: Machine → Broker -->
+            <line
+              x1="172"
+              y1="102"
+              x2="208"
+              y2="102"
+              stroke="#d4d4d4"
+              stroke-width="1"
+              class="d-flow"
+            />
+            <!-- Packet: Machine → Broker -->
+            <circle
+              r="3"
+              fill="#0a0a0a"
+              style="offset-path: path('M 172 102 L 208 102')"
+              class="d-pkt d-pkt-1"
+            />
+            <circle
+              r="3"
+              fill="#0a0a0a"
+              style="offset-path: path('M 172 102 L 208 102')"
+              class="d-pkt d-pkt-5"
+            />
+
+            <!-- ═══ CACHE ═══ -->
+            <rect
+              x="328"
+              y="74"
+              width="96"
+              height="56"
+              rx="8"
+              fill="#ffffff"
+              stroke="#0a0a0a"
+              stroke-width="1.5"
+            />
+            <text
+              x="376"
+              y="96"
+              font-family="'JetBrains Mono',monospace"
+              font-size="10"
+              font-weight="600"
+              fill="#0a0a0a"
+              text-anchor="middle"
+            >
+              Valkey
+            </text>
+            <text
+              x="376"
+              y="110"
+              font-family="'JetBrains Mono',monospace"
+              font-size="7"
+              fill="#737373"
+              text-anchor="middle"
+            >
+              uns:data:* · uns:prev:*
+            </text>
+
+            <!-- Flow: Broker → Cache -->
+            <line
+              x1="292"
+              y1="102"
+              x2="328"
+              y2="102"
+              stroke="#d4d4d4"
+              stroke-width="1"
+              class="d-flow"
+            />
+            <!-- Packet: Broker → Cache -->
+            <circle
+              r="3"
+              fill="#0a0a0a"
+              style="offset-path: path('M 292 102 L 328 102')"
+              class="d-pkt d-pkt-2"
+            />
+            <circle
+              r="3"
+              fill="#0a0a0a"
+              style="offset-path: path('M 292 102 L 328 102')"
+              class="d-pkt d-pkt-6"
+            />
+
+            <!-- ═══ FUNCTIONS ═══ -->
+            <rect
+              x="460"
+              y="72"
+              width="116"
+              height="30"
+              rx="6"
+              fill="#ffffff"
+              stroke="#e5e5e5"
+              stroke-width="1"
+              class="d-glow d-glow-2"
+            />
+            <text
+              x="476"
+              y="91"
+              font-family="'JetBrains Mono',monospace"
+              font-size="8"
+              font-weight="500"
+              fill="#0a0a0a"
+            >
+              uns-state
+            </text>
+
+            <rect
+              x="460"
+              y="108"
+              width="116"
+              height="30"
+              rx="6"
+              fill="#ffffff"
+              stroke="#e5e5e5"
+              stroke-width="1"
+              class="d-glow d-glow-3"
+            />
+            <text
+              x="476"
+              y="127"
+              font-family="'JetBrains Mono',monospace"
+              font-size="8"
+              font-weight="500"
+              fill="#0a0a0a"
+            >
+              uns-stoppage
+            </text>
+
+            <rect
+              x="460"
+              y="144"
+              width="116"
+              height="30"
+              rx="6"
+              fill="#ffffff"
+              stroke="#e5e5e5"
+              stroke-width="1"
+              class="d-glow d-glow-4"
+            />
+            <text
+              x="476"
+              y="163"
+              font-family="'JetBrains Mono',monospace"
+              font-size="8"
+              font-weight="500"
+              fill="#0a0a0a"
+            >
+              uns-productivity
+            </text>
+
+            <!-- Flow: Cache → Functions (vertical trunk at x=436, branching right) -->
+            <line
+              x1="424"
+              y1="102"
+              x2="436"
+              y2="102"
+              stroke="#d4d4d4"
+              stroke-width="1"
+            />
+            <line
+              x1="436"
+              y1="87"
+              x2="436"
+              y2="159"
+              stroke="#d4d4d4"
+              stroke-width="1"
+            />
+            <line
+              x1="436"
+              y1="87"
+              x2="460"
+              y2="87"
+              stroke="#d4d4d4"
+              stroke-width="1"
+              class="d-flow"
+            />
+            <line
+              x1="436"
+              y1="123"
+              x2="460"
+              y2="123"
+              stroke="#d4d4d4"
+              stroke-width="1"
+              class="d-flow"
+            />
+            <line
+              x1="436"
+              y1="159"
+              x2="460"
+              y2="159"
+              stroke="#d4d4d4"
+              stroke-width="1"
+              class="d-flow"
+            />
+
+            <!-- Packets: Cache → Functions (per branch) -->
+            <circle
+              r="2.5"
+              fill="#0a0a0a"
+              style="offset-path: path('M 424 102 L 436 102 L 436 87 L 460 87')"
+              class="d-pkt d-pkt-3"
+            />
+            <circle
+              r="2.5"
+              fill="#0a0a0a"
+              style="
+                offset-path: path('M 424 102 L 436 102 L 436 123 L 460 123');
+              "
+              class="d-pkt d-pkt-7"
+            />
+            <circle
+              r="2.5"
+              fill="#0a0a0a"
+              style="
+                offset-path: path('M 424 102 L 436 102 L 436 159 L 460 159');
+              "
+              class="d-pkt d-pkt-8"
+            />
+
+            <!-- ═══ DATABASE ═══ -->
+            <rect
+              x="612"
+              y="74"
+              width="84"
+              height="56"
+              rx="8"
+              fill="#ffffff"
+              stroke="#0a0a0a"
+              stroke-width="1.5"
+            />
+            <text
+              x="654"
+              y="96"
+              font-family="'JetBrains Mono',monospace"
+              font-size="10"
+              font-weight="600"
+              fill="#0a0a0a"
+              text-anchor="middle"
+            >
+              PostgreSQL
+            </text>
+            <text
+              x="654"
+              y="110"
+              font-family="'JetBrains Mono',monospace"
+              font-size="7"
+              fill="#737373"
+              text-anchor="middle"
+            >
+              states · stoppages · runs
+            </text>
+
+            <!-- Flow: Functions → Database (merge at x=588) -->
+            <line
+              x1="576"
+              y1="87"
+              x2="588"
+              y2="87"
+              stroke="#d4d4d4"
+              stroke-width="1"
+            />
+            <line
+              x1="576"
+              y1="123"
+              x2="588"
+              y2="123"
+              stroke="#d4d4d4"
+              stroke-width="1"
+            />
+            <line
+              x1="576"
+              y1="159"
+              x2="588"
+              y2="159"
+              stroke="#d4d4d4"
+              stroke-width="1"
+            />
+            <line
+              x1="588"
+              y1="87"
+              x2="588"
+              y2="159"
+              stroke="#d4d4d4"
+              stroke-width="1"
+            />
+            <line
+              x1="588"
+              y1="102"
+              x2="612"
+              y2="102"
+              stroke="#d4d4d4"
+              stroke-width="1"
+              class="d-flow"
+            />
+
+            <!-- Packets: Functions → Database -->
+            <circle
+              r="2.5"
+              fill="#0a0a0a"
+              style="offset-path: path('M 576 87 L 588 87 L 588 102 L 612 102')"
+              class="d-pkt d-pkt-4"
+            />
+            <circle
+              r="2.5"
+              fill="#0a0a0a"
+              style="
+                offset-path: path('M 576 123 L 588 123 L 588 102 L 612 102');
+              "
+              class="d-pkt d-pkt-8"
+            />
+
+            <!-- ═══ DIVIDER LINE ═══ -->
+            <line
+              x1="28"
+              y1="204"
+              x2="932"
+              y2="204"
+              stroke="#e5e5e5"
+              stroke-width="1"
+              stroke-dasharray="4 4"
+            />
+            <text
+              x="480"
+              y="200"
+              font-family="'JetBrains Mono',monospace"
+              font-size="7"
+              font-weight="600"
+              fill="#a3a3a3"
+              letter-spacing="0.08em"
+              text-anchor="middle"
+            >
+              ▼ API REQUEST ▼
+            </text>
+
+            <!-- ═══ BOTTOM ROW: THE API CALL ═══ -->
+
+            <!-- Request card -->
+            <rect
+              x="16"
+              y="220"
+              width="400"
+              height="80"
+              rx="8"
+              fill="#ffffff"
+              stroke="#e5e5e5"
+              stroke-width="1"
+            />
+            <text
+              x="32"
+              y="240"
+              font-family="'JetBrains Mono',monospace"
+              font-size="7"
+              font-weight="600"
+              fill="#a3a3a3"
+              letter-spacing="0.06em"
+            >
+              HTTP REQUEST
+            </text>
+            <text
+              x="32"
+              y="260"
+              font-family="'JetBrains Mono',monospace"
+              font-size="11"
+              font-weight="600"
+              fill="#0a0a0a"
+            >
+              GET /uns-kpi?hours=8&amp;machine=cnc-01
+            </text>
+            <text
+              x="32"
+              y="278"
+              font-family="'JetBrains Mono',monospace"
+              font-size="7"
+              fill="#a3a3a3"
+            >
+              → queries PostgreSQL → computes utilisation, availability, MTBF,
+              MTTR, throughput
+            </text>
+            <text
+              x="32"
+              y="290"
+              font-family="'JetBrains Mono',monospace"
+              font-size="7"
+              fill="#a3a3a3"
+            >
+              → returns JSON in 0.3 seconds
+            </text>
+
+            <!-- Flow: Request → uns-kpi -->
+            <line
+              x1="416"
+              y1="260"
+              x2="460"
+              y2="260"
+              stroke="#d4d4d4"
+              stroke-width="1"
+              class="d-flow"
+            />
+
+            <!-- uns-kpi card -->
+            <rect
+              x="460"
+              y="220"
+              width="120"
+              height="80"
+              rx="8"
+              fill="#0a0a0a"
+            />
+            <text
+              x="520"
+              y="248"
+              font-family="'JetBrains Mono',monospace"
+              font-size="11"
+              font-weight="600"
+              fill="#ffffff"
+              text-anchor="middle"
+            >
+              uns-kpi
+            </text>
+            <text
+              x="520"
+              y="264"
+              font-family="'JetBrains Mono',monospace"
+              font-size="8"
+              fill="#a3a3a3"
+              text-anchor="middle"
+            >
+              Go · HTTP
+            </text>
+            <text
+              x="520"
+              y="280"
+              font-family="'JetBrains Mono',monospace"
+              font-size="7"
+              fill="#a3a3a3"
+              text-anchor="middle"
+            >
+              Compute on demand
+            </text>
+
+            <!-- Flow: uns-kpi reads from DB (vertical line up) -->
+            <line
+              x1="520"
+              y1="220"
+              x2="520"
+              y2="204"
+              stroke="#d4d4d4"
+              stroke-width="1"
+            />
+            <line
+              x1="520"
+              y1="204"
+              x2="654"
+              y2="204"
+              stroke="#d4d4d4"
+              stroke-width="1"
+            />
+            <line
+              x1="654"
+              y1="204"
+              x2="654"
+              y2="130"
+              stroke="#d4d4d4"
+              stroke-width="1"
+              class="d-flow"
+            />
+            <!-- Packet: DB → uns-kpi -->
+            <circle
+              r="2.5"
+              fill="#0a0a0a"
+              style="
+                offset-path: path('M 654 130 L 654 204 L 520 204 L 520 220');
+              "
+              class="d-pkt-slow d-pkt-3"
+            />
+
+            <!-- Flow: uns-kpi → Answer -->
+            <line
+              x1="580"
+              y1="260"
+              x2="620"
+              y2="260"
+              stroke="#d4d4d4"
+              stroke-width="1"
+              class="d-flow"
+            />
+
+            <!-- Packet: Request → uns-kpi -->
+            <circle
+              r="3"
+              fill="#0a0a0a"
+              style="offset-path: path('M 416 260 L 460 260')"
+              class="d-pkt d-pkt-1"
+            />
+
+            <!-- Packet: uns-kpi → Answer -->
+            <circle
+              r="3"
+              fill="#0a0a0a"
+              style="offset-path: path('M 580 260 L 620 260')"
+              class="d-pkt d-pkt-4"
+            />
+
+            <!-- ═══ THE ANSWER ═══ -->
+            <rect
+              x="620"
+              y="220"
+              width="320"
+              height="80"
+              rx="8"
+              fill="#ffffff"
+              stroke="#0a0a0a"
+              stroke-width="1.5"
+            />
+            <text
+              x="680"
+              y="252"
+              font-family="'JetBrains Mono',monospace"
+              font-size="28"
+              font-weight="700"
+              fill="#0a0a0a"
+            >
+              72.4%
+            </text>
+            <text
+              x="680"
+              y="272"
+              font-family="'JetBrains Mono',monospace"
+              font-size="8"
+              fill="#737373"
+            >
+              Utilisation
+            </text>
+            <text
+              x="680"
+              y="288"
+              font-family="'JetBrains Mono',monospace"
+              font-size="7"
+              fill="#a3a3a3"
+            >
+              cnc-01 · last shift · 06:00–14:00
+            </text>
+
+            <!-- Additional KPIs in the answer card -->
+            <line
+              x1="780"
+              y1="232"
+              x2="780"
+              y2="292"
+              stroke="#e5e5e5"
+              stroke-width="1"
+            />
+            <text
+              x="796"
+              y="244"
+              font-family="'JetBrains Mono',monospace"
+              font-size="8"
+              font-weight="600"
+              fill="#0a0a0a"
+            >
+              94%
+            </text>
+            <text
+              x="838"
+              y="244"
+              font-family="'JetBrains Mono',monospace"
+              font-size="7"
+              fill="#737373"
+            >
+              Availability
+            </text>
+            <text
+              x="796"
+              y="258"
+              font-family="'JetBrains Mono',monospace"
+              font-size="8"
+              font-weight="600"
+              fill="#0a0a0a"
+            >
+              48/hr
+            </text>
+            <text
+              x="838"
+              y="258"
+              font-family="'JetBrains Mono',monospace"
+              font-size="7"
+              fill="#737373"
+            >
+              Throughput
+            </text>
+            <text
+              x="796"
+              y="272"
+              font-family="'JetBrains Mono',monospace"
+              font-size="8"
+              font-weight="600"
+              fill="#0a0a0a"
+            >
+              142m
+            </text>
+            <text
+              x="838"
+              y="272"
+              font-family="'JetBrains Mono',monospace"
+              font-size="7"
+              fill="#737373"
+            >
+              MTBF
+            </text>
+            <text
+              x="796"
+              y="286"
+              font-family="'JetBrains Mono',monospace"
+              font-size="8"
+              font-weight="600"
+              fill="#0a0a0a"
+            >
+              8.3m
+            </text>
+            <text
+              x="838"
+              y="286"
+              font-family="'JetBrains Mono',monospace"
+              font-size="7"
+              fill="#737373"
+            >
+              MTTR
+            </text>
+
+            <!-- ═══ BOTTOM SUMMARY BAR ═══ -->
+            <rect
+              x="16"
+              y="320"
+              width="928"
+              height="48"
+              rx="8"
+              fill="#0a0a0a"
+            />
+            <text
+              x="480"
+              y="340"
+              font-family="'JetBrains Mono',monospace"
+              font-size="10"
+              font-weight="600"
+              fill="#ffffff"
+              text-anchor="middle"
+            >
+              0.3 seconds · 1 API call · 0 manual steps · 0 spreadsheets ·
+              real-time data · 100% repeatable
+            </text>
+            <text
+              x="480"
+              y="356"
+              font-family="'JetBrains Mono',monospace"
+              font-size="8"
+              fill="#a3a3a3"
+              text-anchor="middle"
+            >
+              Same call works for any machine, any time range, any shift —
+              instantly
+            </text>
+
+            <!-- ═══ TIMELINE COMPARISON ═══ -->
+            <line
+              x1="28"
+              y1="392"
+              x2="932"
+              y2="392"
+              stroke="#e5e5e5"
+              stroke-width="1"
+            />
+            <rect x="28" y="388" width="4" height="8" rx="1" fill="#0a0a0a" />
+            <text
+              x="40"
+              y="398"
+              font-family="'JetBrains Mono',monospace"
+              font-size="8"
+              font-weight="600"
+              fill="#0a0a0a"
+            >
+              0.3s
+            </text>
+            <text
+              x="100"
+              y="398"
+              font-family="'JetBrains Mono',monospace"
+              font-size="7"
+              fill="#a3a3a3"
+            >
+              vs 4 hours 12 minutes with point-to-point
+            </text>
+            <text
+              x="932"
+              y="398"
+              font-family="'JetBrains Mono',monospace"
+              font-size="8"
+              font-weight="600"
+              fill="#0a0a0a"
+              text-anchor="end"
+            >
+              840× faster
+            </text>
+          </svg>
+        </div>
+      </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- ═══════════════════════════════════════════
+     6. THE ARCHITECTURE — Just Enough
+     ═══════════════════════════════════════════ -->
+    <section class="fade-in">
+      <div class="container">
+        <div class="section-label">How It Works</div>
+        <h2>Three ideas make this&nbsp;possible.</h2>
+        <p class="lead">
+          The UNS combines an international standard for data addressing, a
+          lightweight messaging protocol, and small independent functions that
+          process data as it flows.
+        </p>
+
+        <div
+          style="
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 64px;
+            align-items: start;
+          "
+        >
+          <div>
+            <h3
+              style="
+                font-size: 20px;
+                font-weight: 700;
+                letter-spacing: -0.02em;
+                margin-bottom: 12px;
+              "
+            >
+              ISA-95 Topic Hierarchy
+            </h3>
+            <p
+              style="
+                font-size: 15px;
+                color: var(--grey-700);
+                line-height: 1.7;
+                margin-bottom: 24px;
+              "
+            >
+              Every data point gets a canonical address following the ISA-95
+              international standard. The path is self-describing — any consumer
+              can parse it to understand where data comes from without mapping
+              tables.
+            </p>
+
+            <div class="topic-tree topic-tree-animated" data-animate>
+              <div>
+                <span class="tt-segment"><span class="sep">v1.0</span></span
+                ><span class="tt-segment"><span class="sep"> / </span></span
+                ><span class="tt-segment"><span class="value">acme</span></span
+                ><span class="tt-segment"><span class="sep"> / </span></span
+                ><span class="tt-segment"><span class="value">site1</span></span
+                ><span class="tt-segment"><span class="sep"> / </span></span
+                ><span class="tt-segment"><span class="value">area1</span></span
+                ><span class="tt-segment"><span class="sep"> / </span></span
+                ><span class="tt-segment"
+                  ><span class="value">cnc-01</span></span
+                ><span class="tt-segment"><span class="sep"> / </span></span
+                ><span class="tt-segment"
+                  ><span class="value">status</span></span
+                >
+              </div>
+              <div class="tt-desc"><span class="level"> └─ version</span></div>
+              <div class="tt-desc">
+                <span class="level"> └─ enterprise</span>
+              </div>
+              <div class="tt-desc"><span class="level"> └─ site</span></div>
+              <div class="tt-desc"><span class="level"> └─ area</span></div>
+              <div class="tt-desc"><span class="level"> └─ machine</span></div>
+              <div class="tt-desc">
+                <span class="level"> └─ data point</span>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <h3
+              style="
+                font-size: 20px;
+                font-weight: 700;
+                letter-spacing: -0.02em;
+                margin-bottom: 12px;
+              "
+            >
+              MQTT Pub/Sub
+            </h3>
+            <p
+              style="
+                font-size: 15px;
+                color: var(--grey-700);
+                line-height: 1.7;
+                margin-bottom: 24px;
+              "
+            >
+              Machines publish. Applications subscribe. The broker handles
+              delivery. Producers don't need to know who's listening. Consumers
+              don't need to know who's publishing. Adding a new system means one
+              new connection to the broker — not N connections to every other
+              system.
+            </p>
+
+            <h3
+              style="
+                font-size: 20px;
+                font-weight: 700;
+                letter-spacing: -0.02em;
+                margin-bottom: 12px;
+                margin-top: 32px;
+              "
+            >
+              Serverless Functions
+            </h3>
+            <p
+              style="font-size: 15px; color: var(--grey-700); line-height: 1.7"
+            >
+              Each piece of processing logic is a small, independent function —
+              Go or Node.js. State tracking, stoppage classification, production
+              logging, KPI computation. They read from a shared cache, write to
+              PostgreSQL, and compose through infrastructure rather than through
+              each other. Deploy with
+              <code
+                style="
+                  font-family: var(--font-mono);
+                  font-size: 12px;
+                  background: var(--grey-100);
+                  padding: 2px 6px;
+                  border-radius: 4px;
+                "
+                >git push</code
+              >.
+            </p>
+          </div>
+        </div>
+
+        <div style="margin-top: 40px">
+          <a href="/fn-uns/" class="btn-secondary"
+            >See the full architecture on fn-uns →</a
+          >
+          <a href="/framework/" class="btn-secondary" style="margin-left: 12px"
+            >Read the UNS Framework standard →</a
+          >
+        </div>
+      </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- ═══════════════════════════════════════════
+     7. FIVE QUESTIONS, FIVE ROLES
+     ═══════════════════════════════════════════ -->
+    <section class="fade-in">
+      <div class="container">
+        <div class="section-label">Beyond One Question</div>
+        <h2>
+          Every role asks different questions. The UNS answers
+          all&nbsp;of&nbsp;them.
+        </h2>
+        <p class="lead">
+          Utilisation was just the start. The same architecture — machines
+          publishing to MQTT, functions processing data, APIs serving results —
+          answers every question your factory asks.
+        </p>
+
+        <div>
+          <div class="scenario">
+            <div class="scenario-role">Operations Manager</div>
+            <div class="scenario-content">
+              <h3>
+                "Which machines are running right now, and what's the overall
+                shop floor utilisation?"
+              </h3>
+              <p>
+                Every machine publishes its state every 3 seconds. The UNS cache
+                holds the current value for every topic. A single API call
+                returns live status for every machine — ACTIVE, IDLE, ALARM, OFF
+                — with utilisation computed from state duration history. No
+                SCADA screen required. No manual aggregation. Real-time, always.
+              </p>
+              <div class="scenario-api">GET /uns-kpi?area=machining</div>
+            </div>
+          </div>
+
+          <div class="scenario">
+            <div class="scenario-role">Maintenance Lead</div>
+            <div class="scenario-content">
+              <h3>
+                "Which machine has the worst reliability, and what are the top
+                stoppage reasons?"
+              </h3>
+              <p>
+                Every state transition is logged with precise timestamps. The
+                stoppage function auto-classifies downtime reasons. MTBF and
+                MTTR are computed per machine. Stoppage pareto charts rank
+                reasons by total duration. Maintenance can see exactly where to
+                focus — not from gut feeling, but from data that updates
+                continuously.
+              </p>
+              <div class="scenario-api">
+                GET /uns-kpi?machine=cnc-04&amp;hours=168
+              </div>
+            </div>
+          </div>
+
+          <div class="scenario">
+            <div class="scenario-role">Production Planner</div>
+            <div class="scenario-content">
+              <h3>
+                "Are we on target for today's production schedule? Where are the
+                bottlenecks?"
+              </h3>
+              <p>
+                The productivity function tracks parts completed per program,
+                throughput per hour, and target attainment. Compare actual
+                output against planned schedules in real time — not at the end
+                of the shift when it's too late to adjust. Identify which
+                machines are falling behind before they impact delivery.
+              </p>
+              <div class="scenario-api">
+                GET /uns-kpi?hours=8&amp;area=machining
+              </div>
+            </div>
+          </div>
+
+          <div class="scenario">
+            <div class="scenario-role">Quality Engineer</div>
+            <div class="scenario-content">
+              <h3>
+                "Where is the scrap coming from? Which machine-operator-program
+                combination has the highest reject rate?"
+              </h3>
+              <p>
+                Operator input captures scrap counts linked to specific
+                machines, programs, and operators. Quality data flows through
+                the same UNS pipeline as production data — so you can correlate
+                rejects with machine state, tool life, and program parameters.
+                Traceability from raw material to finished part, all in one
+                query.
+              </p>
+              <div class="scenario-api">
+                GET /uns-kpi?machine=cnc-01&amp;include=quality
+              </div>
+            </div>
+          </div>
+
+          <div class="scenario">
+            <div class="scenario-role">Continuous Improvement</div>
+            <div class="scenario-content">
+              <h3>
+                "What's actually improved since we made that change last month?"
+              </h3>
+              <p>
+                Every state change, every stoppage, every production run is
+                recorded with timestamps and durations in PostgreSQL. Compare
+                any time period against any other. See whether utilisation
+                improved, whether MTBF increased, whether the top stoppage
+                reason changed. Evidence-based kaizen — not anecdotes in a
+                meeting room.
+              </p>
+              <div class="scenario-api">
+                GET
+                /uns-kpi?from=2024-01-01&amp;to=2024-01-31&amp;compare=2024-02-01,2024-02-28
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- ═══════════════════════════════════════════
+     8. CTA
+     ═══════════════════════════════════════════ -->
+    <section class="fade-in">
+      <div class="container" style="text-align: center; max-width: 700px">
+        <div class="section-label">Get Started</div>
+        <h2>Stop asking questions you can't&nbsp;answer.</h2>
+        <p class="lead" style="margin-left: auto; margin-right: auto">
+          Read the open standard, explore the reference implementation with real
+          serverless functions, or dive into the documentation. Everything is
+          open source, self-hosted, and ready to deploy.
+        </p>
+        <div class="cta-group" style="justify-content: center">
+          <a href="/docs/" class="btn-primary">Read the Docs →</a>
+          <a href="/fn-uns/" class="btn-secondary">Explore fn-uns →</a>
+          <a href="/framework/" class="btn-secondary">UNS Standard v1.0 →</a>
+          <a
+            href="https://github.com/unsframework"
+            class="btn-secondary"
+            target="_blank"
+            >GitHub</a
+          >
+        </div>
+      </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <footer>
+      <div class="container">
+        <span>UNS Framework — Open Source</span>
+        <div class="footer-links">
+          <a href="/framework/">Standard</a>
+          <a href="/fn-uns/">fn-uns</a>
+          <a href="https://github.com/unsframework" target="_blank">GitHub</a>
+          <a href="https://functionkit.github.io/fnkit/" target="_blank"
+            >fnkit</a
+          >
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      // Dark mode
+      const toggle = document.getElementById('themeToggle'),
+        html = document.documentElement,
+        saved = localStorage.getItem('theme')
+      if (saved) html.setAttribute('data-theme', saved)
+      else if (window.matchMedia('(prefers-color-scheme:dark)').matches)
+        html.setAttribute('data-theme', 'dark')
+      toggle.addEventListener('click', () => {
+        const d = html.getAttribute('data-theme') === 'dark'
+        const n = d ? 'light' : 'dark'
+        html.setAttribute('data-theme', n)
+        localStorage.setItem('theme', n)
+      })
+
+      // Fade-in on scroll
+      const fo = new IntersectionObserver(
+        (e) => {
+          e.forEach((x) => {
+            if (x.isIntersecting) {
+              x.target.classList.add('visible')
+              fo.unobserve(x.target)
+            }
+          })
+        },
+        { threshold: 0.08, rootMargin: '0px 0px -40px 0px' },
+      )
+      document.querySelectorAll('.fade-in').forEach((el) => fo.observe(el))
+
+      // Scroll-triggered [data-animate]
+      const ao = new IntersectionObserver(
+        (e) => {
+          e.forEach((x) => {
+            if (x.isIntersecting) {
+              x.target.classList.add('animate-active')
+              ao.unobserve(x.target)
+            }
+          })
+        },
+        { threshold: 0.15, rootMargin: '0px 0px -20px 0px' },
+      )
+      document
+        .querySelectorAll('[data-animate]')
+        .forEach((el) => ao.observe(el))
+    </script>
+  </body>
+</html>

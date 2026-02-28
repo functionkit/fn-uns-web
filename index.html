@@ -406,48 +406,105 @@
 
       /* Problem section animations */
       @keyframes spaghetti-arrow-pulse {
-        0%, 100% { color: var(--grey-300); }
-        50% { color: var(--black); }
+        0%,
+        100% {
+          color: var(--grey-300);
+        }
+        50% {
+          color: var(--black);
+        }
       }
       @keyframes spoke-border-flash {
-        0%, 100% { border-color: transparent; background: var(--grey-50); }
-        50% { border-color: var(--black); background: var(--white); }
+        0%,
+        100% {
+          border-color: transparent;
+          background: var(--grey-50);
+        }
+        50% {
+          border-color: var(--black);
+          background: var(--white);
+        }
       }
       @keyframes spaghetti-line-slide {
-        0% { opacity: 0; transform: translateX(-12px); }
-        100% { opacity: 1; transform: translateX(0); }
+        0% {
+          opacity: 0;
+          transform: translateX(-12px);
+        }
+        100% {
+          opacity: 1;
+          transform: translateX(0);
+        }
       }
       @keyframes uns-hub-pulse {
-        0%, 100% { border-color: var(--black); box-shadow: 0 0 0 0 rgba(10,10,10,0); }
-        50% { border-color: var(--black); box-shadow: 0 0 0 6px rgba(10,10,10,0.06); }
+        0%,
+        100% {
+          border-color: var(--black);
+          box-shadow: 0 0 0 0 rgba(10, 10, 10, 0);
+        }
+        50% {
+          border-color: var(--black);
+          box-shadow: 0 0 0 6px rgba(10, 10, 10, 0.06);
+        }
       }
       .problem-section-animated .spaghetti-line .arrow {
         animation: spaghetti-arrow-pulse 2s ease-in-out infinite;
       }
-      .problem-section-animated .spaghetti-line:nth-child(1) .arrow { animation-delay: 0s; }
-      .problem-section-animated .spaghetti-line:nth-child(2) .arrow { animation-delay: 0.3s; }
-      .problem-section-animated .spaghetti-line:nth-child(3) .arrow { animation-delay: 0.6s; }
-      .problem-section-animated .spaghetti-line:nth-child(4) .arrow { animation-delay: 0.9s; }
-      .problem-section-animated .spaghetti-line:nth-child(5) .arrow { animation-delay: 1.2s; }
+      .problem-section-animated .spaghetti-line:nth-child(1) .arrow {
+        animation-delay: 0s;
+      }
+      .problem-section-animated .spaghetti-line:nth-child(2) .arrow {
+        animation-delay: 0.3s;
+      }
+      .problem-section-animated .spaghetti-line:nth-child(3) .arrow {
+        animation-delay: 0.6s;
+      }
+      .problem-section-animated .spaghetti-line:nth-child(4) .arrow {
+        animation-delay: 0.9s;
+      }
+      .problem-section-animated .spaghetti-line:nth-child(5) .arrow {
+        animation-delay: 1.2s;
+      }
       .problem-section-animated .spaghetti-line {
         animation: spaghetti-line-slide 0.5s ease-out both;
       }
-      .problem-section-animated .spaghetti-line:nth-child(1) { animation-delay: 0.1s; }
-      .problem-section-animated .spaghetti-line:nth-child(2) { animation-delay: 0.2s; }
-      .problem-section-animated .spaghetti-line:nth-child(3) { animation-delay: 0.3s; }
-      .problem-section-animated .spaghetti-line:nth-child(4) { animation-delay: 0.4s; }
-      .problem-section-animated .spaghetti-line:nth-child(5) { animation-delay: 0.5s; }
+      .problem-section-animated .spaghetti-line:nth-child(1) {
+        animation-delay: 0.1s;
+      }
+      .problem-section-animated .spaghetti-line:nth-child(2) {
+        animation-delay: 0.2s;
+      }
+      .problem-section-animated .spaghetti-line:nth-child(3) {
+        animation-delay: 0.3s;
+      }
+      .problem-section-animated .spaghetti-line:nth-child(4) {
+        animation-delay: 0.4s;
+      }
+      .problem-section-animated .spaghetti-line:nth-child(5) {
+        animation-delay: 0.5s;
+      }
       .problem-section-animated .spoke {
         border: 1px solid transparent;
         transition: all 0.3s ease;
         animation: spoke-border-flash 3s ease-in-out infinite;
       }
-      .problem-section-animated .spoke:nth-child(1) { animation-delay: 0s; }
-      .problem-section-animated .spoke:nth-child(2) { animation-delay: 0.5s; }
-      .problem-section-animated .spoke:nth-child(3) { animation-delay: 1.0s; }
-      .problem-section-animated .spoke:nth-child(4) { animation-delay: 1.5s; }
-      .problem-section-animated .spoke:nth-child(5) { animation-delay: 2.0s; }
-      .problem-section-animated .spoke:nth-child(6) { animation-delay: 2.5s; }
+      .problem-section-animated .spoke:nth-child(1) {
+        animation-delay: 0s;
+      }
+      .problem-section-animated .spoke:nth-child(2) {
+        animation-delay: 0.5s;
+      }
+      .problem-section-animated .spoke:nth-child(3) {
+        animation-delay: 1s;
+      }
+      .problem-section-animated .spoke:nth-child(4) {
+        animation-delay: 1.5s;
+      }
+      .problem-section-animated .spoke:nth-child(5) {
+        animation-delay: 2s;
+      }
+      .problem-section-animated .spoke:nth-child(6) {
+        animation-delay: 2.5s;
+      }
       .problem-section-animated .uns-hub {
         animation: uns-hub-pulse 3s ease-in-out infinite;
       }
@@ -558,54 +615,102 @@
       .topic-tree-animated .tt-segment {
         opacity: 0;
         transform: translateX(-4px);
-        transition: opacity 0.35s ease-out, transform 0.35s ease-out;
+        transition:
+          opacity 0.35s ease-out,
+          transform 0.35s ease-out;
       }
       .topic-tree-animated.animate-active .tt-segment {
         opacity: 1;
         transform: translateX(0);
       }
-      .topic-tree-animated.animate-active .tt-segment:nth-child(1)  { transition-delay: 0.05s; }
-      .topic-tree-animated.animate-active .tt-segment:nth-child(2)  { transition-delay: 0.15s; }
-      .topic-tree-animated.animate-active .tt-segment:nth-child(3)  { transition-delay: 0.25s; }
-      .topic-tree-animated.animate-active .tt-segment:nth-child(4)  { transition-delay: 0.35s; }
-      .topic-tree-animated.animate-active .tt-segment:nth-child(5)  { transition-delay: 0.45s; }
-      .topic-tree-animated.animate-active .tt-segment:nth-child(6)  { transition-delay: 0.55s; }
-      .topic-tree-animated.animate-active .tt-segment:nth-child(7)  { transition-delay: 0.65s; }
-      .topic-tree-animated.animate-active .tt-segment:nth-child(8)  { transition-delay: 0.75s; }
-      .topic-tree-animated.animate-active .tt-segment:nth-child(9)  { transition-delay: 0.85s; }
-      .topic-tree-animated.animate-active .tt-segment:nth-child(10) { transition-delay: 0.95s; }
-      .topic-tree-animated.animate-active .tt-segment:nth-child(11) { transition-delay: 1.05s; }
+      .topic-tree-animated.animate-active .tt-segment:nth-child(1) {
+        transition-delay: 0.05s;
+      }
+      .topic-tree-animated.animate-active .tt-segment:nth-child(2) {
+        transition-delay: 0.15s;
+      }
+      .topic-tree-animated.animate-active .tt-segment:nth-child(3) {
+        transition-delay: 0.25s;
+      }
+      .topic-tree-animated.animate-active .tt-segment:nth-child(4) {
+        transition-delay: 0.35s;
+      }
+      .topic-tree-animated.animate-active .tt-segment:nth-child(5) {
+        transition-delay: 0.45s;
+      }
+      .topic-tree-animated.animate-active .tt-segment:nth-child(6) {
+        transition-delay: 0.55s;
+      }
+      .topic-tree-animated.animate-active .tt-segment:nth-child(7) {
+        transition-delay: 0.65s;
+      }
+      .topic-tree-animated.animate-active .tt-segment:nth-child(8) {
+        transition-delay: 0.75s;
+      }
+      .topic-tree-animated.animate-active .tt-segment:nth-child(9) {
+        transition-delay: 0.85s;
+      }
+      .topic-tree-animated.animate-active .tt-segment:nth-child(10) {
+        transition-delay: 0.95s;
+      }
+      .topic-tree-animated.animate-active .tt-segment:nth-child(11) {
+        transition-delay: 1.05s;
+      }
 
       .topic-tree-animated .tt-desc {
         opacity: 0;
         transform: translateY(4px);
-        transition: opacity 0.35s ease-out, transform 0.35s ease-out;
+        transition:
+          opacity 0.35s ease-out,
+          transform 0.35s ease-out;
       }
       .topic-tree-animated.animate-active .tt-desc {
         opacity: 1;
         transform: translateY(0);
       }
-      .topic-tree-animated.animate-active .tt-desc:nth-child(2)  { transition-delay: 0.7s; }
-      .topic-tree-animated.animate-active .tt-desc:nth-child(3)  { transition-delay: 0.82s; }
-      .topic-tree-animated.animate-active .tt-desc:nth-child(4)  { transition-delay: 0.94s; }
-      .topic-tree-animated.animate-active .tt-desc:nth-child(5)  { transition-delay: 1.06s; }
-      .topic-tree-animated.animate-active .tt-desc:nth-child(6)  { transition-delay: 1.18s; }
-      .topic-tree-animated.animate-active .tt-desc:nth-child(7)  { transition-delay: 1.30s; }
+      .topic-tree-animated.animate-active .tt-desc:nth-child(2) {
+        transition-delay: 0.7s;
+      }
+      .topic-tree-animated.animate-active .tt-desc:nth-child(3) {
+        transition-delay: 0.82s;
+      }
+      .topic-tree-animated.animate-active .tt-desc:nth-child(4) {
+        transition-delay: 0.94s;
+      }
+      .topic-tree-animated.animate-active .tt-desc:nth-child(5) {
+        transition-delay: 1.06s;
+      }
+      .topic-tree-animated.animate-active .tt-desc:nth-child(6) {
+        transition-delay: 1.18s;
+      }
+      .topic-tree-animated.animate-active .tt-desc:nth-child(7) {
+        transition-delay: 1.3s;
+      }
 
       /* Stats Row — staggered entrance */
       .stats-row-animated .stat {
         opacity: 0;
         transform: translateY(8px);
-        transition: opacity 0.45s ease-out, transform 0.45s ease-out;
+        transition:
+          opacity 0.45s ease-out,
+          transform 0.45s ease-out;
       }
       .stats-row-animated.animate-active .stat {
         opacity: 1;
         transform: translateY(0);
       }
-      .stats-row-animated.animate-active .stat:nth-child(1) { transition-delay: 0.05s; }
-      .stats-row-animated.animate-active .stat:nth-child(2) { transition-delay: 0.18s; }
-      .stats-row-animated.animate-active .stat:nth-child(3) { transition-delay: 0.31s; }
-      .stats-row-animated.animate-active .stat:nth-child(4) { transition-delay: 0.44s; }
+      .stats-row-animated.animate-active .stat:nth-child(1) {
+        transition-delay: 0.05s;
+      }
+      .stats-row-animated.animate-active .stat:nth-child(2) {
+        transition-delay: 0.18s;
+      }
+      .stats-row-animated.animate-active .stat:nth-child(3) {
+        transition-delay: 0.31s;
+      }
+      .stats-row-animated.animate-active .stat:nth-child(4) {
+        transition-delay: 0.44s;
+      }
 
       /* Respect reduced motion */
       @media (prefers-reduced-motion: reduce) {
@@ -703,207 +808,1154 @@
     <div class="hero">
       <div class="container">
         <div class="hero-badge">
-          <span class="dot"></span> Open Source · Three Projects · One Unified Solution
+          <span class="dot"></span> Open Source · Three Projects · One Unified
+          Solution
         </div>
         <h1>Manufacturing data is&nbsp;trapped. We&nbsp;fix&nbsp;that.</h1>
 
         <p class="subtitle">
           Every factory generates vast amounts of data — but it's fragmented
-          across disconnected systems that don't talk to each other. The Unified
-          Namespace changes that. Three open-source projects that give every
-          machine on your shop floor a&nbsp;voice.
+          across disconnected systems that don't talk to each other. The UNS
+          Framework replaces point-to-point integrations with a single, shared
+          data layer
         </p>
-
-        <div class="cta-group" style="justify-content: center">
-          <a href="/docs/what-is-uns.html" class="btn-primary">What is a UNS? →</a>
-          <a href="/docs/why-uns.html" class="btn-secondary">Why it Matters</a>
-          <a href="/fn-uns/" class="btn-secondary">View fn-uns</a>
-        </div>
 
         <!-- ANIMATED INFOGRAPHIC -->
         <div class="hero-visual-wrap">
-          <svg viewBox="0 0 880 440" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <svg
+            viewBox="0 0 880 440"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
             <!-- Background -->
-            <rect x="0" y="0" width="880" height="440" rx="16" fill="#fafafa" stroke="#e5e5e5" stroke-width="1"/>
+            <rect
+              x="0"
+              y="0"
+              width="880"
+              height="440"
+              rx="16"
+              fill="#fafafa"
+              stroke="#e5e5e5"
+              stroke-width="1"
+            />
 
             <!-- ═══ STAGE LABELS ═══ -->
-            <text x="100" y="28" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="600" fill="#a3a3a3" letter-spacing="0.08em" class="h-fade h-fade-d1">PRODUCERS</text>
-            <text x="400" y="28" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="600" fill="#a3a3a3" letter-spacing="0.08em" class="h-fade h-fade-d2">UNS FRAMEWORK</text>
-            <text x="710" y="28" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="600" fill="#a3a3a3" letter-spacing="0.08em" class="h-fade h-fade-d3">CONSUMERS</text>
+            <text
+              x="100"
+              y="28"
+              font-family="'JetBrains Mono', monospace"
+              font-size="9"
+              font-weight="600"
+              fill="#a3a3a3"
+              letter-spacing="0.08em"
+              class="h-fade h-fade-d1"
+            >
+              PRODUCERS
+            </text>
+            <text
+              x="400"
+              y="28"
+              font-family="'JetBrains Mono', monospace"
+              font-size="9"
+              font-weight="600"
+              fill="#a3a3a3"
+              letter-spacing="0.08em"
+              class="h-fade h-fade-d2"
+            >
+              UNS FRAMEWORK
+            </text>
+            <text
+              x="710"
+              y="28"
+              font-family="'JetBrains Mono', monospace"
+              font-size="9"
+              font-weight="600"
+              fill="#a3a3a3"
+              letter-spacing="0.08em"
+              class="h-fade h-fade-d3"
+            >
+              CONSUMERS
+            </text>
 
             <!-- Vertical dividers -->
-            <line x1="270" y1="18" x2="270" y2="390" stroke="#e5e5e5" stroke-width="1" stroke-dasharray="4 4"/>
-            <line x1="620" y1="18" x2="620" y2="390" stroke="#e5e5e5" stroke-width="1" stroke-dasharray="4 4"/>
+            <line
+              x1="270"
+              y1="18"
+              x2="270"
+              y2="390"
+              stroke="#e5e5e5"
+              stroke-width="1"
+              stroke-dasharray="4 4"
+            />
+            <line
+              x1="620"
+              y1="18"
+              x2="620"
+              y2="390"
+              stroke="#e5e5e5"
+              stroke-width="1"
+              stroke-dasharray="4 4"
+            />
 
             <!-- ═══ PRODUCERS (left) ═══ -->
-            <rect x="20" y="48" width="230" height="44" rx="8" fill="#ffffff" stroke="#e5e5e5" stroke-width="1" class="h-fade h-fade-d1"/>
-            <circle cx="38" cy="70" r="5" fill="#0a0a0a" class="h-pulse h-pulse-d1"/>
-            <text x="52" y="66" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="600" fill="#0a0a0a">5-Axis CNC</text>
-            <text x="52" y="80" font-family="'JetBrains Mono', monospace" font-size="8" fill="#737373">ACTIVE · OP-7842</text>
+            <rect
+              x="20"
+              y="48"
+              width="230"
+              height="44"
+              rx="8"
+              fill="#ffffff"
+              stroke="#e5e5e5"
+              stroke-width="1"
+              class="h-fade h-fade-d1"
+            />
+            <circle
+              cx="38"
+              cy="70"
+              r="5"
+              fill="#0a0a0a"
+              class="h-pulse h-pulse-d1"
+            />
+            <text
+              x="52"
+              y="66"
+              font-family="'JetBrains Mono', monospace"
+              font-size="10"
+              font-weight="600"
+              fill="#0a0a0a"
+            >
+              5-Axis CNC
+            </text>
+            <text
+              x="52"
+              y="80"
+              font-family="'JetBrains Mono', monospace"
+              font-size="8"
+              fill="#737373"
+            >
+              ACTIVE · OP-7842
+            </text>
 
-            <rect x="20" y="100" width="230" height="44" rx="8" fill="#ffffff" stroke="#e5e5e5" stroke-width="1" class="h-fade h-fade-d2"/>
-            <circle cx="38" cy="122" r="5" fill="#0a0a0a" class="h-pulse h-pulse-d2"/>
-            <text x="52" y="118" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="600" fill="#0a0a0a">Turning Centre</text>
-            <text x="52" y="132" font-family="'JetBrains Mono', monospace" font-size="8" fill="#737373">IDLE · TOOL CHANGE</text>
+            <rect
+              x="20"
+              y="100"
+              width="230"
+              height="44"
+              rx="8"
+              fill="#ffffff"
+              stroke="#e5e5e5"
+              stroke-width="1"
+              class="h-fade h-fade-d2"
+            />
+            <circle
+              cx="38"
+              cy="122"
+              r="5"
+              fill="#0a0a0a"
+              class="h-pulse h-pulse-d2"
+            />
+            <text
+              x="52"
+              y="118"
+              font-family="'JetBrains Mono', monospace"
+              font-size="10"
+              font-weight="600"
+              fill="#0a0a0a"
+            >
+              Turning Centre
+            </text>
+            <text
+              x="52"
+              y="132"
+              font-family="'JetBrains Mono', monospace"
+              font-size="8"
+              fill="#737373"
+            >
+              IDLE · TOOL CHANGE
+            </text>
 
-            <rect x="20" y="152" width="230" height="44" rx="8" fill="#ffffff" stroke="#e5e5e5" stroke-width="1" class="h-fade h-fade-d3"/>
-            <circle cx="38" cy="174" r="5" fill="#0a0a0a" class="h-pulse h-pulse-d3"/>
-            <text x="52" y="170" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="600" fill="#0a0a0a">CMM</text>
-            <text x="52" y="184" font-family="'JetBrains Mono', monospace" font-size="8" fill="#737373">MEASURING · PART-2847</text>
+            <rect
+              x="20"
+              y="152"
+              width="230"
+              height="44"
+              rx="8"
+              fill="#ffffff"
+              stroke="#e5e5e5"
+              stroke-width="1"
+              class="h-fade h-fade-d3"
+            />
+            <circle
+              cx="38"
+              cy="174"
+              r="5"
+              fill="#0a0a0a"
+              class="h-pulse h-pulse-d3"
+            />
+            <text
+              x="52"
+              y="170"
+              font-family="'JetBrains Mono', monospace"
+              font-size="10"
+              font-weight="600"
+              fill="#0a0a0a"
+            >
+              CMM
+            </text>
+            <text
+              x="52"
+              y="184"
+              font-family="'JetBrains Mono', monospace"
+              font-size="8"
+              fill="#737373"
+            >
+              MEASURING · PART-2847
+            </text>
 
             <!-- Flow lines: machines → MQTT -->
-            <line x1="135" y1="92" x2="135" y2="100" stroke="#d4d4d4" stroke-width="1" class="h-flow-line"/>
-            <line x1="135" y1="144" x2="135" y2="152" stroke="#d4d4d4" stroke-width="1" class="h-flow-line"/>
-            <line x1="135" y1="196" x2="135" y2="212" stroke="#d4d4d4" stroke-width="1" class="h-flow-line"/>
+            <line
+              x1="135"
+              y1="92"
+              x2="135"
+              y2="100"
+              stroke="#d4d4d4"
+              stroke-width="1"
+              class="h-flow-line"
+            />
+            <line
+              x1="135"
+              y1="144"
+              x2="135"
+              y2="152"
+              stroke="#d4d4d4"
+              stroke-width="1"
+              class="h-flow-line"
+            />
+            <line
+              x1="135"
+              y1="196"
+              x2="135"
+              y2="212"
+              stroke="#d4d4d4"
+              stroke-width="1"
+              class="h-flow-line"
+            />
 
             <!-- ═══ MQTT BROKER ═══ -->
-            <rect x="20" y="212" width="230" height="48" rx="8" fill="#0a0a0a"/>
-            <text x="135" y="233" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="600" fill="#ffffff" text-anchor="middle">MQTT Broker</text>
-            <text x="135" y="248" font-family="'JetBrains Mono', monospace" font-size="8" fill="#a3a3a3" text-anchor="middle">Pub/Sub · Real-time</text>
+            <rect
+              x="20"
+              y="212"
+              width="230"
+              height="48"
+              rx="8"
+              fill="#0a0a0a"
+            />
+            <text
+              x="135"
+              y="233"
+              font-family="'JetBrains Mono', monospace"
+              font-size="10"
+              font-weight="600"
+              fill="#ffffff"
+              text-anchor="middle"
+            >
+              MQTT Broker
+            </text>
+            <text
+              x="135"
+              y="248"
+              font-family="'JetBrains Mono', monospace"
+              font-size="8"
+              fill="#a3a3a3"
+              text-anchor="middle"
+            >
+              Pub/Sub · Real-time
+            </text>
 
             <!-- Data packets: machines → MQTT -->
-            <circle r="3" fill="#0a0a0a" style="offset-path: path('M 135 92 L 135 212');" class="h-packet h-packet-d1"/>
-            <circle r="3" fill="#0a0a0a" style="offset-path: path('M 135 92 L 135 212');" class="h-packet h-packet-d3"/>
+            <circle
+              r="3"
+              fill="#0a0a0a"
+              style="offset-path: path('M 135 92 L 135 212')"
+              class="h-packet h-packet-d1"
+            />
+            <circle
+              r="3"
+              fill="#0a0a0a"
+              style="offset-path: path('M 135 92 L 135 212')"
+              class="h-packet h-packet-d3"
+            />
 
             <!-- ═══ BIDIRECTIONAL SYSTEMS ═══ -->
-            <rect x="20" y="276" width="230" height="36" rx="6" fill="#ffffff" stroke="#e5e5e5" stroke-width="1" class="h-fade h-fade-d4"/>
-            <text x="36" y="298" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="500" fill="#0a0a0a">MES</text>
-            <text x="234" y="298" font-family="'JetBrains Mono', monospace" font-size="8" fill="#a3a3a3" text-anchor="end">↑ programs · ↓ production</text>
+            <rect
+              x="20"
+              y="276"
+              width="230"
+              height="36"
+              rx="6"
+              fill="#ffffff"
+              stroke="#e5e5e5"
+              stroke-width="1"
+              class="h-fade h-fade-d4"
+            />
+            <text
+              x="36"
+              y="298"
+              font-family="'JetBrains Mono', monospace"
+              font-size="9"
+              font-weight="500"
+              fill="#0a0a0a"
+            >
+              MES
+            </text>
+            <text
+              x="234"
+              y="298"
+              font-family="'JetBrains Mono', monospace"
+              font-size="8"
+              fill="#a3a3a3"
+              text-anchor="end"
+            >
+              ↑ programs · ↓ production
+            </text>
 
-            <rect x="20" y="320" width="230" height="36" rx="6" fill="#ffffff" stroke="#e5e5e5" stroke-width="1" class="h-fade h-fade-d5"/>
-            <text x="36" y="342" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="500" fill="#0a0a0a">ERP</text>
-            <text x="234" y="342" font-family="'JetBrains Mono', monospace" font-size="8" fill="#a3a3a3" text-anchor="end">↑ orders · ↓ completions</text>
+            <rect
+              x="20"
+              y="320"
+              width="230"
+              height="36"
+              rx="6"
+              fill="#ffffff"
+              stroke="#e5e5e5"
+              stroke-width="1"
+              class="h-fade h-fade-d5"
+            />
+            <text
+              x="36"
+              y="342"
+              font-family="'JetBrains Mono', monospace"
+              font-size="9"
+              font-weight="500"
+              fill="#0a0a0a"
+            >
+              ERP
+            </text>
+            <text
+              x="234"
+              y="342"
+              font-family="'JetBrains Mono', monospace"
+              font-size="8"
+              fill="#a3a3a3"
+              text-anchor="end"
+            >
+              ↑ orders · ↓ completions
+            </text>
 
-            <rect x="20" y="364" width="230" height="36" rx="6" fill="#ffffff" stroke="#e5e5e5" stroke-width="1" class="h-fade h-fade-d5"/>
-            <text x="36" y="386" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="500" fill="#0a0a0a">Quality</text>
-            <text x="234" y="386" font-family="'JetBrains Mono', monospace" font-size="8" fill="#a3a3a3" text-anchor="end">↑ specs · ↓ results</text>
+            <rect
+              x="20"
+              y="364"
+              width="230"
+              height="36"
+              rx="6"
+              fill="#ffffff"
+              stroke="#e5e5e5"
+              stroke-width="1"
+              class="h-fade h-fade-d5"
+            />
+            <text
+              x="36"
+              y="386"
+              font-family="'JetBrains Mono', monospace"
+              font-size="9"
+              font-weight="500"
+              fill="#0a0a0a"
+            >
+              Quality
+            </text>
+            <text
+              x="234"
+              y="386"
+              font-family="'JetBrains Mono', monospace"
+              font-size="8"
+              fill="#a3a3a3"
+              text-anchor="end"
+            >
+              ↑ specs · ↓ results
+            </text>
 
             <!-- Flow lines: MQTT ↔ bidirectional systems -->
-            <line x1="135" y1="260" x2="135" y2="276" stroke="#d4d4d4" stroke-width="1" class="h-flow-line"/>
-            <line x1="135" y1="312" x2="135" y2="320" stroke="#d4d4d4" stroke-width="1" class="h-flow-line"/>
-            <line x1="135" y1="356" x2="135" y2="364" stroke="#d4d4d4" stroke-width="1" class="h-flow-line"/>
+            <line
+              x1="135"
+              y1="260"
+              x2="135"
+              y2="276"
+              stroke="#d4d4d4"
+              stroke-width="1"
+              class="h-flow-line"
+            />
+            <line
+              x1="135"
+              y1="312"
+              x2="135"
+              y2="320"
+              stroke="#d4d4d4"
+              stroke-width="1"
+              class="h-flow-line"
+            />
+            <line
+              x1="135"
+              y1="356"
+              x2="135"
+              y2="364"
+              stroke="#d4d4d4"
+              stroke-width="1"
+              class="h-flow-line"
+            />
 
-            <circle r="2.5" fill="#0a0a0a" style="offset-path: path('M 135 400 L 135 260');" class="h-packet h-packet-d2"/>
-            <circle r="2.5" fill="#0a0a0a" style="offset-path: path('M 135 400 L 135 260');" class="h-packet h-packet-d4"/>
+            <circle
+              r="2.5"
+              fill="#0a0a0a"
+              style="offset-path: path('M 135 400 L 135 260')"
+              class="h-packet h-packet-d2"
+            />
+            <circle
+              r="2.5"
+              fill="#0a0a0a"
+              style="offset-path: path('M 135 400 L 135 260')"
+              class="h-packet h-packet-d4"
+            />
 
             <!-- ═══ UNS FRAMEWORK (centre) ═══ -->
-            <path d="M 250 236 L 270 236 Q 280 236 280 226 L 280 72 Q 280 62 290 62 L 300 62" stroke="#d4d4d4" stroke-width="1" fill="none" class="h-flow-line"/>
-            <circle r="3" fill="#0a0a0a" style="offset-path: path('M 250 236 L 270 236 Q 280 236 280 226 L 280 72 Q 280 62 290 62 L 300 62');" class="h-packet h-packet-d2"/>
-            <circle r="3" fill="#0a0a0a" style="offset-path: path('M 250 236 L 270 236 Q 280 236 280 226 L 280 72 Q 280 62 290 62 L 300 62');" class="h-packet h-packet-d4"/>
+            <path
+              d="M 250 236 L 270 236 Q 280 236 280 226 L 280 72 Q 280 62 290 62 L 300 62"
+              stroke="#d4d4d4"
+              stroke-width="1"
+              fill="none"
+              class="h-flow-line"
+            />
+            <circle
+              r="3"
+              fill="#0a0a0a"
+              style="
+                offset-path: path(
+                  'M 250 236 L 270 236 Q 280 236 280 226 L 280 72 Q 280 62 290 62 L 300 62'
+                );
+              "
+              class="h-packet h-packet-d2"
+            />
+            <circle
+              r="3"
+              fill="#0a0a0a"
+              style="
+                offset-path: path(
+                  'M 250 236 L 270 236 Q 280 236 280 226 L 280 72 Q 280 62 290 62 L 300 62'
+                );
+              "
+              class="h-packet h-packet-d4"
+            />
 
             <!-- YAML Standard card -->
-            <rect x="300" y="48" width="300" height="52" rx="8" fill="#ffffff" stroke="#0a0a0a" stroke-width="1.5"/>
-            <text x="450" y="70" font-family="'JetBrains Mono', monospace" font-size="11" font-weight="600" fill="#0a0a0a" text-anchor="middle">uns.yml + site.yml</text>
-            <text x="450" y="86" font-family="'JetBrains Mono', monospace" font-size="8" fill="#737373" text-anchor="middle">ISA-95 · v1.0 · YAML Standard</text>
+            <rect
+              x="300"
+              y="48"
+              width="300"
+              height="52"
+              rx="8"
+              fill="#ffffff"
+              stroke="#0a0a0a"
+              stroke-width="1.5"
+            />
+            <text
+              x="450"
+              y="70"
+              font-family="'JetBrains Mono', monospace"
+              font-size="11"
+              font-weight="600"
+              fill="#0a0a0a"
+              text-anchor="middle"
+            >
+              uns.yml + site.yml
+            </text>
+            <text
+              x="450"
+              y="86"
+              font-family="'JetBrains Mono', monospace"
+              font-size="8"
+              fill="#737373"
+              text-anchor="middle"
+            >
+              ISA-95 · v1.0 · YAML Standard
+            </text>
 
             <!-- Compact topic hierarchy -->
-            <rect x="300" y="112" width="300" height="28" rx="6" fill="#ffffff" stroke="#e5e5e5" stroke-width="1" class="h-glow"/>
-            <text x="450" y="130" font-family="'JetBrains Mono', monospace" font-size="8" fill="#737373" text-anchor="middle">site / area / line / cell / equipment / sensor</text>
+            <rect
+              x="300"
+              y="112"
+              width="300"
+              height="28"
+              rx="6"
+              fill="#ffffff"
+              stroke="#e5e5e5"
+              stroke-width="1"
+              class="h-glow"
+            />
+            <text
+              x="450"
+              y="130"
+              font-family="'JetBrains Mono', monospace"
+              font-size="8"
+              fill="#737373"
+              text-anchor="middle"
+            >
+              site / area / line / cell / equipment / sensor
+            </text>
 
-            <line x1="450" y1="100" x2="450" y2="112" stroke="#d4d4d4" stroke-width="1" class="h-flow-line"/>
-            <line x1="450" y1="140" x2="450" y2="158" stroke="#d4d4d4" stroke-width="1" class="h-flow-line"/>
+            <line
+              x1="450"
+              y1="100"
+              x2="450"
+              y2="112"
+              stroke="#d4d4d4"
+              stroke-width="1"
+              class="h-flow-line"
+            />
+            <line
+              x1="450"
+              y1="140"
+              x2="450"
+              y2="158"
+              stroke="#d4d4d4"
+              stroke-width="1"
+              class="h-flow-line"
+            />
 
             <!-- ═══ fn-uns FUNCTIONS ═══ -->
-            <rect x="300" y="158" width="300" height="36" rx="6" fill="#ffffff" stroke="#e5e5e5" stroke-width="1" class="h-glow"/>
-            <text x="316" y="180" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="500" fill="#0a0a0a">uns-state</text>
-            <text x="584" y="180" font-family="'JetBrains Mono', monospace" font-size="8" fill="#a3a3a3" text-anchor="end">state tracking</text>
+            <rect
+              x="300"
+              y="158"
+              width="300"
+              height="36"
+              rx="6"
+              fill="#ffffff"
+              stroke="#e5e5e5"
+              stroke-width="1"
+              class="h-glow"
+            />
+            <text
+              x="316"
+              y="180"
+              font-family="'JetBrains Mono', monospace"
+              font-size="9"
+              font-weight="500"
+              fill="#0a0a0a"
+            >
+              uns-state
+            </text>
+            <text
+              x="584"
+              y="180"
+              font-family="'JetBrains Mono', monospace"
+              font-size="8"
+              fill="#a3a3a3"
+              text-anchor="end"
+            >
+              state tracking
+            </text>
 
-            <rect x="300" y="202" width="300" height="36" rx="6" fill="#ffffff" stroke="#e5e5e5" stroke-width="1" class="h-glow" style="animation-delay: 0.6s"/>
-            <text x="316" y="224" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="500" fill="#0a0a0a">uns-stoppage</text>
-            <text x="584" y="224" font-family="'JetBrains Mono', monospace" font-size="8" fill="#a3a3a3" text-anchor="end">downtime classification</text>
+            <rect
+              x="300"
+              y="202"
+              width="300"
+              height="36"
+              rx="6"
+              fill="#ffffff"
+              stroke="#e5e5e5"
+              stroke-width="1"
+              class="h-glow"
+              style="animation-delay: 0.6s"
+            />
+            <text
+              x="316"
+              y="224"
+              font-family="'JetBrains Mono', monospace"
+              font-size="9"
+              font-weight="500"
+              fill="#0a0a0a"
+            >
+              uns-stoppage
+            </text>
+            <text
+              x="584"
+              y="224"
+              font-family="'JetBrains Mono', monospace"
+              font-size="8"
+              fill="#a3a3a3"
+              text-anchor="end"
+            >
+              downtime classification
+            </text>
 
-            <rect x="300" y="246" width="300" height="36" rx="6" fill="#ffffff" stroke="#e5e5e5" stroke-width="1" class="h-glow" style="animation-delay: 1.2s"/>
-            <text x="316" y="268" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="500" fill="#0a0a0a">uns-productivity</text>
-            <text x="584" y="268" font-family="'JetBrains Mono', monospace" font-size="8" fill="#a3a3a3" text-anchor="end">production runs</text>
+            <rect
+              x="300"
+              y="246"
+              width="300"
+              height="36"
+              rx="6"
+              fill="#ffffff"
+              stroke="#e5e5e5"
+              stroke-width="1"
+              class="h-glow"
+              style="animation-delay: 1.2s"
+            />
+            <text
+              x="316"
+              y="268"
+              font-family="'JetBrains Mono', monospace"
+              font-size="9"
+              font-weight="500"
+              fill="#0a0a0a"
+            >
+              uns-productivity
+            </text>
+            <text
+              x="584"
+              y="268"
+              font-family="'JetBrains Mono', monospace"
+              font-size="8"
+              fill="#a3a3a3"
+              text-anchor="end"
+            >
+              production runs
+            </text>
 
-            <rect x="300" y="290" width="300" height="36" rx="6" fill="#ffffff" stroke="#e5e5e5" stroke-width="1" class="h-glow" style="animation-delay: 1.8s"/>
-            <text x="316" y="312" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="500" fill="#0a0a0a">uns-kpi</text>
-            <text x="584" y="312" font-family="'JetBrains Mono', monospace" font-size="8" fill="#a3a3a3" text-anchor="end">real-time metrics</text>
+            <rect
+              x="300"
+              y="290"
+              width="300"
+              height="36"
+              rx="6"
+              fill="#ffffff"
+              stroke="#e5e5e5"
+              stroke-width="1"
+              class="h-glow"
+              style="animation-delay: 1.8s"
+            />
+            <text
+              x="316"
+              y="312"
+              font-family="'JetBrains Mono', monospace"
+              font-size="9"
+              font-weight="500"
+              fill="#0a0a0a"
+            >
+              uns-kpi
+            </text>
+            <text
+              x="584"
+              y="312"
+              font-family="'JetBrains Mono', monospace"
+              font-size="8"
+              fill="#a3a3a3"
+              text-anchor="end"
+            >
+              real-time metrics
+            </text>
 
-            <line x1="450" y1="194" x2="450" y2="202" stroke="#d4d4d4" stroke-width="1" class="h-flow-line"/>
-            <line x1="450" y1="238" x2="450" y2="246" stroke="#d4d4d4" stroke-width="1" class="h-flow-line"/>
-            <line x1="450" y1="282" x2="450" y2="290" stroke="#d4d4d4" stroke-width="1" class="h-flow-line"/>
+            <line
+              x1="450"
+              y1="194"
+              x2="450"
+              y2="202"
+              stroke="#d4d4d4"
+              stroke-width="1"
+              class="h-flow-line"
+            />
+            <line
+              x1="450"
+              y1="238"
+              x2="450"
+              y2="246"
+              stroke="#d4d4d4"
+              stroke-width="1"
+              class="h-flow-line"
+            />
+            <line
+              x1="450"
+              y1="282"
+              x2="450"
+              y2="290"
+              stroke="#d4d4d4"
+              stroke-width="1"
+              class="h-flow-line"
+            />
 
             <!-- Infrastructure badges -->
-            <rect x="300" y="340" width="144" height="32" rx="6" fill="#0a0a0a"/>
-            <text x="372" y="360" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="500" fill="#ffffff" text-anchor="middle">Cache</text>
+            <rect
+              x="300"
+              y="340"
+              width="144"
+              height="32"
+              rx="6"
+              fill="#0a0a0a"
+            />
+            <text
+              x="372"
+              y="360"
+              font-family="'JetBrains Mono', monospace"
+              font-size="9"
+              font-weight="500"
+              fill="#ffffff"
+              text-anchor="middle"
+            >
+              Cache
+            </text>
 
-            <rect x="456" y="340" width="144" height="32" rx="6" fill="#0a0a0a"/>
-            <text x="528" y="360" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="500" fill="#ffffff" text-anchor="middle">Database</text>
+            <rect
+              x="456"
+              y="340"
+              width="144"
+              height="32"
+              rx="6"
+              fill="#0a0a0a"
+            />
+            <text
+              x="528"
+              y="360"
+              font-family="'JetBrains Mono', monospace"
+              font-size="9"
+              font-weight="500"
+              fill="#ffffff"
+              text-anchor="middle"
+            >
+              Database
+            </text>
 
-            <line x1="400" y1="326" x2="400" y2="340" stroke="#d4d4d4" stroke-width="1" class="h-flow-line"/>
-            <line x1="500" y1="326" x2="500" y2="340" stroke="#d4d4d4" stroke-width="1" class="h-flow-line"/>
+            <line
+              x1="400"
+              y1="326"
+              x2="400"
+              y2="340"
+              stroke="#d4d4d4"
+              stroke-width="1"
+              class="h-flow-line"
+            />
+            <line
+              x1="500"
+              y1="326"
+              x2="500"
+              y2="340"
+              stroke="#d4d4d4"
+              stroke-width="1"
+              class="h-flow-line"
+            />
 
             <!-- ═══ CONSUMERS (right) ═══ -->
-            <path d="M 600 290 L 620 290 Q 630 290 630 280 L 630 66 Q 630 56 640 56 L 650 56" stroke="#d4d4d4" stroke-width="1" fill="none" class="h-flow-line"/>
-            <circle r="2.5" fill="#0a0a0a" style="offset-path: path('M 600 290 L 620 290 Q 630 290 630 280 L 630 66 Q 630 56 640 56 L 650 56');" class="h-packet h-packet-d1"/>
+            <path
+              d="M 600 290 L 620 290 Q 630 290 630 280 L 630 66 Q 630 56 640 56 L 650 56"
+              stroke="#d4d4d4"
+              stroke-width="1"
+              fill="none"
+              class="h-flow-line"
+            />
+            <circle
+              r="2.5"
+              fill="#0a0a0a"
+              style="
+                offset-path: path(
+                  'M 600 290 L 620 290 Q 630 290 630 280 L 630 66 Q 630 56 640 56 L 650 56'
+                );
+              "
+              class="h-packet h-packet-d1"
+            />
 
             <!-- KPI Dashboard -->
-            <rect x="640" y="48" width="220" height="140" rx="8" fill="#ffffff" stroke="#e5e5e5" stroke-width="1"/>
-            <text x="656" y="68" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="600" fill="#0a0a0a">LIVE DASHBOARD</text>
+            <rect
+              x="640"
+              y="48"
+              width="220"
+              height="140"
+              rx="8"
+              fill="#ffffff"
+              stroke="#e5e5e5"
+              stroke-width="1"
+            />
+            <text
+              x="656"
+              y="68"
+              font-family="'JetBrains Mono', monospace"
+              font-size="9"
+              font-weight="600"
+              fill="#0a0a0a"
+            >
+              LIVE DASHBOARD
+            </text>
 
             <g class="h-kpi h-kpi-d1">
-              <text x="656" y="92" font-family="'JetBrains Mono', monospace" font-size="18" font-weight="700" fill="#0a0a0a">87%</text>
-              <text x="710" y="92" font-family="'JetBrains Mono', monospace" font-size="8" fill="#737373">OEE</text>
+              <text
+                x="656"
+                y="92"
+                font-family="'JetBrains Mono', monospace"
+                font-size="18"
+                font-weight="700"
+                fill="#0a0a0a"
+              >
+                87%
+              </text>
+              <text
+                x="710"
+                y="92"
+                font-family="'JetBrains Mono', monospace"
+                font-size="8"
+                fill="#737373"
+              >
+                OEE
+              </text>
             </g>
-            <line x1="656" y1="100" x2="844" y2="100" stroke="#f5f5f5" stroke-width="1"/>
+            <line
+              x1="656"
+              y1="100"
+              x2="844"
+              y2="100"
+              stroke="#f5f5f5"
+              stroke-width="1"
+            />
 
             <g class="h-kpi h-kpi-d2">
-              <text x="656" y="120" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="600" fill="#0a0a0a">94.2%</text>
-              <text x="706" y="120" font-family="'JetBrains Mono', monospace" font-size="7" fill="#737373">Avail</text>
-              <text x="756" y="120" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="600" fill="#0a0a0a">96.1%</text>
-              <text x="806" y="120" font-family="'JetBrains Mono', monospace" font-size="7" fill="#737373">Quality</text>
+              <text
+                x="656"
+                y="120"
+                font-family="'JetBrains Mono', monospace"
+                font-size="10"
+                font-weight="600"
+                fill="#0a0a0a"
+              >
+                94.2%
+              </text>
+              <text
+                x="706"
+                y="120"
+                font-family="'JetBrains Mono', monospace"
+                font-size="7"
+                fill="#737373"
+              >
+                Avail
+              </text>
+              <text
+                x="756"
+                y="120"
+                font-family="'JetBrains Mono', monospace"
+                font-size="10"
+                font-weight="600"
+                fill="#0a0a0a"
+              >
+                96.1%
+              </text>
+              <text
+                x="806"
+                y="120"
+                font-family="'JetBrains Mono', monospace"
+                font-size="7"
+                fill="#737373"
+              >
+                Quality
+              </text>
             </g>
-            <line x1="656" y1="128" x2="844" y2="128" stroke="#f5f5f5" stroke-width="1"/>
+            <line
+              x1="656"
+              y1="128"
+              x2="844"
+              y2="128"
+              stroke="#f5f5f5"
+              stroke-width="1"
+            />
 
             <g class="h-kpi h-kpi-d3">
-              <text x="656" y="146" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="600" fill="#0a0a0a">12/hr</text>
-              <text x="706" y="146" font-family="'JetBrains Mono', monospace" font-size="7" fill="#737373">Thru</text>
-              <text x="756" y="146" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="600" fill="#0a0a0a">4.2m</text>
-              <text x="806" y="146" font-family="'JetBrains Mono', monospace" font-size="7" fill="#737373">MTTR</text>
+              <text
+                x="656"
+                y="146"
+                font-family="'JetBrains Mono', monospace"
+                font-size="10"
+                font-weight="600"
+                fill="#0a0a0a"
+              >
+                12/hr
+              </text>
+              <text
+                x="706"
+                y="146"
+                font-family="'JetBrains Mono', monospace"
+                font-size="7"
+                fill="#737373"
+              >
+                Thru
+              </text>
+              <text
+                x="756"
+                y="146"
+                font-family="'JetBrains Mono', monospace"
+                font-size="10"
+                font-weight="600"
+                fill="#0a0a0a"
+              >
+                4.2m
+              </text>
+              <text
+                x="806"
+                y="146"
+                font-family="'JetBrains Mono', monospace"
+                font-size="7"
+                fill="#737373"
+              >
+                MTTR
+              </text>
             </g>
-            <line x1="656" y1="154" x2="844" y2="154" stroke="#f5f5f5" stroke-width="1"/>
+            <line
+              x1="656"
+              y1="154"
+              x2="844"
+              y2="154"
+              stroke="#f5f5f5"
+              stroke-width="1"
+            />
 
             <g class="h-kpi h-kpi-d4">
-              <text x="656" y="172" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="600" fill="#0a0a0a">142m</text>
-              <text x="706" y="172" font-family="'JetBrains Mono', monospace" font-size="7" fill="#737373">MTBF</text>
-              <text x="756" y="172" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="600" fill="#0a0a0a">Pareto</text>
-              <text x="806" y="172" font-family="'JetBrains Mono', monospace" font-size="7" fill="#737373">Stops</text>
+              <text
+                x="656"
+                y="172"
+                font-family="'JetBrains Mono', monospace"
+                font-size="10"
+                font-weight="600"
+                fill="#0a0a0a"
+              >
+                142m
+              </text>
+              <text
+                x="706"
+                y="172"
+                font-family="'JetBrains Mono', monospace"
+                font-size="7"
+                fill="#737373"
+              >
+                MTBF
+              </text>
+              <text
+                x="756"
+                y="172"
+                font-family="'JetBrains Mono', monospace"
+                font-size="10"
+                font-weight="600"
+                fill="#0a0a0a"
+              >
+                Pareto
+              </text>
+              <text
+                x="806"
+                y="172"
+                font-family="'JetBrains Mono', monospace"
+                font-size="7"
+                fill="#737373"
+              >
+                Stops
+              </text>
             </g>
 
             <!-- Consumer systems -->
-            <rect x="640" y="204" width="220" height="36" rx="6" fill="#ffffff" stroke="#e5e5e5" stroke-width="1" class="h-fade h-fade-d4"/>
-            <text x="656" y="226" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="500" fill="#0a0a0a">MES</text>
-            <text x="844" y="226" font-family="'JetBrains Mono', monospace" font-size="8" fill="#a3a3a3" text-anchor="end">← schedules · → data</text>
+            <rect
+              x="640"
+              y="204"
+              width="220"
+              height="36"
+              rx="6"
+              fill="#ffffff"
+              stroke="#e5e5e5"
+              stroke-width="1"
+              class="h-fade h-fade-d4"
+            />
+            <text
+              x="656"
+              y="226"
+              font-family="'JetBrains Mono', monospace"
+              font-size="9"
+              font-weight="500"
+              fill="#0a0a0a"
+            >
+              MES
+            </text>
+            <text
+              x="844"
+              y="226"
+              font-family="'JetBrains Mono', monospace"
+              font-size="8"
+              fill="#a3a3a3"
+              text-anchor="end"
+            >
+              ← schedules · → data
+            </text>
 
-            <rect x="640" y="248" width="220" height="36" rx="6" fill="#ffffff" stroke="#e5e5e5" stroke-width="1" class="h-fade h-fade-d5"/>
-            <text x="656" y="270" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="500" fill="#0a0a0a">ERP</text>
-            <text x="844" y="270" font-family="'JetBrains Mono', monospace" font-size="8" fill="#a3a3a3" text-anchor="end">← orders · → completions</text>
+            <rect
+              x="640"
+              y="248"
+              width="220"
+              height="36"
+              rx="6"
+              fill="#ffffff"
+              stroke="#e5e5e5"
+              stroke-width="1"
+              class="h-fade h-fade-d5"
+            />
+            <text
+              x="656"
+              y="270"
+              font-family="'JetBrains Mono', monospace"
+              font-size="9"
+              font-weight="500"
+              fill="#0a0a0a"
+            >
+              ERP
+            </text>
+            <text
+              x="844"
+              y="270"
+              font-family="'JetBrains Mono', monospace"
+              font-size="8"
+              fill="#a3a3a3"
+              text-anchor="end"
+            >
+              ← orders · → completions
+            </text>
 
-            <rect x="640" y="292" width="220" height="36" rx="6" fill="#ffffff" stroke="#e5e5e5" stroke-width="1" class="h-fade h-fade-d5"/>
-            <text x="656" y="314" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="500" fill="#0a0a0a">Quality</text>
-            <text x="844" y="314" font-family="'JetBrains Mono', monospace" font-size="8" fill="#a3a3a3" text-anchor="end">← specs · → results</text>
+            <rect
+              x="640"
+              y="292"
+              width="220"
+              height="36"
+              rx="6"
+              fill="#ffffff"
+              stroke="#e5e5e5"
+              stroke-width="1"
+              class="h-fade h-fade-d5"
+            />
+            <text
+              x="656"
+              y="314"
+              font-family="'JetBrains Mono', monospace"
+              font-size="9"
+              font-weight="500"
+              fill="#0a0a0a"
+            >
+              Quality
+            </text>
+            <text
+              x="844"
+              y="314"
+              font-family="'JetBrains Mono', monospace"
+              font-size="8"
+              fill="#a3a3a3"
+              text-anchor="end"
+            >
+              ← specs · → results
+            </text>
 
             <!-- Output channels -->
-            <rect x="640" y="340" width="220" height="52" rx="8" fill="#0a0a0a"/>
-            <text x="750" y="362" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="600" fill="#ffffff" text-anchor="middle">fn-uns</text>
-            <text x="750" y="380" font-family="'JetBrains Mono', monospace" font-size="8" fill="#a3a3a3" text-anchor="middle">Dashboard · API · Alerts</text>
+            <rect
+              x="640"
+              y="340"
+              width="220"
+              height="52"
+              rx="8"
+              fill="#0a0a0a"
+            />
+            <text
+              x="750"
+              y="362"
+              font-family="'JetBrains Mono', monospace"
+              font-size="10"
+              font-weight="600"
+              fill="#ffffff"
+              text-anchor="middle"
+            >
+              fn-uns
+            </text>
+            <text
+              x="750"
+              y="380"
+              font-family="'JetBrains Mono', monospace"
+              font-size="8"
+              fill="#a3a3a3"
+              text-anchor="middle"
+            >
+              Dashboard · API · Alerts
+            </text>
 
             <!-- Flow: Functions → Consumers -->
-            <path d="M 600 220 L 620 220 Q 630 220 630 222 L 630 222 Q 630 222 640 222" stroke="#d4d4d4" stroke-width="1" fill="none" class="h-flow-line"/>
-            <path d="M 600 260 L 620 260 Q 630 260 630 266 L 630 266 Q 630 266 640 266" stroke="#d4d4d4" stroke-width="1" fill="none" class="h-flow-line"/>
-            <path d="M 600 300 L 620 300 Q 630 300 630 310 L 630 310 Q 630 310 640 310" stroke="#d4d4d4" stroke-width="1" fill="none" class="h-flow-line"/>
+            <path
+              d="M 600 220 L 620 220 Q 630 220 630 222 L 630 222 Q 630 222 640 222"
+              stroke="#d4d4d4"
+              stroke-width="1"
+              fill="none"
+              class="h-flow-line"
+            />
+            <path
+              d="M 600 260 L 620 260 Q 630 260 630 266 L 630 266 Q 630 266 640 266"
+              stroke="#d4d4d4"
+              stroke-width="1"
+              fill="none"
+              class="h-flow-line"
+            />
+            <path
+              d="M 600 300 L 620 300 Q 630 300 630 310 L 630 310 Q 630 310 640 310"
+              stroke="#d4d4d4"
+              stroke-width="1"
+              fill="none"
+              class="h-flow-line"
+            />
 
             <!-- Bidirectional flow -->
-            <path d="M 640 230 L 625 230 Q 615 230 615 240 L 615 380 Q 615 390 605 390 L 280 390 Q 270 390 270 380 L 270 250 Q 270 240 260 240 L 250 240" stroke="#d4d4d4" stroke-width="1" fill="none" class="h-flow-line"/>
-            <circle r="2.5" fill="#0a0a0a" style="offset-path: path('M 640 230 L 625 230 Q 615 230 615 240 L 615 380 Q 615 390 605 390 L 280 390 Q 270 390 270 380 L 270 250 Q 270 240 260 240 L 250 240');" class="h-packet h-packet-d3"/>
+            <path
+              d="M 640 230 L 625 230 Q 615 230 615 240 L 615 380 Q 615 390 605 390 L 280 390 Q 270 390 270 380 L 270 250 Q 270 240 260 240 L 250 240"
+              stroke="#d4d4d4"
+              stroke-width="1"
+              fill="none"
+              class="h-flow-line"
+            />
+            <circle
+              r="2.5"
+              fill="#0a0a0a"
+              style="
+                offset-path: path(
+                  'M 640 230 L 625 230 Q 615 230 615 240 L 615 380 Q 615 390 605 390 L 280 390 Q 270 390 270 380 L 270 250 Q 270 240 260 240 L 250 240'
+                );
+              "
+              class="h-packet h-packet-d3"
+            />
 
             <!-- ═══ TOPIC PATH (bottom bar) ═══ -->
-            <rect x="20" y="412" width="840" height="22" rx="4" fill="#0a0a0a"/>
-            <text x="440" y="427" font-family="'JetBrains Mono', monospace" font-size="9" fill="#ffffff" text-anchor="middle">v1.0 / site / area / line / cell / equipment / sensor</text>
+            <rect
+              x="20"
+              y="412"
+              width="840"
+              height="22"
+              rx="4"
+              fill="#0a0a0a"
+            />
+            <text
+              x="440"
+              y="427"
+              font-family="'JetBrains Mono', monospace"
+              font-size="9"
+              fill="#ffffff"
+              text-anchor="middle"
+            >
+              v1.0 / site / area / line / cell / equipment / sensor
+            </text>
           </svg>
         </div>
       </div>
+    </div>
+    <div class="cta-group" style="justify-content: center; padding-bottom: 2em">
+      <a href="/docs/what-is-uns.html" class="btn-primary">What is a UNS? →</a>
+      <a href="/docs/why-uns.html" class="btn-secondary">Why it Matters</a>
+      <a href="/fn-uns/" class="btn-secondary">View fn-uns</a>
     </div>
 
     <div class="divider"></div>
@@ -988,24 +2040,72 @@
 
         <!-- ISA-95 Topic Hierarchy -->
         <div style="margin-top: 64px">
-          <h3 style="font-size: 18px; font-weight: 700; letter-spacing: -0.01em; margin-bottom: 16px;">ISA-95 Topic Structure</h3>
-          <p style="font-size: 15px; color: var(--grey-700); line-height: 1.7; margin-bottom: 24px; max-width: 600px;">
-            Data is organised using the ISA-95 international standard — a structured path from enterprise down to individual data points. The hierarchy is self-describing.
+          <h3
+            style="
+              font-size: 18px;
+              font-weight: 700;
+              letter-spacing: -0.01em;
+              margin-bottom: 16px;
+            "
+          >
+            ISA-95 Topic Structure
+          </h3>
+          <p
+            style="
+              font-size: 15px;
+              color: var(--grey-700);
+              line-height: 1.7;
+              margin-bottom: 24px;
+              max-width: 600px;
+            "
+          >
+            Data is organised using the ISA-95 international standard — a
+            structured path from enterprise down to individual data points. The
+            hierarchy is self-describing.
           </p>
-          <div class="topic-tree topic-tree-animated" data-animate style="max-width: 600px">
+          <div
+            class="topic-tree topic-tree-animated"
+            data-animate
+            style="max-width: 600px"
+          >
             <div>
-              <span class="tt-segment"><span class="sep">v1.0</span></span><span class="tt-segment"><span class="sep"> / </span></span><span class="tt-segment"><span class="value">enterprise</span></span><span class="tt-segment"><span class="sep"> / </span></span><span class="tt-segment"><span class="value">site1</span></span><span class="tt-segment"><span class="sep"> / </span></span><span class="tt-segment"><span class="value">area1</span></span><span class="tt-segment"><span class="sep"> / </span></span><span class="tt-segment"><span class="value">cnc-01</span></span><span class="tt-segment"><span class="sep"> / </span></span><span class="tt-segment"><span class="value">status</span></span>
+              <span class="tt-segment"><span class="sep">v1.0</span></span
+              ><span class="tt-segment"><span class="sep"> / </span></span
+              ><span class="tt-segment"
+                ><span class="value">enterprise</span></span
+              ><span class="tt-segment"><span class="sep"> / </span></span
+              ><span class="tt-segment"><span class="value">site1</span></span
+              ><span class="tt-segment"><span class="sep"> / </span></span
+              ><span class="tt-segment"><span class="value">area1</span></span
+              ><span class="tt-segment"><span class="sep"> / </span></span
+              ><span class="tt-segment"><span class="value">cnc-01</span></span
+              ><span class="tt-segment"><span class="sep"> / </span></span
+              ><span class="tt-segment"><span class="value">status</span></span>
             </div>
-            <div class="tt-desc"><span class="level"> └─ namespace version</span></div>
-            <div class="tt-desc"><span class="level"> └─ company / business unit</span></div>
-            <div class="tt-desc"><span class="level"> └─ factory / physical site</span></div>
-            <div class="tt-desc"><span class="level"> └─ production area</span></div>
-            <div class="tt-desc"><span class="level"> └─ individual machine</span></div>
+            <div class="tt-desc">
+              <span class="level"> └─ namespace version</span>
+            </div>
+            <div class="tt-desc">
+              <span class="level"> └─ company / business unit</span>
+            </div>
+            <div class="tt-desc">
+              <span class="level"> └─ factory / physical site</span>
+            </div>
+            <div class="tt-desc">
+              <span class="level"> └─ production area</span>
+            </div>
+            <div class="tt-desc">
+              <span class="level"> └─ individual machine</span>
+            </div>
             <div class="tt-desc"><span class="level"> └─ data point</span></div>
           </div>
         </div>
 
-        <div class="stats-row stats-row-animated" data-animate style="margin-top: 48px">
+        <div
+          class="stats-row stats-row-animated"
+          data-animate
+          style="margin-top: 48px"
+        >
           <div class="stat">
             <div class="stat-number">&lt;1s</div>
             <div class="stat-label">Data latency — real-time, not batch</div>
@@ -1027,7 +2127,9 @@
         </div>
 
         <div style="margin-top: 36px">
-          <a href="/docs/what-is-uns.html" class="btn-secondary">Learn more about the UNS →</a>
+          <a href="/docs/what-is-uns.html" class="btn-secondary"
+            >Learn more about the UNS →</a
+          >
         </div>
       </div>
     </section>
@@ -1123,13 +2225,16 @@
             <h3>IT &amp; Engineering</h3>
             <p>
               A clean, maintainable architecture. Each function is independent,
-              version-controlled, and deployable via git push. No vendor lock-in.
+              version-controlled, and deployable via git push. No vendor
+              lock-in.
             </p>
           </div>
         </div>
 
         <div style="margin-top: 36px">
-          <a href="/docs/why-uns.html" class="btn-secondary">Read the full business case →</a>
+          <a href="/docs/why-uns.html" class="btn-secondary"
+            >Read the full business case →</a
+          >
         </div>
       </div>
     </section>
@@ -1214,7 +2319,9 @@
           functions.
         </p>
         <div class="cta-group" style="justify-content: center">
-          <a href="/docs/what-is-uns.html" class="btn-primary">What is a UNS? →</a>
+          <a href="/docs/what-is-uns.html" class="btn-primary"
+            >What is a UNS? →</a
+          >
           <a href="/framework/" class="btn-secondary">Read the Standard →</a>
           <a href="/fn-uns/" class="btn-secondary">Explore fn-uns →</a>
           <a
@@ -1258,7 +2365,9 @@
         },
         { threshold: 0.15, rootMargin: '0px 0px -20px 0px' },
       )
-      document.querySelectorAll('[data-animate]').forEach((el) => animateObserver.observe(el))
+      document
+        .querySelectorAll('[data-animate]')
+        .forEach((el) => animateObserver.observe(el))
 
       // Hero graphic fullscreen on click
       const heroVisual = document.querySelector('.hero-visual-wrap')

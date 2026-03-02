@@ -1,0 +1,3950 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+      How It Works — Follow the Data from Dashboard to Shop Floor
+    </title>
+    <meta
+      name="description"
+      content="A step-by-step guide through every layer of the Unified Namespace — from the consumer asking a question to the machine publishing data. Understand the standard, the YAML, the platform, and the process."
+    />
+    <link rel="canonical" href="https://unsframework.com/how-it-works/" />
+    <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="UNS Framework" />
+    <meta
+      property="og:title"
+      content="How It Works — Follow the Data from Dashboard to Shop Floor"
+    />
+    <meta
+      property="og:description"
+      content="Eight steps from consumer to producer. Understand every layer of the Unified Namespace."
+    />
+    <meta property="og:url" content="https://unsframework.com/how-it-works/" />
+    <meta name="twitter:card" content="summary" />
+    <meta
+      name="twitter:title"
+      content="How It Works — UNS Framework Step by Step"
+    />
+    <meta
+      name="twitter:description"
+      content="Follow the data backwards: from the dashboard on your screen to the sensor on the shop floor."
+    />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>"
+    />
+
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500;700&display=swap');
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      :root {
+        --black: #0a0a0a;
+        --grey-950: #141414;
+        --grey-900: #1a1a1a;
+        --grey-800: #262626;
+        --grey-700: #404040;
+        --grey-600: #525252;
+        --grey-500: #737373;
+        --grey-400: #a3a3a3;
+        --grey-300: #d4d4d4;
+        --grey-200: #e5e5e5;
+        --grey-100: #f5f5f5;
+        --grey-50: #fafafa;
+        --white: #ffffff;
+        --nav-bg: rgba(255, 255, 255, 0.88);
+        --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+        --font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', monospace;
+      }
+      [data-theme='dark'] {
+        --black: #f5f5f5;
+        --grey-950: #141414;
+        --grey-900: #1a1a1a;
+        --grey-800: #d4d4d4;
+        --grey-700: #a3a3a3;
+        --grey-600: #a3a3a3;
+        --grey-500: #737373;
+        --grey-400: #525252;
+        --grey-300: #404040;
+        --grey-200: #262626;
+        --grey-100: #1a1a1a;
+        --grey-50: #141414;
+        --white: #0a0a0a;
+        --nav-bg: rgba(10, 10, 10, 0.88);
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        font-family: var(--font-sans);
+        background: var(--white);
+        color: var(--black);
+        font-size: 16px;
+        line-height: 1.6;
+        -webkit-font-smoothing: antialiased;
+      }
+      body,
+      nav,
+      footer {
+        transition:
+          background-color 0.3s ease,
+          color 0.3s ease,
+          border-color 0.3s ease;
+      }
+
+      /* NAV */
+      nav {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 100;
+        height: 56px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 48px;
+        background: var(--nav-bg);
+        backdrop-filter: blur(24px);
+        -webkit-backdrop-filter: blur(24px);
+        border-bottom: 1px solid var(--grey-200);
+      }
+      nav .logo {
+        font-family: var(--font-mono);
+        font-weight: 600;
+        font-size: 15px;
+        letter-spacing: -0.02em;
+        color: var(--black);
+        text-decoration: none;
+      }
+      nav .links {
+        display: flex;
+        gap: 32px;
+        align-items: center;
+      }
+      nav .links a {
+        color: var(--grey-700);
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 400;
+        transition: color 0.2s;
+      }
+      nav .links a:hover {
+        color: var(--black);
+      }
+
+      /* LAYOUT */
+      .container {
+        max-width: 1120px;
+        margin: 0 auto;
+        padding: 0 48px;
+      }
+      .narrow {
+        max-width: 800px;
+      }
+      .divider {
+        width: 100%;
+        height: 1px;
+        background: var(--grey-200);
+      }
+      section {
+        padding: 100px 0;
+      }
+      .section-label {
+        font-family: var(--font-mono);
+        font-size: 12px;
+        font-weight: 500;
+        color: var(--grey-700);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        margin-bottom: 16px;
+      }
+      section h2 {
+        font-size: clamp(28px, 4vw, 42px);
+        font-weight: 700;
+        line-height: 1.12;
+        letter-spacing: -0.03em;
+        margin-bottom: 16px;
+      }
+      section .lead {
+        font-size: 17px;
+        font-weight: 400;
+        color: var(--grey-700);
+        max-width: 600px;
+        line-height: 1.7;
+        margin-bottom: 48px;
+      }
+
+      /* BUTTONS */
+      .btn-primary {
+        display: inline-flex;
+        align-items: center;
+        padding: 12px 28px;
+        background: var(--black);
+        color: var(--white);
+        font-size: 14px;
+        font-weight: 500;
+        text-decoration: none;
+        border-radius: 8px;
+        font-family: var(--font-sans);
+        transition: all 0.2s;
+        border: 1px solid var(--black);
+      }
+      .btn-primary:hover {
+        background: var(--grey-800);
+      }
+      .btn-secondary {
+        display: inline-flex;
+        align-items: center;
+        padding: 12px 28px;
+        background: transparent;
+        color: var(--black);
+        font-size: 14px;
+        font-weight: 500;
+        text-decoration: none;
+        border-radius: 8px;
+        border: 1px solid var(--grey-300);
+        font-family: var(--font-sans);
+        transition: all 0.2s;
+      }
+      .btn-secondary:hover {
+        border-color: var(--black);
+      }
+      .cta-group {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+      }
+
+      /* DARK MODE TOGGLE */
+      .theme-toggle {
+        position: relative;
+        width: 44px;
+        height: 24px;
+        background: var(--grey-200);
+        border: 1px solid var(--grey-300);
+        border-radius: 100px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        padding: 0 3px;
+        flex-shrink: 0;
+      }
+      .theme-toggle:hover {
+        border-color: var(--grey-500);
+      }
+      .theme-toggle .toggle-thumb {
+        width: 18px;
+        height: 18px;
+        background: var(--white);
+        border-radius: 50%;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 10px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+      }
+      [data-theme='dark'] .theme-toggle {
+        background: var(--grey-200);
+      }
+      [data-theme='dark'] .theme-toggle .toggle-thumb {
+        transform: translateX(18px);
+        background: var(--grey-50);
+      }
+      .toggle-icon-sun,
+      .toggle-icon-moon {
+        pointer-events: none;
+        line-height: 1;
+      }
+      .toggle-icon-moon {
+        display: none;
+      }
+      [data-theme='dark'] .toggle-icon-sun {
+        display: none;
+      }
+      [data-theme='dark'] .toggle-icon-moon {
+        display: block;
+      }
+
+      /* FADE */
+      .fade-in {
+        opacity: 0;
+        transform: translateY(16px);
+        transition:
+          opacity 0.6s ease,
+          transform 0.6s ease;
+      }
+      .fade-in.visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      /* ═══ HERO ═══ */
+      .hero {
+        min-height: 80vh;
+        display: flex;
+        align-items: center;
+        padding: 56px 0 0;
+      }
+      .hero .container {
+        max-width: 800px;
+      }
+      .hero h1 {
+        font-size: clamp(36px, 5vw, 56px);
+        font-weight: 800;
+        line-height: 1.06;
+        letter-spacing: -0.04em;
+        margin-bottom: 24px;
+      }
+      .hero h1 .hero-accent {
+        color: var(--grey-500);
+      }
+      .hero .subtitle {
+        font-size: 18px;
+        font-weight: 400;
+        color: var(--grey-700);
+        line-height: 1.7;
+        margin-bottom: 0;
+        max-width: 640px;
+      }
+
+      /* ═══ STEP LAYOUT ═══ */
+      .step-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 64px;
+        align-items: start;
+      }
+      .step-text h3 {
+        font-size: 22px;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+        margin-bottom: 12px;
+        line-height: 1.25;
+      }
+      .step-text p {
+        font-size: 15px;
+        color: var(--grey-700);
+        line-height: 1.7;
+        margin-bottom: 16px;
+      }
+      .step-text p strong {
+        color: var(--black);
+        font-weight: 600;
+      }
+
+      /* ═══ YAML BLOCKS ═══ */
+      .yaml-block {
+        background: var(--grey-950);
+        color: var(--grey-300);
+        padding: 24px;
+        border-radius: 12px;
+        font-family: var(--font-mono);
+        font-size: 12px;
+        line-height: 1.9;
+        overflow-x: auto;
+        box-shadow: 0 12px 32px rgba(0, 0, 0, 0.06);
+      }
+      .yaml-block .yk {
+        color: #e5e5e5;
+        font-weight: 500;
+      }
+      .yaml-block .yv {
+        color: #a3a3a3;
+      }
+      .yaml-block .yc {
+        color: #525252;
+      }
+
+      /* ═══ MINI SVG INFOGRAPHICS ═══ */
+      .mini-svg {
+        width: 100%;
+        max-width: 100%;
+      }
+      .mini-svg svg {
+        width: 100%;
+        height: auto;
+        display: block;
+      }
+
+      /* SVG animations */
+      @keyframes dash-flow {
+        to {
+          stroke-dashoffset: -16;
+        }
+      }
+      @keyframes dot-pulse {
+        0%,
+        100% {
+          opacity: 0.3;
+        }
+        50% {
+          opacity: 1;
+        }
+      }
+      @keyframes pkt-move {
+        0% {
+          offset-distance: 0%;
+          opacity: 0;
+        }
+        8% {
+          opacity: 1;
+        }
+        92% {
+          opacity: 1;
+        }
+        100% {
+          offset-distance: 100%;
+          opacity: 0;
+        }
+      }
+      @keyframes glow-border {
+        0%,
+        100% {
+          stroke: #e5e5e5;
+        }
+        50% {
+          stroke: #0a0a0a;
+        }
+      }
+      @keyframes fade-up-in {
+        0% {
+          opacity: 0;
+          transform: translateY(6px);
+        }
+        100% {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .d-flow {
+        stroke-dasharray: 4 8;
+        animation: dash-flow 1.2s linear infinite;
+      }
+      .d-pulse {
+        animation: dot-pulse 2.4s ease-in-out infinite;
+      }
+      .d-pulse-1 {
+        animation-delay: 0s;
+      }
+      .d-pulse-2 {
+        animation-delay: 0.6s;
+      }
+      .d-pulse-3 {
+        animation-delay: 1.2s;
+      }
+      .d-pulse-4 {
+        animation-delay: 1.8s;
+      }
+      .d-pkt {
+        offset-rotate: 0deg;
+        animation: pkt-move 2.4s ease-in-out infinite;
+      }
+      .d-pkt-1 {
+        animation-delay: 0s;
+      }
+      .d-pkt-2 {
+        animation-delay: 0.6s;
+      }
+      .d-pkt-3 {
+        animation-delay: 1.2s;
+      }
+      .d-pkt-4 {
+        animation-delay: 1.8s;
+      }
+      .d-pkt-5 {
+        animation-delay: 2.4s;
+      }
+      .d-glow {
+        animation: glow-border 3s ease-in-out infinite;
+      }
+      .d-glow-1 {
+        animation-delay: 0s;
+      }
+      .d-glow-2 {
+        animation-delay: 0.5s;
+      }
+      .d-glow-3 {
+        animation-delay: 1s;
+      }
+      .d-glow-4 {
+        animation-delay: 1.5s;
+      }
+      .d-glow-5 {
+        animation-delay: 2s;
+      }
+      .d-glow-6 {
+        animation-delay: 2.5s;
+      }
+
+      /* Dark mode SVG overrides */
+      [data-theme='dark'] .mini-svg svg rect[fill='#fafafa'] {
+        fill: #141414;
+      }
+      [data-theme='dark'] .mini-svg svg rect[fill='#ffffff'] {
+        fill: #1a1a1a;
+      }
+      [data-theme='dark'] .mini-svg svg rect[fill='#f5f5f5'] {
+        fill: #1a1a1a;
+      }
+      [data-theme='dark'] .mini-svg svg rect[fill='#0a0a0a'] {
+        fill: #f5f5f5;
+      }
+      [data-theme='dark'] .mini-svg svg rect[stroke='#e5e5e5'] {
+        stroke: #262626;
+      }
+      [data-theme='dark'] .mini-svg svg rect[stroke='#d4d4d4'] {
+        stroke: #404040;
+      }
+      [data-theme='dark'] .mini-svg svg rect[stroke='#0a0a0a'] {
+        stroke: #f5f5f5;
+      }
+      [data-theme='dark'] .mini-svg svg line[stroke='#e5e5e5'] {
+        stroke: #262626;
+      }
+      [data-theme='dark'] .mini-svg svg line[stroke='#d4d4d4'] {
+        stroke: #404040;
+      }
+      [data-theme='dark'] .mini-svg svg line[stroke='#f5f5f5'] {
+        stroke: #1a1a1a;
+      }
+      [data-theme='dark'] .mini-svg svg path[stroke='#d4d4d4'] {
+        stroke: #404040;
+      }
+      [data-theme='dark'] .mini-svg svg circle[fill='#0a0a0a'] {
+        fill: #f5f5f5;
+      }
+      [data-theme='dark'] .mini-svg svg text[fill='#0a0a0a'] {
+        fill: #f5f5f5;
+      }
+      [data-theme='dark'] .mini-svg svg text[fill='#737373'] {
+        fill: #a3a3a3;
+      }
+      [data-theme='dark'] .mini-svg svg text[fill='#a3a3a3'] {
+        fill: #737373;
+      }
+      [data-theme='dark'] .mini-svg svg text[fill='#ffffff'] {
+        fill: #0a0a0a;
+      }
+      [data-theme='dark'] .mini-svg svg .d-glow {
+        animation-name: glow-border-dark;
+      }
+      @keyframes glow-border-dark {
+        0%,
+        100% {
+          stroke: #262626;
+        }
+        50% {
+          stroke: #f5f5f5;
+        }
+      }
+
+      /* ═══ TABLE GRID ═══ */
+      .info-table {
+        width: 100%;
+        border: 1px solid var(--grey-200);
+        border-radius: 12px;
+        overflow: hidden;
+        border-collapse: separate;
+        border-spacing: 0;
+        font-size: 13px;
+      }
+      .info-table thead {
+        background: var(--grey-50);
+      }
+      .info-table th {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        font-weight: 600;
+        color: var(--grey-500);
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        text-align: left;
+        padding: 12px 16px;
+        border-bottom: 1px solid var(--grey-200);
+      }
+      .info-table td {
+        padding: 10px 16px;
+        border-bottom: 1px solid var(--grey-100);
+        color: var(--grey-700);
+      }
+      .info-table tr:last-child td {
+        border-bottom: none;
+      }
+      .info-table td:first-child {
+        font-family: var(--font-mono);
+        font-weight: 500;
+        color: var(--black);
+        font-size: 12px;
+      }
+
+      /* ═══ STEP NUMBER ═══ */
+      .step-num {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        font-weight: 600;
+        color: var(--grey-500);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        margin-bottom: 8px;
+      }
+
+      /* ═══ TOPIC TREE ═══ */
+      .topic-tree {
+        border: 1px solid var(--grey-200);
+        border-radius: 12px;
+        padding: 24px;
+        font-family: var(--font-mono);
+        font-size: 12px;
+        line-height: 2.2;
+        background: var(--white);
+      }
+      .topic-tree .level {
+        color: var(--grey-700);
+      }
+      .topic-tree .value {
+        color: var(--black);
+        font-weight: 500;
+      }
+      .topic-tree .sep {
+        color: var(--grey-300);
+      }
+      .topic-tree-animated .tt-segment {
+        opacity: 0;
+        transform: translateX(-4px);
+        transition:
+          opacity 0.35s ease-out,
+          transform 0.35s ease-out;
+      }
+      .topic-tree-animated.animate-active .tt-segment {
+        opacity: 1;
+        transform: translateX(0);
+      }
+      .topic-tree-animated.animate-active .tt-segment:nth-child(1) {
+        transition-delay: 0.05s;
+      }
+      .topic-tree-animated.animate-active .tt-segment:nth-child(2) {
+        transition-delay: 0.15s;
+      }
+      .topic-tree-animated.animate-active .tt-segment:nth-child(3) {
+        transition-delay: 0.25s;
+      }
+      .topic-tree-animated.animate-active .tt-segment:nth-child(4) {
+        transition-delay: 0.35s;
+      }
+      .topic-tree-animated.animate-active .tt-segment:nth-child(5) {
+        transition-delay: 0.45s;
+      }
+      .topic-tree-animated.animate-active .tt-segment:nth-child(6) {
+        transition-delay: 0.55s;
+      }
+      .topic-tree-animated.animate-active .tt-segment:nth-child(7) {
+        transition-delay: 0.65s;
+      }
+      .topic-tree-animated.animate-active .tt-segment:nth-child(8) {
+        transition-delay: 0.75s;
+      }
+      .topic-tree-animated.animate-active .tt-segment:nth-child(9) {
+        transition-delay: 0.85s;
+      }
+      .topic-tree-animated.animate-active .tt-segment:nth-child(10) {
+        transition-delay: 0.95s;
+      }
+      .topic-tree-animated.animate-active .tt-segment:nth-child(11) {
+        transition-delay: 1.05s;
+      }
+      .topic-tree-animated .tt-desc {
+        opacity: 0;
+        transform: translateY(4px);
+        transition:
+          opacity 0.35s ease-out,
+          transform 0.35s ease-out;
+      }
+      .topic-tree-animated.animate-active .tt-desc {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      .topic-tree-animated.animate-active .tt-desc:nth-child(2) {
+        transition-delay: 0.7s;
+      }
+      .topic-tree-animated.animate-active .tt-desc:nth-child(3) {
+        transition-delay: 0.82s;
+      }
+      .topic-tree-animated.animate-active .tt-desc:nth-child(4) {
+        transition-delay: 0.94s;
+      }
+      .topic-tree-animated.animate-active .tt-desc:nth-child(5) {
+        transition-delay: 1.06s;
+      }
+      .topic-tree-animated.animate-active .tt-desc:nth-child(6) {
+        transition-delay: 1.18s;
+      }
+      .topic-tree-animated.animate-active .tt-desc:nth-child(7) {
+        transition-delay: 1.3s;
+      }
+
+      /* ═══ YAML LINE REVEAL ═══ */
+      .yaml-animated .yaml-line {
+        opacity: 0;
+        transform: translateY(6px);
+        transition:
+          opacity 0.4s ease-out,
+          transform 0.4s ease-out;
+      }
+      .yaml-animated.animate-active .yaml-line {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      .yaml-animated.animate-active .yaml-line:nth-child(1) {
+        transition-delay: 0s;
+      }
+      .yaml-animated.animate-active .yaml-line:nth-child(2) {
+        transition-delay: 0.06s;
+      }
+      .yaml-animated.animate-active .yaml-line:nth-child(3) {
+        transition-delay: 0.12s;
+      }
+      .yaml-animated.animate-active .yaml-line:nth-child(4) {
+        transition-delay: 0.18s;
+      }
+      .yaml-animated.animate-active .yaml-line:nth-child(5) {
+        transition-delay: 0.24s;
+      }
+      .yaml-animated.animate-active .yaml-line:nth-child(6) {
+        transition-delay: 0.3s;
+      }
+      .yaml-animated.animate-active .yaml-line:nth-child(7) {
+        transition-delay: 0.36s;
+      }
+      .yaml-animated.animate-active .yaml-line:nth-child(8) {
+        transition-delay: 0.42s;
+      }
+      .yaml-animated.animate-active .yaml-line:nth-child(9) {
+        transition-delay: 0.48s;
+      }
+      .yaml-animated.animate-active .yaml-line:nth-child(10) {
+        transition-delay: 0.54s;
+      }
+      .yaml-animated.animate-active .yaml-line:nth-child(11) {
+        transition-delay: 0.6s;
+      }
+      .yaml-animated.animate-active .yaml-line:nth-child(12) {
+        transition-delay: 0.66s;
+      }
+      .yaml-animated.animate-active .yaml-line:nth-child(13) {
+        transition-delay: 0.72s;
+      }
+      .yaml-animated.animate-active .yaml-line:nth-child(14) {
+        transition-delay: 0.78s;
+      }
+      .yaml-animated.animate-active .yaml-line:nth-child(15) {
+        transition-delay: 0.84s;
+      }
+
+      /* ═══ STACK GRID (3 solutions) ═══ */
+      .stack-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1px;
+        background: var(--grey-200);
+        border: 1px solid var(--grey-200);
+        border-radius: 12px;
+        overflow: hidden;
+      }
+      .stack-card {
+        background: var(--white);
+        padding: 36px;
+      }
+      .stack-card:hover {
+        background: var(--grey-50);
+      }
+      .stack-num {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        font-weight: 600;
+        color: var(--grey-700);
+        letter-spacing: 0.08em;
+        margin-bottom: 16px;
+      }
+      .stack-card h3 {
+        font-size: 22px;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+        margin-bottom: 4px;
+      }
+      .stack-url {
+        font-family: var(--font-mono);
+        font-size: 12px;
+        color: var(--grey-700);
+        margin-bottom: 16px;
+      }
+      .stack-card p {
+        font-size: 14px;
+        color: var(--grey-700);
+        line-height: 1.65;
+        margin-bottom: 20px;
+      }
+      .stack-role {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        font-weight: 600;
+        color: var(--black);
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        padding-top: 16px;
+        border-top: 1px solid var(--grey-200);
+      }
+
+      /* ═══ FOOTER ═══ */
+      footer {
+        padding: 48px 0;
+        border-top: 1px solid var(--grey-200);
+      }
+      footer .container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 13px;
+        color: var(--grey-700);
+      }
+      footer a {
+        color: var(--grey-700);
+        text-decoration: none;
+        transition: color 0.2s;
+      }
+      footer a:hover {
+        color: var(--black);
+      }
+      footer .footer-links {
+        display: flex;
+        gap: 24px;
+      }
+
+      /* ═══ RESPONSIVE — TABLET ═══ */
+      @media (max-width: 960px) {
+        nav {
+          padding: 0 24px;
+        }
+        .container {
+          padding: 0 24px;
+        }
+        section {
+          padding: 80px 0;
+        }
+        .step-grid {
+          grid-template-columns: 1fr;
+          gap: 32px;
+        }
+        .stack-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+      /* ═══ RESPONSIVE — MOBILE ═══ */
+      @media (max-width: 600px) {
+        nav {
+          padding: 0 16px;
+        }
+        nav .links {
+          gap: 20px;
+        }
+        nav .links a {
+          font-size: 13px;
+        }
+        .container {
+          padding: 0 16px;
+        }
+        section {
+          padding: 56px 0;
+        }
+        section h2 {
+          font-size: 26px;
+        }
+        section .lead {
+          font-size: 14px;
+          margin-bottom: 32px;
+        }
+        .hero {
+          min-height: auto;
+          padding: 100px 0 56px;
+        }
+        .hero h1 {
+          font-size: 30px;
+        }
+        .hero .subtitle {
+          font-size: 15px;
+        }
+        .step-text h3 {
+          font-size: 18px;
+        }
+        .step-text p {
+          font-size: 13px;
+        }
+        .yaml-block {
+          padding: 16px;
+          font-size: 10px;
+          line-height: 1.8;
+        }
+        .topic-tree {
+          padding: 16px;
+          font-size: 10px;
+          line-height: 1.9;
+          overflow-x: auto;
+          white-space: nowrap;
+        }
+        .info-table {
+          font-size: 11px;
+        }
+        .info-table th,
+        .info-table td {
+          padding: 8px 10px;
+        }
+        .cta-group {
+          flex-direction: column;
+          align-items: stretch;
+        }
+        .btn-primary,
+        .btn-secondary {
+          justify-content: center;
+          padding: 14px 24px;
+          font-size: 15px;
+        }
+        .stack-grid {
+          display: flex;
+          overflow-x: auto;
+          -webkit-overflow-scrolling: touch;
+          gap: 12px;
+          background: none;
+          border: none;
+          border-radius: 0;
+          padding-bottom: 8px;
+          scroll-snap-type: x mandatory;
+        }
+        .stack-card {
+          min-width: 280px;
+          max-width: 300px;
+          flex-shrink: 0;
+          border: 1px solid var(--grey-200);
+          border-radius: 10px;
+          scroll-snap-align: start;
+        }
+        footer {
+          padding: 32px 0;
+        }
+        footer .container {
+          flex-direction: column;
+          gap: 12px;
+          text-align: center;
+        }
+        footer .footer-links {
+          justify-content: center;
+        }
+      }
+      /* Reduced motion */
+      @media (prefers-reduced-motion: reduce) {
+        .fade-in,
+        .topic-tree-animated .tt-segment,
+        .topic-tree-animated .tt-desc,
+        .yaml-animated .yaml-line {
+          opacity: 1 !important;
+          transform: none !important;
+          transition: none !important;
+        }
+        .d-flow,
+        .d-pulse,
+        .d-pkt,
+        .d-glow {
+          animation: none !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <nav>
+      <a href="/" class="logo">UNS Framework</a>
+      <div class="links">
+        <a href="/framework/">Standard v1.0</a>
+        <a href="/fn-uns/">fn-uns</a>
+        <a href="https://github.com/unsframework" target="_blank">GitHub</a>
+        <button
+          class="theme-toggle"
+          id="themeToggle"
+          aria-label="Toggle dark mode"
+        >
+          <div class="toggle-thumb">
+            <span class="toggle-icon-sun">☀</span
+            ><span class="toggle-icon-moon">☾</span>
+          </div>
+        </button>
+      </div>
+    </nav>
+
+    <!-- ═══════════════════════════════════════════
+     HERO
+     ═══════════════════════════════════════════ -->
+    <div class="hero">
+      <div class="container">
+        <h1>
+          Follow the data<br /><span class="hero-accent"
+            >from dashboard to&nbsp;shop&nbsp;floor.</span
+          >
+        </h1>
+        <p class="subtitle">
+          You want to know machine utilisation. Here's every layer that makes
+          that answer possible — starting from the consumer who asks the
+          question, working backwards through every component, all the way to
+          the machine publishing data on the shop floor. Eight steps. Three
+          solutions. One standard.
+        </p>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- ═══════════════════════════════════════════
+     STEP 1 — THE CONSUMER
+     ═══════════════════════════════════════════ -->
+    <section class="fade-in">
+      <div class="container">
+        <div class="step-grid">
+          <div class="step-text">
+            <div class="step-num">Step 01</div>
+            <h3>The Consumer — Who Asks the Question</h3>
+            <p>
+              Everything starts with someone — or something — that needs an
+              answer. A dashboard showing live utilisation. An ERP system pulling
+              production counts. A maintenance lead checking MTBF on their
+              phone. An AI model requesting historical state data.
+            </p>
+            <p>
+              In the UNS, a <strong>consumer</strong> is any entity that
+              receives information. It doesn't need to know where the data comes
+              from, which machine produced it, or how it was processed. It just
+              subscribes to a topic or calls an API.
+            </p>
+            <p>
+              The UNS Framework standard describes consumers in YAML — so your
+              entire data landscape is documented, version-controlled, and
+              machine-readable.
+            </p>
+
+            <div
+              class="yaml-block yaml-animated"
+              data-animate
+              style="margin-top: 24px"
+            >
+              <div class="yaml-line">
+                <span class="yc"># consumer.yml</span>
+              </div>
+              <div class="yaml-line">
+                <span class="yk">version:</span>
+                <span class="yv">'1.0'</span>
+              </div>
+              <div class="yaml-line">
+                <span class="yk">consumer:</span>
+              </div>
+              <div class="yaml-line">
+                &nbsp;&nbsp;- <span class="yk">name:</span>
+                <span class="yv">Operations Dashboard</span>
+              </div>
+              <div class="yaml-line">
+                &nbsp;&nbsp;&nbsp;&nbsp;<span class="yk">endpoint:</span>
+                <span class="yv">https://dashboard.factory.com</span>
+              </div>
+              <div class="yaml-line">
+                &nbsp;&nbsp;- <span class="yk">name:</span>
+                <span class="yv">ERP</span>
+              </div>
+              <div class="yaml-line">
+                &nbsp;&nbsp;&nbsp;&nbsp;<span class="yk">endpoint:</span>
+                <span class="yv">opcua://erp:4840</span>
+              </div>
+              <div class="yaml-line">
+                &nbsp;&nbsp;- <span class="yk">name:</span>
+                <span class="yv">Maintenance App</span>
+              </div>
+              <div class="yaml-line">
+                &nbsp;&nbsp;&nbsp;&nbsp;<span class="yk">endpoint:</span>
+                <span class="yv">https://maint.factory.com/api</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="mini-svg">
+            <svg
+              viewBox="0 0 440 340"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <rect
+                x="0"
+                y="0"
+                width="440"
+                height="340"
+                rx="12"
+                fill="#fafafa"
+                stroke="#e5e5e5"
+                stroke-width="1"
+              />
+
+              <!-- Title -->
+              <text
+                x="20"
+                y="28"
+                font-family="'JetBrains Mono',monospace"
+                font-size="8"
+                font-weight="600"
+                fill="#a3a3a3"
+                letter-spacing="0.08em"
+              >
+                CONSUMERS — WHO ASKS THE QUESTION
+              </text>
+
+              <!-- Consumer cards -->
+              <rect
+                x="20"
+                y="48"
+                width="120"
+                height="56"
+                rx="8"
+                fill="#ffffff"
+                stroke="#e5e5e5"
+                stroke-width="1"
+                class="d-glow d-glow-1"
+              />
+              <text
+                x="36"
+                y="72"
+                font-family="'JetBrains Mono',monospace"
+                font-size="9"
+                font-weight="600"
+                fill="#0a0a0a"
+              >
+                Dashboard
+              </text>
+              <text
+                x="36"
+                y="88"
+                font-family="'JetBrains Mono',monospace"
+                font-size="7"
+                fill="#737373"
+              >
+                Live utilisation
+              </text>
+
+              <rect
+                x="20"
+                y="116"
+                width="120"
+                height="56"
+                rx="8"
+                fill="#ffffff"
+                stroke="#e5e5e5"
+                stroke-width="1"
+                class="d-glow d-glow-2"
+              />
+              <text
+                x="36"
+                y="140"
+                font-family="'JetBrains Mono',monospace"
+                font-size="9"
+                font-weight="600"
+                fill="#0a0a0a"
+              >
+                ERP System
+              </text>
+              <text
+                x="36"
+                y="156"
+                font-family="'JetBrains Mono',monospace"
+                font-size="7"
+                fill="#737373"
+              >
+                Production counts
+              </text>
+
+              <rect
+                x="20"
+                y="184"
+                width="120"
+                height="56"
+                rx="8"
+                fill="#ffffff"
+                stroke="#e5e5e5"
+                stroke-width="1"
+                class="d-glow d-glow-3"
+              />
+              <text
+                x="36"
+                y="208"
+                font-family="'JetBrains Mono',monospace"
+                font-size="9"
+                font-weight="600"
+                fill="#0a0a0a"
+              >
+                Maint. App
+              </text>
+              <text
+                x="36"
+                y="224"
+                font-family="'JetBrains Mono',monospace"
+                font-size="7"
+                fill="#737373"
+              >
+                MTBF / MTTR
+              </text>
+
+              <rect
+                x="20"
+                y="252"
+                width="120"
+                height="56"
+                rx="8"
+                fill="#ffffff"
+                stroke="#e5e5e5"
+                stroke-width="1"
+                class="d-glow d-glow-4"
+              />
+              <text
+                x="36"
+                y="276"
+                font-family="'JetBrains Mono',monospace"
+                font-size="9"
+                font-weight="600"
+                fill="#0a0a0a"
+              >
+                AI / Analytics
+              </text>
+              <text
+                x="36"
+                y="292"
+                font-family="'JetBrains Mono',monospace"
+                font-size="7"
+                fill="#737373"
+              >
+                Historical data
+              </text>
+
+              <!-- Flow lines to UNS API -->
+              <line
+                x1="140"
+                y1="76"
+                x2="240"
+                y2="168"
+                stroke="#d4d4d4"
+                stroke-width="1"
+                class="d-flow"
+              />
+              <line
+                x1="140"
+                y1="144"
+                x2="240"
+                y2="168"
+                stroke="#d4d4d4"
+                stroke-width="1"
+                class="d-flow"
+              />
+              <line
+                x1="140"
+                y1="212"
+                x2="240"
+                y2="180"
+                stroke="#d4d4d4"
+                stroke-width="1"
+                class="d-flow"
+              />
+              <line
+                x1="140"
+                y1="280"
+                x2="240"
+                y2="180"
+                stroke="#d4d4d4"
+                stroke-width="1"
+                class="d-flow"
+              />
+
+              <!-- Packets -->
+              <circle
+                r="3"
+                fill="#0a0a0a"
+                style="offset-path: path('M 240 168 L 140 76')"
+                class="d-pkt d-pkt-1"
+              />
+              <circle
+                r="3"
+                fill="#0a0a0a"
+                style="offset-path: path('M 240 168 L 140 144')"
+                class="d-pkt d-pkt-2"
+              />
+              <circle
+                r="3"
+                fill="#0a0a0a"
+                style="offset-path: path('M 240 180 L 140 212')"
+                class="d-pkt d-pkt-3"
+              />
+              <circle
+                r="3"
+                fill="#0a0a0a"
+                style="offset-path: path('M 240 180 L 140 280')"
+                class="d-pkt d-pkt-4"
+              />
+
+              <!-- UNS API box -->
+              <rect
+                x="240"
+                y="140"
+                width="180"
+                height="68"
+                rx="8"
+                fill="#0a0a0a"
+              />
+              <text
+                x="330"
+                y="166"
+                font-family="'JetBrains Mono',monospace"
+                font-size="11"
+                font-weight="600"
+                fill="#ffffff"
+                text-anchor="middle"
+              >
+                UNS API
+              </text>
+              <text
+                x="330"
+                y="182"
+                font-family="'JetBrains Mono',monospace"
+                font-size="8"
+                fill="#a3a3a3"
+                text-anchor="middle"
+              >
+                One endpoint · Any question
+              </text>
+              <text
+                x="330"
+                y="198"
+                font-family="'JetBrains Mono',monospace"
+                font-size="7"
+                fill="#a3a3a3"
+                text-anchor="middle"
+              >
+                GET /uns-kpi?hours=8&amp;machine=cnc-01
+              </text>
+
+              <!-- Bottom label -->
+              <rect
+                x="20"
+                y="318"
+                width="400"
+                height="2"
+                rx="1"
+                fill="#e5e5e5"
+              />
+              <text
+                x="220"
+                y="336"
+                font-family="'JetBrains Mono',monospace"
+                font-size="7"
+                fill="#a3a3a3"
+                text-anchor="middle"
+              >
+                Many consumers · One API · Zero coupling
+              </text>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- ═══════════════════════════════════════════
+     STEP 2 — THE KPI LAYER
+     ═══════════════════════════════════════════ -->
+    <section class="fade-in">
+      <div class="container">
+        <div class="step-grid">
+          <div class="mini-svg">
+            <svg
+              viewBox="0 0 440 300"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <rect
+                x="0"
+                y="0"
+                width="440"
+                height="300"
+                rx="12"
+                fill="#fafafa"
+                stroke="#e5e5e5"
+                stroke-width="1"
+              />
+
+              <text
+                x="20"
+                y="28"
+                font-family="'JetBrains Mono',monospace"
+                font-size="8"
+                font-weight="600"
+                fill="#a3a3a3"
+                letter-spacing="0.08em"
+              >
+                UNS-KPI — COMPUTE ON DEMAND
+              </text>
+
+              <!-- Request -->
+              <rect
+                x="20"
+                y="48"
+                width="180"
+                height="52"
+                rx="8"
+                fill="#ffffff"
+                stroke="#e5e5e5"
+                stroke-width="1"
+              />
+              <text
+                x="36"
+                y="68"
+                font-family="'JetBrains Mono',monospace"
+                font-size="7"
+                font-weight="600"
+                fill="#a3a3a3"
+              >
+                HTTP REQUEST
+              </text>
+              <text
+                x="36"
+                y="86"
+                font-family="'JetBrains Mono',monospace"
+                font-size="9"
+                font-weight="600"
+                fill="#0a0a0a"
+              >
+                GET /uns-kpi?hours=8
+              </text>
+
+              <!-- Arrow -->
+              <line
+                x1="200"
+                y1="74"
+                x2="240"
+                y2="74"
+                stroke="#d4d4d4"
+                stroke-width="1"
+                class="d-flow"
+              />
+              <circle
+                r="3"
+                fill="#0a0a0a"
+                style="offset-path: path('M 200 74 L 240 74')"
+                class="d-pkt d-pkt-1"
+              />
+
+              <!-- uns-kpi -->
+              <rect
+                x="240"
+                y="48"
+                width="100"
+                height="52"
+                rx="8"
+                fill="#0a0a0a"
+              />
+              <text
+                x="290"
+                y="72"
+                font-family="'JetBrains Mono',monospace"
+                font-size="10"
+                font-weight="600"
+                fill="#ffffff"
+                text-anchor="middle"
+              >
+                uns-kpi
+              </text>
+              <text
+                x="290"
+                y="88"
+                font-family="'JetBrains Mono',monospace"
+                font-size="7"
+                fill="#a3a3a3"
+                text-anchor="middle"
+              >
+                Go · HTTP
+              </text>
+
+              <!-- Arrow down to DB -->
+              <line
+                x1="290"
+                y1="100"
+                x2="290"
+                y2="130"
+                stroke="#d4d4d4"
+                stroke-width="1"
+                class="d-flow"
+              />
+              <circle
+                r="2.5"
+                fill="#0a0a0a"
+                style="offset-path: path('M 290 130 L 290 100')"
+                class="d-pkt d-pkt-3"
+              />
+
+              <!-- PostgreSQL -->
+              <rect
+                x="240"
+                y="130"
+                width="100"
+                height="44"
+                rx="8"
+                fill="#ffffff"
+                stroke="#0a0a0a"
+                stroke-width="1.5"
+              />
+              <text
+                x="290"
+                y="150"
+                font-family="'JetBrains Mono',monospace"
+                font-size="9"
+                font-weight="600"
+                fill="#0a0a0a"
+                text-anchor="middle"
+              >
+                PostgreSQL
+              </text>
+              <text
+                x="290"
+                y="164"
+                font-family="'JetBrains Mono',monospace"
+                font-size="7"
+                fill="#737373"
+                text-anchor="middle"
+              >
+                4 tables
+              </text>
+
+              <!-- Arrow to response -->
+              <line
+                x1="340"
+                y1="74"
+                x2="370"
+                y2="74"
+                stroke="#d4d4d4"
+                stroke-width="1"
+                class="d-flow"
+              />
+              <circle
+                r="3"
+                fill="#0a0a0a"
+                style="offset-path: path('M 340 74 L 370 74')"
+                class="d-pkt d-pkt-4"
+              />
+
+              <!-- Response card -->
+              <rect
+                x="20"
+                y="190"
+                width="400"
+                height="92"
+                rx="8"
+                fill="#ffffff"
+                stroke="#0a0a0a"
+                stroke-width="1.5"
+              />
+              <text
+                x="36"
+                y="212"
+                font-family="'JetBrains Mono',monospace"
+                font-size="7"
+                font-weight="600"
+                fill="#a3a3a3"
+              >
+                JSON RESPONSE · 0.3 SECONDS
+              </text>
+
+              <!-- KPI values -->
+              <text
+                x="36"
+                y="236"
+                font-family="'JetBrains Mono',monospace"
+                font-size="20"
+                font-weight="700"
+                fill="#0a0a0a"
+              >
+                72.4%
+              </text>
+              <text
+                x="120"
+                y="236"
+                font-family="'JetBrains Mono',monospace"
+                font-size="8"
+                fill="#737373"
+              >
+                Utilisation
+              </text>
+
+              <text
+                x="200"
+                y="228"
+                font-family="'JetBrains Mono',monospace"
+                font-size="9"
+                font-weight="600"
+                fill="#0a0a0a"
+              >
+                94%
+              </text>
+              <text
+                x="230"
+                y="228"
+                font-family="'JetBrains Mono',monospace"
+                font-size="7"
+                fill="#737373"
+              >
+                Availability
+              </text>
+
+              <text
+                x="200"
+                y="244"
+                font-family="'JetBrains Mono',monospace"
+                font-size="9"
+                font-weight="600"
+                fill="#0a0a0a"
+              >
+                48/hr
+              </text>
+              <text
+                x="240"
+                y="244"
+                font-family="'JetBrains Mono',monospace"
+                font-size="7"
+                fill="#737373"
+              >
+                Throughput
+              </text>
+
+              <text
+                x="310"
+                y="228"
+                font-family="'JetBrains Mono',monospace"
+                font-size="9"
+                font-weight="600"
+                fill="#0a0a0a"
+              >
+                142m
+              </text>
+              <text
+                x="348"
+                y="228"
+                font-family="'JetBrains Mono',monospace"
+                font-size="7"
+                fill="#737373"
+              >
+                MTBF
+              </text>
+
+              <text
+                x="310"
+                y="244"
+                font-family="'JetBrains Mono',monospace"
+                font-size="9"
+                font-weight="600"
+                fill="#0a0a0a"
+              >
+                8.3m
+              </text>
+              <text
+                x="348"
+                y="244"
+                font-family="'JetBrains Mono',monospace"
+                font-size="7"
+                fill="#737373"
+              >
+                MTTR
+              </text>
+
+              <text
+                x="36"
+                y="268"
+                font-family="'JetBrains Mono',monospace"
+                font-size="7"
+                fill="#a3a3a3"
+              >
+                cnc-01 · last shift · 06:00–14:00 · Pareto: Tool Change 34%,
+                Material Wait 22%, Alarm 18%
+              </text>
+            </svg>
+          </div>
+
+          <div class="step-text">
+            <div class="step-num">Step 02</div>
+            <h3>The KPI Layer — Computed on Demand</h3>
+            <p>
+              When a consumer asks "what was the utilisation of CNC-01 last
+              shift?", the request hits <strong>uns-kpi</strong> — a pure read
+              function written in Go. It doesn't store anything. It queries
+              PostgreSQL, computes the answer, and returns JSON.
+            </p>
+            <p>
+              One API call returns utilisation, availability, throughput, MTBF,
+              MTTR, and a stoppage pareto — all computed from real data, not
+              pre-aggregated summaries. Filter by machine, area, or any time
+              range.
+            </p>
+            <p>
+              Because it's a stateless function, it scales horizontally. Because
+              it's code (not a dashboard configuration), it's testable,
+              reviewable, and version-controlled.
+            </p>
+            <p
+              style="
+                font-family: var(--font-mono);
+                font-size: 12px;
+                color: var(--grey-500);
+                margin-top: 16px;
+                padding: 12px 16px;
+                background: var(--grey-50);
+                border: 1px solid var(--grey-200);
+                border-radius: 8px;
+              "
+            >
+              GET /uns-kpi?hours=8&amp;machine=cnc-01
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- ═══════════════════════════════════════════
+     STEP 3 — THE DATABASE
+     ═══════════════════════════════════════════ -->
+    <section class="fade-in">
+      <div class="container">
+        <div class="step-grid">
+          <div class="step-text">
+            <div class="step-num">Step 03</div>
+            <h3>The Database — Where History Lives</h3>
+            <p>
+              The KPI function needs data to compute from. That data lives in
+              <strong>PostgreSQL</strong> — four tables, auto-created on first
+              run, no migrations needed. Each table is written by a specific
+              function and read by uns-kpi.
+            </p>
+            <p>
+              This is where the UNS becomes more than a real-time data stream.
+              Every state change, every stoppage, every production run is
+              recorded with precise timestamps and durations. History is what
+              turns live data into actionable insight.
+            </p>
+            <p>
+              The UNS Framework standard describes your database configuration
+              in YAML — so it's documented alongside everything else.
+            </p>
+
+            <div
+              class="yaml-block yaml-animated"
+              data-animate
+              style="margin-top: 24px"
+            >
+              <div class="yaml-line">
+                <span class="yc"># database.yml</span>
+              </div>
+              <div class="yaml-line">
+                <span class="yk">version:</span>
+                <span class="yv">'1.0'</span>
+              </div>
+              <div class="yaml-line">
+                <span class="yk">database:</span>
+              </div>
+              <div class="yaml-line">
+                &nbsp;&nbsp;<span class="yk">timeseries:</span>
+              </div>
+              <div class="yaml-line">
+                &nbsp;&nbsp;&nbsp;&nbsp;<span class="yk">host:</span>
+                <span class="yv">'fnkit-postgres'</span>
+              </div>
+              <div class="yaml-line">
+                &nbsp;&nbsp;&nbsp;&nbsp;<span class="yk">port:</span>
+                <span class="yv">5432</span>
+              </div>
+              <div class="yaml-line">
+                &nbsp;&nbsp;&nbsp;&nbsp;<span class="yk">username:</span>
+                <span class="yv">'uns'</span>
+              </div>
+              <div class="yaml-line">
+                &nbsp;&nbsp;&nbsp;&nbsp;<span class="yk">password:</span>
+                <span class="yv">'********'</span>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <table class="info-table">
+              <thead>
+                <tr>
+                  <th>Table</th>
+                  <th>Written by</th>
+                  <th>Stores</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>uns_state</td>
+                  <td>uns-state</td>
+                  <td>Machine state durations with timestamps</td>
+                </tr>
+                <tr>
+                  <td>uns_stoppage</td>
+                  <td>uns-stoppage</td>
+                  <td>Classified stoppage reasons and durations</td>
+                </tr>
+                <tr>
+                  <td>uns_productivity</td>
+                  <td>uns-productivity</td>
+                  <td>Production runs, parts count, throughput</td>
+                </tr>
+                <tr>
+                  <td>uns_input</td>
+                  <td>uns-input</td>
+                  <td>Manual operator entries — scrap, quality, notes</td>
+                </tr>
+              </tbody>
+            </table>
+            <p
+              style="
+                font-size: 13px;
+                color: var(--grey-700);
+                margin-top: 20px;
+                line-height: 1.6;
+              "
+            >
+              All tables are auto-created on first run. No schema migrations, no
+              DBA required. Each function owns its table — clean separation of
+              concerns.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- ═══════════════════════════════════════════
+     STEP 4 — THE FUNCTIONS
+     ═══════════════════════════════════════════ -->
+    <section class="fade-in">
+      <div class="container">
+        <div class="step-grid">
+          <div class="mini-svg">
+            <svg
+              viewBox="0 0 440 360"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <rect
+                x="0"
+                y="0"
+                width="440"
+                height="360"
+                rx="12"
+                fill="#fafafa"
+                stroke="#e5e5e5"
+                stroke-width="1"
+              />
+
+              <text
+                x="20"
+                y="28"
+                font-family="'JetBrains Mono',monospace"
+                font-size="8"
+                font-weight="600"
+                fill="#a3a3a3"
+                letter-spacing="0.08em"
+              >
+                FUNCTIONS — DETECT CHANGES, WRITE HISTORY
+              </text>
+
+              <!-- Cache source -->
+              <rect
+                x="20"
+                y="48"
+                width="100"
+                height="44"
+                rx="8"
+                fill="#ffffff"
+                stroke="#0a0a0a"
+                stroke-width="1.5"
+              />
+              <text
+                x="70"
+                y="68"
+                font-family="'JetBrains Mono',monospace"
+                font-size="9"
+                font-weight="600"
+                fill="#0a0a0a"
+                text-anchor="middle"
+              >
+                Valkey
+              </text>
+              <text
+                x="70"
+                y="82"
+                font-family="'JetBrains Mono',monospace"
+                font-size="7"
+                fill="#737373"
+                text-anchor="middle"
+              >
+                Cache
+              </text>
+
+              <!-- Trunk line from cache -->
+              <line
+                x1="120"
+                y1="70"
+                x2="150"
+                y2="70"
+                stroke="#d4d4d4"
+                stroke-width="1"
+              />
+              <line
+                x1="150"
+                y1="70"
+                x2="150"
+                y2="310"
+                stroke="#d4d4d4"
+                stroke-width="1"
+              />
+
+              <!-- Function cards -->
+              <!-- uns-state -->
+              <line
+                x1="150"
+                y1="70"
+                x2="180"
+                y2="70"
+                stroke="#d4d4d4"
+                stroke-width="1"
+                class="d-flow"
+              />
+              <rect
+                x="180"
+                y="48"
+                width="120"
+                height="44"
+                rx="6"
+                fill="#ffffff"
+                stroke="#e5e5e5"
+                stroke-width="1"
+                class="d-glow d-glow-1"
+              />
+              <text
+                x="196"
+                y="68"
+                font-family="'JetBrains Mono',monospace"
+                font-size="9"
+                font-weight="600"
+                fill="#0a0a0a"
+              >
+                uns-state
+              </text>
+              <text
+                x="196"
+                y="82"
+                font-family="'JetBrains Mono',monospace"
+                font-size="7"
+                fill="#737373"
+              >
+                Go · State durations
+              </text>
+
+              <!-- uns-stoppage -->
+              <line
+                x1="150"
+                y1="130"
+                x2="180"
+                y2="130"
+                stroke="#d4d4d4"
+                stroke-width="1"
+                class="d-flow"
+              />
+              <rect
+                x="180"
+                y="108"
+                width="120"
+                height="44"
+                rx="6"
+                fill="#ffffff"
+                stroke="#e5e5e5"
+                stroke-width="1"
+                class="d-glow d-glow-2"
+              />
+              <text
+                x="196"
+                y="128"
+                font-family="'JetBrains Mono',monospace"
+                font-size="9"
+                font-weight="600"
+                fill="#0a0a0a"
+              >
+                uns-stoppage
+              </text>
+              <text
+                x="196"
+                y="142"
+                font-family="'JetBrains Mono',monospace"
+                font-size="7"
+                fill="#737373"
+              >
+                Node · Classify reasons
+              </text>
+
+              <!-- uns-productivity -->
+              <line
+                x1="150"
+                y1="190"
+                x2="180"
+                y2="190"
+                stroke="#d4d4d4"
+                stroke-width="1"
+                class="d-flow"
+              />
+              <rect
+                x="180"
+                y="168"
+                width="120"
+                height="44"
+                rx="6"
+                fill="#ffffff"
+                stroke="#e5e5e5"
+                stroke-width="1"
+                class="d-glow d-glow-3"
+              />
+              <text
+                x="196"
+                y="188"
+                font-family="'JetBrains Mono',monospace"
+                font-size="9"
+                font-weight="600"
+                fill="#0a0a0a"
+              >
+                uns-productivity
+              </text>
+              <text
+                x="196"
+                y="202"
+                font-family="'JetBrains Mono',monospace"
+                font-size="7"
+                fill="#737373"
+              >
+                Go · Production runs
+              </text>
+
+              <!-- uns-log -->
+              <line
+                x1="150"
+                y1="250"
+                x2="180"
+                y2="250"
+                stroke="#d4d4d4"
+                stroke-width="1"
+                class="d-flow"
+              />
+              <rect
+                x="180"
+                y="228"
+                width="120"
+                height="44"
+                rx="6"
+                fill="#ffffff"
+                stroke="#e5e5e5"
+                stroke-width="1"
+                class="d-glow d-glow-4"
+              />
+              <text
+                x="196"
+                y="248"
+                font-family="'JetBrains Mono',monospace"
+                font-size="9"
+                font-weight="600"
+                fill="#0a0a0a"
+              >
+                uns-log
+              </text>
+              <text
+                x="196"
+                y="262"
+                font-family="'JetBrains Mono',monospace"
+                font-size="7"
+                fill="#737373"
+              >
+                Go · Change snapshots
+              </text>
+
+              <!-- uns-input -->
+              <line
+                x1="150"
+                y1="310"
+                x2="180"
+                y2="310"
+                stroke="#d4d4d4"
+                stroke-width="1"
+                class="d-flow"
+              />
+              <rect
+                x="180"
+                y="288"
+                width="120"
+                height="44"
+                rx="6"
+                fill="#ffffff"
+                stroke="#e5e5e5"
+                stroke-width="1"
+                class="d-glow d-glow-5"
+              />
+              <text
+                x="196"
+                y="308"
+                font-family="'JetBrains Mono',monospace"
+                font-size="9"
+                font-weight="600"
+                fill="#0a0a0a"
+              >
+                uns-input
+              </text>
+              <text
+                x="196"
+                y="322"
+                font-family="'JetBrains Mono',monospace"
+                font-size="7"
+                fill="#737373"
+              >
+                Node · Operator data
+              </text>
+
+              <!-- Merge trunk to DB -->
+              <line
+                x1="300"
+                y1="70"
+                x2="340"
+                y2="70"
+                stroke="#d4d4d4"
+                stroke-width="1"
+              />
+              <line
+                x1="300"
+                y1="130"
+                x2="340"
+                y2="130"
+                stroke="#d4d4d4"
+                stroke-width="1"
+              />
+              <line
+                x1="300"
+                y1="190"
+                x2="340"
+                y2="190"
+                stroke="#d4d4d4"
+                stroke-width="1"
+              />
+              <line
+                x1="300"
+                y1="250"
+                x2="340"
+                y2="250"
+                stroke="#d4d4d4"
+                stroke-width="1"
+              />
+              <line
+                x1="300"
+                y1="310"
+                x2="340"
+                y2="310"
+                stroke="#d4d4d4"
+                stroke-width="1"
+              />
+              <line
+                x1="340"
+                y1="70"
+                x2="340"
+                y2="310"
+                stroke="#d4d4d4"
+                stroke-width="1"
+              />
+              <line
+                x1="340"
+                y1="190"
+                x2="370"
+                y2="190"
+                stroke="#d4d4d4"
+                stroke-width="1"
+                class="d-flow"
+              />
+
+              <!-- Packets -->
+              <circle
+                r="2.5"
+                fill="#0a0a0a"
+                style="
+                  offset-path: path('M 300 70 L 340 70 L 340 190 L 370 190');
+                "
+                class="d-pkt d-pkt-1"
+              />
+              <circle
+                r="2.5"
+                fill="#0a0a0a"
+                style="
+                  offset-path: path('M 300 190 L 340 190 L 340 190 L 370 190');
+                "
+                class="d-pkt d-pkt-3"
+              />
+              <circle
+                r="2.5"
+                fill="#0a0a0a"
+                style="
+                  offset-path: path('M 300 310 L 340 310 L 340 190 L 370 190');
+                "
+                class="d-pkt d-pkt-5"
+              />
+
+              <!-- PostgreSQL -->
+              <rect
+                x="370"
+                y="164"
+                width="52"
+                height="52"
+                rx="8"
+                fill="#ffffff"
+                stroke="#0a0a0a"
+                stroke-width="1.5"
+              />
+              <text
+                x="396"
+                y="188"
+                font-family="'JetBrains Mono',monospace"
+                font-size="7"
+                font-weight="600"
+                fill="#0a0a0a"
+                text-anchor="middle"
+              >
+                Postgres
+              </text>
+              <text
+                x="396"
+                y="200"
+                font-family="'JetBrains Mono',monospace"
+                font-size="6"
+                fill="#737373"
+                text-anchor="middle"
+              >
+                4 tables
+              </text>
+            </svg>
+          </div>
+
+          <div class="step-text">
+            <div class="step-num">Step 04</div>
+            <h3>The Functions — Processing in Real Time</h3>
+            <p>
+              The database doesn't fill itself. Five independent
+              <strong>serverless functions</strong> — written in Go and Node.js
+              — read from the cache, detect changes, and write structured
+              records to PostgreSQL.
+            </p>
+            <p>
+              <strong>uns-state</strong> tracks machine state transitions and
+              logs precise durations. <strong>uns-stoppage</strong>
+              auto-classifies why machines aren't running.
+              <strong>uns-productivity</strong> tracks production runs and parts
+              counts. <strong>uns-log</strong> snapshots every data change.
+              <strong>uns-input</strong> captures manual operator entries.
+            </p>
+            <p>
+              Each function is its own container, its own repo, its own deploy
+              lifecycle. They compose through shared infrastructure — not
+              through each other. The UNS Framework describes them in YAML:
+            </p>
+
+            <div
+              class="yaml-block yaml-animated"
+              data-animate
+              style="margin-top: 24px"
+            >
+              <div class="yaml-line">
+                <span class="yc"># function.yml</span>
+              </div>
+              <div class="yaml-line">
+                <span class="yk">version:</span>
+                <span class="yv">'1.0'</span>
+              </div>
+              <div class="yaml-line">
+                <span class="yk">function:</span>
+              </div>
+              <div class="yaml-line">
+                &nbsp;&nbsp;- <span class="yk">name:</span>
+                <span class="yv">uns-state</span>
+              </div>
+              <div class="yaml-line">
+                &nbsp;&nbsp;&nbsp;&nbsp;<span class="yk">endpoint:</span>
+                <span class="yv">http://uns-state:8080</span>
+              </div>
+              <div class="yaml-line">
+                &nbsp;&nbsp;- <span class="yk">name:</span>
+                <span class="yv">uns-stoppage</span>
+              </div>
+              <div class="yaml-line">
+                &nbsp;&nbsp;&nbsp;&nbsp;<span class="yk">endpoint:</span>
+                <span class="yv">http://uns-stoppage:8080</span>
+              </div>
+              <div class="yaml-line">
+                &nbsp;&nbsp;- <span class="yk">name:</span>
+                <span class="yv">uns-productivity</span>
+              </div>
+              <div class="yaml-line">
+                &nbsp;&nbsp;&nbsp;&nbsp;<span class="yk">endpoint:</span>
+                <span class="yv">http://uns-productivity:8080</span>
+              </div>
+              <div class="yaml-line">
+                &nbsp;&nbsp;- <span class="yk">name:</span>
+                <span class="yv">uns-log</span>
+              </div>
+              <div class="yaml-line">
+                &nbsp;&nbsp;&nbsp;&nbsp;<span class="yk">endpoint:</span>
+                <span class="yv">http://uns-log:8080</span>
+              </div>
+              <div class="yaml-line">
+                &nbsp;&nbsp;- <span class="yk">name:</span>
+                <span class="yv">uns-input</span>
+              </div>
+              <div class="yaml-line">
+                &nbsp;&nbsp;&nbsp;&nbsp;<span class="yk">endpoint:</span>
+                <span class="yv">http://uns-input:8080</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- ═══════════════════════════════════════════
+     STEP 5 — THE CACHE
+     ═══════════════════════════════════════════ -->
+    <section class="fade-in">
+      <div class="container">
+        <div class="step-grid">
+          <div class="step-text">
+            <div class="step-num">Step 05</div>
+            <h3>The Cache — The Real-Time Snapshot</h3>
+            <p>
+              Functions don't read directly from MQTT. They read from
+              <strong>Valkey</strong> — an open-source, Redis-compatible cache
+              that holds the current state of the entire namespace.
+            </p>
+            <p>
+              For every MQTT topic, the cache stores two values:
+              <strong>current</strong> (<code
+                style="
+                  font-family: var(--font-mono);
+                  font-size: 12px;
+                  background: var(--grey-100);
+                  padding: 2px 6px;
+                  border-radius: 4px;
+                "
+                >uns:data:*</code
+              >) and <strong>previous</strong> (<code
+                style="
+                  font-family: var(--font-mono);
+                  font-size: 12px;
+                  background: var(--grey-100);
+                  padding: 2px 6px;
+                  border-radius: 4px;
+                "
+                >uns:prev:*</code
+              >). This is the key pattern: by comparing current to previous,
+              functions know whether something actually changed — and only write
+              to the database when it did.
+            </p>
+            <p>
+              The cache also maintains a topic registry (<code
+                style="
+                  font-family: var(--font-mono);
+                  font-size: 12px;
+                  background: var(--grey-100);
+                  padding: 2px 6px;
+                  border-radius: 4px;
+                "
+                >uns:topics</code
+              >) — a set of every topic that has ever been seen. This is how
+              functions discover what machines exist without hardcoding anything.
+            </p>
+          </div>
+
+          <div class="mini-svg">
+            <svg
+              viewBox="0 0 440 280"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <rect
+                x="0"
+                y="0"
+                width="440"
+                height="280"
+                rx="12"
+                fill="#fafafa"
+                stroke="#e5e5e5"
+                stroke-width="1"
+              />
+
+              <text
+                x="20"
+                y="28"
+                font-family="'JetBrains Mono',monospace"
+                font-size="8"
+                font-weight="600"
+                fill="#a3a3a3"
+                letter-spacing="0.08em"
+              >
+                VALKEY CACHE — CURRENT + PREVIOUS
+              </text>
+
+              <!-- Cache box -->
+              <rect
+                x="20"
+                y="48"
+                width="400"
+                height="210"
+                rx="8"
+                fill="#ffffff"
+                stroke="#0a0a0a"
+                stroke-width="1.5"
+              />
+
+              <!-- Header -->
+              <rect
+                x="20"
+                y="48"
+                width="400"
+                height="32"
+                rx="8"
+                fill="#0a0a0a"
+              />
+              <rect x="20" y="68" width="400" height="12" fill="#0a0a0a" />
+              <text
+                x="36"
+                y="68"
+                font-family="'JetBrains Mono',monospace"
+                font-size="9"
+                font-weight="600"
+                fill="#ffffff"
+              >
+                Valkey Cache
+              </text>
+
+              <!-- Key-value rows -->
+              <text
+                x="36"
+                y="104"
+                font-family="'JetBrains Mono',monospace"
+                font-size="8"
+                font-weight="500"
+                fill="#0a0a0a"
+              >
+                uns:data:v1.0/.../cnc-01/status
+              </text>
+              <text
+                x="340"
+                y="104"
+                font-family="'JetBrains Mono',monospace"
+                font-size="8"
+                fill="#737373"
+              >
+                "ACTIVE"
+              </text>
+              <circle
+                cx="404"
+                cy="100"
+                r="4"
+                fill="#0a0a0a"
+                class="d-pulse d-pulse-1"
+              />
+
+              <line
+                x1="36"
+                y1="114"
+                x2="404"
+                y2="114"
+                stroke="#f5f5f5"
+                stroke-width="1"
+              />
+
+              <text
+                x="36"
+                y="130"
+                font-family="'JetBrains Mono',monospace"
+                font-size="8"
+                font-weight="500"
+                fill="#0a0a0a"
+              >
+                uns:prev:v1.0/.../cnc-01/status
+              </text>
+              <text
+                x="340"
+                y="130"
+                font-family="'JetBrains Mono',monospace"
+                font-size="8"
+                fill="#737373"
+              >
+                "IDLE"
+              </text>
+
+              <line
+                x1="36"
+                y1="140"
+                x2="404"
+                y2="140"
+                stroke="#f5f5f5"
+                stroke-width="1"
+              />
+
+              <text
+                x="36"
+                y="156"
+                font-family="'JetBrains Mono',monospace"
+                font-size="8"
+                font-weight="500"
+                fill="#0a0a0a"
+              >
+                uns:data:v1.0/.../cnc-01/program
+              </text>
+              <text
+                x="340"
+                y="156"
+                font-family="'JetBrains Mono',monospace"
+                font-size="8"
+                fill="#737373"
+              >
+                "O1001"
+              </text>
+              <circle
+                cx="404"
+                cy="152"
+                r="4"
+                fill="#0a0a0a"
+                class="d-pulse d-pulse-2"
+              />
+
+              <line
+                x1="36"
+                y1="166"
+                x2="404"
+                y2="166"
+                stroke="#f5f5f5"
+                stroke-width="1"
+              />
+
+              <text
+                x="36"
+                y="182"
+                font-family="'JetBrains Mono',monospace"
+                font-size="8"
+                font-weight="500"
+                fill="#0a0a0a"
+              >
+                uns:prev:v1.0/.../cnc-01/program
+              </text>
+              <text
+                x="340"
+                y="182"
+                font-family="'JetBrains Mono',monospace"
+                font-size="8"
+                fill="#737373"
+              >
+                "O1001"
+              </text>
+
+              <line
+                x1="36"
+                y1="192"
+                x2="404"
+                y2="192"
+                stroke="#f5f5f5"
+                stroke-width="1"
+              />
+
+              <!-- Change detection highlight -->
+              <rect
+                x="36"
+                y="200"
+                width="368"
+                height="44"
+                rx="6"
+                fill="#f5f5f5"
+              />
+              <text
+                x="220"
+                y="218"
+                font-family="'JetBrains Mono',monospace"
+                font-size="8"
+                font-weight="600"
+                fill="#0a0a0a"
+                text-anchor="middle"
+              >
+                status: IDLE → ACTIVE = changed ✓
+              </text>
+              <text
+                x="220"
+                y="234"
+                font-family="'JetBrains Mono',monospace"
+                font-size="8"
+                fill="#737373"
+                text-anchor="middle"
+              >
+                program: O1001 → O1001 = unchanged ✗
+              </text>
+
+              <!-- Bottom label -->
+              <text
+                x="220"
+                y="272"
+                font-family="'JetBrains Mono',monospace"
+                font-size="7"
+                fill="#a3a3a3"
+                text-anchor="middle"
+              >
+                Functions only write to PostgreSQL when a value actually changes
+              </text>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- ═══════════════════════════════════════════
+     STEP 6 — THE BROKER
+     ═══════════════════════════════════════════ -->
+    <section class="fade-in">
+      <div class="container">
+        <div class="step-grid">
+          <div class="mini-svg">
+            <svg
+              viewBox="0 0 440 300"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <rect
+                x="0"
+                y="0"
+                width="440"
+                height="300"
+                rx="12"
+                fill="#fafafa"
+                stroke="#e5e5e5"
+                stroke-width="1"
+              />
+
+              <text
+                x="20"
+                y="28"
+                font-family="'JetBrains Mono',monospace"
+                font-size="8"
+                font-weight="600"
+                fill="#a3a3a3"
+                letter-spacing="0.08em"
+              >
+                MQTT BROKER — PUBLISH / SUBSCRIBE
+              </text>
+
+              <!-- Producers (left) -->
+              <rect
+                x="20"
+                y="56"
+                width="100"
+                height="36"
+                rx="6"
+                fill="#ffffff"
+                stroke="#e5e5e5"
+                stroke-width="1"
+              />
+              <text
+                x="70"
+                y="78"
+                font-family="'JetBrains Mono',monospace"
+                font-size="8"
+                font-weight="500"
+                fill="#0a0a0a"
+                text-anchor="middle"
+              >
+                cnc-01
+              </text>
+
+              <rect
+                x="20"
+                y="100"
+                width="100"
+                height="36"
+                rx="6"
+                fill="#ffffff"
+                stroke="#e5e5e5"
+                stroke-width="1"
+              />
+              <text
+                x="70"
+                y="122"
+                font-family="'JetBrains Mono',monospace"
+                font-size="8"
+                font-weight="500"
+                fill="#0a0a0a"
+                text-anchor="middle"
+              >
+                cnc-02
+              </text>
+
+              <rect
+                x="20"
+                y="144"
+                width="100"
+                height="36"
+                rx="6"
+                fill="#ffffff"
+                stroke="#e5e5e5"
+                stroke-width="1"
+              />
+              <text
+                x="70"
+                y="166"
+                font-family="'JetBrains Mono',monospace"
+                font-size="8"
+                font-weight="500"
+                fill="#0a0a0a"
+                text-anchor="middle"
+              >
+                cnc-03
+              </text>
+
+              <rect
+                x="20"
+                y="188"
+                width="100"
+                height="36"
+                rx="6"
+                fill="#ffffff"
+                stroke="#e5e5e5"
+                stroke-width="1"
+              />
+              <text
+                x="70"
+                y="210"
+                font-family="'JetBrains Mono',monospace"
+                font-size="8"
+                font-weight="500"
+                fill="#0a0a0a"
+                text-anchor="middle"
+              >
+                cnc-04
+              </text>
+
+              <text
+                x="70"
+                y="244"
+                font-family="'JetBrains Mono',monospace"
+                font-size="7"
+                fill="#a3a3a3"
+                text-anchor="middle"
+              >
+                PUBLISH
+              </text>
+
+              <!-- Flow lines to broker -->
+              <line
+                x1="120"
+                y1="74"
+                x2="180"
+                y2="140"
+                stroke="#d4d4d4"
+                stroke-width="1"
+                class="d-flow"
+              />
+              <line
+                x1="120"
+                y1="118"
+                x2="180"
+                y2="140"
+                stroke="#d4d4d4"
+                stroke-width="1"
+                class="d-flow"
+              />
+              <line
+                x1="120"
+                y1="162"
+                x2="180"
+                y2="152"
+                stroke="#d4d4d4"
+                stroke-width="1"
+                class="d-flow"
+              />
+              <line
+                x1="120"
+                y1="206"
+                x2="180"
+                y2="152"
+                stroke="#d4d4d4"
+                stroke-width="1"
+                class="d-flow"
+              />
+
+              <!-- Packets to broker -->
+              <circle
+                r="2.5"
+                fill="#0a0a0a"
+                style="offset-path: path('M 120 74 L 180 140')"
+                class="d-pkt d-pkt-1"
+              />
+              <circle
+                r="2.5"
+                fill="#0a0a0a"
+                style="offset-path: path('M 120 118 L 180 140')"
+                class="d-pkt d-pkt-2"
+              />
+              <circle
+                r="2.5"
+                fill="#0a0a0a"
+                style="offset-path: path('M 120 162 L 180 152')"
+                class="d-pkt d-pkt-3"
+              />
+              <circle
+                r="2.5"
+                fill="#0a0a0a"
+                style="offset-path: path('M 120 206 L 180 152')"
+                class="d-pkt d-pkt-4"
+              />
+
+              <!-- MQTT Broker -->
+              <rect
+                x="180"
+                y="112"
+                width="80"
+                height="68"
+                rx="8"
+                fill="#0a0a0a"
+              />
+              <text
+                x="220"
+                y="140"
+                font-family="'JetBrains Mono',monospace"
+                font-size="11"
+                font-weight="600"
+                fill="#ffffff"
+                text-anchor="middle"
+              >
+                MQTT
+              </text>
+              <text
+                x="220"
+                y="156"
+                font-family="'JetBrains Mono',monospace"
+                font-size="7"
+                fill="#a3a3a3"
+                text-anchor="middle"
+              >
+                Broker
+              </text>
+              <text
+                x="220"
+                y="170"
+                font-family="'JetBrains Mono',monospace"
+                font-size="7"
+                fill="#a3a3a3"
+                text-anchor="middle"
+              >
+                Pub/Sub
+              </text>
+
+              <!-- Flow lines to subscribers -->
+              <line
+                x1="260"
+                y1="140"
+                x2="320"
+                y2="74"
+                stroke="#d4d4d4"
+                stroke-width="1"
+                class="d-flow"
+              />
+              <line
+                x1="260"
+                y1="146"
+                x2="320"
+                y2="130"
+                stroke="#d4d4d4"
+                stroke-width="1"
+                class="d-flow"
+              />
+              <line
+                x1="260"
+                y1="152"
+                x2="320"
+                y2="186"
+                stroke="#d4d4d4"
+                stroke-width="1"
+                class="d-flow"
+              />
+
+              <!-- Packets from broker -->
+              <circle
+                r="2.5"
+                fill="#0a0a0a"
+                style="offset-path: path('M 260 140 L 320 74')"
+                class="d-pkt d-pkt-2"
+              />
+              <circle
+                r="2.5"
+                fill="#0a0a0a"
+                style="offset-path: path('M 260 146 L 320 130')"
+                class="d-pkt d-pkt-3"
+              />
+              <circle
+                r="2.5"
+                fill="#0a0a0a"
+                style="offset-path: path('M 260 152 L 320 186')"
+                class="d-pkt d-pkt-4"
+              />
+
+              <!-- Subscribers (right) -->
+              <rect
+                x="320"
+                y="56"
+                width="100"
+                height="36"
+                rx="6"
+                fill="#ffffff"
+                stroke="#e5e5e5"
+                stroke-width="1"
+              />
+              <text
+                x="370"
+                y="72"
+                font-family="'JetBrains Mono',monospace"
+                font-size="8"
+                font-weight="500"
+                fill="#0a0a0a"
+                text-anchor="middle"
+              >
+                uns-framework
+              </text>
+              <text
+                x="370"
+                y="84"
+                font-family="'JetBrains Mono',monospace"
+                font-size="6"
+                fill="#737373"
+                text-anchor="middle"
+              >
+                v1.0/#
+              </text>
+
+              <rect
+                x="320"
+                y="112"
+                width="100"
+                height="36"
+                rx="6"
+                fill="#ffffff"
+                stroke="#e5e5e5"
+                stroke-width="1"
+              />
+              <text
+                x="370"
+                y="128"
+                font-family="'JetBrains Mono',monospace"
+                font-size="8"
+                font-weight="500"
+                fill="#0a0a0a"
+                text-anchor="middle"
+              >
+                Dashboard
+              </text>
+              <text
+                x="370"
+                y="140"
+                font-family="'JetBrains Mono',monospace"
+                font-size="6"
+                fill="#737373"
+                text-anchor="middle"
+              >
+                v1.0/+/+/+/+/status
+              </text>
+
+              <rect
+                x="320"
+                y="168"
+                width="100"
+                height="36"
+                rx="6"
+                fill="#ffffff"
+                stroke="#e5e5e5"
+                stroke-width="1"
+              />
+              <text
+                x="370"
+                y="184"
+                font-family="'JetBrains Mono',monospace"
+                font-size="8"
+                font-weight="500"
+                fill="#0a0a0a"
+                text-anchor="middle"
+              >
+                Future App
+              </text>
+              <text
+                x="370"
+                y="196"
+                font-family="'JetBrains Mono',monospace"
+                font-size="6"
+                fill="#737373"
+                text-anchor="middle"
+              >
+                v1.0/.../area1/#
+              </text>
+
+              <text
+                x="370"
+                y="224"
+                font-family="'JetBrains Mono',monospace"
+                font-size="7"
+                fill="#a3a3a3"
+                text-anchor="middle"
+              >
+                SUBSCRIBE
+              </text>
+
+              <!-- Bottom summary -->
+              <rect
+                x="20"
+                y="252"
+                width="400"
+                height="32"
+                rx="6"
+                fill="#ffffff"
+                stroke="#e5e5e5"
+                stroke-width="1"
+              />
+              <text
+                x="220"
+                y="272"
+                font-family="'JetBrains Mono',monospace"
+                font-size="7"
+                fill="#737373"
+                text-anchor="middle"
+              >
+                Producers don't know consumers · Consumers don't know producers
+                · Adding a new system = 1 connection
+              </text>
+            </svg>
+          </div>
+
+          <div class="step-text">
+            <div class="step-num">Step 06</div>
+            <h3>The Broker — MQTT Pub/Sub</h3>
+            <p>
+              The cache is populated by <strong>uns-framework</strong>, which
+              subscribes to the MQTT broker using a wildcard
+              (<code
+                style="
+                  font-family: var(--font-mono);
+                  font-size: 12px;
+                  background: var(--grey-100);
+                  padding: 2px 6px;
+                  border-radius: 4px;
+                "
+                >v1.0/#</code
+              >) and caches every message it receives.
+            </p>
+            <p>
+              The <strong>MQTT broker</strong> is the central nervous system of
+              the UNS. It's a lightweight message bus that decouples producers
+              from consumers. Machines publish to topics. Applications subscribe
+              to what they need. The broker handles delivery.
+            </p>
+            <p>
+              Adding a new machine means publishing to a new topic — the entire
+              pipeline picks it up automatically. Adding a new consumer means
+              subscribing to existing topics — no changes to producers required.
+            </p>
+
+            <div
+              class="yaml-block yaml-animated"
+              data-animate
+              style="margin-top: 24px"
+            >
+              <div class="yaml-line">
+                <span class="yc"># mqtt.yml</span>
+              </div>
+              <div class="yaml-line">
+                <span class="yk">version:</span>
+                <span class="yv">'1.0'</span>
+              </div>
+              <div class="yaml-line">
+                <span class="yk">mqtt:</span>
+              </div>
+              <div class="yaml-line">
+                &nbsp;&nbsp;<span class="yk">broker:</span>
+              </div>
+              <div class="yaml-line">
+                &nbsp;&nbsp;&nbsp;&nbsp;<span class="yk">host:</span>
+                <span class="yv">'mqtt://mqtt-broker'</span>
+              </div>
+              <div class="yaml-line">
+                &nbsp;&nbsp;&nbsp;&nbsp;<span class="yk">port:</span>
+                <span class="yv">1883</span>
+              </div>
+              <div class="yaml-line">
+                &nbsp;&nbsp;&nbsp;&nbsp;<span class="yk">username:</span>
+                <span class="yv">'uns'</span>
+              </div>
+              <div class="yaml-line">
+                &nbsp;&nbsp;&nbsp;&nbsp;<span class="yk">password:</span>
+                <span class="yv">'********'</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- ═══════════════════════════════════════════
+     STEP 7 — THE STANDARD
+     ═══════════════════════════════════════════ -->
+    <section class="fade-in">
+      <div class="container">
+        <div class="step-grid">
+          <div class="step-text">
+            <div class="step-num">Step 07</div>
+            <h3>The Standard — ISA-95 Topic Hierarchy</h3>
+            <p>
+              Every data point in the UNS has a canonical address following the
+              <strong>ISA-95</strong> international standard for manufacturing
+              systems integration. The path is self-describing — any consumer
+              can parse it to understand where data comes from without mapping
+              tables.
+            </p>
+            <p>
+              The UNS Framework standard describes your entire namespace in
+              YAML: the top-level configuration, sites, areas, lines, cells,
+              equipment, and sensors. Templates let you define a sensor type
+              once and reuse it across hundreds of machines.
+            </p>
+            <p>
+              This is the <strong>paradigm shift</strong>: instead of
+              configuring your namespace in a proprietary platform, you describe
+              it in version-controlled YAML files that are both human-readable
+              and machine-readable.
+            </p>
+          </div>
+
+          <div>
+            <div class="topic-tree topic-tree-animated" data-animate>
+              <div>
+                <span class="tt-segment"><span class="sep">v1.0</span></span
+                ><span class="tt-segment"><span class="sep"> / </span></span
+                ><span class="tt-segment"
+                  ><span class="value">enterprise</span></span
+                ><span class="tt-segment"><span class="sep"> / </span></span
+                ><span class="tt-segment"
+                  ><span class="value">site1</span></span
+                ><span class="tt-segment"><span class="sep"> / </span></span
+                ><span class="tt-segment"
+                  ><span class="value">area1</span></span
+                ><span class="tt-segment"><span class="sep"> / </span></span
+                ><span class="tt-segment"
+                  ><span class="value">cnc-01</span></span
+                ><span class="tt-segment"><span class="sep"> / </span></span
+                ><span class="tt-segment"
+                  ><span class="value">status</span></span
+                >
+              </div>
+              <div class="tt-desc">
+                <span class="level"> └─ namespace version</span>
+              </div>
+              <div class="tt-desc">
+                <span class="level"> └─ company / business unit</span>
+              </div>
+              <div class="tt-desc">
+                <span class="level"> └─ factory / physical site</span>
+              </div>
+              <div class="tt-desc">
+                <span class="level"> └─ production area</span>
+              </div>
+              <div class="tt-desc">
+                <span class="level"> └─ individual machine</span>
+              </div>
+              <div class="tt-desc">
+                <span class="level"> └─ data point</span>
+              </div>
+            </div>
+
+            <div
+              class="yaml-block yaml-animated"
+              data-animate
+              style="margin-top: 24px"
+            >
+              <div class="yaml-line">
+                <span class="yc"># uns.yml — describe your namespace</span>
+              </div>
+              <div class="yaml-line">
+                <span class="yk">version:</span>
+                <span class="yv">'1.0'</span>
+              </div>
+              <div class="yaml-line">
+                <span class="yk">uns:</span>
+              </div>
+              <div class="yaml-line">
+                &nbsp;&nbsp;<span class="yk">name:</span>
+                <span class="yv">'Acme Manufacturing'</span>
+              </div>
+              <div class="yaml-line">
+                &nbsp;&nbsp;<span class="yk">region:</span>
+                <span class="yv">'UK'</span>
+              </div>
+              <div class="yaml-line">
+                &nbsp;&nbsp;<span class="yk">timezone:</span>
+                <span class="yv">'UTC'</span>
+              </div>
+              <div class="yaml-line">
+                &nbsp;&nbsp;<span class="yk">topic_structure:</span>
+                <span class="yv"
+                  >'version/site/area/line/cell/equipment/sensor'</span
+                >
+              </div>
+              <div class="yaml-line">
+                &nbsp;&nbsp;<span class="yk">topic_standard:</span>
+                <span class="yv">'ISA95'</span>
+              </div>
+              <div class="yaml-line">
+                &nbsp;&nbsp;<span class="yk">information_model:</span>
+                <span class="yv">'User Defined'</span>
+              </div>
+            </div>
+
+            <div
+              class="yaml-block yaml-animated"
+              data-animate
+              style="margin-top: 16px"
+            >
+              <div class="yaml-line">
+                <span class="yc"># site.yml — describe your factory</span>
+              </div>
+              <div class="yaml-line">
+                <span class="yk">site:</span>
+              </div>
+              <div class="yaml-line">
+                &nbsp;&nbsp;- <span class="yk">name:</span>
+                <span class="yv">UK</span>
+              </div>
+              <div class="yaml-line">
+                &nbsp;&nbsp;&nbsp;&nbsp;<span class="yk">id:</span>
+                <span class="yv">UK</span>
+              </div>
+              <div class="yaml-line">
+                &nbsp;&nbsp;&nbsp;&nbsp;<span class="yk">area:</span>
+              </div>
+              <div class="yaml-line">
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-
+                <span class="yk">name:</span>
+                <span class="yv">Machining</span>
+              </div>
+              <div class="yaml-line">
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span
+                  class="yk"
+                  >equipment:</span
+                >
+              </div>
+              <div class="yaml-line">
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-
+                <span class="yk">id:</span>
+                <span class="yv">'cnc-01'</span>
+              </div>
+              <div class="yaml-line">
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span
+                  class="yk"
+                  >name:</span
+                >
+                <span class="yv">Haas VF-2 Mill</span>
+              </div>
+              <div class="yaml-line">
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span
+                  class="yk"
+                  >&lt;&lt;:</span
+                >
+                <span class="yv">*template_cnc</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- ═══════════════════════════════════════════
+     STEP 8 — THE PRODUCERS
+     ═══════════════════════════════════════════ -->
+    <section class="fade-in">
+      <div class="container">
+        <div class="step-grid">
+          <div class="mini-svg">
+            <svg
+              viewBox="0 0 440 340"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <rect
+                x="0"
+                y="0"
+                width="440"
+                height="340"
+                rx="12"
+                fill="#fafafa"
+                stroke="#e5e5e5"
+                stroke-width="1"
+              />
+
+              <text
+                x="20"
+                y="28"
+                font-family="'JetBrains Mono',monospace"
+                font-size="8"
+                font-weight="600"
+                fill="#a3a3a3"
+                letter-spacing="0.08em"
+              >
+                PRODUCERS — WHERE DATA BEGINS
+              </text>
+
+              <!-- Machine 1 -->
+              <rect
+                x="20"
+                y="48"
+                width="190"
+                height="64"
+                rx="8"
+                fill="#ffffff"
+                stroke="#e5e5e5"
+                stroke-width="1"
+                class="d-glow d-glow-1"
+              />
+              <circle
+                cx="40"
+                cy="76"
+                r="5"
+                fill="#0a0a0a"
+                class="d-pulse d-pulse-1"
+              />
+              <text
+                x="54"
+                y="72"
+                font-family="'JetBrains Mono',monospace"
+                font-size="10"
+                font-weight="600"
+                fill="#0a0a0a"
+              >
+                cnc-01
+              </text>
+              <text
+                x="54"
+                y="86"
+                font-family="'JetBrains Mono',monospace"
+                font-size="7"
+                fill="#737373"
+              >
+                Haas VF-2 · ACTIVE
+              </text>
+              <text
+                x="54"
+                y="100"
+                font-family="'JetBrains Mono',monospace"
+                font-size="7"
+                fill="#a3a3a3"
+              >
+                O1001 · T01 · 8200 RPM
+              </text>
+
+              <!-- Machine 2 -->
+              <rect
+                x="20"
+                y="120"
+                width="190"
+                height="64"
+                rx="8"
+                fill="#ffffff"
+                stroke="#e5e5e5"
+                stroke-width="1"
+                class="d-glow d-glow-2"
+              />
+              <circle
+                cx="40"
+                cy="148"
+                r="5"
+                fill="#0a0a0a"
+                class="d-pulse d-pulse-2"
+              />
+              <text
+                x="54"
+                y="144"
+                font-family="'JetBrains Mono',monospace"
+                font-size="10"
+                font-weight="600"
+                fill="#0a0a0a"
+              >
+                cnc-02
+              </text>
+              <text
+                x="54"
+                y="158"
+                font-family="'JetBrains Mono',monospace"
+                font-size="7"
+                fill="#737373"
+              >
+                DMG Mori NLX · IDLE
+              </text>
+              <text
+                x="54"
+                y="172"
+                font-family="'JetBrains Mono',monospace"
+                font-size="7"
+                fill="#a3a3a3"
+              >
+                O2001 · T03 · 0 RPM
+              </text>
+
+              <!-- Machine 3 -->
+              <rect
+                x="20"
+                y="192"
+                width="190"
+                height="64"
+                rx="8"
+                fill="#ffffff"
+                stroke="#e5e5e5"
+                stroke-width="1"
+                class="d-glow d-glow-3"
+              />
+              <circle
+                cx="40"
+                cy="220"
+                r="5"
+                fill="#0a0a0a"
+                class="d-pulse d-pulse-3"
+              />
+              <text
+                x="54"
+                y="216"
+                font-family="'JetBrains Mono',monospace"
+                font-size="10"
+                font-weight="600"
+                fill="#0a0a0a"
+              >
+                cnc-03
+              </text>
+              <text
+                x="54"
+                y="230"
+                font-family="'JetBrains Mono',monospace"
+                font-size="7"
+                fill="#737373"
+              >
+                Mazak Integrex · ACTIVE
+              </text>
+              <text
+                x="54"
+                y="244"
+                font-family="'JetBrains Mono',monospace"
+                font-size="7"
+                fill="#a3a3a3"
+              >
+                O3001 · T02 · 12000 RPM
+              </text>
+
+              <!-- Machine 4 -->
+              <rect
+                x="20"
+                y="264"
+                width="190"
+                height="64"
+                rx="8"
+                fill="#ffffff"
+                stroke="#e5e5e5"
+                stroke-width="1"
+                class="d-glow d-glow-4"
+              />
+              <circle
+                cx="40"
+                cy="292"
+                r="5"
+                fill="#0a0a0a"
+                class="d-pulse d-pulse-4"
+              />
+              <text
+                x="54"
+                y="288"
+                font-family="'JetBrains Mono',monospace"
+                font-size="10"
+                font-weight="600"
+                fill="#0a0a0a"
+              >
+                cnc-04
+              </text>
+              <text
+                x="54"
+                y="302"
+                font-family="'JetBrains Mono',monospace"
+                font-size="7"
+                fill="#737373"
+              >
+                Okuma LB3000 · ALARM
+              </text>
+              <text
+                x="54"
+                y="316"
+                font-family="'JetBrains Mono',monospace"
+                font-size="7"
+                fill="#a3a3a3"
+              >
+                O4002 · T01 · 0 RPM
+              </text>
+
+              <!-- Topic paths -->
+              <rect
+                x="230"
+                y="48"
+                width="190"
+                height="28"
+                rx="4"
+                fill="#ffffff"
+                stroke="#e5e5e5"
+                stroke-width="1"
+              />
+              <text
+                x="240"
+                y="66"
+                font-family="'JetBrains Mono',monospace"
+                font-size="6"
+                fill="#737373"
+              >
+                v1.0/.../area1/cnc-01/status
+              </text>
+
+              <rect
+                x="230"
+                y="84"
+                width="190"
+                height="28"
+                rx="4"
+                fill="#ffffff"
+                stroke="#e5e5e5"
+                stroke-width="1"
+              />
+              <text
+                x="240"
+                y="102"
+                font-family="'JetBrains Mono',monospace"
+                font-size="6"
+                fill="#737373"
+              >
+                v1.0/.../area1/cnc-01/program
+              </text>
+
+              <rect
+                x="230"
+                y="120"
+                width="190"
+                height="28"
+                rx="4"
+                fill="#ffffff"
+                stroke="#e5e5e5"
+                stroke-width="1"
+              />
+              <text
+                x="240"
+                y="138"
+                font-family="'JetBrains Mono',monospace"
+                font-size="6"
+                fill="#737373"
+              >
+                v1.0/.../area1/cnc-01/tool
+              </text>
+
+              <!-- Publish interval -->
+              <rect
+                x="230"
+                y="168"
+                width="190"
+                height="40"
+                rx="6"
+                fill="#0a0a0a"
+              />
+              <text
+                x="325"
+                y="186"
+                font-family="'JetBrains Mono',monospace"
+                font-size="9"
+                font-weight="600"
+                fill="#ffffff"
+                text-anchor="middle"
+              >
+                Every 3 seconds
+              </text>
+              <text
+                x="325"
+                y="200"
+                font-family="'JetBrains Mono',monospace"
+                font-size="7"
+                fill="#a3a3a3"
+                text-anchor="middle"
+              >
+                3 topics × 4 machines = 12 messages
+              </text>
+
+              <!-- Data tags -->
+              <rect
+                x="230"
+                y="224"
+                width="60"
+                height="24"
+                rx="4"
+                fill="#f5f5f5"
+              />
+              <text
+                x="260"
+                y="240"
+                font-family="'JetBrains Mono',monospace"
+                font-size="7"
+                font-weight="500"
+                fill="#0a0a0a"
+                text-anchor="middle"
+              >
+                /status
+              </text>
+
+              <rect
+                x="296"
+                y="224"
+                width="60"
+                height="24"
+                rx="4"
+                fill="#f5f5f5"
+              />
+              <text
+                x="326"
+                y="240"
+                font-family="'JetBrains Mono',monospace"
+                font-size="7"
+                font-weight="500"
+                fill="#0a0a0a"
+                text-anchor="middle"
+              >
+                /program
+              </text>
+
+              <rect
+                x="362"
+                y="224"
+                width="58"
+                height="24"
+                rx="4"
+                fill="#f5f5f5"
+              />
+              <text
+                x="391"
+                y="240"
+                font-family="'JetBrains Mono',monospace"
+                font-size="7"
+                font-weight="500"
+                fill="#0a0a0a"
+                text-anchor="middle"
+              >
+                /tool
+              </text>
+
+              <!-- Payload example -->
+              <rect
+                x="230"
+                y="264"
+                width="190"
+                height="64"
+                rx="6"
+                fill="#ffffff"
+                stroke="#e5e5e5"
+                stroke-width="1"
+              />
+              <text
+                x="240"
+                y="280"
+                font-family="'JetBrains Mono',monospace"
+                font-size="6"
+                fill="#a3a3a3"
+              >
+                PAYLOAD EXAMPLE
+              </text>
+              <text
+                x="240"
+                y="296"
+                font-family="'JetBrains Mono',monospace"
+                font-size="7"
+                fill="#0a0a0a"
+              >
+                { "state": "ACTIVE",
+              </text>
+              <text
+                x="240"
+                y="308"
+                font-family="'JetBrains Mono',monospace"
+                font-size="7"
+                fill="#0a0a0a"
+              >
+                &nbsp;&nbsp;"operator": "OP-7842",
+              </text>
+              <text
+                x="240"
+                y="320"
+                font-family="'JetBrains Mono',monospace"
+                font-size="7"
+                fill="#0a0a0a"
+              >
+                &nbsp;&nbsp;"timestamp": "..." }
+              </text>
+            </svg>
+          </div>
+
+          <div class="step-text">
+            <div class="step-num">Step 08</div>
+            <h3>The Producers — Where Data Begins</h3>
+            <p>
+              At the very bottom of the stack: the machines themselves. PLCs,
+              sensors, gateways, and simulators that publish data to MQTT topics
+              every few seconds.
+            </p>
+            <p>
+              Each machine publishes three topics —
+              <strong>/status</strong> (machine state),
+              <strong>/program</strong> (current job, parts count, progress),
+              and <strong>/tool</strong> (active tool, tool life, offset). The
+              topic path follows the ISA-95 hierarchy defined in your YAML.
+            </p>
+            <p>
+              A <strong>producer</strong> is any entity that sends information
+              into the UNS. It doesn't need to know who's listening. It just
+              publishes to its topic, and the broker handles the rest.
+            </p>
+
+            <div
+              class="yaml-block yaml-animated"
+              data-animate
+              style="margin-top: 24px"
+            >
+              <div class="yaml-line">
+                <span class="yc"># producer.yml</span>
+              </div>
+              <div class="yaml-line">
+                <span class="yk">version:</span>
+                <span class="yv">'1.0'</span>
+              </div>
+              <div class="yaml-line">
+                <span class="yk">producer:</span>
+              </div>
+              <div class="yaml-line">
+                &nbsp;&nbsp;- <span class="yk">name:</span>
+                <span class="yv">CNC Gateway</span>
+              </div>
+              <div class="yaml-line">
+                &nbsp;&nbsp;&nbsp;&nbsp;<span class="yk">endpoint:</span>
+                <span class="yv">mqtt://gateway:1883</span>
+              </div>
+              <div class="yaml-line">
+                &nbsp;&nbsp;- <span class="yk">name:</span>
+                <span class="yv">Environment Sensors</span>
+              </div>
+              <div class="yaml-line">
+                &nbsp;&nbsp;&nbsp;&nbsp;<span class="yk">endpoint:</span>
+                <span class="yv">http://sensor-bridge:8080</span>
+              </div>
+              <div class="yaml-line">
+                &nbsp;&nbsp;- <span class="yk">name:</span>
+                <span class="yv">uns-sim</span>
+              </div>
+              <div class="yaml-line">
+                &nbsp;&nbsp;&nbsp;&nbsp;<span class="yk">endpoint:</span>
+                <span class="yv">mqtt://uns-sim:1883</span>
+              </div>
+              <div class="yaml-line">
+                &nbsp;&nbsp;&nbsp;&nbsp;<span class="yc"
+                  ># Simulator for development</span
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- ═══════════════════════════════════════════
+     THE THREE SOLUTIONS
+     ═══════════════════════════════════════════ -->
+    <section class="fade-in">
+      <div class="container">
+        <div class="section-label">Three Solutions</div>
+        <h2>The standard. The implementation. The&nbsp;platform.</h2>
+        <p class="lead">
+          These eight steps are powered by three open-source projects that work
+          together — or independently. Use the standard to describe what you
+          have. Use fn-uns as a reference implementation. Use fnkit to deploy
+          and run everything.
+        </p>
+
+        <div class="stack-grid">
+          <div class="stack-card">
+            <div class="stack-num">01 — STANDARD</div>
+            <h3>UNS Framework</h3>
+            <div class="stack-url">unsframework.com/framework</div>
+            <p>
+              An open YAML standard for describing your Unified Namespace. Sites,
+              areas, equipment, sensors, functions, producers, consumers, MQTT
+              brokers, and databases — all defined in version-controlled files
+              that are both human-readable and machine-readable. Complements
+              Sparkplug, OPC/UA, and MT Connect.
+            </p>
+            <div class="stack-role">Describe what you have</div>
+          </div>
+          <div class="stack-card">
+            <div class="stack-num">02 — IMPLEMENTATION</div>
+            <h3>fn-uns</h3>
+            <div class="stack-url">unsframework.com/fn-uns</div>
+            <p>
+              A complete reference implementation of the UNS — serverless
+              functions that capture, process, and report on real-time factory
+              data. Nine independent components from simulator to KPI API. Go
+              and Node.js. Open source. Self-hosted.
+            </p>
+            <div class="stack-role">Build your data pipeline</div>
+          </div>
+          <div class="stack-card">
+            <div class="stack-num">03 — PLATFORM</div>
+            <h3>fnkit</h3>
+            <div class="stack-url">functionkit.github.io/fnkit</div>
+            <p>
+              The serverless platform that deploys and runs fn-uns functions.
+              Git push to deploy. Automatic TLS. API gateway with auth and rate
+              limiting. Shared cache and database. GitOps workflow — the same
+              tools your software team already uses.
+            </p>
+            <div class="stack-role">Deploy and run everything</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- ═══════════════════════════════════════════
+     CTA
+     ═══════════════════════════════════════════ -->
+    <section class="fade-in">
+      <div class="container" style="text-align: center; max-width: 700px">
+        <div class="section-label">Get Started</div>
+        <h2>From shop floor to dashboard in&nbsp;eight&nbsp;steps.</h2>
+        <p class="lead" style="margin-left: auto; margin-right: auto">
+          Read the open standard, explore the reference implementation, or dive
+          into the documentation. Everything is open source, self-hosted, and
+          ready to deploy.
+        </p>
+        <div class="cta-group" style="justify-content: center">
+          <a href="/framework/" class="btn-primary">UNS Standard v1.0 →</a>
+          <a href="/fn-uns/" class="btn-secondary">Explore fn-uns →</a>
+          <a href="/docs/" class="btn-secondary">Read the Docs →</a>
+          <a
+            href="https://github.com/unsframework"
+            class="btn-secondary"
+            target="_blank"
+            >GitHub</a
+          >
+        </div>
+      </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <footer>
+      <div class="container">
+        <span>UNS Framework — Open Source</span>
+        <div class="footer-links">
+          <a href="/framework/">Standard</a>
+          <a href="/fn-uns/">fn-uns</a>
+          <a href="https://github.com/unsframework" target="_blank">GitHub</a>
+          <a href="https://functionkit.github.io/fnkit/" target="_blank"
+            >fnkit</a
+          >
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      // Dark mode
+      const toggle = document.getElementById('themeToggle'),
+        html = document.documentElement,
+        saved = localStorage.getItem('theme')
+      if (saved) html.setAttribute('data-theme', saved)
+      else if (window.matchMedia('(prefers-color-scheme:dark)').matches)
+        html.setAttribute('data-theme', 'dark')
+      toggle.addEventListener('click', () => {
+        const d = html.getAttribute('data-theme') === 'dark'
+        const n = d ? 'light' : 'dark'
+        html.setAttribute('data-theme', n)
+        localStorage.setItem('theme', n)
+      })
+
+      // Fade-in on scroll
+      const fo = new IntersectionObserver(
+        (e) => {
+          e.forEach((x) => {
+            if (x.isIntersecting) {
+              x.target.classList.add('visible')
+              fo.unobserve(x.target)
+            }
+          })
+        },
+        { threshold: 0.08, rootMargin: '0px 0px -40px 0px' },
+      )
+      document.querySelectorAll('.fade-in').forEach((el) => fo.observe(el))
+
+      // Scroll-triggered [data-animate]
+      const ao = new IntersectionObserver(
+        (e) => {
+          e.forEach((x) => {
+            if (x.isIntersecting) {
+              x.target.classList.add('animate-active')
+              ao.unobserve(x.target)
+            }
+          })
+        },
+        { threshold: 0.15, rootMargin: '0px 0px -20px 0px' },
+      )
+      document
+        .querySelectorAll('[data-animate]')
+        .forEach((el) => ao.observe(el))
+    </script>
+  </body>
+</html>

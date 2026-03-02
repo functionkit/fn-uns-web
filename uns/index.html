@@ -1227,16 +1227,64 @@
           gap: 8px;
         }
       }
+      /* Mobile hamburger menu */
+      nav .menu-toggle {
+        display: none;
+        background: none;
+        border: 1px solid var(--grey-300);
+        border-radius: 6px;
+        width: 36px;
+        height: 36px;
+        cursor: pointer;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+        color: var(--black);
+        flex-shrink: 0;
+        transition: border-color 0.2s;
+      }
+      nav .menu-toggle:hover { border-color: var(--black); }
+      nav .mobile-menu {
+        display: none;
+        position: fixed;
+        top: 56px;
+        left: 0;
+        right: 0;
+        background: var(--nav-bg);
+        backdrop-filter: blur(24px);
+        -webkit-backdrop-filter: blur(24px);
+        border-bottom: 1px solid var(--grey-200);
+        padding: 16px 24px;
+        z-index: 99;
+        flex-direction: column;
+        gap: 4px;
+      }
+      nav .mobile-menu.open { display: flex; }
+      nav .mobile-menu a {
+        display: block;
+        padding: 12px 16px;
+        color: var(--grey-700);
+        text-decoration: none;
+        font-size: 15px;
+        font-weight: 400;
+        border-radius: 8px;
+        transition: all 0.15s;
+      }
+      nav .mobile-menu a:hover {
+        color: var(--black);
+        background: var(--grey-50);
+      }
+
       /* ═══ RESPONSIVE — MOBILE ═══ */
       @media (max-width: 600px) {
         nav {
           padding: 0 16px;
         }
         nav .links {
-          gap: 20px;
+          display: none;
         }
-        nav .links a {
-          font-size: 13px;
+        nav .menu-toggle {
+          display: flex;
         }
         .container {
           padding: 0 16px;
@@ -1376,9 +1424,9 @@
     <nav>
       <a href="/" class="logo">UNS Framework</a>
       <div class="links">
-        <a href="/framework/">Standard v1.0</a>
         <a href="/fn-uns/">fn-uns</a>
-        <a href="https://github.com/unsframework" target="_blank">GitHub</a>
+        <a href="/framework/">Standard Docs</a>
+        <a href="/docs/">UNS Docs</a>
         <button
           class="theme-toggle"
           id="themeToggle"
@@ -1389,6 +1437,12 @@
             ><span class="toggle-icon-moon">☾</span>
           </div>
         </button>
+      </div>
+      <button class="menu-toggle" aria-label="Menu" aria-expanded="false">☰</button>
+      <div class="mobile-menu">
+        <a href="/fn-uns/">fn-uns</a>
+        <a href="/framework/">Standard Docs</a>
+        <a href="/docs/">UNS Docs</a>
       </div>
     </nav>
 
@@ -3903,6 +3957,24 @@
         { threshold: 0.08, rootMargin: '0px 0px -40px 0px' },
       )
       document.querySelectorAll('.fade-in').forEach((el) => fo.observe(el))
+
+      // Mobile hamburger menu toggle
+      const menuToggle = document.querySelector('.menu-toggle');
+      const mobileMenu = document.querySelector('.mobile-menu');
+      if (menuToggle && mobileMenu) {
+        menuToggle.addEventListener('click', () => {
+          const isOpen = mobileMenu.classList.toggle('open');
+          menuToggle.innerHTML = isOpen ? '✕' : '☰';
+          menuToggle.setAttribute('aria-expanded', isOpen);
+        });
+        mobileMenu.querySelectorAll('a').forEach((link) => {
+          link.addEventListener('click', () => {
+            mobileMenu.classList.remove('open');
+            menuToggle.innerHTML = '☰';
+            menuToggle.setAttribute('aria-expanded', 'false');
+          });
+        });
+      }
 
       // Scroll-triggered [data-animate]
       const ao = new IntersectionObserver(

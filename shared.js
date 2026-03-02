@@ -29,3 +29,22 @@ const fadeObserver = new IntersectionObserver(
   { threshold: 0.08, rootMargin: '0px 0px -40px 0px' }
 );
 document.querySelectorAll('.fade-in').forEach((el) => fadeObserver.observe(el));
+
+// Mobile hamburger menu toggle
+const menuToggle = document.querySelector('.menu-toggle');
+const mobileMenu = document.querySelector('.mobile-menu');
+if (menuToggle && mobileMenu) {
+  menuToggle.addEventListener('click', () => {
+    const isOpen = mobileMenu.classList.toggle('open');
+    menuToggle.innerHTML = isOpen ? '✕' : '☰';
+    menuToggle.setAttribute('aria-expanded', isOpen);
+  });
+  // Close menu when clicking a link
+  mobileMenu.querySelectorAll('a').forEach((link) => {
+    link.addEventListener('click', () => {
+      mobileMenu.classList.remove('open');
+      menuToggle.innerHTML = '☰';
+      menuToggle.setAttribute('aria-expanded', 'false');
+    });
+  });
+}

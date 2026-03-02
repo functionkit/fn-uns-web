@@ -20,7 +20,7 @@
     />
     <meta
       property="og:description"
-      content="Eight steps from consumer to producer. Understand every layer of the Unified Namespace."
+      content="Nine steps from consumer to producer. Understand every layer of the Unified Namespace."
     />
     <meta property="og:url" content="https://unsframework.com/how-it-works/" />
     <meta name="twitter:card" content="summary" />
@@ -1000,7 +1000,7 @@
           You want to know machine utilisation. Here's every layer that makes
           that answer possible — starting from the consumer who asks the
           question, working backwards through every component, all the way to
-          the machine publishing data on the shop floor. Eight steps. Three
+          the machine publishing data on the shop floor. Nine steps. Three
           solutions. One standard.
         </p>
       </div>
@@ -3299,7 +3299,153 @@
     <div class="divider"></div>
 
     <!-- ═══════════════════════════════════════════
-     STEP 8 — THE PRODUCERS
+     STEP 8 — THE INFORMATION MODEL (SENSORS)
+     ═══════════════════════════════════════════ -->
+    <section class="fade-in">
+      <div class="container">
+        <div class="step-grid">
+          <div class="step-text">
+            <div class="step-num">Step 08</div>
+            <h3>The Information Model — Sensors</h3>
+            <p>
+              The ISA-95 hierarchy tells you <em>where</em> data comes from. But
+              <strong>sensors</strong> define <em>what</em> data each piece of
+              equipment actually publishes — the information model. This is
+              where you spec the machine data model for the UNS.
+            </p>
+            <p>
+              A <strong>sensor template</strong> defines the data points a type
+              of equipment produces: status (string), program (string), tool
+              (float), axis positions (float), temperature (float). You define
+              the template once, then attach it to any equipment using YAML
+              anchors. Every data point in the template becomes an MQTT topic.
+            </p>
+            <p>
+              This is the contract between producers and consumers. The sensor
+              template says "a CNC machine publishes these five data points with
+              these types." Any consumer can read the YAML and know exactly what
+              data to expect — without inspecting live traffic or reading
+              documentation.
+            </p>
+            <p>
+              Different equipment types get different templates. A CNC machine
+              publishes axis positions, status, program, and tool data. An
+              environment sensor publishes temperature. The framework supports
+              any information model — user-defined, Sparkplug, OPC/UA, or
+              MT Connect.
+            </p>
+          </div>
+
+          <div>
+            <div class="mini-svg" style="margin-bottom: 24px">
+              <svg viewBox="0 0 440 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="0" y="0" width="440" height="300" rx="12" fill="#fafafa" stroke="#e5e5e5" stroke-width="1"/>
+
+                <text x="20" y="28" font-family="'JetBrains Mono',monospace" font-size="8" font-weight="600" fill="#a3a3a3" letter-spacing="0.08em">SENSOR TEMPLATE → MQTT TOPICS</text>
+
+                <!-- Template box -->
+                <rect x="20" y="48" width="160" height="140" rx="8" fill="#0a0a0a"/>
+                <text x="100" y="68" font-family="'JetBrains Mono',monospace" font-size="8" font-weight="600" fill="#ffffff" text-anchor="middle">template_sensor_cnc</text>
+
+                <text x="36" y="90" font-family="'JetBrains Mono',monospace" font-size="7" fill="#a3a3a3">information_model:</text>
+                <text x="44" y="106" font-family="'JetBrains Mono',monospace" font-size="7" fill="#ffffff">status</text>
+                <text x="100" y="106" font-family="'JetBrains Mono',monospace" font-size="7" fill="#a3a3a3">string</text>
+                <text x="44" y="120" font-family="'JetBrains Mono',monospace" font-size="7" fill="#ffffff">program</text>
+                <text x="100" y="120" font-family="'JetBrains Mono',monospace" font-size="7" fill="#a3a3a3">string</text>
+                <text x="44" y="134" font-family="'JetBrains Mono',monospace" font-size="7" fill="#ffffff">tool</text>
+                <text x="100" y="134" font-family="'JetBrains Mono',monospace" font-size="7" fill="#a3a3a3">float</text>
+                <text x="44" y="148" font-family="'JetBrains Mono',monospace" font-size="7" fill="#ffffff">x-axis</text>
+                <text x="100" y="148" font-family="'JetBrains Mono',monospace" font-size="7" fill="#a3a3a3">float</text>
+                <text x="44" y="162" font-family="'JetBrains Mono',monospace" font-size="7" fill="#ffffff">z-axis</text>
+                <text x="100" y="162" font-family="'JetBrains Mono',monospace" font-size="7" fill="#a3a3a3">float</text>
+                <text x="44" y="180" font-family="'JetBrains Mono',monospace" font-size="6" fill="#a3a3a3">Define once · Reuse everywhere</text>
+
+                <!-- Flow lines from template to topics -->
+                <line x1="180" y1="100" x2="220" y2="72" stroke="#d4d4d4" stroke-width="1" class="d-flow"/>
+                <line x1="180" y1="114" x2="220" y2="100" stroke="#d4d4d4" stroke-width="1" class="d-flow"/>
+                <line x1="180" y1="128" x2="220" y2="128" stroke="#d4d4d4" stroke-width="1" class="d-flow"/>
+                <line x1="180" y1="142" x2="220" y2="156" stroke="#d4d4d4" stroke-width="1" class="d-flow"/>
+                <line x1="180" y1="156" x2="220" y2="184" stroke="#d4d4d4" stroke-width="1" class="d-flow"/>
+
+                <!-- Packets -->
+                <circle r="2" fill="#0a0a0a" style="offset-path: path('M 180 100 L 220 72')" class="d-pkt d-pkt-1"/>
+                <circle r="2" fill="#0a0a0a" style="offset-path: path('M 180 114 L 220 100')" class="d-pkt d-pkt-2"/>
+                <circle r="2" fill="#0a0a0a" style="offset-path: path('M 180 128 L 220 128')" class="d-pkt d-pkt-3"/>
+                <circle r="2" fill="#0a0a0a" style="offset-path: path('M 180 142 L 220 156')" class="d-pkt d-pkt-4"/>
+                <circle r="2" fill="#0a0a0a" style="offset-path: path('M 180 156 L 220 184')" class="d-pkt d-pkt-5"/>
+
+                <!-- Generated topic paths -->
+                <rect x="220" y="56" width="200" height="28" rx="4" fill="#ffffff" stroke="#e5e5e5" stroke-width="1" class="d-glow d-glow-1"/>
+                <text x="232" y="74" font-family="'JetBrains Mono',monospace" font-size="7" fill="#0a0a0a">v1.0/uk/a1/l1/c1/m1/s1/status</text>
+
+                <rect x="220" y="88" width="200" height="28" rx="4" fill="#ffffff" stroke="#e5e5e5" stroke-width="1" class="d-glow d-glow-2"/>
+                <text x="232" y="106" font-family="'JetBrains Mono',monospace" font-size="7" fill="#0a0a0a">v1.0/uk/a1/l1/c1/m1/s1/program</text>
+
+                <rect x="220" y="120" width="200" height="28" rx="4" fill="#ffffff" stroke="#e5e5e5" stroke-width="1" class="d-glow d-glow-3"/>
+                <text x="232" y="138" font-family="'JetBrains Mono',monospace" font-size="7" fill="#0a0a0a">v1.0/uk/a1/l1/c1/m1/s1/tool</text>
+
+                <rect x="220" y="152" width="200" height="28" rx="4" fill="#ffffff" stroke="#e5e5e5" stroke-width="1" class="d-glow d-glow-4"/>
+                <text x="232" y="170" font-family="'JetBrains Mono',monospace" font-size="7" fill="#0a0a0a">v1.0/uk/a1/l1/c1/m1/s1/x-axis</text>
+
+                <rect x="220" y="184" width="200" height="28" rx="4" fill="#ffffff" stroke="#e5e5e5" stroke-width="1" class="d-glow d-glow-5"/>
+                <text x="232" y="202" font-family="'JetBrains Mono',monospace" font-size="7" fill="#0a0a0a">v1.0/uk/a1/l1/c1/m1/s1/z-axis</text>
+
+                <!-- Environment sensor template (smaller) -->
+                <rect x="20" y="210" width="160" height="72" rx="8" fill="#ffffff" stroke="#0a0a0a" stroke-width="1.5"/>
+                <text x="100" y="230" font-family="'JetBrains Mono',monospace" font-size="7" font-weight="600" fill="#0a0a0a" text-anchor="middle">template_sensor_env</text>
+                <text x="36" y="248" font-family="'JetBrains Mono',monospace" font-size="7" fill="#737373">information_model:</text>
+                <text x="44" y="264" font-family="'JetBrains Mono',monospace" font-size="7" font-weight="500" fill="#0a0a0a">temperature</text>
+                <text x="110" y="264" font-family="'JetBrains Mono',monospace" font-size="7" fill="#737373">float</text>
+
+                <!-- Flow to env topic -->
+                <line x1="180" y1="258" x2="220" y2="240" stroke="#d4d4d4" stroke-width="1" class="d-flow"/>
+                <circle r="2" fill="#0a0a0a" style="offset-path: path('M 180 258 L 220 240')" class="d-pkt d-pkt-2"/>
+
+                <rect x="220" y="226" width="200" height="28" rx="4" fill="#ffffff" stroke="#e5e5e5" stroke-width="1" class="d-glow d-glow-6"/>
+                <text x="232" y="244" font-family="'JetBrains Mono',monospace" font-size="7" fill="#0a0a0a">v1.0/uk/a1/l1/c1/m2/s3/temperature</text>
+
+                <!-- Bottom label -->
+                <text x="220" y="286" font-family="'JetBrains Mono',monospace" font-size="7" fill="#a3a3a3" text-anchor="middle">Template defines the data model · Each field becomes an MQTT topic</text>
+              </svg>
+            </div>
+
+            <div class="yaml-block yaml-animated" data-animate>
+              <div class="yaml-line"><span class="yc"># Sensor template — define once, reuse everywhere</span></div>
+              <div class="yaml-line"><span class="yk">template_sensor_cnc:</span> <span class="yv">&amp;template_sensor_cnc</span></div>
+              <div class="yaml-line">&nbsp;&nbsp;<span class="yk">information_model:</span></div>
+              <div class="yaml-line">&nbsp;&nbsp;&nbsp;&nbsp;<span class="yk">status:</span></div>
+              <div class="yaml-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="yk">data_type:</span> <span class="yv">string</span></div>
+              <div class="yaml-line">&nbsp;&nbsp;&nbsp;&nbsp;<span class="yk">program:</span></div>
+              <div class="yaml-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="yk">data_type:</span> <span class="yv">string</span></div>
+              <div class="yaml-line">&nbsp;&nbsp;&nbsp;&nbsp;<span class="yk">tool:</span></div>
+              <div class="yaml-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="yk">data_type:</span> <span class="yv">float</span></div>
+              <div class="yaml-line">&nbsp;&nbsp;&nbsp;&nbsp;<span class="yk">x-axis:</span></div>
+              <div class="yaml-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="yk">machine:</span> <span class="yv">float</span></div>
+              <div class="yaml-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="yk">relative:</span> <span class="yv">float</span></div>
+              <div class="yaml-line">&nbsp;&nbsp;&nbsp;&nbsp;<span class="yk">z-axis:</span></div>
+              <div class="yaml-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="yk">machine:</span> <span class="yv">float</span></div>
+              <div class="yaml-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="yk">relative:</span> <span class="yv">float</span></div>
+            </div>
+
+            <div class="yaml-block yaml-animated" data-animate style="margin-top: 16px">
+              <div class="yaml-line"><span class="yc"># Attach to equipment with YAML anchors</span></div>
+              <div class="yaml-line"><span class="yk">equipment:</span></div>
+              <div class="yaml-line">&nbsp;&nbsp;- <span class="yk">id:</span> <span class="yv">'M1'</span></div>
+              <div class="yaml-line">&nbsp;&nbsp;&nbsp;&nbsp;<span class="yk">name:</span> <span class="yv">Haas VF-2 Mill</span></div>
+              <div class="yaml-line">&nbsp;&nbsp;&nbsp;&nbsp;<span class="yk">&lt;&lt;:</span> <span class="yv">*template_equipment</span></div>
+              <div class="yaml-line">&nbsp;&nbsp;&nbsp;&nbsp;<span class="yk">sensors:</span></div>
+              <div class="yaml-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- <span class="yk">id:</span> <span class="yv">'S1'</span></div>
+              <div class="yaml-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="yk">&lt;&lt;:</span> <span class="yv">*template_sensor_cnc</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- ═══════════════════════════════════════════
+     STEP 9 — THE PRODUCERS
      ═══════════════════════════════════════════ -->
     <section class="fade-in">
       <div class="container">
@@ -3729,7 +3875,7 @@
           </div>
 
           <div class="step-text">
-            <div class="step-num">Step 08</div>
+            <div class="step-num">Step 09</div>
             <h3>The Producers — Where Data Begins</h3>
             <p>
               At the very bottom of the stack: the machines themselves. PLCs,
@@ -3809,7 +3955,7 @@
         <div class="section-label">Three Solutions</div>
         <h2>The standard. The implementation. The&nbsp;platform.</h2>
         <p class="lead">
-          These eight steps are powered by three open-source projects that work
+          These nine steps are powered by three open-source projects that work
           together — or independently. Use the standard to describe what you
           have. Use fn-uns as a reference implementation. Use fnkit to deploy
           and run everything.
@@ -3865,7 +4011,7 @@
     <section class="fade-in">
       <div class="container" style="text-align: center; max-width: 700px">
         <div class="section-label">Get Started</div>
-        <h2>From shop floor to dashboard in&nbsp;eight&nbsp;steps.</h2>
+        <h2>From shop floor to dashboard in&nbsp;nine&nbsp;steps.</h2>
         <p class="lead" style="margin-left: auto; margin-right: auto">
           Read the open standard, explore the reference implementation, or dive
           into the documentation. Everything is open source, self-hosted, and

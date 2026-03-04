@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Technical Guides UNS Framework</title>
+    <meta
+      name="description"
+      content="Hands-on technical guides for connecting real hardware to a Unified Namespace. Step-by-step tutorials with troubleshooting."
+    />
+    <link rel="canonical" href="https://unsframework.com/guides/" />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>"
+    />
+    <link rel="stylesheet" href="../style.css" />
+    <link rel="stylesheet" href="../docs.css" />
+    <style>
+      .guide-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 1px;
+        background: var(--grey-200);
+        border: 1px solid var(--grey-200);
+        border-radius: 12px;
+        overflow: hidden;
+        margin: 32px 0;
+      }
+      .guide-card {
+        background: var(--white);
+        padding: 28px 32px;
+        text-decoration: none;
+        display: block;
+        transition: background 0.15s;
+      }
+      .guide-card:hover {
+        background: var(--grey-50);
+      }
+      .guide-card-header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 8px;
+      }
+      .guide-card-title {
+        font-size: 17px;
+        font-weight: 700;
+        color: var(--black);
+        letter-spacing: -0.01em;
+      }
+      .guide-card-badge {
+        font-family: var(--font-mono);
+        font-size: 10px;
+        font-weight: 600;
+        color: var(--grey-700);
+        background: var(--grey-100);
+        padding: 3px 10px;
+        border-radius: 100px;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        white-space: nowrap;
+      }
+      .guide-card-desc {
+        font-size: 14px;
+        color: var(--grey-700);
+        line-height: 1.6;
+        margin-bottom: 12px;
+      }
+      .guide-card-meta {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        color: var(--grey-500);
+        display: flex;
+        gap: 16px;
+        flex-wrap: wrap;
+      }
+    </style>
+  </head>
+  <body>
+    <nav>
+      <a href="/" class="logo">UNS Framework</a>
+      <div class="links">
+        <a href="/fn-uns/">fn-uns</a>
+        <a href="/framework/">Standard Docs</a>
+        <a href="/docs/">UNS Docs</a>
+        <a href="/guides/">Guides</a>
+        <button
+          class="theme-toggle"
+          id="themeToggle"
+          aria-label="Toggle dark mode"
+        >
+          <div class="toggle-thumb">
+            <span class="toggle-icon-sun">☀</span
+            ><span class="toggle-icon-moon">☾</span>
+          </div>
+        </button>
+      </div>
+      <button class="menu-toggle" aria-label="Menu" aria-expanded="false">
+        ☰
+      </button>
+      <div class="mobile-menu">
+        <a href="/fn-uns/">fn-uns</a>
+        <a href="/framework/">Standard Docs</a>
+        <a href="/docs/">UNS Docs</a>
+        <a href="/guides/">Guides</a>
+      </div>
+    </nav>
+
+    <div class="docs-layout">
+      <aside class="docs-sidebar">
+        <div class="sidebar-section">
+          <div class="sidebar-title">Guides</div>
+          <a href="/guides/" class="active">All Guides</a>
+        </div>
+        <div class="sidebar-section">
+          <div class="sidebar-title">Hardware</div>
+          <a href="/guides/siemens-logo-mqtt.html">Siemens Logo 8.4 MQTT</a>
+        </div>
+      </aside>
+
+      <main class="docs-content">
+        <h1>Technical Guides</h1>
+        <p class="page-desc">
+          Hands-on, step-by-step tutorials for connecting real hardware and
+          software to a Unified Namespace. Based on real training sessions
+          including the troubleshooting and lessons learned.
+        </p>
+
+        <div class="guide-grid">
+          <a href="/guides/siemens-logo-mqtt.html" class="guide-card">
+            <div class="guide-card-header">
+              <span class="guide-card-title">Siemens Logo 8.4 → MQTT</span>
+              <span class="guide-card-badge">Hardware</span>
+            </div>
+            <div class="guide-card-desc">
+              Complete tutorial for configuring a Siemens Logo PLC to publish
+              data via MQTT. Covers network setup, Mosquitto broker
+              installation, VS Code MQTT client, Logo configuration, data
+              mapping, and testing with real I/O signals.
+            </div>
+            <div class="guide-card-meta">
+              <span>Siemens Logo 8.4</span>
+              <span>Eclipse Mosquitto</span>
+              <span>MQTT</span>
+              <span>~60 min</span>
+            </div>
+          </a>
+        </div>
+
+        <div class="info-banner">
+          <div class="info-icon">i</div>
+          <div>
+            More guides coming soon Node-RED integration, multi-device
+            deployments, and connecting to the fn-uns data pipeline.
+            <a
+              href="https://github.com/unsframework"
+              style="
+                color: var(--black);
+                border-bottom: 1px solid var(--grey-300);
+              "
+              >Follow on GitHub</a
+            >
+            for updates.
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <script src="../shared.js"></script>
+  </body>
+</html>

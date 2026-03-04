@@ -1,0 +1,1237 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Siemens Logo 8.4 MQTT Setup — Technical Guide — UNS Framework</title>
+<meta name="description" content="Complete step-by-step tutorial for configuring a Siemens Logo 8.4 PLC to publish data via MQTT. Includes network setup, Mosquitto broker, VS Code client, and troubleshooting."/>
+<link rel="canonical" href="https://unsframework.com/guides/siemens-logo-mqtt.html" />
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>"/>
+<link rel="stylesheet" href="../style.css"/>
+<link rel="stylesheet" href="../docs.css"/>
+<style>
+/* Guide-specific styles */
+.guide-hero {
+  background: var(--grey-50);
+  border: 1px solid var(--grey-200);
+  border-radius: 12px;
+  padding: 32px;
+  margin-bottom: 48px;
+}
+.guide-hero-meta {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+.guide-hero-meta .tag {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--grey-700);
+  background: var(--grey-100);
+  padding: 4px 12px;
+  border-radius: 100px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.guide-hero h1 {
+  font-size: 32px !important;
+  margin-bottom: 12px !important;
+}
+.guide-hero .guide-subtitle {
+  font-size: 16px;
+  color: var(--grey-700);
+  line-height: 1.7;
+  max-width: 640px;
+}
+
+/* Step numbering */
+.step-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--grey-500);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-top: 40px;
+  margin-bottom: 4px;
+  display: block;
+}
+/* Tightly couple step-label with its h3 */
+.step-label + h3 {
+  margin-top: 4px;
+}
+/* First step after a section heading — less top space since h2 provides its own */
+h2 + .step-label {
+  margin-top: 12px;
+}
+/* First step after a section intro paragraph */
+h2 + p + .step-label,
+.guide-toc + .step-label {
+  margin-top: 24px;
+}
+/* Step after a warning banner (e.g. PLC Program section) */
+.warning-banner + .step-label {
+  margin-top: 24px;
+}
+
+/* Image placeholder */
+.img-placeholder {
+  background: var(--grey-50);
+  border: 2px dashed var(--grey-300);
+  border-radius: 10px;
+  padding: 48px 24px;
+  text-align: center;
+  margin: 24px 0;
+  transition: border-color 0.2s;
+}
+.img-placeholder:hover {
+  border-color: var(--grey-500);
+}
+.img-placeholder .img-icon {
+  font-size: 28px;
+  margin-bottom: 8px;
+  opacity: 0.5;
+}
+.img-placeholder .img-caption {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--grey-500);
+  line-height: 1.5;
+}
+
+/* Checklist */
+.checklist {
+  list-style: none;
+  padding: 0;
+  margin: 16px 0 24px;
+}
+.checklist li {
+  padding: 8px 0;
+  font-size: 14px;
+  color: var(--grey-700);
+  border-bottom: 1px solid var(--grey-100);
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  line-height: 1.5;
+}
+.checklist li:last-child { border-bottom: none; }
+.checklist .check {
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  border: 1.5px solid var(--grey-300);
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  margin-top: 2px;
+  color: var(--grey-500);
+}
+
+/* Warning / Critical banner */
+.warning-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 16px 20px;
+  background: #fef3c7;
+  border: 1px solid #f59e0b;
+  border-radius: 10px;
+  margin: 24px 0;
+  font-size: 14px;
+  color: #92400e;
+  line-height: 1.6;
+}
+[data-theme="dark"] .warning-banner {
+  background: #451a03;
+  border-color: #b45309;
+  color: #fde68a;
+}
+.warning-banner .warning-icon {
+  flex-shrink: 0;
+  font-size: 16px;
+  margin-top: 1px;
+}
+
+/* Success indicator */
+.success-indicator {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  background: var(--grey-50);
+  border: 1px solid var(--grey-200);
+  border-radius: 8px;
+  margin: 16px 0;
+  font-size: 14px;
+  color: var(--grey-700);
+}
+.success-indicator .success-icon {
+  color: #16a34a;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+/* Config explanation */
+.config-explain {
+  margin: 16px 0 24px;
+  padding: 0;
+  list-style: none;
+}
+.config-explain li {
+  padding: 6px 0;
+  font-size: 13px;
+  color: var(--grey-700);
+  line-height: 1.5;
+  display: flex;
+  gap: 8px;
+}
+.config-explain code {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  background: var(--grey-100);
+  padding: 2px 8px;
+  border-radius: 4px;
+  color: var(--black);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* Network diagram */
+.network-diagram {
+  background: var(--grey-50);
+  border: 1px solid var(--grey-200);
+  border-radius: 12px;
+  padding: 32px;
+  margin: 24px 0;
+  text-align: center;
+}
+.network-diagram svg { max-width: 100%; height: auto; }
+
+/* TOC */
+.guide-toc {
+  border: 1px solid var(--grey-200);
+  border-radius: 10px;
+  padding: 24px 28px;
+  margin: 24px 0 48px;
+}
+.guide-toc-title {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--grey-500);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+.guide-toc ol {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  counter-reset: toc;
+}
+.guide-toc ol li {
+  counter-increment: toc;
+  padding: 4px 0;
+}
+.guide-toc ol li a {
+  font-size: 14px;
+  color: var(--grey-700);
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: color 0.15s;
+}
+.guide-toc ol li a:hover { color: var(--black); }
+.guide-toc ol li a::before {
+  content: counter(toc, decimal-leading-zero);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--grey-400);
+  min-width: 20px;
+}
+
+/* Lessons learned cards */
+.lesson-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px;
+  background: var(--grey-200);
+  border: 1px solid var(--grey-200);
+  border-radius: 10px;
+  overflow: hidden;
+  margin: 24px 0;
+}
+.lesson-card {
+  background: var(--white);
+  padding: 24px;
+}
+.lesson-card h4 {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--black);
+  margin-bottom: 6px;
+}
+.lesson-card p {
+  font-size: 13px !important;
+  color: var(--grey-700);
+  line-height: 1.55;
+  margin-bottom: 0 !important;
+}
+
+/* Security table */
+.security-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin: 24px 0;
+}
+.security-card {
+  padding: 20px;
+  border: 1px solid var(--grey-200);
+  border-radius: 10px;
+}
+.security-card h4 {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--black);
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.security-card ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.security-card ul li {
+  padding: 4px 0;
+  font-size: 13px;
+  color: var(--grey-700);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Scroll-margin for anchor links — clears the fixed nav */
+.docs-content h2[id] {
+  scroll-margin-top: 80px;
+}
+
+/* Print styles — hide sidebar and nav, full-width content */
+@media print {
+  nav, .docs-sidebar, .menu-toggle, .mobile-menu { display: none !important; }
+  .docs-layout { grid-template-columns: 1fr !important; }
+  .docs-content { padding: 0 !important; max-width: 100% !important; }
+  .img-placeholder { break-inside: avoid; }
+  .warning-banner, .info-banner, .success-indicator { break-inside: avoid; }
+  .lesson-grid, .security-grid, .def-table, .yaml-block { break-inside: avoid; }
+  .guide-toc { break-inside: avoid; }
+  .docs-nav-buttons { display: none !important; }
+  .docs-content h2 { break-before: page; }
+  .docs-content h2:first-of-type { break-before: avoid; }
+  .guide-hero { break-after: avoid; }
+  .guide-toc { break-after: page; }
+  h3 { break-after: avoid; break-inside: avoid; }
+  .step-label { break-after: avoid; break-inside: avoid; }
+  /* Keep step label + h3 + first content together */
+  .step-label, .step-label + h3, .step-label + h3 + p,
+  .step-label + h3 + .yaml-block, .step-label + h3 + .info-banner { break-before: auto; }
+  .img-placeholder, .yaml-block, .info-banner, .warning-banner,
+  .success-indicator, .checklist, .def-table, .config-explain,
+  .network-diagram, .lesson-card, .security-card { break-inside: avoid; }
+  p, ol, ul { orphans: 3; widows: 3; }
+  /* All text black, remove backgrounds and shading */
+  * { color: #000 !important; }
+  .guide-hero, .info-banner, .success-indicator, .img-placeholder,
+  .yaml-block, .network-diagram, .security-card, .lesson-card,
+  .guide-toc, .checklist .check, .guide-hero-meta .tag,
+  .stat, .stack-card, .component-card, .benefit-card {
+    background: #fff !important;
+    border-color: #ccc !important;
+    box-shadow: none !important;
+  }
+  .warning-banner {
+    background: #fff !important;
+    border-color: #000 !important;
+    color: #000 !important;
+  }
+  .yaml-block { background: #f5f5f5 !important; }
+  .yaml-block, .yaml-block * { color: #000 !important; }
+  a { text-decoration: underline !important; }
+}
+
+@media (max-width: 600px) {
+  .guide-hero { padding: 20px; }
+  .guide-hero h1 { font-size: 24px !important; }
+  .lesson-grid { grid-template-columns: 1fr; }
+  .security-grid { grid-template-columns: 1fr; }
+  .guide-hero-meta { gap: 8px; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="logo">UNS Framework</a>
+  <div class="links">
+    <a href="/fn-uns/">fn-uns</a>
+    <a href="/framework/">Standard Docs</a>
+    <a href="/docs/">UNS Docs</a>
+    <a href="/guides/">Guides</a>
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+      <div class="toggle-thumb"><span class="toggle-icon-sun">☀</span><span class="toggle-icon-moon">☾</span></div>
+    </button>
+  </div>
+  <button class="menu-toggle" aria-label="Menu" aria-expanded="false">☰</button>
+  <div class="mobile-menu">
+    <a href="/fn-uns/">fn-uns</a>
+    <a href="/framework/">Standard Docs</a>
+    <a href="/docs/">UNS Docs</a>
+    <a href="/guides/">Guides</a>
+  </div>
+</nav>
+
+<div class="docs-layout">
+  <aside class="docs-sidebar">
+    <div class="sidebar-section">
+      <div class="sidebar-title">Guides</div>
+      <a href="/guides/">All Guides</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-title">This Guide</div>
+      <a href="#prerequisites">Prerequisites</a>
+      <a href="#network">Network Config</a>
+      <a href="#logo-config" class="active">Logo Config</a>
+      <a href="#data-mapping">Data Mapping</a>
+      <a href="#plc-program">PLC Program</a>
+      <a href="#mosquitto">MQTT Broker</a>
+      <a href="#vscode">VS Code Client</a>
+      <a href="#testing">Testing</a>
+      <a href="#architecture">Architecture</a>
+      <a href="#troubleshooting">Troubleshooting</a>
+      <a href="#lessons">Lessons Learned</a>
+    </div>
+  </aside>
+
+  <main class="docs-content">
+
+    <!-- HERO -->
+    <div class="guide-hero">
+      <div class="guide-hero-meta">
+        <span class="tag">Hardware</span>
+        <span class="tag">MQTT</span>
+        <span class="tag">Siemens Logo 8.4</span>
+        <span class="tag">~60 min</span>
+      </div>
+      <h1>Siemens Logo 8.4 → MQTT</h1>
+      <p class="guide-subtitle">
+        Complete tutorial for configuring a Siemens Logo PLC to publish data via MQTT.
+        Based on a real training session — includes important troubleshooting insights and lessons learned.
+      </p>
+    </div>
+
+    <!-- TABLE OF CONTENTS -->
+    <div class="guide-toc">
+      <div class="guide-toc-title">Contents</div>
+      <ol>
+        <li><a href="#prerequisites">Prerequisites</a></li>
+        <li><a href="#network">Network Configuration</a></li>
+        <li><a href="#logo-config">Logo Configuration</a></li>
+        <li><a href="#data-mapping">Data Mapping</a></li>
+        <li><a href="#plc-program">Creating the PLC Program</a></li>
+        <li><a href="#mosquitto">MQTT Broker Installation</a></li>
+        <li><a href="#vscode">VS Code MQTT Client Setup</a></li>
+        <li><a href="#testing">Testing</a></li>
+        <li><a href="#architecture">Network Architecture &amp; Topics</a></li>
+        <li><a href="#troubleshooting">Troubleshooting</a></li>
+        <li><a href="#lessons">Lessons Learned</a></li>
+        <li><a href="#security">Security Considerations</a></li>
+        <li><a href="#next-steps">Next Steps</a></li>
+      </ol>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- PREREQUISITES -->
+    <!-- ═══════════════════════════════════════ -->
+    <h2 id="prerequisites">Prerequisites</h2>
+
+    <h3>Hardware</h3>
+    <ul class="checklist">
+      <li><span class="check">☐</span> Siemens Logo 8.4 PLC</li>
+      <li><span class="check">☐</span> 24V power supply</li>
+      <li><span class="check">☐</span> Ethernet cable</li>
+      <li><span class="check">☐</span> USB to Ethernet adapter (if needed)</li>
+      <li><span class="check">☐</span> Jumper wires for testing inputs</li>
+    </ul>
+
+    <h3>Software</h3>
+    <ul class="checklist">
+      <li><span class="check">☐</span> Siemens Logo Soft Comfort (programming software)</li>
+      <li><span class="check">☐</span> Windows PC with administrator rights</li>
+      <li><span class="check">☐</span> Eclipse Mosquitto MQTT broker</li>
+      <li><span class="check">☐</span> Visual Studio Code</li>
+    </ul>
+
+    <div class="img-placeholder">
+      <div class="img-icon">📷</div>
+      <div class="img-caption">Photo: Siemens Logo 8.4 PLC with power supply and Ethernet cable connected</div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- NETWORK CONFIGURATION -->
+    <!-- ═══════════════════════════════════════ -->
+    <h2 id="network">Network Configuration</h2>
+
+    <span class="step-label">Step 1 — Configure PC Network Adapter</span>
+    <h3>Set a Static IP on Your PC</h3>
+    <p>Open <strong>Network and Sharing Center</strong>, click <strong>Change adapter settings</strong>, then right-click your Ethernet adapter → <strong>Properties</strong>.</p>
+    <p>Select <strong>Internet Protocol Version 4 (TCP/IPv4)</strong> → Properties, and configure:</p>
+
+    <div class="yaml-block"><pre style="margin:0;font:inherit;white-space:pre"><span class="yaml-key">IP Address:</span>       <span class="yaml-val">10.1.10.1</span>
+<span class="yaml-key">Subnet Mask:</span>     <span class="yaml-val">255.255.255.0</span>
+<span class="yaml-key">Default Gateway:</span> <span class="yaml-val">10.1.10.1</span></pre></div>
+
+    <p>Click <strong>OK</strong> to save.</p>
+
+    <div class="info-banner">
+      <div class="info-icon">i</div>
+      <div><strong>Why Static IP?</strong> The Logo doesn't have DHCP capabilities, so you need a static IP to communicate directly with it.</div>
+    </div>
+
+    <div class="img-placeholder">
+      <div class="img-icon">📷</div>
+      <div class="img-caption">Screenshot: Windows TCP/IPv4 properties dialog with static IP configured</div>
+    </div>
+
+    <span class="step-label">Step 2 — Configure Logo IP Address</span>
+    <h3>Set the Logo's IP</h3>
+    <p>On the Logo device screen, navigate to:</p>
+    <div class="yaml-block"><pre style="margin:0;font:inherit;white-space:pre"><span class="yaml-key">Setup</span> → <span class="yaml-key">Network</span> → <span class="yaml-key">IP Address</span>
+<span class="yaml-val">010.001.010.002</span></pre></div>
+    <p>This translates to <code style="font-family:var(--font-mono);font-size:13px;background:var(--grey-100);padding:2px 8px;border-radius:4px;">10.1.10.2</code>. Confirm the settings.</p>
+
+    <div class="info-banner">
+      <div class="info-icon">i</div>
+      <div><strong>IP Format:</strong> The Logo uses a 3-digit format for each octet — <code style="font-family:var(--font-mono);font-size:12px;">010</code> for 10, <code style="font-family:var(--font-mono);font-size:12px;">001</code> for 1, <code style="font-family:var(--font-mono);font-size:12px;">002</code> for 2.</div>
+    </div>
+
+    <div class="img-placeholder">
+      <div class="img-icon">📷</div>
+      <div class="img-caption">Photo: Logo device screen showing IP address configuration in 3-digit format</div>
+    </div>
+
+    <span class="step-label">Step 3 — Verify Connectivity</span>
+    <h3>Ping the Logo</h3>
+    <p>Open Command Prompt and test the connection:</p>
+    <div class="yaml-block"><pre style="margin:0;font:inherit;white-space:pre"><span class="yaml-key">ping</span> <span class="yaml-val">10.1.10.2</span></pre></div>
+
+    <div class="success-indicator">
+      <span class="success-icon">✓</span>
+      You should see successful replies confirming the Logo is reachable on the network.
+    </div>
+
+    <div class="img-placeholder">
+      <div class="img-icon">📷</div>
+      <div class="img-caption">Screenshot: Command Prompt showing successful ping replies from 10.1.10.2</div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- LOGO CONFIGURATION -->
+    <!-- ═══════════════════════════════════════ -->
+    <h2 id="logo-config">Logo Configuration</h2>
+
+    <span class="step-label">Step 4 — Open Logo Soft Comfort</span>
+    <h3>Go Online</h3>
+    <p>Launch <strong>Logo Soft Comfort</strong>, go to <strong>View → Network Project</strong>, and click <strong>Go Online</strong>.</p>
+
+    <span class="step-label">Step 5 — Add Logo Device</span>
+    <h3>Register the PLC</h3>
+    <p>Click <strong>Add New Device</strong>, select <strong>Logo 8.4</strong>, and configure:</p>
+
+    <div class="yaml-block"><pre style="margin:0;font:inherit;white-space:pre"><span class="yaml-key">IP Address:</span>   <span class="yaml-val">10.1.10.2</span>
+<span class="yaml-key">Subnet Mask:</span>  <span class="yaml-val">255.255.255.0</span>
+<span class="yaml-key">Gateway:</span>      <span class="yaml-val">10.1.10.1</span></pre></div>
+
+    <p>Click <strong>OK</strong>.</p>
+
+    <div class="img-placeholder">
+      <div class="img-icon">📷</div>
+      <div class="img-caption">Screenshot: Logo Soft Comfort — Add New Device dialog with IP configuration</div>
+    </div>
+
+    <span class="step-label">Step 6 — Connect to Logo</span>
+    <h3>Establish Connection</h3>
+    <p>Right-click on the Logo device → <strong>Properties</strong>, go to the <strong>Online Settings</strong> tab, and click <strong>Connect</strong>.</p>
+
+    <div class="success-indicator">
+      <span class="success-icon">✓</span>
+      You should now be connected to the Logo.
+    </div>
+
+    <span class="step-label">Step 7 — Enable Cloud Access</span>
+    <h3>Turn On MQTT Connectivity</h3>
+    <p>In Properties, go to <strong>Cloud Connection Settings</strong>. Click <strong>Enable Cloud Access → Apply</strong>.</p>
+    <p>When prompted, choose <strong>Disable all unsecure ports → Continue</strong>. Click <strong>Yes</strong> when asked if the device should stop.</p>
+
+    <div class="img-placeholder">
+      <div class="img-icon">📷</div>
+      <div class="img-caption">Screenshot: Logo Soft Comfort — Cloud Connection Settings with Enable Cloud Access</div>
+    </div>
+
+    <span class="step-label">Step 8 — Register MQTT Thing</span>
+    <h3>Configure the MQTT Connection</h3>
+    <p>Click <strong>Register Thing</strong>, select <strong>MQTT</strong> from the dropdown → Next. Configure:</p>
+
+    <div class="yaml-block"><pre style="margin:0;font:inherit;white-space:pre"><span class="yaml-key">Broker URL:</span>  <span class="yaml-val">10.1.10.1</span>
+<span class="yaml-key">Port:</span>        <span class="yaml-val">1883</span>
+<span class="yaml-key">Client ID:</span>   <span class="yaml-val">logo</span>  <span class="yaml-comment"># or any unique identifier</span>
+<span class="yaml-key">Username:</span>    <span class="yaml-comment">(leave empty)</span>
+<span class="yaml-key">Password:</span>    <span class="yaml-comment">(leave empty)</span></pre></div>
+
+    <p>Click <strong>Next</strong>.</p>
+
+    <div class="info-banner">
+      <div class="info-icon">i</div>
+      <div><strong>Note:</strong> The broker URL points to your PC's IP. The broker doesn't need to be running yet — we'll set that up in the <a href="#mosquitto" style="color:var(--black);border-bottom:1px solid var(--grey-300);">MQTT Broker</a> section. The Logo will retry the connection automatically.</div>
+    </div>
+
+    <div class="img-placeholder">
+      <div class="img-icon">📷</div>
+      <div class="img-caption">Screenshot: Logo Soft Comfort — MQTT Thing registration with broker URL and port</div>
+    </div>
+
+    <span class="step-label">Step 9 — Configure Security</span>
+    <h3>Select TCP (Unencrypted)</h3>
+    <p>For this tutorial, select <strong>TCP</strong> (not TLS). Click <strong>Next</strong>.</p>
+
+    <div class="info-banner">
+      <div class="info-icon">i</div>
+      <div>
+        <strong>Production Note:</strong> In production environments, use TLS with certificates. This requires a broker CA certificate, device certificate, and device key. Managing certificate renewals (typically annual or quarterly) across many devices requires proper certificate management infrastructure.
+      </div>
+    </div>
+
+    <span class="step-label">Step 10 — Set MQTT Topics</span>
+    <h3>Define Publish Topic</h3>
+
+    <div class="yaml-block"><pre style="margin:0;font:inherit;white-space:pre"><span class="yaml-key">Published Topic:</span>   <span class="yaml-val">/logo/test</span>
+<span class="yaml-key">QoS:</span>               <span class="yaml-val">0</span>
+<span class="yaml-key">Subscribed Topic:</span>  <span class="yaml-comment">(leave empty — we're only publishing)</span></pre></div>
+
+    <p>Click <strong>Next → Finish</strong>.</p>
+
+    <div class="img-placeholder">
+      <div class="img-icon">📷</div>
+      <div class="img-caption">Screenshot: Logo Soft Comfort — MQTT topic configuration</div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- DATA MAPPING -->
+    <!-- ═══════════════════════════════════════ -->
+    <h2 id="data-mapping">Data Mapping</h2>
+
+    <span class="step-label">Step 11 — Configure Data Transfer</span>
+    <h3>Map Input to MQTT</h3>
+    <p>Right-click Logo → <strong>Properties</strong>, go to <strong>Cloud Data Transfer Settings</strong>, and click <strong>+</strong> to add a new data point:</p>
+
+    <div class="yaml-block"><pre style="margin:0;font:inherit;white-space:pre"><span class="yaml-key">Name:</span>     <span class="yaml-val">Input1</span>  <span class="yaml-comment"># or descriptive: "DoorSensor"</span>
+<span class="yaml-key">Range:</span>    <span class="yaml-val">I</span>       <span class="yaml-comment"># Input</span>
+<span class="yaml-key">Type:</span>     <span class="yaml-val">Bit</span>
+<span class="yaml-key">Address:</span>  <span class="yaml-val">I1</span>
+<span class="yaml-key">Length:</span>   <span class="yaml-val">1</span></pre></div>
+
+    <p>Set transmission conditions:</p>
+    <ul class="checklist">
+      <li><span class="check" style="background:var(--black);color:var(--white);border-color:var(--black);">✓</span> <strong>On Change</strong> — Sends when value changes</li>
+      <li><span class="check" style="background:var(--black);color:var(--white);border-color:var(--black);">✓</span> <strong>Periodically</strong> — Send interval: 60 seconds (1 minute)</li>
+    </ul>
+    <p>Leave <strong>Writable</strong> unchecked. Click <strong>Write to Logo → OK</strong>.</p>
+
+    <div class="info-banner">
+      <div class="info-icon">i</div>
+      <div>
+        <strong>Transmission Strategy:</strong> Using both methods provides redundancy.
+        <strong>On Change</strong> gives immediate updates when input state changes.
+        <strong>Periodic</strong> acts as a backup — useful if the broker was temporarily offline.
+      </div>
+    </div>
+
+    <div class="img-placeholder">
+      <div class="img-icon">📷</div>
+      <div class="img-caption">Screenshot: Logo Soft Comfort — Cloud Data Transfer Settings with Input1 mapped</div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- PLC PROGRAM -->
+    <!-- ═══════════════════════════════════════ -->
+    <h2 id="plc-program">Creating the PLC Program</h2>
+
+    <div class="warning-banner">
+      <span class="warning-icon">⚠</span>
+      <div>
+        <strong>CRITICAL STEP:</strong> The Logo <strong>must</strong> have a program loaded, even if it's minimal!
+        This was the key discovery from the training session. The Logo will not function properly without a program.
+      </div>
+    </div>
+
+    <span class="step-label">Step 12 — Create Basic Program</span>
+    <h3>Wire Input to Output</h3>
+    <p>In Logo Soft Comfort, switch to <strong>Diagram view</strong>. From the <strong>Digital</strong> section on the left:</p>
+    <ol style="font-size:14px;color:var(--grey-700);line-height:1.8;padding-left:20px;margin-bottom:16px;">
+      <li>Drag an <strong>Input</strong> block to the workspace</li>
+      <li>Drag an <strong>Output</strong> block to the workspace</li>
+      <li>Connect Input to Output (click and drag from output pin to input pin)</li>
+    </ol>
+
+    <p><strong>What this does:</strong> When Input I1 receives 24V, it activates Output Q1. This creates a simple pass-through program — the Logo will now process and transmit input states.</p>
+
+    <div class="img-placeholder">
+      <div class="img-icon">📷</div>
+      <div class="img-caption">Screenshot: Logo Soft Comfort — Diagram view with Input block connected to Output block</div>
+    </div>
+
+    <span class="step-label">Step 13 — Download Program to Logo</span>
+    <h3>Save and Transfer</h3>
+    <p><strong>File → Save As</strong> → Name: <code style="font-family:var(--font-mono);font-size:12px;background:var(--grey-100);padding:2px 8px;border-radius:4px;">Logo_MQTT_Test</code></p>
+    <p>Click the <strong>Download</strong> button (white down arrow) or right-click Logo → <strong>Download</strong>. Select your saved program and click <strong>OK</strong>.</p>
+    <p>When prompted:</p>
+    <ul class="checklist">
+      <li><span class="check" style="background:var(--black);color:var(--white);border-color:var(--black);">✓</span> Overwrite IP and Device Name</li>
+      <li><span class="check" style="background:var(--black);color:var(--white);border-color:var(--black);">✓</span> Change to RUN mode</li>
+    </ul>
+    <p>Click <strong>Yes</strong>.</p>
+
+    <div class="success-indicator">
+      <span class="success-icon">✓</span>
+      The Logo screen should change from <strong>orange</strong> to <strong>white</strong>.
+    </div>
+
+    <div class="img-placeholder">
+      <div class="img-icon">📷</div>
+      <div class="img-caption">Screenshot: Logo Soft Comfort — Download dialog with overwrite and RUN mode options</div>
+    </div>
+
+    <span class="step-label">Step 14 — Set Logo to Operating Mode</span>
+    <h3>Switch from Admin to OP</h3>
+    <p>On the Logo device, press <strong>ESC</strong> repeatedly, navigate to <strong>Setup</strong>, scroll down to <strong>Switch to OP</strong> (Operating Mode), and confirm.</p>
+
+    <table class="def-table">
+      <thead><tr><th>Mode</th><th>Screen</th><th>Purpose</th></tr></thead>
+      <tbody>
+        <tr><td>Admin Mode</td><td>Orange screen</td><td>Configuration access</td></tr>
+        <tr><td>Operating Mode (OP)</td><td>White screen</td><td>Runtime with I/O status display</td></tr>
+      </tbody>
+    </table>
+
+    <div class="img-placeholder">
+      <div class="img-icon">📷</div>
+      <div class="img-caption">Photo: Logo device screen — white Operating Mode display showing I/O status</div>
+    </div>
+
+    <div class="info-banner">
+      <div class="info-icon">i</div>
+      <div>
+        <strong>Logo setup complete.</strong> The PLC is now configured, programmed, and running. It will attempt to connect to the MQTT broker at <code style="font-family:var(--font-mono);font-size:12px;">10.1.10.1:1883</code> and retry automatically. Next, we'll set up the broker and a test client on the PC side.
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- MQTT BROKER INSTALLATION -->
+    <!-- ═══════════════════════════════════════ -->
+    <h2 id="mosquitto">MQTT Broker Installation</h2>
+    <p>With the Logo configured and running, we now set up the MQTT broker on the PC so the Logo has somewhere to publish its data.</p>
+
+    <span class="step-label">Step 15 — Download Eclipse Mosquitto</span>
+    <h3>Get the Installer</h3>
+    <p>Go to <a href="https://mosquitto.org/" style="color:var(--black);border-bottom:1px solid var(--grey-300);">mosquitto.org</a>, navigate to the Download section, and download the <strong>Windows 64-bit installer</strong> (e.g., <code style="font-family:var(--font-mono);font-size:12px;background:var(--grey-100);padding:2px 8px;border-radius:4px;">mosquitto-2.x.x-install-windows-x64.exe</code>).</p>
+    <p>If your browser warns about the download, click the dots → <strong>Keep</strong> → <strong>Keep Anyway</strong>.</p>
+
+    <span class="step-label">Step 16 — Install Mosquitto</span>
+    <h3>Run the Installer</h3>
+    <p>Use default/standard installation options. Install to the default location:</p>
+    <div class="yaml-block"><pre style="margin:0;font:inherit;white-space:pre"><span class="yaml-val">C:\Program Files\mosquitto</span></pre></div>
+    <p>Click <strong>Finish</strong>.</p>
+
+    <div class="img-placeholder">
+      <div class="img-icon">📷</div>
+      <div class="img-caption">Screenshot: Mosquitto installer — default installation path selected</div>
+    </div>
+
+    <span class="step-label">Step 17 — Configure Mosquitto</span>
+    <h3>Edit the Config File</h3>
+    <p>Navigate to the installation folder and open <code style="font-family:var(--font-mono);font-size:13px;background:var(--grey-100);padding:2px 8px;border-radius:4px;">mosquitto.conf</code> with Notepad or VS Code:</p>
+    <div class="yaml-block"><pre style="margin:0;font:inherit;white-space:pre"><span class="yaml-val">C:\Program Files\mosquitto\mosquitto.conf</span></pre></div>
+    <p>Add these lines <strong>at the top</strong> of the file:</p>
+    <div class="yaml-block"><pre style="margin:0;font:inherit;white-space:pre"><span class="yaml-key">bind_address</span> <span class="yaml-val">0.0.0.0</span>
+<span class="yaml-key">allow_anonymous</span> <span class="yaml-val">true</span>
+<span class="yaml-key">listener</span> <span class="yaml-val">1883</span></pre></div>
+    <p>Save the file (may require administrator rights).</p>
+
+    <ul class="config-explain">
+      <li><code>bind_address 0.0.0.0</code> — Allows external connections (not just localhost)</li>
+      <li><code>allow_anonymous true</code> — Permits connections without username/password</li>
+      <li><code>listener 1883</code> — Standard MQTT port (non-encrypted)</li>
+    </ul>
+
+    <span class="step-label">Step 18 — Configure Windows Firewall</span>
+    <h3>Allow MQTT Traffic</h3>
+    <p>Open <strong>Windows Defender Firewall with Advanced Security</strong>.</p>
+
+    <p><strong>Inbound Rule:</strong></p>
+    <ol style="font-size:14px;color:var(--grey-700);line-height:1.8;padding-left:20px;margin-bottom:16px;">
+      <li>Click <strong>Inbound Rules</strong> → <strong>New Rule</strong></li>
+      <li>Select <strong>Port</strong> → Next</li>
+      <li>Select <strong>TCP</strong> → Specific local ports: <code style="font-family:var(--font-mono);font-size:12px;background:var(--grey-100);padding:2px 8px;border-radius:4px;">1883</code> → Next</li>
+      <li>Select <strong>Allow the connection</strong> → Next</li>
+      <li>Check all network types → Next</li>
+      <li>Name: <strong>MQTT Broker</strong> → Finish</li>
+    </ol>
+
+    <p><strong>Outbound Rule:</strong> Repeat the same steps under <strong>Outbound Rules</strong>.</p>
+
+    <div class="info-banner">
+      <div class="info-icon">i</div>
+      <div><strong>Important:</strong> The default is "Block" — ensure you select <strong>Allow the connection</strong>.</div>
+    </div>
+
+    <div class="img-placeholder">
+      <div class="img-icon">📷</div>
+      <div class="img-caption">Screenshot: Windows Firewall — new inbound rule for port 1883</div>
+    </div>
+
+    <span class="step-label">Step 19 — Restart Mosquitto Service</span>
+    <h3>Apply the Configuration</h3>
+    <p>Open <strong>Services</strong> (Windows key + R → <code style="font-family:var(--font-mono);font-size:12px;background:var(--grey-100);padding:2px 8px;border-radius:4px;">services.msc</code>), find <strong>Mosquitto Broker</strong>, right-click → <strong>Restart</strong>.</p>
+
+    <div class="warning-banner">
+      <span class="warning-icon">⚠</span>
+      <div>If the service won't start, check your <code style="font-family:var(--font-mono);font-size:12px;">mosquitto.conf</code> for syntax errors. A common mistake is extra spaces or missing values.</div>
+    </div>
+
+    <div class="success-indicator">
+      <span class="success-icon">✓</span>
+      Once the broker is running, the Logo should automatically connect. Check Logo Soft Comfort — the MQTT status should show <strong>Connected</strong>.
+    </div>
+
+    <div class="img-placeholder">
+      <div class="img-icon">📷</div>
+      <div class="img-caption">Screenshot: Windows Services showing Mosquitto Broker running</div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- VS CODE MQTT CLIENT -->
+    <!-- ═══════════════════════════════════════ -->
+    <h2 id="vscode">VS Code MQTT Client Setup</h2>
+    <p>Now we set up a client to subscribe to the Logo's MQTT messages and verify everything is working.</p>
+
+    <span class="step-label">Step 20 — Install Visual Studio Code</span>
+    <h3>Download VS Code</h3>
+    <p>Download from <a href="https://code.visualstudio.com/" style="color:var(--black);border-bottom:1px solid var(--grey-300);">code.visualstudio.com</a> and install with default options.</p>
+
+    <span class="step-label">Step 21 — Install MQTT Extension</span>
+    <h3>Add VSMQTT</h3>
+    <p>Open VS Code, click the <strong>Extensions</strong> icon (left sidebar — four squares), search for <strong>MQTT</strong>, and install the <strong>VSMQTT</strong> extension. Click <strong>Trust Publisher</strong> and <strong>Install</strong>.</p>
+
+    <div class="img-placeholder">
+      <div class="img-icon">📷</div>
+      <div class="img-caption">Screenshot: VS Code Extensions marketplace showing VSMQTT extension</div>
+    </div>
+
+    <span class="step-label">Step 22 — Create Workspace</span>
+    <h3>Set Up a Folder</h3>
+    <p>In VS Code: <strong>File → Open Folder</strong>. Create a new folder (e.g., <code style="font-family:var(--font-mono);font-size:12px;background:var(--grey-100);padding:2px 8px;border-radius:4px;">MQTT</code>), select it, and trust the authors.</p>
+
+    <span class="step-label">Step 23 — Configure MQTT Connection</span>
+    <h3>Connect to the Broker</h3>
+    <p>Click the <strong>MQTT icon</strong> in the left sidebar, then <strong>Add Profile</strong>:</p>
+
+    <div class="yaml-block"><pre style="margin:0;font:inherit;white-space:pre"><span class="yaml-key">Profile Name:</span> <span class="yaml-val">localhost</span>
+<span class="yaml-key">Host:</span>         <span class="yaml-val">localhost</span>  <span class="yaml-comment"># or 127.0.0.1</span>
+<span class="yaml-key">Port:</span>         <span class="yaml-val">1883</span></pre></div>
+
+    <p>Click the <strong>Connect</strong> icon.</p>
+
+    <div class="success-indicator">
+      <span class="success-icon">✓</span>
+      You should see <strong>Online</strong> with a green indicator at the top right.
+    </div>
+
+    <div class="img-placeholder">
+      <div class="img-icon">📷</div>
+      <div class="img-caption">Screenshot: VS Code VSMQTT panel showing "Online" connection status</div>
+    </div>
+
+    <span class="step-label">Step 24 — Subscribe to Logo Topics</span>
+    <h3>Subscribe and Verify</h3>
+    <p><strong>Subscribe to topics:</strong> In the MQTT tab, click <strong>Subscribe</strong> and add:</p>
+    <div class="yaml-block"><pre style="margin:0;font:inherit;white-space:pre"><span class="yaml-val">/logo/#</span>  <span class="yaml-comment"># wildcard — catches all subtopics</span></pre></div>
+
+    <p><strong>Publish a test message (optional):</strong> Click <strong>Publish</strong>, set the topic and payload:</p>
+    <div class="yaml-block"><pre style="margin:0;font:inherit;white-space:pre"><span class="yaml-key">Topic:</span>   <span class="yaml-val">/logo/test</span>
+<span class="yaml-key">Payload:</span> <span class="yaml-val">Hello MQTT!</span></pre></div>
+
+    <div class="success-indicator">
+      <span class="success-icon">✓</span>
+      You should see the message appear in the Messages section. If the Logo is connected and running, you'll also see its periodic data messages arriving.
+    </div>
+
+    <div class="img-placeholder">
+      <div class="img-icon">📷</div>
+      <div class="img-caption">Screenshot: VS Code MQTT client — subscribed to /logo/# with test message received</div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- TESTING -->
+    <!-- ═══════════════════════════════════════ -->
+    <h2 id="testing">Testing</h2>
+
+    <span class="step-label">Step 25 — Test Input Signal</span>
+    <h3>Hardware Setup</h3>
+    <p>Use a jumper wire to connect <strong>P1</strong> (24V power) to <strong>I1</strong> (Input 1).</p>
+
+    <p><strong>Method 1: Screw Terminal</strong></p>
+    <ol style="font-size:14px;color:var(--grey-700);line-height:1.8;padding-left:20px;margin-bottom:16px;">
+      <li>Unplug Logo (safety)</li>
+      <li>Unscrew P1 terminal</li>
+      <li>Insert jumper wire alongside power cable</li>
+      <li>Screw down securely</li>
+      <li>Plug in Logo</li>
+    </ol>
+
+    <p><strong>Method 2: Quick Test</strong></p>
+    <p>Touch exposed copper wire to the top of the screw heads — P1 screw → I1 screw. You should hear a small relay click.</p>
+
+    <div class="img-placeholder">
+      <div class="img-icon">📷</div>
+      <div class="img-caption">Photo: Jumper wire connecting P1 (24V) to I1 on the Logo terminal block</div>
+    </div>
+
+    <span class="step-label">Step 26 — Monitor I/O Status</span>
+    <h3>Verify in Logo Soft Comfort</h3>
+    <p>Right-click Logo → <strong>I/O Status</strong>. Click <strong>Yes</strong> to change to RUN mode. Watch the status list.</p>
+
+    <div class="success-indicator">
+      <span class="success-icon">✓</span>
+      When you connect P1 to I1, the value should change from <strong>0</strong> to <strong>1</strong>.
+    </div>
+
+    <h3>Verify in VS Code MQTT Client</h3>
+    <p>Ensure you're subscribed to <code style="font-family:var(--font-mono);font-size:12px;background:var(--grey-100);padding:2px 8px;border-radius:4px;">/logo/#</code>. When the input changes, you'll see JSON messages like:</p>
+
+    <div class="yaml-block"><pre style="margin:0;font:inherit;white-space:pre">{
+  <span class="yaml-key">"timestamp"</span>: <span class="yaml-val">"..."</span>,
+  <span class="yaml-key">"I1"</span>: <span class="yaml-val">true</span>
+}</pre></div>
+
+    <div class="img-placeholder">
+      <div class="img-icon">📷</div>
+      <div class="img-caption">Screenshot: VS Code MQTT client showing received JSON message with I1: true</div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- NETWORK ARCHITECTURE -->
+    <!-- ═══════════════════════════════════════ -->
+    <h2 id="architecture">Network Architecture &amp; Topic Structure</h2>
+
+    <h3>Network Diagram</h3>
+
+    <div class="network-diagram">
+      <svg viewBox="0 0 640 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- Logo PLC -->
+        <rect x="16" y="60" width="140" height="80" rx="8" fill="var(--white)" stroke="var(--grey-200)" stroke-width="1.5"/>
+        <text x="86" y="90" font-family="'JetBrains Mono', monospace" font-size="11" font-weight="600" fill="var(--black)" text-anchor="middle">Logo 8.4</text>
+        <text x="86" y="108" font-family="'JetBrains Mono', monospace" font-size="9" fill="var(--grey-500)" text-anchor="middle">10.1.10.2</text>
+        <text x="86" y="124" font-family="'JetBrains Mono', monospace" font-size="8" fill="var(--grey-400)" text-anchor="middle">MQTT Publisher</text>
+
+        <!-- Arrow -->
+        <line x1="156" y1="100" x2="210" y2="100" stroke="var(--grey-300)" stroke-width="1.5"/>
+        <text x="183" y="92" font-family="'JetBrains Mono', monospace" font-size="7" fill="var(--grey-400)" text-anchor="middle">Ethernet</text>
+
+        <!-- PC / Broker -->
+        <rect x="210" y="30" width="200" height="140" rx="8" fill="var(--white)" stroke="var(--black)" stroke-width="1.5"/>
+        <text x="310" y="56" font-family="'JetBrains Mono', monospace" font-size="11" font-weight="600" fill="var(--black)" text-anchor="middle">PC — 10.1.10.1</text>
+
+        <rect x="226" y="68" width="168" height="36" rx="6" fill="var(--grey-50)" stroke="var(--grey-200)" stroke-width="1"/>
+        <text x="310" y="84" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="500" fill="var(--black)" text-anchor="middle">Mosquitto Broker</text>
+        <text x="310" y="97" font-family="'JetBrains Mono', monospace" font-size="8" fill="var(--grey-500)" text-anchor="middle">Port 1883</text>
+
+        <rect x="226" y="114" width="168" height="36" rx="6" fill="var(--grey-50)" stroke="var(--grey-200)" stroke-width="1"/>
+        <text x="310" y="130" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="500" fill="var(--black)" text-anchor="middle">VS Code MQTT Client</text>
+        <text x="310" y="143" font-family="'JetBrains Mono', monospace" font-size="8" fill="var(--grey-500)" text-anchor="middle">Subscriber</text>
+
+        <!-- Arrow to future -->
+        <line x1="410" y1="100" x2="464" y2="100" stroke="var(--grey-300)" stroke-width="1.5" stroke-dasharray="4 4"/>
+
+        <!-- Future consumers -->
+        <rect x="464" y="60" width="160" height="80" rx="8" fill="var(--grey-50)" stroke="var(--grey-200)" stroke-width="1.5" stroke-dasharray="4 4"/>
+        <text x="544" y="90" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="500" fill="var(--grey-500)" text-anchor="middle">Node-RED</text>
+        <text x="544" y="108" font-family="'JetBrains Mono', monospace" font-size="9" fill="var(--grey-400)" text-anchor="middle">or other clients</text>
+        <text x="544" y="124" font-family="'JetBrains Mono', monospace" font-size="8" fill="var(--grey-400)" text-anchor="middle">(future)</text>
+      </svg>
+    </div>
+
+    <h3>MQTT Topic Structure</h3>
+    <p><strong>Recommended Format (UNS Framework):</strong></p>
+    <div class="yaml-block"><pre style="margin:0;font:inherit;white-space:pre"><span class="yaml-comment"># Full UNS hierarchy</span>
+<span class="yaml-val">/{site}/{area}/{line}/{cell}/{device}/{datapoint}</span>
+
+<span class="yaml-comment"># Example</span>
+<span class="yaml-val">/filton/hydraulics/pipebender/logo01/input1</span>
+<span class="yaml-val">/filton/hydraulics/pipebender/logo01/status</span></pre></div>
+
+    <p><strong>Simple Format (Used in This Tutorial):</strong></p>
+    <div class="yaml-block"><pre style="margin:0;font:inherit;white-space:pre"><span class="yaml-val">/logo/test</span>
+<span class="yaml-val">/logo/demo</span></pre></div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- TROUBLESHOOTING -->
+    <!-- ═══════════════════════════════════════ -->
+    <h2 id="troubleshooting">Troubleshooting</h2>
+
+    <h3>Connection Issues</h3>
+
+    <p><strong>Logo not found on network:</strong></p>
+    <ul class="checklist">
+      <li><span class="check">☐</span> Check Ethernet cable connection</li>
+      <li><span class="check">☐</span> Verify PC IP: <code style="font-family:var(--font-mono);font-size:12px;">10.1.10.1</code></li>
+      <li><span class="check">☐</span> Verify Logo IP: <code style="font-family:var(--font-mono);font-size:12px;">10.1.10.2</code></li>
+      <li><span class="check">☐</span> Test with: <code style="font-family:var(--font-mono);font-size:12px;">ping 10.1.10.2</code></li>
+      <li><span class="check">☐</span> Ensure Logo is powered on</li>
+    </ul>
+
+    <p><strong>"Server Connection Error":</strong></p>
+    <ul class="checklist">
+      <li><span class="check">☐</span> Check Mosquitto service is running</li>
+      <li><span class="check">☐</span> Verify <code style="font-family:var(--font-mono);font-size:12px;">mosquitto.conf</code> has <code style="font-family:var(--font-mono);font-size:12px;">bind_address 0.0.0.0</code></li>
+      <li><span class="check">☐</span> Check firewall rules for port 1883</li>
+      <li><span class="check">☐</span> Restart Mosquitto service</li>
+    </ul>
+
+    <p><strong>"Not Authorized":</strong></p>
+    <ul class="checklist">
+      <li><span class="check">☐</span> Add <code style="font-family:var(--font-mono);font-size:12px;">allow_anonymous true</code> to <code style="font-family:var(--font-mono);font-size:12px;">mosquitto.conf</code></li>
+      <li><span class="check">☐</span> Restart Mosquitto service</li>
+    </ul>
+
+    <h3>Logo Configuration Issues</h3>
+
+    <p><strong>"Unable to access remote device":</strong></p>
+    <ul class="checklist">
+      <li><span class="check">☐</span> Logo must be in <strong>Stop mode</strong> before downloading programs</li>
+      <li><span class="check">☐</span> Click Stop button (red square) in Logo Soft Comfort</li>
+      <li><span class="check">☐</span> Then attempt download again</li>
+    </ul>
+
+    <p><strong>"No programme exists in Logo":</strong></p>
+    <ul class="checklist">
+      <li><span class="check">☐</span> This is expected! The Logo requires a program</li>
+      <li><span class="check">☐</span> Create the basic I/O program as described in <a href="#plc-program" style="color:var(--black);border-bottom:1px solid var(--grey-300);">Step 12</a></li>
+      <li><span class="check">☐</span> Download the program to the Logo</li>
+    </ul>
+
+    <p><strong>Logo screen stays orange:</strong></p>
+    <ul class="checklist">
+      <li><span class="check">☐</span> Logo is in Admin mode</li>
+      <li><span class="check">☐</span> Navigate to: Setup → Switch to OP</li>
+      <li><span class="check">☐</span> Screen should turn white in Operating mode</li>
+    </ul>
+
+    <p><strong>Input not triggering:</strong></p>
+    <ul class="checklist">
+      <li><span class="check">☐</span> Ensure wire has good contact with screw terminals</li>
+      <li><span class="check">☐</span> Verify you're connecting to P1 (positive 24V), not P2 (ground)</li>
+      <li><span class="check">☐</span> Check Logo is in RUN mode (not STOP)</li>
+      <li><span class="check">☐</span> Verify program has been downloaded</li>
+    </ul>
+
+    <h3>MQTT Data Issues</h3>
+
+    <p><strong>No messages in VS Code:</strong></p>
+    <ul class="checklist">
+      <li><span class="check">☐</span> Check Logo shows "Connected" status</li>
+      <li><span class="check">☐</span> Verify subscription topic matches publish topic</li>
+      <li><span class="check">☐</span> Use <code style="font-family:var(--font-mono);font-size:12px;">#</code> wildcard: <code style="font-family:var(--font-mono);font-size:12px;">/logo/#</code> to catch all messages</li>
+      <li><span class="check">☐</span> Check Cloud Data Transfer Settings configured correctly</li>
+    </ul>
+
+    <p><strong>Messages only sent once:</strong></p>
+    <ul class="checklist">
+      <li><span class="check">☐</span> Ensure both "On Change" AND "Periodically" are checked</li>
+      <li><span class="check">☐</span> This provides redundancy</li>
+    </ul>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- LESSONS LEARNED -->
+    <!-- ═══════════════════════════════════════ -->
+    <h2 id="lessons">Important Discoveries &amp; Lessons Learned</h2>
+    <p>These insights came directly from the training session — they're the things that aren't obvious from the documentation.</p>
+
+    <div class="lesson-grid">
+      <div class="lesson-card">
+        <h4>1. Logo Requires a Program</h4>
+        <p>Even for simple data collection, the Logo must have a program loaded. An empty Logo will not process inputs correctly. Create a minimal program connecting inputs to outputs or memory bits.</p>
+      </div>
+      <div class="lesson-card">
+        <h4>2. Admin vs Operating Mode</h4>
+        <p>The Logo has two distinct modes: Admin Mode (orange screen, configuration access) and Operating Mode (white screen, runtime with I/O display). Always switch to OP mode for normal operation.</p>
+      </div>
+      <div class="lesson-card">
+        <h4>3. External Connection Config</h4>
+        <p>Mosquitto defaults to localhost-only connections. You must explicitly set <code style="font-family:var(--font-mono);font-size:11px;">bind_address 0.0.0.0</code>, <code style="font-family:var(--font-mono);font-size:11px;">allow_anonymous true</code>, and configure firewall rules.</p>
+      </div>
+      <div class="lesson-card">
+        <h4>4. IP Address Format</h4>
+        <p>Logo uses 3-digit format: <code style="font-family:var(--font-mono);font-size:11px;">010.001.010.002</code>. Software uses standard format: <code style="font-family:var(--font-mono);font-size:11px;">10.1.10.2</code>. Don't let this trip you up.</p>
+      </div>
+      <div class="lesson-card">
+        <h4>5. Transmission Redundancy</h4>
+        <p>Configure both transmission methods: On Change for real-time updates, and Periodic to ensure data is sent even if "on change" messages were lost.</p>
+      </div>
+      <div class="lesson-card">
+        <h4>6. Stop Before Download</h4>
+        <p>The Logo must be in Stop mode before you can download a new program. If you get "Unable to access remote device", click the Stop button first.</p>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- SECURITY -->
+    <!-- ═══════════════════════════════════════ -->
+    <h2 id="security">Security Considerations</h2>
+
+    <div class="security-grid">
+      <div class="security-card">
+        <h4>Current Setup (Dev/Testing)</h4>
+        <ul>
+          <li>✅ Unencrypted TCP</li>
+          <li>✅ Anonymous access</li>
+          <li>✅ No authentication</li>
+        </ul>
+      </div>
+      <div class="security-card">
+        <h4>Production Recommendations</h4>
+        <ul>
+          <li>🔒 Use TLS encryption (port 8883)</li>
+          <li>🔒 Certificate-based authentication</li>
+          <li>🔒 Username/password authentication</li>
+          <li>🔒 Certificate management system</li>
+          <li>🔒 Network VLANs and DMZ</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="info-banner">
+      <div class="info-icon">i</div>
+      <div>Certificate management for hundreds of devices requires infrastructure planning, as certificates typically expire annually or quarterly.</div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- NEXT STEPS -->
+    <!-- ═══════════════════════════════════════ -->
+    <h2 id="next-steps">Next Steps</h2>
+
+    <table class="def-table">
+      <thead><tr><th>Step</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td>Multiple Inputs</td><td>Map I2, I3, etc. to additional MQTT data points</td></tr>
+        <tr><td>Memory Bits</td><td>Use M bits for calculated values within the Logo program</td></tr>
+        <tr><td>Node-RED</td><td>Process MQTT data for dashboards and automation flows</td></tr>
+        <tr><td>UNS Topics</td><td>Adopt the <a href="/framework/" style="color:var(--black);border-bottom:1px solid var(--grey-300);">UNS Framework</a> topic hierarchy for production</td></tr>
+        <tr><td>Production Security</td><td>Implement TLS, authentication, and certificate management</td></tr>
+        <tr><td>fn-uns Integration</td><td>Connect to the <a href="/fn-uns/" style="color:var(--black);border-bottom:1px solid var(--grey-300);">fn-uns</a> data pipeline for KPIs and analytics</td></tr>
+      </tbody>
+    </table>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- QUICK REFERENCE -->
+    <!-- ═══════════════════════════════════════ -->
+    <h2 id="quick-reference">Quick Reference</h2>
+
+    <h3>Network</h3>
+    <div class="yaml-block"><pre style="margin:0;font:inherit;white-space:pre"><span class="yaml-comment"># Test connection</span>
+<span class="yaml-key">ping</span> <span class="yaml-val">10.1.10.2</span>
+<span class="yaml-key">ipconfig</span></pre></div>
+
+    <h3>Mosquitto Config</h3>
+    <div class="yaml-block"><pre style="margin:0;font:inherit;white-space:pre"><span class="yaml-comment"># Location</span>
+<span class="yaml-val">C:\Program Files\mosquitto\mosquitto.conf</span>
+
+<span class="yaml-comment"># Required lines</span>
+<span class="yaml-key">bind_address</span> <span class="yaml-val">0.0.0.0</span>
+<span class="yaml-key">allow_anonymous</span> <span class="yaml-val">true</span>
+<span class="yaml-key">listener</span> <span class="yaml-val">1883</span>
+
+<span class="yaml-comment"># Restart</span>
+<span class="yaml-val">Services → Mosquitto Broker → Restart</span></pre></div>
+
+    <h3>IP Addresses</h3>
+    <table class="def-table">
+      <thead><tr><th>Device</th><th>IP Address</th><th>Role</th></tr></thead>
+      <tbody>
+        <tr><td>PC</td><td>10.1.10.1</td><td>MQTT Broker + Client</td></tr>
+        <tr><td>Logo 8.4</td><td>10.1.10.2</td><td>MQTT Publisher</td></tr>
+      </tbody>
+    </table>
+
+    <div style="margin-top:32px;padding:20px;background:var(--grey-50);border:1px solid var(--grey-200);border-radius:10px;">
+      <p style="font-family:var(--font-mono);font-size:12px;color:var(--grey-500);margin-bottom:4px;">
+        Tutorial Version: 1.0 · Tested On: Siemens Logo 8.4, Windows 10/11, Mosquitto 2.x
+      </p>
+      <p style="font-size:13px;color:var(--grey-500);margin-bottom:0;">
+        Based on training session transcript. Last updated March 2026.
+      </p>
+    </div>
+
+    <!-- NAV BUTTONS -->
+    <div class="docs-nav-buttons">
+      <a href="/guides/" class="docs-nav-btn">
+        <span class="nav-label">Back</span>
+        <span class="nav-title">All Guides</span>
+      </a>
+      <div></div>
+    </div>
+
+  </main>
+</div>
+
+<script src="../shared.js"></script>
+<script>
+// Scroll-spy: highlight sidebar link matching current section
+(function() {
+  const sidebarLinks = document.querySelectorAll('.docs-sidebar a[href^="#"]');
+  const sections = [];
+  sidebarLinks.forEach(link => {
+    const id = link.getAttribute('href').slice(1);
+    const el = document.getElementById(id);
+    if (el) sections.push({ id, el, link });
+  });
+  if (!sections.length) return;
+
+  function update() {
+    const scrollY = window.scrollY + 80; // offset for fixed nav
+    let current = sections[0];
+    for (const s of sections) {
+      if (s.el.offsetTop <= scrollY) current = s;
+    }
+    sidebarLinks.forEach(l => l.classList.remove('active'));
+    current.link.classList.add('active');
+  }
+
+  let ticking = false;
+  window.addEventListener('scroll', () => {
+    if (!ticking) {
+      requestAnimationFrame(() => { update(); ticking = false; });
+      ticking = true;
+    }
+  });
+  update();
+})();
+</script>
+</body>
+</html>

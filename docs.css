@@ -154,7 +154,7 @@
 /* YAML code block */
 .yaml-block {
   background: var(--grey-950);
-  color: var(--grey-300);
+  color: var(--white);
   padding: 24px;
   border-radius: 10px;
   font-family: var(--font-mono);
@@ -164,9 +164,16 @@
   margin: 24px 0 32px;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
 }
-.yaml-block .yaml-key { color: #e5e5e5; font-weight: 500; }
-.yaml-block .yaml-val { color: #a3a3a3; }
-.yaml-block .yaml-comment { color: #525252; }
+.yaml-block .yaml-key {
+  color: #e5e5e5;
+  font-weight: 500;
+}
+.yaml-block .yaml-val {
+  color: #a3a3a3;
+}
+.yaml-block .yaml-comment {
+  color: #525252;
+}
 .yaml-block-label {
   font-family: var(--font-mono);
   font-size: 11px;
@@ -270,7 +277,9 @@
   padding: 8px 0;
   border-bottom: 1px solid var(--grey-100);
 }
-.topic-path:last-child { border-bottom: none; }
+.topic-path:last-child {
+  border-bottom: none;
+}
 
 /* Responsive */
 @media (max-width: 960px) {

@@ -143,6 +143,7 @@
       <a href="/docs/uns-framework.html">uns-framework</a>
       <a href="/docs/uns-cache.html">uns-cache</a>
       <a href="/docs/uns-log.html">uns-log</a>
+      <a href="/docs/uns-historian.html">uns-historian</a>
       <a href="/docs/uns-state.html">uns-state</a>
       <a href="/docs/uns-stoppage.html">uns-stoppage</a>
       <a href="/docs/uns-productivity.html">uns-productivity</a>
@@ -167,7 +168,7 @@
     <h1>fn-uns Documentation</h1>
     <p class="page-desc">
       Build a manufacturing data backbone using serverless functions, MQTT, and GitOps.
-      9 independent functions that capture, process, and report on real-time factory data.
+      10 independent functions that capture, process, and report on real-time factory data.
     </p>
 
     <!-- ANIMATED INFOGRAPHIC — Capture → Process → Report pipeline -->
@@ -330,7 +331,7 @@
       Instead of point-to-point integrations between machines, databases, and dashboards, the UNS creates a <strong>single source of truth</strong> for all operational data. Every machine, sensor, and system publishes to a shared MQTT topic hierarchy, and lightweight serverless functions process, store, and report on that data.
     </p>
 
-    <h2>The 9 Components</h2>
+    <h2>The 10 Components</h2>
     <p>Each function does <strong>one thing well</strong> — they compose through shared infrastructure (MQTT, Valkey, PostgreSQL), not through each other.</p>
 
     <div class="docs-component-grid">
@@ -353,6 +354,11 @@
         <div class="cc-name">uns-log</div>
         <div class="cc-meta">Go · HTTP</div>
         <div class="cc-desc">Logs snapshot rows to PostgreSQL on change</div>
+      </a>
+      <a href="/docs/uns-historian.html" class="docs-component-card">
+        <div class="cc-name">uns-historian</div>
+        <div class="cc-meta">Go · MQTT</div>
+        <div class="cc-desc">Logs every value change to PostgreSQL in real-time</div>
       </a>
       <a href="/docs/uns-state.html" class="docs-component-card">
         <div class="cc-name">uns-state</div>

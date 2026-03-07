@@ -178,6 +178,11 @@
     <priority>0.6</priority>
   </url>
   <url>
+    <loc>https://unsframework.com/docs/uns-historian.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
     <loc>https://unsframework.com/docs/uns-input.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>

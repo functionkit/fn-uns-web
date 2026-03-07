@@ -33,13 +33,13 @@
     <div class="sidebar-section"><div class="sidebar-title">fn-uns</div><a href="/docs/">Overview</a></div>
     <div class="sidebar-section"><div class="sidebar-title">Introduction</div><a href="/docs/what-is-uns.html">What is the UNS?</a><a href="/docs/why-uns.html">Why UNS Matters</a><a href="/docs/why-faas.html">Why FaaS &amp; GitOps?</a><a href="/docs/architecture.html">Architecture</a></div>
     <div class="sidebar-section"><div class="sidebar-title">Getting Started</div><a href="/docs/getting-started.html">Quick Start</a><a href="/docs/fnkit-basics.html">fnkit Basics</a><a href="/docs/first-deployment.html">First Deployment</a></div>
-    <div class="sidebar-section"><div class="sidebar-title">Components</div><a href="/docs/components.html" class="active">Overview</a><a href="/docs/uns-sim.html">uns-sim</a><a href="/docs/uns-framework.html">uns-framework</a><a href="/docs/uns-cache.html">uns-cache</a><a href="/docs/uns-log.html">uns-log</a><a href="/docs/uns-state.html">uns-state</a><a href="/docs/uns-stoppage.html">uns-stoppage</a><a href="/docs/uns-productivity.html">uns-productivity</a><a href="/docs/uns-input.html">uns-input</a><a href="/docs/uns-kpi.html">uns-kpi</a></div>
+    <div class="sidebar-section"><div class="sidebar-title">Components</div><a href="/docs/components.html" class="active">Overview</a><a href="/docs/uns-sim.html">uns-sim</a><a href="/docs/uns-framework.html">uns-framework</a><a href="/docs/uns-cache.html">uns-cache</a><a href="/docs/uns-log.html">uns-log</a><a href="/docs/uns-historian.html">uns-historian</a><a href="/docs/uns-state.html">uns-state</a><a href="/docs/uns-stoppage.html">uns-stoppage</a><a href="/docs/uns-productivity.html">uns-productivity</a><a href="/docs/uns-input.html">uns-input</a><a href="/docs/uns-kpi.html">uns-kpi</a></div>
     <div class="sidebar-section"><div class="sidebar-title">Guides</div><a href="/docs/configuration.html">Configuration</a><a href="/docs/manufacturing-kpis.html">Manufacturing KPIs</a><a href="/docs/api-reference.html">API Reference</a></div>
     <div class="sidebar-section"><div class="sidebar-title">Developer</div><a href="/docs/code-patterns.html">Code Patterns</a><a href="/docs/extending.html">Extending</a><a href="/docs/database-schema.html">Database Schema</a></div>
   </aside>
   <main class="docs-content">
     <h1>Components</h1>
-    <p class="page-desc">The 9 functions that make up the UNS pipeline. They communicate through shared infrastructure — not through direct calls to each other.</p>
+    <p class="page-desc">The 10 functions that make up the UNS pipeline. They communicate through shared infrastructure — not through direct calls to each other.</p>
 
     <h2>Data Pipeline</h2>
     <div class="yaml-block">
@@ -81,6 +81,7 @@
       <tbody>
         <tr><td><a href="/docs/uns-cache.html">uns-cache</a></td><td>Node.js</td><td>HTTP</td><td>Reads cached topics with change detection</td></tr>
         <tr><td><a href="/docs/uns-log.html">uns-log</a></td><td>Go</td><td>HTTP</td><td>Logs change snapshots to PostgreSQL</td></tr>
+        <tr><td><a href="/docs/uns-historian.html">uns-historian</a></td><td>Go</td><td>MQTT</td><td>Logs every value change to PostgreSQL in real-time</td></tr>
         <tr><td><a href="/docs/uns-state.html">uns-state</a></td><td>Go</td><td>HTTP</td><td>Tracks machine state durations</td></tr>
         <tr><td><a href="/docs/uns-stoppage.html">uns-stoppage</a></td><td>Node.js</td><td>HTTP</td><td>Classifies stoppage reasons</td></tr>
         <tr><td><a href="/docs/uns-productivity.html">uns-productivity</a></td><td>Go</td><td>HTTP</td><td>Tracks production runs and throughput</td></tr>

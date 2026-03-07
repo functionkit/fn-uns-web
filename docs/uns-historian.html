@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>uns-historian — MQTT Historian — fn-uns Docs</title>
+<meta name="description" content="Subscribes to MQTT topics and logs every value change to PostgreSQL in real-time."/>
+<link rel="stylesheet" href="../style.css"/>
+<link rel="stylesheet" href="../docs.css"/>
+</head>
+<body>
+<nav>
+  <a href="/" class="logo">UNS Framework</a>
+  <div class="links">
+    <a href="/fn-uns/">fn-uns</a>
+    <a href="/framework/">Standard Docs</a>
+    <a href="/docs/">UNS Docs</a>
+        <a href="/guides/">Guides</a>
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+      <div class="toggle-thumb"><span class="toggle-icon-sun">☀</span><span class="toggle-icon-moon">☾</span></div>
+    </button>
+  </div>
+  <button class="menu-toggle" aria-label="Menu" aria-expanded="false">☰</button>
+  <div class="mobile-menu">
+    <a href="/fn-uns/">fn-uns</a>
+    <a href="/framework/">Standard Docs</a>
+    <a href="/docs/">UNS Docs</a>
+        <a href="/guides/">Guides</a>
+  </div>
+</nav>
+<div class="docs-layout">
+  <aside class="docs-sidebar">
+    <div class="sidebar-section"><div class="sidebar-title">fn-uns</div><a href="/docs/">Overview</a></div>
+    <div class="sidebar-section"><div class="sidebar-title">Introduction</div><a href="/docs/what-is-uns.html">What is the UNS?</a><a href="/docs/why-uns.html">Why UNS Matters</a><a href="/docs/why-faas.html">Why FaaS &amp; GitOps?</a><a href="/docs/architecture.html">Architecture</a></div>
+    <div class="sidebar-section"><div class="sidebar-title">Getting Started</div><a href="/docs/getting-started.html">Quick Start</a><a href="/docs/fnkit-basics.html">fnkit Basics</a><a href="/docs/first-deployment.html">First Deployment</a></div>
+    <div class="sidebar-section"><div class="sidebar-title">Components</div><a href="/docs/components.html">Overview</a><a href="/docs/uns-sim.html">uns-sim</a><a href="/docs/uns-framework.html">uns-framework</a><a href="/docs/uns-cache.html">uns-cache</a><a href="/docs/uns-log.html">uns-log</a><a href="/docs/uns-historian.html" class="active">uns-historian</a><a href="/docs/uns-state.html">uns-state</a><a href="/docs/uns-stoppage.html">uns-stoppage</a><a href="/docs/uns-productivity.html">uns-productivity</a><a href="/docs/uns-input.html">uns-input</a><a href="/docs/uns-kpi.html">uns-kpi</a></div>
+    <div class="sidebar-section"><div class="sidebar-title">Guides</div><a href="/docs/configuration.html">Configuration</a><a href="/docs/manufacturing-kpis.html">Manufacturing KPIs</a><a href="/docs/api-reference.html">API Reference</a></div>
+    <div class="sidebar-section"><div class="sidebar-title">Developer</div><a href="/docs/code-patterns.html">Code Patterns</a><a href="/docs/extending.html">Extending</a><a href="/docs/database-schema.html">Database Schema</a></div>
+  </aside>
+  <main class="docs-content">
+    <h1>uns-historian — MQTT Historian</h1>
+    <p class="page-desc">Subscribes to MQTT topics and logs every value change to PostgreSQL in real-time. No values missed between polls.</p>
+    <table class="def-table"><tbody>
+        <tr><td>Language</td><td>Go</td></tr>
+        <tr><td>Type</td><td>MQTT function</td></tr>
+        <tr><td>Scaffolded with</td><td>fnkit go-mqtt</td></tr>
+        <tr><td>Depends on</td><td>MQTT Broker, Valkey, PostgreSQL</td></tr>
+    </tbody></table>
+
+    <h2>What It Does</h2>
+    <p>Reads topics from Valkey config, subscribes via MQTT, and logs every value change to PostgreSQL. In-memory change detection skips duplicate values. Unlike <a href="/docs/uns-log.html" style="color:var(--black);border-bottom:1px solid var(--grey-300);">uns-log</a> (HTTP-triggered, poll-based), uns-historian captures <strong>every</strong> change as it happens.</p>
+
+    <h2>uns-historian vs uns-log</h2>
+    <table class="def-table">
+      <thead><tr><th>Aspect</th><th>uns-log</th><th>uns-historian</th></tr></thead>
+      <tbody>
+        <tr><td>Trigger</td><td>HTTP (polled on timer)</td><td>MQTT (real-time)</td></tr>
+        <tr><td>Data capture</td><td>Snapshot at poll time</td><td>Every individual change</td></tr>
+        <tr><td>Missed values</td><td>Possible — between polls</td><td>None</td></tr>
+        <tr><td>Row content</td><td>Full snapshot (all tags)</td><td>Single value per row</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Config in Valkey</h2>
+    <div class="yaml-block"><pre style="margin:0;font:inherit;white-space:pre">docker exec fnkit-cache valkey-cli SET fnkit:config:uns-historian \
+  '{"table":"uns_historian","topics":["v1.0/acme/factory1/mixing/line1/#"]}'</pre></div>
+    <p>Topics support explicit paths and MQTT wildcards (<code style="font-family:var(--font-mono);font-size:13px;background:var(--grey-100);padding:2px 8px;border-radius:4px;">+</code> single level, <code style="font-family:var(--font-mono);font-size:13px;background:var(--grey-100);padding:2px 8px;border-radius:4px;">#</code> multi-level).</p>
+
+    <h2>PostgreSQL Table</h2>
+    <div class="yaml-block"><pre style="margin:0;font:inherit;white-space:pre">CREATE TABLE IF NOT EXISTS uns_historian (
+  id BIGSERIAL PRIMARY KEY, logged_at TIMESTAMPTZ DEFAULT NOW(),
+  enterprise TEXT, site TEXT, area TEXT, line TEXT, tag TEXT,
+  topic TEXT NOT NULL, value JSONB NOT NULL );</pre></div>
+
+    <h2>Quick Start</h2>
+    <div class="yaml-block"><pre style="margin:0;font:inherit;white-space:pre"># Set config in Valkey
+docker exec fnkit-cache valkey-cli SET fnkit:config:uns-historian \
+  '{"table":"uns_historian","topics":["v1.0/acme/factory1/mixing/line1/#"]}'
+
+# Build and start
+cd uns-historian && docker compose up -d
+
+# Check logs
+docker logs -f uns-historian</pre></div>
+
+    <div class="docs-nav-buttons">
+      <a href="/docs/uns-log.html" class="docs-nav-btn"><span class="nav-label">Previous</span><span class="nav-title">uns-log</span></a>
+      <a href="/docs/uns-state.html" class="docs-nav-btn next"><span class="nav-label">Next</span><span class="nav-title">uns-state</span></a>
+    </div>
+  </main>
+</div>
+<script src="../shared.js"></script>
+</body>
+</html>

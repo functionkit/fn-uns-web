@@ -154,7 +154,7 @@
 /* YAML code block */
 .yaml-block {
   background: var(--grey-950);
-  color: var(#ffffff);
+  color: #ffffff;
   padding: 24px;
   border-radius: 10px;
   font-family: var(--font-mono);

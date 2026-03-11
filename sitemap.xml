@@ -223,6 +223,23 @@
     <priority>0.5</priority>
   </url>
 
+  <!-- Guides -->
+  <url>
+    <loc>https://unsframework.com/guides/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://unsframework.com/guides/connectivity-options.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://unsframework.com/guides/siemens-logo-mqtt.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
   <!-- Changelog -->
   <url>
     <loc>https://unsframework.com/changelog.html</loc>

@@ -1,0 +1,1727 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Functions That Make Up the UNS Pipeline — Technical Guide — UNS Framework</title>
+<meta name="description" content="A complete walkthrough of the 12 functions that form the fn-uns data pipeline — from machine capture through processing, reporting, and AI analysis. For developers, IT, and manufacturing engineers."/>
+<link rel="canonical" href="https://unsframework.com/guides/pipeline-functions.html" />
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>"/>
+<link rel="stylesheet" href="../style.css"/>
+<link rel="stylesheet" href="../docs.css"/>
+<style>
+/* Guide-specific styles */
+.guide-hero {
+  background: var(--grey-50);
+  border: 1px solid var(--grey-200);
+  border-radius: 12px;
+  padding: 32px;
+  margin-bottom: 48px;
+}
+.guide-hero-meta {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+.guide-hero-meta .tag {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--grey-700);
+  background: var(--grey-100);
+  padding: 4px 12px;
+  border-radius: 100px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.guide-hero h1 {
+  font-size: 32px !important;
+  margin-bottom: 12px !important;
+}
+.guide-hero .guide-subtitle {
+  font-size: 16px;
+  color: var(--grey-700);
+  line-height: 1.7;
+  max-width: 640px;
+}
+
+/* TOC */
+.guide-toc {
+  border: 1px solid var(--grey-200);
+  border-radius: 10px;
+  padding: 24px 28px;
+  margin: 24px 0 48px;
+}
+.guide-toc-title {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--grey-500);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+.guide-toc ol {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  counter-reset: toc;
+}
+.guide-toc ol li {
+  counter-increment: toc;
+  padding: 4px 0;
+}
+.guide-toc ol li a {
+  font-size: 14px;
+  color: var(--grey-700);
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: color 0.15s;
+}
+.guide-toc ol li a:hover { color: var(--black); }
+.guide-toc ol li a::before {
+  content: counter(toc, decimal-leading-zero);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--grey-400);
+  min-width: 20px;
+}
+
+/* Network / pipeline diagram */
+.network-diagram {
+  background: var(--grey-50);
+  border: 1px solid var(--grey-200);
+  border-radius: 12px;
+  padding: 32px;
+  margin: 24px 0;
+  text-align: center;
+  overflow-x: auto;
+}
+.network-diagram svg { max-width: 100%; height: auto; }
+
+/* Warning / Critical banner */
+.warning-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 16px 20px;
+  background: #fef3c7;
+  border: 1px solid #f59e0b;
+  border-radius: 10px;
+  margin: 24px 0;
+  font-size: 14px;
+  color: #92400e;
+  line-height: 1.6;
+}
+[data-theme="dark"] .warning-banner {
+  background: #451a03;
+  border-color: #b45309;
+  color: #fde68a;
+}
+.warning-banner .warning-icon {
+  flex-shrink: 0;
+  font-size: 16px;
+  margin-top: 1px;
+}
+
+/* Success indicator */
+.success-indicator {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  background: var(--grey-50);
+  border: 1px solid var(--grey-200);
+  border-radius: 8px;
+  margin: 16px 0;
+  font-size: 14px;
+  color: var(--grey-700);
+}
+.success-indicator .success-icon {
+  color: #16a34a;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+/* Option cards */
+.option-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px;
+  background: var(--grey-200);
+  border: 1px solid var(--grey-200);
+  border-radius: 10px;
+  overflow: hidden;
+  margin: 24px 0;
+}
+.option-card {
+  background: var(--white);
+  padding: 24px;
+}
+.option-card h4 {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--black);
+  margin-bottom: 6px;
+}
+.option-card p {
+  font-size: 13px !important;
+  color: var(--grey-700);
+  line-height: 1.55;
+  margin-bottom: 0 !important;
+}
+
+/* Persona cards — 3 columns */
+.persona-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 1px;
+  background: var(--grey-200);
+  border: 1px solid var(--grey-200);
+  border-radius: 10px;
+  overflow: hidden;
+  margin: 24px 0;
+}
+.persona-card {
+  background: var(--white);
+  padding: 24px;
+}
+.persona-card .persona-icon {
+  font-size: 20px;
+  margin-bottom: 8px;
+}
+.persona-card h4 {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--black);
+  margin-bottom: 8px;
+  letter-spacing: -0.01em;
+}
+.persona-card p {
+  font-size: 13px !important;
+  color: var(--grey-700);
+  line-height: 1.6;
+  margin-bottom: 0 !important;
+}
+
+/* Function card grid */
+.fn-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1px;
+  background: var(--grey-200);
+  border: 1px solid var(--grey-200);
+  border-radius: 10px;
+  overflow: hidden;
+  margin: 24px 0;
+}
+.fn-card {
+  background: var(--white);
+  padding: 24px 28px;
+  display: grid;
+  grid-template-columns: 160px 1fr;
+  gap: 20px;
+  align-items: start;
+}
+.fn-card-name {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--black);
+}
+.fn-card-lang {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--grey-500);
+  background: var(--grey-100);
+  padding: 2px 8px;
+  border-radius: 100px;
+  display: inline-block;
+  margin-top: 4px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.fn-card-body p {
+  font-size: 14px;
+  color: var(--grey-700);
+  line-height: 1.6;
+  margin-bottom: 8px;
+}
+.fn-card-body p:last-child { margin-bottom: 0; }
+.fn-card-flow {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--grey-500);
+  margin-top: 4px;
+}
+
+/* Checklist */
+.checklist {
+  list-style: none;
+  padding: 0;
+  margin: 16px 0 24px;
+}
+.checklist li {
+  padding: 8px 0;
+  font-size: 14px;
+  color: var(--grey-700);
+  border-bottom: 1px solid var(--grey-100);
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  line-height: 1.5;
+}
+.checklist li:last-child { border-bottom: none; }
+.checklist .check {
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  border: 1.5px solid var(--grey-300);
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  margin-top: 2px;
+  color: var(--grey-500);
+}
+
+/* Layer label */
+.layer-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--grey-500);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.layer-label .layer-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+}
+.layer-dot-capture { background: #3b82f6; }
+.layer-dot-process { background: #f59e0b; }
+.layer-dot-report { background: #10b981; }
+.layer-dot-ai { background: #8b5cf6; }
+
+/* ═══════════════════════════════════════ */
+/* PIPELINE ANIMATIONS                     */
+/* ═══════════════════════════════════════ */
+
+/* Pulse animation for data flow dots */
+@keyframes flowRight {
+  0% { transform: translateX(0); opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { transform: translateX(var(--flow-dist, 80px)); opacity: 0; }
+}
+@keyframes flowDown {
+  0% { transform: translateY(0); opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { transform: translateY(var(--flow-dist, 40px)); opacity: 0; }
+}
+@keyframes pulse {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 1; }
+}
+@keyframes glowPulse {
+  0%, 100% { filter: drop-shadow(0 0 2px var(--glow-color, #3b82f6)); }
+  50% { filter: drop-shadow(0 0 8px var(--glow-color, #3b82f6)); }
+}
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes stateTransition {
+  0% { fill: #22c55e; }
+  25% { fill: #eab308; }
+  50% { fill: #3b82f6; }
+  75% { fill: #ef4444; }
+  100% { fill: #22c55e; }
+}
+@keyframes dataPacket {
+  0% { offset-distance: 0%; opacity: 0; }
+  5% { opacity: 1; }
+  95% { opacity: 1; }
+  100% { offset-distance: 100%; opacity: 0; }
+}
+@keyframes typingCursor {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+@keyframes scaleIn {
+  from { transform: scale(0.8); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Flow dot styling */
+.flow-dot {
+  animation: pulse 2s ease-in-out infinite;
+}
+.flow-dot-1 { animation-delay: 0s; }
+.flow-dot-2 { animation-delay: 0.5s; }
+.flow-dot-3 { animation-delay: 1s; }
+.flow-dot-4 { animation-delay: 1.5s; }
+
+/* Glow effect on active nodes */
+.node-glow {
+  animation: glowPulse 3s ease-in-out infinite;
+}
+
+/* State indicator animation */
+.state-indicator {
+  animation: stateTransition 8s ease-in-out infinite;
+}
+
+/* Scroll-margin for anchor links */
+.docs-content h2[id] {
+  scroll-margin-top: 80px;
+}
+
+/* Print styles */
+@media print {
+  nav, .docs-sidebar, .menu-toggle, .mobile-menu { display: none !important; }
+  .docs-layout { grid-template-columns: 1fr !important; }
+  .docs-content { padding: 0 !important; max-width: 100% !important; }
+  .warning-banner, .info-banner, .success-indicator { break-inside: avoid; }
+  .def-table, .yaml-block, .network-diagram { break-inside: avoid; }
+  .guide-toc { break-inside: avoid; }
+  .docs-nav-buttons { display: none !important; }
+  .docs-content h2 { break-before: page; }
+  .docs-content h2:first-of-type { break-before: avoid; }
+  .guide-hero { break-after: avoid; }
+  .guide-toc { break-after: page; }
+  h3 { break-after: avoid; break-inside: avoid; }
+  * { color: #000 !important; animation: none !important; }
+  .guide-hero, .info-banner, .success-indicator,
+  .yaml-block, .network-diagram, .option-card, .persona-card, .fn-card,
+  .guide-toc, .checklist .check, .guide-hero-meta .tag {
+    background: #fff !important;
+    border-color: #ccc !important;
+    box-shadow: none !important;
+  }
+  .warning-banner {
+    background: #fff !important;
+    border-color: #000 !important;
+    color: #000 !important;
+  }
+  .yaml-block { background: #f5f5f5 !important; }
+  .yaml-block, .yaml-block * { color: #000 !important; }
+  a { text-decoration: underline !important; }
+}
+
+@media (max-width: 600px) {
+  .guide-hero { padding: 20px; }
+  .guide-hero h1 { font-size: 24px !important; }
+  .option-grid { grid-template-columns: 1fr; }
+  .persona-grid { grid-template-columns: 1fr; }
+  .fn-card { grid-template-columns: 1fr; }
+  .guide-hero-meta { gap: 8px; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="logo">UNS Framework</a>
+  <div class="links">
+    <a href="/fn-uns/">fn-uns</a>
+    <a href="/framework/">Standard Docs</a>
+    <a href="/docs/">UNS Docs</a>
+    <a href="/guides/">Guides</a>
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+      <div class="toggle-thumb"><span class="toggle-icon-sun">☀</span><span class="toggle-icon-moon">☾</span></div>
+    </button>
+  </div>
+  <button class="menu-toggle" aria-label="Menu" aria-expanded="false">☰</button>
+  <div class="mobile-menu">
+    <a href="/fn-uns/">fn-uns</a>
+    <a href="/framework/">Standard Docs</a>
+    <a href="/docs/">UNS Docs</a>
+    <a href="/guides/">Guides</a>
+  </div>
+</nav>
+
+<div class="docs-layout">
+  <aside class="docs-sidebar">
+    <div class="sidebar-section">
+      <div class="sidebar-title">Guides</div>
+      <a href="/guides/">All Guides</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-title">This Guide</div>
+      <a href="#big-picture">The Big Picture</a>
+      <a href="#how-it-works">How It Works</a>
+      <a href="#layer-capture">Layer 1: Capture</a>
+      <a href="#layer-process">Layer 2: Process</a>
+      <a href="#layer-report">Layer 3: Report</a>
+      <a href="#layer-ai">Layer 4: AI</a>
+      <a href="#end-to-end">End-to-End Flow</a>
+      <a href="#infrastructure">Infrastructure Map</a>
+      <a href="#deploy-order">Deployment Order</a>
+      <a href="#next-steps">Next Steps</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-title">Related</div>
+      <a href="/docs/components.html">Components Overview</a>
+      <a href="/docs/architecture.html">Architecture</a>
+      <a href="/docs/code-patterns.html">Code Patterns</a>
+    </div>
+  </aside>
+
+  <main class="docs-content">
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- HERO                                    -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="guide-hero">
+      <div class="guide-hero-meta">
+        <span class="tag">Architecture</span>
+        <span class="tag">Pipeline</span>
+        <span class="tag">Software</span>
+        <span class="tag">~20 min read</span>
+      </div>
+      <h1>Functions That Make Up the UNS Pipeline</h1>
+      <p class="guide-subtitle">
+        A complete walkthrough of the 12 functions that form the fn-uns data pipeline — from machine data capture through processing, reporting, and AI-powered analysis. Written for developers, IT engineers, and manufacturing engineers.
+      </p>
+    </div>
+
+    <!-- TABLE OF CONTENTS -->
+    <div class="guide-toc">
+      <div class="guide-toc-title">Contents</div>
+      <ol>
+        <li><a href="#big-picture">The Big Picture</a></li>
+        <li><a href="#how-it-works">How It Works</a></li>
+        <li><a href="#layer-capture">Layer 1: Capture</a></li>
+        <li><a href="#layer-process">Layer 2: Process</a></li>
+        <li><a href="#layer-report">Layer 3: Report</a></li>
+        <li><a href="#layer-ai">Layer 4: AI</a></li>
+        <li><a href="#end-to-end">End-to-End Data Flow</a></li>
+        <li><a href="#infrastructure">Infrastructure Map</a></li>
+        <li><a href="#deploy-order">Deployment Order</a></li>
+        <li><a href="#next-steps">Next Steps</a></li>
+      </ol>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- THE BIG PICTURE                         -->
+    <!-- ═══════════════════════════════════════ -->
+    <h2 id="big-picture">The Big Picture</h2>
+
+    <p>The fn-uns pipeline is made up of <strong>12 independent functions</strong> organised into 4 layers. Each function runs in its own Docker container, does one job, and communicates through shared infrastructure — never through direct calls to other functions.</p>
+
+    <div class="network-diagram">
+      <svg viewBox="0 0 760 520" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- Layer labels -->
+        <text x="380" y="18" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="600" fill="var(--grey-400)" text-anchor="middle" letter-spacing="0.1em">THE UNS PIPELINE — 12 FUNCTIONS, 4 LAYERS</text>
+
+        <!-- ═══ LAYER 1: CAPTURE ═══ -->
+        <rect x="16" y="36" width="728" height="90" rx="10" fill="none" stroke="#3b82f6" stroke-width="1.5" stroke-dasharray="4 3" opacity="0.4"/>
+        <text x="32" y="54" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="600" fill="#3b82f6" letter-spacing="0.08em">LAYER 1 — CAPTURE</text>
+
+        <!-- uns-sim -->
+        <rect x="32" y="66" width="120" height="48" rx="6" fill="var(--white)" stroke="var(--grey-200)" stroke-width="1.5"/>
+        <text x="92" y="86" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="600" fill="var(--black)" text-anchor="middle">uns-sim</text>
+        <text x="92" y="102" font-family="'JetBrains Mono', monospace" font-size="8" fill="var(--grey-500)" text-anchor="middle">Node.js · MQTT pub</text>
+
+        <!-- Arrow sim → broker -->
+        <line x1="152" y1="90" x2="198" y2="90" stroke="var(--grey-300)" stroke-width="1.2"/>
+        <polygon points="194,86 202,90 194,94" fill="var(--grey-300)"/>
+        <circle cx="172" cy="90" r="3" fill="#3b82f6" class="flow-dot flow-dot-1" opacity="0.6"/>
+
+        <!-- MQTT Broker -->
+        <rect x="202" y="66" width="120" height="48" rx="6" fill="var(--white)" stroke="var(--black)" stroke-width="1.5"/>
+        <text x="262" y="86" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="600" fill="var(--black)" text-anchor="middle">MQTT Broker</text>
+        <text x="262" y="102" font-family="'JetBrains Mono', monospace" font-size="8" fill="var(--grey-500)" text-anchor="middle">Mosquitto / EMQX</text>
+
+        <!-- Arrow broker → framework -->
+        <line x1="322" y1="90" x2="368" y2="90" stroke="var(--grey-300)" stroke-width="1.2"/>
+        <polygon points="364,86 372,90 364,94" fill="var(--grey-300)"/>
+        <circle cx="342" cy="90" r="3" fill="#3b82f6" class="flow-dot flow-dot-2" opacity="0.6"/>
+
+        <!-- uns-framework -->
+        <rect x="372" y="66" width="140" height="48" rx="6" fill="var(--white)" stroke="var(--grey-200)" stroke-width="1.5"/>
+        <text x="442" y="86" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="600" fill="var(--black)" text-anchor="middle">uns-framework</text>
+        <text x="442" y="102" font-family="'JetBrains Mono', monospace" font-size="8" fill="var(--grey-500)" text-anchor="middle">Go · MQTT sub</text>
+
+        <!-- Arrow framework → Valkey -->
+        <line x1="512" y1="90" x2="558" y2="90" stroke="var(--grey-300)" stroke-width="1.2"/>
+        <polygon points="554,86 562,90 554,94" fill="var(--grey-300)"/>
+        <circle cx="532" cy="90" r="3" fill="#3b82f6" class="flow-dot flow-dot-3" opacity="0.6"/>
+
+        <!-- Valkey -->
+        <rect x="562" y="66" width="166" height="48" rx="6" fill="var(--white)" stroke="var(--black)" stroke-width="1.5"/>
+        <text x="645" y="86" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="600" fill="var(--black)" text-anchor="middle">Valkey Cache</text>
+        <text x="645" y="102" font-family="'JetBrains Mono', monospace" font-size="8" fill="var(--grey-500)" text-anchor="middle">uns:data:* · uns:prev:*</text>
+
+        <!-- ═══ LAYER 2: PROCESS ═══ -->
+        <rect x="16" y="142" width="728" height="200" rx="10" fill="none" stroke="#f59e0b" stroke-width="1.5" stroke-dasharray="4 3" opacity="0.4"/>
+        <text x="32" y="160" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="600" fill="#f59e0b" letter-spacing="0.08em">LAYER 2 — PROCESS</text>
+
+        <!-- Vertical line from Valkey down -->
+        <line x1="645" y1="114" x2="645" y2="142" stroke="var(--grey-300)" stroke-width="1.2"/>
+        <circle cx="645" cy="130" r="3" fill="#f59e0b" class="flow-dot flow-dot-4" opacity="0.6"/>
+
+        <!-- uns-cache -->
+        <rect x="32" y="174" width="130" height="44" rx="6" fill="var(--white)" stroke="var(--grey-200)" stroke-width="1.5"/>
+        <text x="97" y="192" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="600" fill="var(--black)" text-anchor="middle">uns-cache</text>
+        <text x="97" y="206" font-family="'JetBrains Mono', monospace" font-size="8" fill="var(--grey-500)" text-anchor="middle">Node.js · HTTP</text>
+        <!-- reads arrow -->
+        <line x1="162" y1="196" x2="560" y2="114" stroke="var(--grey-200)" stroke-width="1" stroke-dasharray="3 3"/>
+        <text x="340" y="148" font-family="'JetBrains Mono', monospace" font-size="7" fill="var(--grey-400)" text-anchor="middle">reads Valkey</text>
+
+        <!-- uns-log -->
+        <rect x="178" y="174" width="130" height="44" rx="6" fill="var(--white)" stroke="var(--grey-200)" stroke-width="1.5"/>
+        <text x="243" y="192" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="600" fill="var(--black)" text-anchor="middle">uns-log</text>
+        <text x="243" y="206" font-family="'JetBrains Mono', monospace" font-size="8" fill="var(--grey-500)" text-anchor="middle">Go · HTTP</text>
+
+        <!-- uns-historian -->
+        <rect x="324" y="174" width="130" height="44" rx="6" fill="var(--white)" stroke="var(--grey-200)" stroke-width="1.5"/>
+        <text x="389" y="192" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="600" fill="var(--black)" text-anchor="middle">uns-historian</text>
+        <text x="389" y="206" font-family="'JetBrains Mono', monospace" font-size="8" fill="var(--grey-500)" text-anchor="middle">Go · MQTT</text>
+        <!-- reads MQTT arrow -->
+        <line x1="389" y1="174" x2="262" y2="114" stroke="var(--grey-200)" stroke-width="1" stroke-dasharray="3 3"/>
+        <text x="310" y="138" font-family="'JetBrains Mono', monospace" font-size="7" fill="var(--grey-400)" text-anchor="middle">MQTT sub</text>
+
+        <!-- uns-state -->
+        <rect x="470" y="174" width="130" height="44" rx="6" fill="var(--white)" stroke="var(--grey-200)" stroke-width="1.5"/>
+        <text x="535" y="192" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="600" fill="var(--black)" text-anchor="middle">uns-state</text>
+        <text x="535" y="206" font-family="'JetBrains Mono', monospace" font-size="8" fill="var(--grey-500)" text-anchor="middle">Go · HTTP</text>
+
+        <!-- uns-stoppage -->
+        <rect x="32" y="234" width="130" height="44" rx="6" fill="var(--white)" stroke="var(--grey-200)" stroke-width="1.5"/>
+        <text x="97" y="252" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="600" fill="var(--black)" text-anchor="middle">uns-stoppage</text>
+        <text x="97" y="266" font-family="'JetBrains Mono', monospace" font-size="8" fill="var(--grey-500)" text-anchor="middle">Node.js · HTTP</text>
+        <!-- reads uns_state -->
+        <line x1="97" y1="234" x2="97" y2="218" stroke="var(--grey-200)" stroke-width="1" stroke-dasharray="3 3"/>
+
+        <!-- uns-productivity -->
+        <rect x="178" y="234" width="130" height="44" rx="6" fill="var(--white)" stroke="var(--grey-200)" stroke-width="1.5"/>
+        <text x="243" y="252" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="600" fill="var(--black)" text-anchor="middle">uns-productivity</text>
+        <text x="243" y="266" font-family="'JetBrains Mono', monospace" font-size="8" fill="var(--grey-500)" text-anchor="middle">Go · HTTP</text>
+
+        <!-- uns-input -->
+        <rect x="324" y="234" width="130" height="44" rx="6" fill="var(--white)" stroke="var(--grey-200)" stroke-width="1.5"/>
+        <text x="389" y="252" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="600" fill="var(--black)" text-anchor="middle">uns-input</text>
+        <text x="389" y="266" font-family="'JetBrains Mono', monospace" font-size="8" fill="var(--grey-500)" text-anchor="middle">Node.js · HTTP</text>
+
+        <!-- PostgreSQL -->
+        <rect x="562" y="220" width="166" height="48" rx="6" fill="var(--white)" stroke="var(--black)" stroke-width="1.5"/>
+        <text x="645" y="240" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="600" fill="var(--black)" text-anchor="middle">PostgreSQL</text>
+        <text x="645" y="256" font-family="'JetBrains Mono', monospace" font-size="8" fill="var(--grey-500)" text-anchor="middle">6 tables</text>
+
+        <!-- Arrows from processors to PostgreSQL -->
+        <line x1="454" y1="210" x2="560" y2="240" stroke="var(--grey-200)" stroke-width="1" stroke-dasharray="3 3"/>
+        <line x1="308" y1="196" x2="560" y2="236" stroke="var(--grey-200)" stroke-width="1" stroke-dasharray="3 3"/>
+        <line x1="162" y1="256" x2="560" y2="244" stroke="var(--grey-200)" stroke-width="1" stroke-dasharray="3 3"/>
+        <line x1="308" y1="256" x2="560" y2="244" stroke="var(--grey-200)" stroke-width="1" stroke-dasharray="3 3"/>
+        <line x1="454" y1="256" x2="560" y2="244" stroke="var(--grey-200)" stroke-width="1" stroke-dasharray="3 3"/>
+        <line x1="600" y1="196" x2="600" y2="220" stroke="var(--grey-200)" stroke-width="1" stroke-dasharray="3 3"/>
+
+        <!-- writes label -->
+        <text x="520" y="230" font-family="'JetBrains Mono', monospace" font-size="7" fill="var(--grey-400)" text-anchor="middle">writes →</text>
+
+        <!-- Operator label on uns-input -->
+        <text x="389" y="290" font-family="'JetBrains Mono', monospace" font-size="7" fill="var(--grey-400)" text-anchor="middle">← operator HTTP POST</text>
+
+        <!-- ═══ LAYER 3: REPORT ═══ -->
+        <rect x="16" y="358" width="728" height="70" rx="10" fill="none" stroke="#10b981" stroke-width="1.5" stroke-dasharray="4 3" opacity="0.4"/>
+        <text x="32" y="376" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="600" fill="#10b981" letter-spacing="0.08em">LAYER 3 — REPORT</text>
+
+        <!-- Vertical line from PostgreSQL down -->
+        <line x1="645" y1="268" x2="645" y2="358" stroke="var(--grey-300)" stroke-width="1.2"/>
+        <circle cx="645" cy="320" r="3" fill="#10b981" class="flow-dot flow-dot-1" opacity="0.6"/>
+
+        <!-- uns-kpi -->
+        <rect x="32" y="388" width="160" height="28" rx="6" fill="var(--white)" stroke="var(--grey-200)" stroke-width="1.5"/>
+        <text x="112" y="406" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="600" fill="var(--black)" text-anchor="middle">uns-kpi</text>
+
+        <!-- uns-dashboard -->
+        <rect x="208" y="388" width="160" height="28" rx="6" fill="var(--white)" stroke="var(--grey-200)" stroke-width="1.5"/>
+        <text x="288" y="406" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="600" fill="var(--black)" text-anchor="middle">uns-dashboard</text>
+
+        <!-- reads PostgreSQL arrows -->
+        <line x1="192" y1="402" x2="560" y2="268" stroke="var(--grey-200)" stroke-width="1" stroke-dasharray="3 3"/>
+        <line x1="368" y1="402" x2="560" y2="268" stroke="var(--grey-200)" stroke-width="1" stroke-dasharray="3 3"/>
+        <text x="440" y="340" font-family="'JetBrains Mono', monospace" font-size="7" fill="var(--grey-400)" text-anchor="middle">reads all tables</text>
+
+        <!-- Output labels -->
+        <text x="112" y="430" font-family="'JetBrains Mono', monospace" font-size="7" fill="var(--grey-400)" text-anchor="middle">→ JSON KPI response</text>
+        <text x="288" y="430" font-family="'JetBrains Mono', monospace" font-size="7" fill="var(--grey-400)" text-anchor="middle">→ 5 Grafana dashboards</text>
+
+        <!-- ═══ LAYER 4: AI ═══ -->
+        <rect x="16" y="448" width="728" height="62" rx="10" fill="none" stroke="#8b5cf6" stroke-width="1.5" stroke-dasharray="4 3" opacity="0.4"/>
+        <text x="32" y="466" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="600" fill="#8b5cf6" letter-spacing="0.08em">LAYER 4 — AI</text>
+
+        <!-- uns-ai -->
+        <rect x="32" y="478" width="696" height="24" rx="6" fill="var(--white)" stroke="var(--grey-200)" stroke-width="1.5"/>
+        <text x="380" y="494" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="600" fill="var(--black)" text-anchor="middle">uns-ai — reads Valkey + PostgreSQL → AI provider → publishes to MQTT + stores audit trail</text>
+
+        <!-- reads arrows -->
+        <line x1="380" y1="478" x2="645" y2="430" stroke="var(--grey-200)" stroke-width="1" stroke-dasharray="3 3"/>
+      </svg>
+    </div>
+
+    <div class="success-indicator">
+      <span class="success-icon">✓</span>
+      <strong>Key insight:</strong> No function calls another function directly. They all read from and write to shared infrastructure — MQTT, Valkey, and PostgreSQL. This means you can deploy, update, or replace any function independently.
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- HOW IT WORKS                            -->
+    <!-- ═══════════════════════════════════════ -->
+    <h2 id="how-it-works">How It Works</h2>
+
+    <p>The pipeline follows a simple principle: <strong>data flows through infrastructure, not through function calls</strong>. Machines publish to MQTT. Functions read from MQTT or Valkey, process data, and write to PostgreSQL. Reporting functions read from PostgreSQL. AI reads from everything.</p>
+
+    <p>This decoupled architecture means:</p>
+
+    <ul class="checklist">
+      <li><span class="check" style="background:var(--black);color:var(--white);border-color:var(--black);">✓</span> <strong>Independent deployment</strong> — update one function without touching others</li>
+      <li><span class="check" style="background:var(--black);color:var(--white);border-color:var(--black);">✓</span> <strong>Language freedom</strong> — Go and Node.js side by side, use what fits</li>
+      <li><span class="check" style="background:var(--black);color:var(--white);border-color:var(--black);">✓</span> <strong>Failure isolation</strong> — if uns-stoppage crashes, state tracking continues</li>
+      <li><span class="check" style="background:var(--black);color:var(--white);border-color:var(--black);">✓</span> <strong>Easy to extend</strong> — add a new function that reads the same data</li>
+      <li><span class="check" style="background:var(--black);color:var(--white);border-color:var(--black);">✓</span> <strong>Testable in isolation</strong> — each function has its own Docker Compose</li>
+    </ul>
+
+    <h3>What This Means for You</h3>
+
+    <div class="persona-grid">
+      <div class="persona-card">
+        <div class="persona-icon">🔧</div>
+        <h4>Manufacturing Engineer</h4>
+        <p>Each function maps to a real manufacturing concept you already know — machine status, production runs, stoppages, KPIs. The pipeline turns raw machine signals into the metrics you use daily: utilisation, availability, MTBF, throughput. No black box — every calculation is visible and auditable.</p>
+      </div>
+      <div class="persona-card">
+        <div class="persona-icon">💻</div>
+        <h4>Developer</h4>
+        <p>12 microservices, each scaffolded with fnkit, each with its own Dockerfile and docker-compose.yml. Go for performance-critical paths (state tracking, historian), Node.js for flexibility (cache reader, stoppage classification, AI). All functions follow the same patterns: Valkey config, auto-create tables, JSON responses.</p>
+      </div>
+      <div class="persona-card">
+        <div class="persona-icon">🖥️</div>
+        <h4>IT Engineer</h4>
+        <p>3 pieces of shared infrastructure: MQTT broker, Valkey cache, PostgreSQL database. 12 stateless containers on a single Docker network. No service mesh, no API gateway, no orchestrator. Each container is independently deployable and restartable. Monitoring is straightforward — check container health and database connectivity.</p>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- LAYER 1: CAPTURE                        -->
+    <!-- ═══════════════════════════════════════ -->
+    <h2 id="layer-capture">Layer 1: Capture</h2>
+
+    <div class="layer-label"><span class="layer-dot layer-dot-capture"></span> CAPTURE — Get machine data into the system</div>
+
+    <p>The capture layer has one job: get machine data off the factory floor and into a fast, queryable cache. Two functions handle this — a simulator (or your real machines) and a topic monitor.</p>
+
+    <div class="network-diagram">
+      <svg viewBox="0 0 720 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- Machines -->
+        <rect x="16" y="20" width="140" height="120" rx="8" fill="var(--white)" stroke="var(--grey-200)" stroke-width="1.5"/>
+        <text x="86" y="44" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="600" fill="var(--black)" text-anchor="middle">uns-sim</text>
+        <text x="86" y="60" font-family="'JetBrains Mono', monospace" font-size="8" fill="var(--grey-500)" text-anchor="middle">4 CNC machines</text>
+        <!-- Machine status indicators -->
+        <rect x="30" y="72" width="52" height="18" rx="4" fill="none" stroke="var(--grey-200)" stroke-width="1"/>
+        <circle cx="42" cy="81" r="4" fill="#22c55e" class="state-indicator"/>
+        <text x="58" y="85" font-family="'JetBrains Mono', monospace" font-size="7" fill="var(--grey-500)">cnc-01</text>
+        <rect x="90" y="72" width="52" height="18" rx="4" fill="none" stroke="var(--grey-200)" stroke-width="1"/>
+        <circle cx="102" cy="81" r="4" fill="#eab308">
+          <animate attributeName="fill" values="#eab308;#22c55e;#eab308" dur="4s" repeatCount="indefinite"/>
+        </circle>
+        <text x="118" y="85" font-family="'JetBrains Mono', monospace" font-size="7" fill="var(--grey-500)">cnc-02</text>
+        <rect x="30" y="96" width="52" height="18" rx="4" fill="none" stroke="var(--grey-200)" stroke-width="1"/>
+        <circle cx="42" cy="105" r="4" fill="#3b82f6">
+          <animate attributeName="fill" values="#3b82f6;#22c55e;#22c55e;#3b82f6" dur="6s" repeatCount="indefinite"/>
+        </circle>
+        <text x="58" y="109" font-family="'JetBrains Mono', monospace" font-size="7" fill="var(--grey-500)">cnc-03</text>
+        <rect x="90" y="96" width="52" height="18" rx="4" fill="none" stroke="var(--grey-200)" stroke-width="1"/>
+        <circle cx="102" cy="105" r="4" fill="#ef4444">
+          <animate attributeName="fill" values="#ef4444;#ef4444;#22c55e;#22c55e" dur="8s" repeatCount="indefinite"/>
+        </circle>
+        <text x="118" y="109" font-family="'JetBrains Mono', monospace" font-size="7" fill="var(--grey-500)">cnc-04</text>
+
+        <!-- Publish arrows with animated dots -->
+        <line x1="156" y1="80" x2="230" y2="80" stroke="var(--grey-300)" stroke-width="1.5"/>
+        <polygon points="226,76 234,80 226,84" fill="var(--grey-300)"/>
+        <text x="193" y="72" font-family="'JetBrains Mono', monospace" font-size="7" fill="var(--grey-400)" text-anchor="middle">MQTT pub</text>
+        <!-- Animated data packets -->
+        <circle r="3" fill="#3b82f6" opacity="0.8">
+          <animate attributeName="cx" values="160;226" dur="1.5s" repeatCount="indefinite"/>
+          <animate attributeName="opacity" values="0;1;1;0" dur="1.5s" repeatCount="indefinite"/>
+        </circle>
+        <circle r="3" fill="#3b82f6" opacity="0.8">
+          <animate attributeName="cx" values="160;226" dur="1.5s" repeatCount="indefinite" begin="0.5s"/>
+          <animate attributeName="opacity" values="0;1;1;0" dur="1.5s" repeatCount="indefinite" begin="0.5s"/>
+        </circle>
+        <circle r="3" fill="#3b82f6" opacity="0.8">
+          <animate attributeName="cx" values="160;226" dur="1.5s" repeatCount="indefinite" begin="1s"/>
+          <animate attributeName="opacity" values="0;1;1;0" dur="1.5s" repeatCount="indefinite" begin="1s"/>
+        </circle>
+        <!-- Fix cy for animated dots -->
+        <animate attributeName="cy" values="80" dur="0s" fill="freeze"/>
+
+        <!-- MQTT Broker -->
+        <rect x="234" y="40" width="130" height="80" rx="8" fill="var(--white)" stroke="var(--black)" stroke-width="1.5"/>
+        <text x="299" y="68" font-family="'JetBrains Mono', monospace" font-size="11" font-weight="600" fill="var(--black)" text-anchor="middle">MQTT Broker</text>
+        <text x="299" y="84" font-family="'JetBrains Mono', monospace" font-size="8" fill="var(--grey-500)" text-anchor="middle">12 topics</text>
+        <text x="299" y="100" font-family="'JetBrains Mono', monospace" font-size="7" fill="var(--grey-400)" text-anchor="middle">v1.0/enterprise/site1/#</text>
+        <!-- Pulse ring -->
+        <rect x="234" y="40" width="130" height="80" rx="8" fill="none" stroke="#3b82f6" stroke-width="1" opacity="0.3">
+          <animate attributeName="opacity" values="0.3;0.6;0.3" dur="2s" repeatCount="indefinite"/>
+        </rect>
+
+        <!-- Subscribe arrow -->
+        <line x1="364" y1="80" x2="430" y2="80" stroke="var(--grey-300)" stroke-width="1.5"/>
+        <polygon points="426,76 434,80 426,84" fill="var(--grey-300)"/>
+        <text x="397" y="72" font-family="'JetBrains Mono', monospace" font-size="7" fill="var(--grey-400)" text-anchor="middle">sub v1.0/#</text>
+        <!-- Animated data packets -->
+        <circle r="3" fill="#3b82f6" opacity="0.8">
+          <animate attributeName="cx" values="368;426" dur="1.2s" repeatCount="indefinite"/>
+          <animate attributeName="opacity" values="0;1;1;0" dur="1.2s" repeatCount="indefinite"/>
+        </circle>
+
+        <!-- uns-framework -->
+        <rect x="434" y="40" width="130" height="80" rx="8" fill="var(--white)" stroke="var(--grey-200)" stroke-width="1.5"/>
+        <text x="499" y="64" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="600" fill="var(--black)" text-anchor="middle">uns-framework</text>
+        <text x="499" y="80" font-family="'JetBrains Mono', monospace" font-size="8" fill="var(--grey-500)" text-anchor="middle">Go · MQTT subscriber</text>
+        <text x="499" y="96" font-family="'JetBrains Mono', monospace" font-size="7" fill="var(--grey-400)" text-anchor="middle">current + previous</text>
+        <text x="499" y="108" font-family="'JetBrains Mono', monospace" font-size="7" fill="var(--grey-400)" text-anchor="middle">change tracking</text>
+
+        <!-- Cache arrow -->
+        <line x1="564" y1="80" x2="600" y2="80" stroke="var(--grey-300)" stroke-width="1.5"/>
+        <polygon points="596,76 604,80 596,84" fill="var(--grey-300)"/>
+        <circle r="3" fill="#3b82f6" opacity="0.8">
+          <animate attributeName="cx" values="568;596" dur="0.8s" repeatCount="indefinite"/>
+          <animate attributeName="opacity" values="0;1;1;0" dur="0.8s" repeatCount="indefinite"/>
+        </circle>
+
+        <!-- Valkey -->
+        <rect x="604" y="30" width="100" height="100" rx="8" fill="var(--white)" stroke="var(--black)" stroke-width="1.5"/>
+        <text x="654" y="56" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="600" fill="var(--black)" text-anchor="middle">Valkey</text>
+        <text x="654" y="72" font-family="'JetBrains Mono', monospace" font-size="7" fill="var(--grey-400)" text-anchor="middle">uns:topics SET</text>
+        <text x="654" y="84" font-family="'JetBrains Mono', monospace" font-size="7" fill="var(--grey-400)" text-anchor="middle">uns:data:* STRING</text>
+        <text x="654" y="96" font-family="'JetBrains Mono', monospace" font-size="7" fill="var(--grey-400)" text-anchor="middle">uns:prev:* STRING</text>
+        <text x="654" y="108" font-family="'JetBrains Mono', monospace" font-size="7" fill="var(--grey-400)" text-anchor="middle">uns:meta:* STRING</text>
+        <!-- Glow -->
+        <rect x="604" y="30" width="100" height="100" rx="8" fill="none" stroke="#3b82f6" stroke-width="1" opacity="0.2">
+          <animate attributeName="opacity" values="0.1;0.4;0.1" dur="3s" repeatCount="indefinite"/>
+        </rect>
+      </svg>
+    </div>
+
+    <div class="fn-grid">
+      <div class="fn-card">
+        <div>
+          <div class="fn-card-name">uns-sim</div>
+          <div class="fn-card-lang">Node.js</div>
+        </div>
+        <div class="fn-card-body">
+          <p><strong>Machine Simulator.</strong> Publishes realistic CNC machine data to MQTT every 3 seconds. Simulates 4 machines (Haas VF-2, DMG Mori NLX 2500, Mazak Integrex i-200, Okuma LB3000 EX II) across 2 production areas. Each machine publishes 3 topics: <code style="font-family:var(--font-mono);font-size:12px;background:var(--grey-100);padding:1px 6px;border-radius:3px;">/status</code>, <code style="font-family:var(--font-mono);font-size:12px;background:var(--grey-100);padding:1px 6px;border-radius:3px;">/program</code>, <code style="font-family:var(--font-mono);font-size:12px;background:var(--grey-100);padding:1px 6px;border-radius:3px;">/tool</code>.</p>
+          <p>In production, replace with OPC UA gateway, Sparkplug B, or a custom edge agent. The rest of the pipeline works identically.</p>
+          <div class="fn-card-flow">Machine → MQTT Broker (12 topics, 3s interval)</div>
+        </div>
+      </div>
+      <div class="fn-card">
+        <div>
+          <div class="fn-card-name">uns-framework</div>
+          <div class="fn-card-lang">Go</div>
+        </div>
+        <div class="fn-card-body">
+          <p><strong>Topic Monitor.</strong> Subscribes to <code style="font-family:var(--font-mono);font-size:12px;background:var(--grey-100);padding:1px 6px;border-radius:3px;">v1.0/#</code> — the entire UNS namespace. Every message is cached in Valkey with current/previous value tracking. This is the <strong>foundation</strong> — all other functions read from this cache.</p>
+          <p>Maintains a SET of all discovered topics, the latest payload, the previous payload, and metadata (last_updated, message count, first_seen).</p>
+          <div class="fn-card-flow">MQTT Broker → Valkey (uns:data:*, uns:prev:*, uns:meta:*)</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="persona-grid">
+      <div class="persona-card">
+        <div class="persona-icon">🔧</div>
+        <h4>Manufacturing Engineer</h4>
+        <p>This is where your machine signals enter the digital world. Every status change, program update, and tool measurement is captured. The simulator mimics real CNC behaviour — ACTIVE, IDLE, SETUP, ALARM, WAITING, OFFLINE — so you can validate the entire pipeline before connecting real equipment.</p>
+      </div>
+      <div class="persona-card">
+        <div class="persona-icon">💻</div>
+        <h4>Developer</h4>
+        <p>uns-framework is written in Go for performance — it handles every MQTT message with minimal latency. The current/previous pattern in Valkey enables change detection downstream without any function needing to maintain its own state. Check <code style="font-family:var(--font-mono);font-size:11px;">uns:meta:*</code> for message counts and timing.</p>
+      </div>
+      <div class="persona-card">
+        <div class="persona-icon">🖥️</div>
+        <h4>IT Engineer</h4>
+        <p>Two containers plus the MQTT broker and Valkey. uns-sim is optional in production (replaced by real PLCs). uns-framework is the only MQTT subscriber that writes to Valkey — single point of ingestion. Monitor Valkey memory usage and MQTT connection status.</p>
+      </div>
+    </div>
+
+    <h3>Topics Published by uns-sim</h3>
+    <div class="yaml-block"><pre style="margin:0;font:inherit;white-space:pre">v1.0/enterprise/site1/area1/cnc-01/status   → { "state": "ACTIVE", "spindle_speed": 8500, ... }
+v1.0/enterprise/site1/area1/cnc-01/program   → { "name": "PART-A-001", "parts_made": 42, ... }
+v1.0/enterprise/site1/area1/cnc-01/tool      → { "id": "T01", "life_remaining": 78, ... }
+v1.0/enterprise/site1/area1/cnc-02/status    ...
+v1.0/enterprise/site1/area1/cnc-02/program   ...
+v1.0/enterprise/site1/area1/cnc-02/tool      ...
+v1.0/enterprise/site1/area2/cnc-03/status    ...
+v1.0/enterprise/site1/area2/cnc-03/program   ...
+v1.0/enterprise/site1/area2/cnc-03/tool      ...
+v1.0/enterprise/site1/area2/cnc-04/status    ...
+v1.0/enterprise/site1/area2/cnc-04/program   ...
+v1.0/enterprise/site1/area2/cnc-04/tool      ...
+
+12 topics total — 4 machines × 3 data tags — published every 3 seconds</pre></div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- LAYER 2: PROCESS                        -->
+    <!-- ═══════════════════════════════════════ -->
+    <h2 id="layer-process">Layer 2: Process</h2>
+
+    <div class="layer-label"><span class="layer-dot layer-dot-process"></span> PROCESS — Transform raw data into structured records</div>
+
+    <p>Seven functions read from the capture layer and write structured records to PostgreSQL. They run in parallel — each watching for different things in the same data.</p>
+
+    <div class="network-diagram">
+      <svg viewBox="0 0 720 340" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- Source: Valkey -->
+        <rect x="16" y="10" width="100" height="40" rx="6" fill="var(--white)" stroke="var(--black)" stroke-width="1.5"/>
+        <text x="66" y="34" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="600" fill="var(--black)" text-anchor="middle">Valkey</text>
+
+        <!-- Source: MQTT -->
+        <rect x="132" y="10" width="100" height="40" rx="6" fill="var(--white)" stroke="var(--black)" stroke-width="1.5"/>
+        <text x="182" y="34" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="600" fill="var(--black)" text-anchor="middle">MQTT</text>
+
+        <!-- Fan-out lines from Valkey -->
+        <line x1="66" y1="50" x2="66" y2="70" stroke="var(--grey-300)" stroke-width="1.2"/>
+        <line x1="66" y1="70" x2="66" y2="90" stroke="var(--grey-300)" stroke-width="1.2"/>
+        <line x1="66" y1="70" x2="200" y2="90" stroke="var(--grey-300)" stroke-width="1.2"/>
+        <line x1="66" y1="70" x2="334" y2="90" stroke="var(--grey-300)" stroke-width="1.2"/>
+        <line x1="66" y1="70" x2="468" y2="90" stroke="var(--grey-300)" stroke-width="1.2"/>
+
+        <!-- Fan-out from MQTT -->
+        <line x1="182" y1="50" x2="182" y2="70" stroke="var(--grey-300)" stroke-width="1.2"/>
+        <line x1="182" y1="70" x2="334" y2="90" stroke="var(--grey-300)" stroke-width="1.2"/>
+
+        <!-- Animated dots on fan-out -->
+        <circle r="2.5" fill="#f59e0b" opacity="0.7">
+          <animate attributeName="cx" values="66;66" dur="2s" repeatCount="indefinite"/>
+          <animate attributeName="cy" values="55;86" dur="2s" repeatCount="indefinite"/>
+          <animate attributeName="opacity" values="0;1;1;0" dur="2s" repeatCount="indefinite"/>
+        </circle>
+        <circle r="2.5" fill="#f59e0b" opacity="0.7">
+          <animate attributeName="cx" values="66;200" dur="2s" repeatCount="indefinite" begin="0.3s"/>
+          <animate attributeName="cy" values="55;86" dur="2s" repeatCount="indefinite" begin="0.3s"/>
+          <animate attributeName="opacity" values="0;1;1;0" dur="2s" repeatCount="indefinite" begin="0.3s"/>
+        </circle>
+        <circle r="2.5" fill="#f59e0b" opacity="0.7">
+          <animate attributeName="cx" values="66;468" dur="2s" repeatCount="indefinite" begin="0.6s"/>
+          <animate attributeName="cy" values="55;86" dur="2s" repeatCount="indefinite" begin="0.6s"/>
+          <animate attributeName="opacity" values="0;1;1;0" dur="2s" repeatCount="indefinite" begin="0.6s"/>
+        </circle>
+
+        <!-- ═══ ROW 1: Cache, Log, Historian, State ═══ -->
+        <!-- uns-cache -->
+        <rect x="16" y="90" width="118" height="60" rx="6" fill="var(--white)" stroke="var(--grey-200)" stroke-width="1.5"/>
+        <text x="75" y="110" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="600" fill="var(--black)" text-anchor="middle">uns-cache</text>
+        <text x="75" y="124" font-family="'JetBrains Mono', monospace" font-size="7" fill="var(--grey-500)" text-anchor="middle">Change detection</text>
+        <text x="75" y="140" font-family="'JetBrains Mono', monospace" font-size="7" fill="var(--grey-400)" text-anchor="middle">Node.js · HTTP</text>
+
+        <!-- uns-log -->
+        <rect x="150" y="90" width="118" height="60" rx="6" fill="var(--white)" stroke="var(--grey-200)" stroke-width="1.5"/>
+        <text x="209" y="110" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="600" fill="var(--black)" text-anchor="middle">uns-log</text>
+        <text x="209" y="124" font-family="'JetBrains Mono', monospace" font-size="7" fill="var(--grey-500)" text-anchor="middle">Snapshot logger</text>
+        <text x="209" y="140" font-family="'JetBrains Mono', monospace" font-size="7" fill="var(--grey-400)" text-anchor="middle">Go · HTTP</text>
+
+        <!-- uns-historian -->
+        <rect x="284" y="90" width="118" height="60" rx="6" fill="var(--white)" stroke="var(--grey-200)" stroke-width="1.5"/>
+        <text x="343" y="110" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="600" fill="var(--black)" text-anchor="middle">uns-historian</text>
+        <text x="343" y="124" font-family="'JetBrains Mono', monospace" font-size="7" fill="var(--grey-500)" text-anchor="middle">Real-time logger</text>
+        <text x="343" y="140" font-family="'JetBrains Mono', monospace" font-size="7" fill="var(--grey-400)" text-anchor="middle">Go · MQTT</text>
+        <!-- MQTT badge -->
+        <rect x="370" y="92" width="28" height="12" rx="3" fill="#3b82f6" opacity="0.15"/>
+        <text x="384" y="101" font-family="'JetBrains Mono', monospace" font-size="6" font-weight="600" fill="#3b82f6" text-anchor="middle">MQTT</text>
+
+        <!-- uns-state -->
+        <rect x="418" y="90" width="118" height="60" rx="6" fill="var(--white)" stroke="var(--grey-200)" stroke-width="1.5"/>
+        <text x="477" y="110" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="600" fill="var(--black)" text-anchor="middle">uns-state</text>
+        <text x="477" y="124" font-family="'JetBrains Mono', monospace" font-size="7" fill="var(--grey-500)" text-anchor="middle">Duration tracker</text>
+        <text x="477" y="140" font-family="'JetBrains Mono', monospace" font-size="7" fill="var(--grey-400)" text-anchor="middle">Go · HTTP</text>
+        <!-- State animation -->
+        <rect x="500" y="92" width="32" height="12" rx="3" fill="none" stroke="var(--grey-200)" stroke-width="0.5"/>
+        <rect x="501" y="93" width="10" height="10" rx="2">
+          <animate attributeName="fill" values="#22c55e;#eab308;#ef4444;#22c55e" dur="6s" repeatCount="indefinite"/>
+        </rect>
+
+        <!-- ═══ ROW 2: Stoppage, Productivity, Input ═══ -->
+        <!-- uns-stoppage -->
+        <rect x="16" y="170" width="118" height="60" rx="6" fill="var(--white)" stroke="var(--grey-200)" stroke-width="1.5"/>
+        <text x="75" y="190" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="600" fill="var(--black)" text-anchor="middle">uns-stoppage</text>
+        <text x="75" y="204" font-family="'JetBrains Mono', monospace" font-size="7" fill="var(--grey-500)" text-anchor="middle">Classify reasons</text>
+        <text x="75" y="220" font-family="'JetBrains Mono', monospace" font-size="7" fill="var(--grey-400)" text-anchor="middle">Node.js · HTTP</text>
+        <!-- reads uns_state arrow -->
+        <line x1="75" y1="170" x2="477" y2="150" stroke="var(--grey-200)" stroke-width="1" stroke-dasharray="3 3"/>
+        <text x="260" y="156" font-family="'JetBrains Mono', monospace" font-size="7" fill="var(--grey-400)" text-anchor="middle">reads uns_state table</text>
+
+        <!-- uns-productivity -->
+        <rect x="150" y="170" width="118" height="60" rx="6" fill="var(--white)" stroke="var(--grey-200)" stroke-width="1.5"/>
+        <text x="209" y="190" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="600" fill="var(--black)" text-anchor="middle">uns-productivity</text>
+        <text x="209" y="204" font-family="'JetBrains Mono', monospace" font-size="7" fill="var(--grey-500)" text-anchor="middle">Run tracking</text>
+        <text x="209" y="220" font-family="'JetBrains Mono', monospace" font-size="7" fill="var(--grey-400)" text-anchor="middle">Go · HTTP</text>
+
+        <!-- uns-input -->
+        <rect x="284" y="170" width="118" height="60" rx="6" fill="var(--white)" stroke="var(--grey-200)" stroke-width="1.5"/>
+        <text x="343" y="190" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="600" fill="var(--black)" text-anchor="middle">uns-input</text>
+        <text x="343" y="204" font-family="'JetBrains Mono', monospace" font-size="7" fill="var(--grey-500)" text-anchor="middle">Operator entry</text>
+        <text x="343" y="220" font-family="'JetBrains Mono', monospace" font-size="7" fill="var(--grey-400)" text-anchor="middle">Node.js · HTTP</text>
+        <!-- Operator icon -->
+        <text x="343" y="248" font-family="'JetBrains Mono', monospace" font-size="7" fill="var(--grey-400)" text-anchor="middle">↑ operator POST</text>
+
+        <!-- ═══ PostgreSQL ═══ -->
+        <rect x="552" y="90" width="152" height="140" rx="8" fill="var(--white)" stroke="var(--black)" stroke-width="1.5"/>
+        <text x="628" y="112" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="600" fill="var(--black)" text-anchor="middle">PostgreSQL</text>
+        <!-- Table list -->
+        <text x="568" y="132" font-family="'JetBrains Mono', monospace" font-size="8" fill="var(--grey-500)">uns_log</text>
+        <text x="568" y="146" font-family="'JetBrains Mono', monospace" font-size="8" fill="var(--grey-500)">uns_historian</text>
+        <text x="568" y="160" font-family="'JetBrains Mono', monospace" font-size="8" fill="var(--grey-500)">uns_state</text>
+        <text x="568" y="174" font-family="'JetBrains Mono', monospace" font-size="8" fill="var(--grey-500)">uns_stoppage</text>
+        <text x="568" y="188" font-family="'JetBrains Mono', monospace" font-size="8" fill="var(--grey-500)">uns_productivity</text>
+        <text x="568" y="202" font-family="'JetBrains Mono', monospace" font-size="8" fill="var(--grey-500)">uns_input</text>
+        <!-- Glow -->
+        <rect x="552" y="90" width="152" height="140" rx="8" fill="none" stroke="#f59e0b" stroke-width="1" opacity="0.2">
+          <animate attributeName="opacity" values="0.1;0.3;0.1" dur="3s" repeatCount="indefinite"/>
+        </rect>
+
+        <!-- Write arrows to PostgreSQL -->
+        <line x1="134" y1="120" x2="550" y2="132" stroke="var(--grey-300)" stroke-width="1"/>
+        <polygon points="546,129 554,132 546,135" fill="var(--grey-300)"/>
+        <line x1="268" y1="120" x2="550" y2="146" stroke="var(--grey-300)" stroke-width="1"/>
+        <polygon points="546,143 554,146 546,149" fill="var(--grey-300)"/>
+        <line x1="402" y1="120" x2="550" y2="146" stroke="var(--grey-300)" stroke-width="1"/>
+        <line x1="536" y1="120" x2="550" y2="160" stroke="var(--grey-300)" stroke-width="1"/>
+        <polygon points="546,157 554,160 546,163" fill="var(--grey-300)"/>
+        <line x1="134" y1="200" x2="550" y2="174" stroke="var(--grey-300)" stroke-width="1"/>
+        <polygon points="546,171 554,174 546,177" fill="var(--grey-300)"/>
+        <line x1="268" y1="200" x2="550" y2="188" stroke="var(--grey-300)" stroke-width="1"/>
+        <polygon points="546,185 554,188 546,191" fill="var(--grey-300)"/>
+        <line x1="402" y1="200" x2="550" y2="202" stroke="var(--grey-300)" stroke-width="1"/>
+        <polygon points="546,199 554,202 546,205" fill="var(--grey-300)"/>
+
+        <!-- Animated write dots -->
+        <circle r="2.5" fill="#f59e0b" opacity="0.7">
+          <animate attributeName="cx" values="268;550" dur="2s" repeatCount="indefinite"/>
+          <animate attributeName="cy" values="120;146" dur="2s" repeatCount="indefinite"/>
+          <animate attributeName="opacity" values="0;1;1;0" dur="2s" repeatCount="indefinite"/>
+        </circle>
+        <circle r="2.5" fill="#f59e0b" opacity="0.7">
+          <animate attributeName="cx" values="536;550" dur="1.5s" repeatCount="indefinite" begin="0.5s"/>
+          <animate attributeName="cy" values="120;160" dur="1.5s" repeatCount="indefinite" begin="0.5s"/>
+          <animate attributeName="opacity" values="0;1;1;0" dur="1.5s" repeatCount="indefinite" begin="0.5s"/>
+        </circle>
+        <circle r="2.5" fill="#f59e0b" opacity="0.7">
+          <animate attributeName="cx" values="134;550" dur="2.5s" repeatCount="indefinite" begin="1s"/>
+          <animate attributeName="cy" values="200;174" dur="2.5s" repeatCount="indefinite" begin="1s"/>
+          <animate attributeName="opacity" values="0;1;1;0" dur="2.5s" repeatCount="indefinite" begin="1s"/>
+        </circle>
+
+        <!-- Legend -->
+        <rect x="16" y="280" width="688" height="50" rx="6" fill="var(--grey-50)" stroke="var(--grey-200)" stroke-width="1"/>
+        <text x="32" y="300" font-family="'JetBrains Mono', monospace" font-size="8" font-weight="600" fill="var(--grey-500)">TRIGGER TYPES:</text>
+        <text x="32" y="318" font-family="'JetBrains Mono', monospace" font-size="8" fill="var(--grey-500)">HTTP (polled on timer): uns-cache, uns-log, uns-state, uns-stoppage, uns-productivity, uns-input</text>
+        <text x="500" y="300" font-family="'JetBrains Mono', monospace" font-size="8" font-weight="600" fill="var(--grey-500)">MQTT (real-time):</text>
+        <text x="500" y="318" font-family="'JetBrains Mono', monospace" font-size="8" fill="var(--grey-500)">uns-historian</text>
+      </svg>
+    </div>
+
+    <h3>The 7 Processing Functions</h3>
+
+    <div class="fn-grid">
+      <div class="fn-card">
+        <div>
+          <div class="fn-card-name">uns-cache</div>
+          <div class="fn-card-lang">Node.js</div>
+        </div>
+        <div class="fn-card-body">
+          <p><strong>Cache Reader API.</strong> Reads all cached UNS topics from Valkey and returns JSON. Compares current vs previous values to detect which topics have changed since the last read. Returns both the full topic list and a filtered changes-only list.</p>
+          <div class="fn-card-flow">Valkey → JSON response { topic_count, changed_count, topics[], changes[] }</div>
+        </div>
+      </div>
+      <div class="fn-card">
+        <div>
+          <div class="fn-card-name">uns-log</div>
+          <div class="fn-card-lang">Go</div>
+        </div>
+        <div class="fn-card-body">
+          <p><strong>Change Logger.</strong> Compares current vs previous values. When any value changes, inserts a <strong>complete snapshot row</strong> into PostgreSQL — all values, not just the changed ones. Unchanged values are copied forward. This gives you a full picture at any point in time.</p>
+          <p>HTTP-triggered, polled on a timer. May miss rapid changes between polls.</p>
+          <div class="fn-card-flow">Valkey → PostgreSQL (uns_log table) — snapshot on change</div>
+        </div>
+      </div>
+      <div class="fn-card">
+        <div>
+          <div class="fn-card-name">uns-historian</div>
+          <div class="fn-card-lang">Go</div>
+        </div>
+        <div class="fn-card-body">
+          <p><strong>MQTT Historian.</strong> Subscribes directly to MQTT topics and logs <strong>every single value change</strong> to PostgreSQL in real-time. In-memory change detection skips duplicate values. Unlike uns-log, no values are ever missed between polls — this captures the complete history.</p>
+          <p>Supports MQTT wildcards (<code style="font-family:var(--font-mono);font-size:12px;background:var(--grey-100);padding:1px 6px;border-radius:3px;">+</code> single level, <code style="font-family:var(--font-mono);font-size:12px;background:var(--grey-100);padding:1px 6px;border-radius:3px;">#</code> multi-level) for flexible topic selection.</p>
+          <div class="fn-card-flow">MQTT Broker → PostgreSQL (uns_historian table) — every change, real-time</div>
+        </div>
+      </div>
+      <div class="fn-card">
+        <div>
+          <div class="fn-card-name">uns-state</div>
+          <div class="fn-card-lang">Go</div>
+        </div>
+        <div class="fn-card-body">
+          <p><strong>State Duration Tracker.</strong> Reads /status topics, maintains an in-memory state tracker per machine. When a machine transitions from one state to another, logs the <strong>completed state with its exact duration</strong>. This is the foundation for all time-based KPIs — utilisation, availability, MTBF, MTTR.</p>
+          <div class="fn-card-flow">Valkey /status → PostgreSQL (uns_state table) — state + duration_s + next_state</div>
+        </div>
+      </div>
+      <div class="fn-card">
+        <div>
+          <div class="fn-card-name">uns-stoppage</div>
+          <div class="fn-card-lang">Node.js</div>
+        </div>
+        <div class="fn-card-body">
+          <p><strong>Stoppage Classifier.</strong> Reads non-ACTIVE states from the uns_state table and auto-classifies each stoppage (IDLE→NO_WORK, ALARM→FAULT, SETUP→SETUP, etc.). Provides a POST endpoint for operators to override the auto-classification with the real reason — e.g. changing FAULT to TOOL_BREAK.</p>
+          <div class="fn-card-flow">PostgreSQL (uns_state) → PostgreSQL (uns_stoppage) + operator overrides</div>
+        </div>
+      </div>
+      <div class="fn-card">
+        <div>
+          <div class="fn-card-name">uns-productivity</div>
+          <div class="fn-card-lang">Go</div>
+        </div>
+        <div class="fn-card-body">
+          <p><strong>Production Run Logger.</strong> Reads /program topics from Valkey, tracks active production runs per machine. When a run completes (parts reached target), the program changes, or the machine stops, logs the run with throughput metrics — parts made, target, cycle time, duration.</p>
+          <div class="fn-card-flow">Valkey /program → PostgreSQL (uns_productivity) — run completion events</div>
+        </div>
+      </div>
+      <div class="fn-card">
+        <div>
+          <div class="fn-card-name">uns-input</div>
+          <div class="fn-card-lang">Node.js</div>
+        </div>
+        <div class="fn-card-body">
+          <p><strong>Manual Data Entry.</strong> HTTP API for operators to submit data that machines can't provide automatically — scrap counts with reasons, quality measurements, free-text notes, value corrections, and manual downtime reasons. The human layer of the pipeline.</p>
+          <div class="fn-card-flow">Operator HTTP POST → PostgreSQL (uns_input) — scrap, notes, quality, adjustments</div>
+        </div>
+      </div>
+    </div>
+
+    <h3>uns-historian vs uns-log</h3>
+
+    <p>These two functions both log data to PostgreSQL, but they serve different purposes:</p>
+
+    <div class="option-grid">
+      <div class="option-card">
+        <h4>uns-log — Snapshot Logger</h4>
+        <p>HTTP-triggered, polled on a timer. Captures a <strong>complete snapshot</strong> of all values when any value changes. Good for "what did everything look like at this moment?" queries. May miss rapid changes between polls. Each row contains all tags for a machine.</p>
+      </div>
+      <div class="option-card">
+        <h4>uns-historian — Real-Time Logger</h4>
+        <p>MQTT-triggered, captures <strong>every individual change</strong> as it happens. No values missed. Good for "show me every state transition" queries. Each row contains a single value for a single topic. Powers the Grafana dashboards.</p>
+      </div>
+    </div>
+
+    <h3>State Machine Animation</h3>
+
+    <p>uns-state tracks transitions like this — each completed state is logged with its exact duration:</p>
+
+    <div class="network-diagram">
+      <svg viewBox="0 0 700 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- Timeline -->
+        <line x1="30" y1="50" x2="670" y2="50" stroke="var(--grey-200)" stroke-width="1"/>
+
+        <!-- ACTIVE block -->
+        <rect x="30" y="30" width="180" height="40" rx="4" fill="#22c55e" opacity="0.15" stroke="#22c55e" stroke-width="1"/>
+        <text x="120" y="46" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="600" fill="#16a34a" text-anchor="middle">ACTIVE</text>
+        <text x="120" y="62" font-family="'JetBrains Mono', monospace" font-size="8" fill="#16a34a" text-anchor="middle" opacity="0.7">120 seconds</text>
+
+        <!-- Transition arrow 1 -->
+        <polygon points="210,45 220,50 210,55" fill="var(--grey-400)"/>
+
+        <!-- IDLE block -->
+        <rect x="220" y="30" width="100" height="40" rx="4" fill="#eab308" opacity="0.15" stroke="#eab308" stroke-width="1"/>
+        <text x="270" y="46" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="600" fill="#a16207" text-anchor="middle">IDLE</text>
+        <text x="270" y="62" font-family="'JetBrains Mono', monospace" font-size="8" fill="#a16207" text-anchor="middle" opacity="0.7">45 seconds</text>
+
+        <!-- Transition arrow 2 -->
+        <polygon points="320,45 330,50 320,55" fill="var(--grey-400)"/>
+
+        <!-- SETUP block -->
+        <rect x="330" y="30" width="120" height="40" rx="4" fill="#3b82f6" opacity="0.15" stroke="#3b82f6" stroke-width="1"/>
+        <text x="390" y="46" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="600" fill="#2563eb" text-anchor="middle">SETUP</text>
+        <text x="390" y="62" font-family="'JetBrains Mono', monospace" font-size="8" fill="#2563eb" text-anchor="middle" opacity="0.7">90 seconds</text>
+
+        <!-- Transition arrow 3 -->
+        <polygon points="450,45 460,50 450,55" fill="var(--grey-400)"/>
+
+        <!-- ACTIVE block 2 -->
+        <rect x="460" y="30" width="210" height="40" rx="4" fill="#22c55e" opacity="0.15" stroke="#22c55e" stroke-width="1"/>
+        <text x="565" y="46" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="600" fill="#16a34a" text-anchor="middle">ACTIVE</text>
+        <text x="565" y="62" font-family="'JetBrains Mono', monospace" font-size="8" fill="#16a34a" text-anchor="middle" opacity="0.7">running...</text>
+
+        <!-- Scanning line animation -->
+        <line x1="30" y1="25" x2="30" y2="75" stroke="#f59e0b" stroke-width="1.5" opacity="0.6">
+          <animate attributeName="x1" values="30;670;30" dur="8s" repeatCount="indefinite"/>
+          <animate attributeName="x2" values="30;670;30" dur="8s" repeatCount="indefinite"/>
+          <animate attributeName="opacity" values="0.6;0.6;0" dur="8s" repeatCount="indefinite"/>
+        </line>
+
+        <!-- Labels -->
+        <text x="120" y="88" font-family="'JetBrains Mono', monospace" font-size="7" fill="var(--grey-400)" text-anchor="middle">← logged to uns_state →</text>
+        <text x="270" y="88" font-family="'JetBrains Mono', monospace" font-size="7" fill="var(--grey-400)" text-anchor="middle">← logged →</text>
+        <text x="390" y="88" font-family="'JetBrains Mono', monospace" font-size="7" fill="var(--grey-400)" text-anchor="middle">← logged →</text>
+        <text x="565" y="88" font-family="'JetBrains Mono', monospace" font-size="7" fill="var(--grey-400)" text-anchor="middle">← in progress</text>
+      </svg>
+    </div>
+
+    <div class="info-banner">
+      <div class="info-icon">i</div>
+      <div><strong>Why duration matters.</strong> Manufacturing KPIs are time-based. You don't count how many times a machine was ACTIVE — you measure how <em>long</em> it was ACTIVE. uns-state gives you exact durations in seconds, which feed directly into utilisation %, availability %, MTBF, and MTTR calculations.</div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- LAYER 3: REPORT                         -->
+    <!-- ═══════════════════════════════════════ -->
+    <h2 id="layer-report">Layer 3: Report</h2>
+
+    <div class="layer-label"><span class="layer-dot layer-dot-report"></span> REPORT — Turn structured data into actionable metrics</div>
+
+    <p>Two functions consume the PostgreSQL tables and present manufacturing metrics — one as a JSON API, one as visual dashboards.</p>
+
+    <div class="network-diagram">
+      <svg viewBox="0 0 720 180" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- PostgreSQL -->
+        <rect x="16" y="40" width="160" height="100" rx="8" fill="var(--white)" stroke="var(--black)" stroke-width="1.5"/>
+        <text x="96" y="62" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="600" fill="var(--black)" text-anchor="middle">PostgreSQL</text>
+        <text x="32" y="80" font-family="'JetBrains Mono', monospace" font-size="7" fill="var(--grey-500)">uns_state</text>
+        <text x="32" y="92" font-family="'JetBrains Mono', monospace" font-size="7" fill="var(--grey-500)">uns_stoppage</text>
+        <text x="32" y="104" font-family="'JetBrains Mono', monospace" font-size="7" fill="var(--grey-500)">uns_productivity</text>
+        <text x="100" y="80" font-family="'JetBrains Mono', monospace" font-size="7" fill="var(--grey-500)">uns_input</text>
+        <text x="100" y="92" font-family="'JetBrains Mono', monospace" font-size="7" fill="var(--grey-500)">uns_historian</text>
+        <text x="100" y="104" font-family="'JetBrains Mono', monospace" font-size="7" fill="var(--grey-500)">uns_log</text>
+        <!-- Glow -->
+        <rect x="16" y="40" width="160" height="100" rx="8" fill="none" stroke="#10b981" stroke-width="1" opacity="0.2">
+          <animate attributeName="opacity" values="0.1;0.3;0.1" dur="3s" repeatCount="indefinite"/>
+        </rect>
+
+        <!-- SQL arrow to uns-kpi -->
+        <line x1="176" y1="70" x2="260" y2="70" stroke="var(--grey-300)" stroke-width="1.5"/>
+        <polygon points="256,66 264,70 256,74" fill="var(--grey-300)"/>
+        <text x="218" y="62" font-family="'JetBrains Mono', monospace" font-size="7" fill="var(--grey-400)" text-anchor="middle">SQL queries</text>
+        <circle r="2.5" fill="#10b981" opacity="0.7">
+          <animate attributeName="cx" values="180;256" dur="1.5s" repeatCount="indefinite"/>
+          <animate attributeName="cy" values="70;70" dur="1.5s" repeatCount="indefinite"/>
+          <animate attributeName="opacity" values="0;1;1;0" dur="1.5s" repeatCount="indefinite"/>
+        </circle>
+
+        <!-- SQL arrow to uns-dashboard -->
+        <line x1="176" y1="110" x2="260" y2="110" stroke="var(--grey-300)" stroke-width="1.5"/>
+        <polygon points="256,106 264,110 256,114" fill="var(--grey-300)"/>
+        <circle r="2.5" fill="#10b981" opacity="0.7">
+          <animate attributeName="cx" values="180;256" dur="1.8s" repeatCount="indefinite" begin="0.3s"/>
+          <animate attributeName="cy" values="110;110" dur="1.8s" repeatCount="indefinite" begin="0.3s"/>
+          <animate attributeName="opacity" values="0;1;1;0" dur="1.8s" repeatCount="indefinite" begin="0.3s"/>
+        </circle>
+
+        <!-- uns-kpi -->
+        <rect x="264" y="44" width="140" height="52" rx="6" fill="var(--white)" stroke="var(--grey-200)" stroke-width="1.5"/>
+        <text x="334" y="64" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="600" fill="var(--black)" text-anchor="middle">uns-kpi</text>
+        <text x="334" y="80" font-family="'JetBrains Mono', monospace" font-size="8" fill="var(--grey-500)" text-anchor="middle">Go · HTTP · read-only</text>
+
+        <!-- uns-dashboard -->
+        <rect x="264" y="104" width="140" height="52" rx="6" fill="var(--white)" stroke="var(--grey-200)" stroke-width="1.5"/>
+        <text x="334" y="124" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="600" fill="var(--black)" text-anchor="middle">uns-dashboard</text>
+        <text x="334" y="140" font-family="'JetBrains Mono', monospace" font-size="8" fill="var(--grey-500)" text-anchor="middle">Grafana · 5 dashboards</text>
+
+        <!-- Output arrows -->
+        <line x1="404" y1="70" x2="460" y2="70" stroke="var(--grey-300)" stroke-width="1.5"/>
+        <polygon points="456,66 464,70 456,74" fill="var(--grey-300)"/>
+        <line x1="404" y1="130" x2="460" y2="130" stroke="var(--grey-300)" stroke-width="1.5"/>
+        <polygon points="456,126 464,130 456,134" fill="var(--grey-300)"/>
+
+        <!-- KPI output -->
+        <rect x="464" y="40" width="240" height="60" rx="6" fill="var(--grey-50)" stroke="var(--grey-200)" stroke-width="1"/>
+        <text x="584" y="58" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="600" fill="var(--black)" text-anchor="middle">JSON KPI Response</text>
+        <text x="484" y="74" font-family="'JetBrains Mono', monospace" font-size="7" fill="var(--grey-500)">Utilisation 87.2%</text>
+        <text x="484" y="86" font-family="'JetBrains Mono', monospace" font-size="7" fill="var(--grey-500)">Availability 94.1%</text>
+        <text x="600" y="74" font-family="'JetBrains Mono', monospace" font-size="7" fill="var(--grey-500)">MTBF 142 min</text>
+        <text x="600" y="86" font-family="'JetBrains Mono', monospace" font-size="7" fill="var(--grey-500)">MTTR 8.3 min</text>
+
+        <!-- Dashboard output -->
+        <rect x="464" y="108" width="240" height="52" rx="6" fill="var(--grey-50)" stroke="var(--grey-200)" stroke-width="1"/>
+        <text x="584" y="126" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="600" fill="var(--black)" text-anchor="middle">Grafana Dashboards</text>
+        <text x="484" y="142" font-family="'JetBrains Mono', monospace" font-size="7" fill="var(--grey-500)">Machine · Production · Tooling · Status Log · KPI</text>
+      </svg>
+    </div>
+
+    <div class="fn-grid">
+      <div class="fn-card">
+        <div>
+          <div class="fn-card-name">uns-kpi</div>
+          <div class="fn-card-lang">Go</div>
+        </div>
+        <div class="fn-card-body">
+          <p><strong>KPI Reporter.</strong> Queries all PostgreSQL tables and computes manufacturing KPIs on demand. Pure read, no config needed — just SQL and JSON. Supports filtering by machine, area, and time range.</p>
+          <p>Computes: Utilisation %, Availability %, Throughput, Stoppage Pareto, MTBF, MTTR, Scrap totals.</p>
+          <div class="fn-card-flow">PostgreSQL (all tables) → JSON { utilisation, availability, mtbf, mttr, throughput, stoppages }</div>
+        </div>
+      </div>
+      <div class="fn-card">
+        <div>
+          <div class="fn-card-name">uns-dashboard</div>
+          <div class="fn-card-lang">Grafana</div>
+        </div>
+        <div class="fn-card-body">
+          <p><strong>5 Grafana Dashboards.</strong> Machine Overview, Production, Tooling, Status Log, and KPI Overview. Queries PostgreSQL directly using SQL with <code style="font-family:var(--font-mono);font-size:12px;background:var(--grey-100);padding:1px 6px;border-radius:3px;">LEAD()</code> and <code style="font-family:var(--font-mono);font-size:12px;background:var(--grey-100);padding:1px 6px;border-radius:3px;">LAG()</code> window functions for accurate duration-based metrics and deduplication.</p>
+          <p>Consistent colour mapping: ACTIVE=green, IDLE=yellow, ALARM=red, OFFLINE=gray, SETUP=blue, WAITING=orange.</p>
+          <div class="fn-card-flow">PostgreSQL (uns_historian, uns_log) → 5 dashboards, 51 panels total</div>
+        </div>
+      </div>
+    </div>
+
+    <h3>KPI Calculations</h3>
+
+    <table class="def-table">
+      <thead><tr><th>KPI</th><th>Source Table</th><th>Calculation</th><th>Who Uses It</th></tr></thead>
+      <tbody>
+        <tr><td>Utilisation %</td><td>uns_state</td><td>ACTIVE time / total tracked time</td><td>Production managers, shift leads</td></tr>
+        <tr><td>Availability %</td><td>uns_state + uns_stoppage</td><td>(total - unplanned stops) / total</td><td>Maintenance, operations</td></tr>
+        <tr><td>Throughput</td><td>uns_productivity</td><td>Parts/hour, target attainment %</td><td>Production planning</td></tr>
+        <tr><td>Stoppage Pareto</td><td>uns_stoppage</td><td>Top reasons ranked by total duration</td><td>Continuous improvement</td></tr>
+        <tr><td>MTBF</td><td>uns_state</td><td>Average ACTIVE run before ALARM</td><td>Maintenance planning</td></tr>
+        <tr><td>MTTR</td><td>uns_state</td><td>Average ALARM duration</td><td>Maintenance response</td></tr>
+        <tr><td>Scrap</td><td>uns_input</td><td>Total rejected parts per machine</td><td>Quality, production</td></tr>
+      </tbody>
+    </table>
+
+    <div class="persona-grid">
+      <div class="persona-card">
+        <div class="persona-icon">🔧</div>
+        <h4>Manufacturing Engineer</h4>
+        <p>These are the metrics you already track — but now they're computed automatically from real machine data, not from manual spreadsheets. The stoppage pareto tells you exactly where to focus improvement efforts. MTBF and MTTR give you maintenance scheduling data.</p>
+      </div>
+      <div class="persona-card">
+        <div class="persona-icon">💻</div>
+        <h4>Developer</h4>
+        <p>uns-kpi is a pure read function — no state, no config, no side effects. It runs SQL queries against PostgreSQL and returns JSON. The Grafana dashboards use window functions (LEAD, LAG) for accurate time-based calculations. All dashboard JSON is version-controlled.</p>
+      </div>
+      <div class="persona-card">
+        <div class="persona-icon">🖥️</div>
+        <h4>IT Engineer</h4>
+        <p>Both reporting functions are read-only — they never write to the database. Grafana connects directly to PostgreSQL with a read-only user. uns-kpi is stateless and can be scaled horizontally. Dashboard provisioning is automated via Docker Compose.</p>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- LAYER 4: AI                             -->
+    <!-- ═══════════════════════════════════════ -->
+    <h2 id="layer-ai">Layer 4: AI</h2>
+
+    <div class="layer-label"><span class="layer-dot layer-dot-ai"></span> AI — Intelligent analysis across the entire pipeline</div>
+
+    <p>The AI layer reads from <strong>everything</strong> — live data from Valkey, historical data from PostgreSQL — assembles a rich context, and sends it to an AI provider for analysis.</p>
+
+    <div class="network-diagram">
+      <svg viewBox="0 0 720 220" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- Title -->
+        <text x="360" y="16" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="600" fill="var(--grey-400)" text-anchor="middle" letter-spacing="0.08em">UNS-AI — CONTEXT ASSEMBLY PIPELINE</text>
+
+        <!-- Layer 1: Data Sources -->
+        <rect x="16" y="30" width="100" height="50" rx="6" fill="var(--white)" stroke="var(--black)" stroke-width="1.5"/>
+        <text x="66" y="50" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="600" fill="var(--black)" text-anchor="middle">Valkey</text>
+        <text x="66" y="64" font-family="'JetBrains Mono', monospace" font-size="7" fill="var(--grey-500)" text-anchor="middle">Live data</text>
+
+        <rect x="132" y="30" width="100" height="50" rx="6" fill="var(--white)" stroke="var(--black)" stroke-width="1.5"/>
+        <text x="182" y="50" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="600" fill="var(--black)" text-anchor="middle">PostgreSQL</text>
+        <text x="182" y="64" font-family="'JetBrains Mono', monospace" font-size="7" fill="var(--grey-500)" text-anchor="middle">History</text>
+
+        <!-- Arrows down to context assembly -->
+        <line x1="66" y1="80" x2="66" y2="100" stroke="var(--grey-300)" stroke-width="1.2"/>
+        <line x1="182" y1="80" x2="182" y2="100" stroke="var(--grey-300)" stroke-width="1.2"/>
+        <circle r="2.5" fill="#8b5cf6" opacity="0.7">
+          <animate attributeName="cx" values="66;66" dur="1.5s" repeatCount="indefinite"/>
+          <animate attributeName="cy" values="82;98" dur="1.5s" repeatCount="indefinite"/>
+          <animate attributeName="opacity" values="0;1;1;0" dur="1.5s" repeatCount="indefinite"/>
+        </circle>
+        <circle r="2.5" fill="#8b5cf6" opacity="0.7">
+          <animate attributeName="cx" values="182;182" dur="1.5s" repeatCount="indefinite" begin="0.3s"/>
+          <animate attributeName="cy" values="82;98" dur="1.5s" repeatCount="indefinite" begin="0.3s"/>
+          <animate attributeName="opacity" values="0;1;1;0" dur="1.5s" repeatCount="indefinite" begin="0.3s"/>
+        </circle>
+
+        <!-- Context Assembly -->
+        <rect x="16" y="100" width="216" height="50" rx="6" fill="var(--white)" stroke="var(--grey-200)" stroke-width="1.5"/>
+        <text x="124" y="120" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="600" fill="var(--black)" text-anchor="middle">uns-ai</text>
+        <text x="124" y="136" font-family="'JetBrains Mono', monospace" font-size="7" fill="var(--grey-500)" text-anchor="middle">Context assembly + prompt</text>
+        <!-- Glow -->
+        <rect x="16" y="100" width="216" height="50" rx="6" fill="none" stroke="#8b5cf6" stroke-width="1" opacity="0.2">
+          <animate attributeName="opacity" values="0.1;0.4;0.1" dur="2s" repeatCount="indefinite"/>
+        </rect>
+
+        <!-- Arrow to AI Provider -->
+        <line x1="232" y1="125" x2="320" y2="125" stroke="var(--grey-300)" stroke-width="1.5"/>
+        <polygon points="316,121 324,125 316,129" fill="var(--grey-300)"/>
+        <text x="276" y="118" font-family="'JetBrains Mono', monospace" font-size="7" fill="var(--grey-400)" text-anchor="middle">API call</text>
+        <!-- Animated packet -->
+        <circle r="3" fill="#8b5cf6" opacity="0.8">
+          <animate attributeName="cx" values="236;316" dur="2s" repeatCount="indefinite"/>
+          <animate attributeName="cy" values="125;125" dur="2s" repeatCount="indefinite"/>
+          <animate attributeName="opacity" values="0;1;1;0" dur="2s" repeatCount="indefinite"/>
+        </circle>
+
+        <!-- AI Provider -->
+        <rect x="324" y="100" width="140" height="50" rx="6" fill="var(--white)" stroke="var(--black)" stroke-width="1.5"/>
+        <text x="394" y="120" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="600" fill="var(--black)" text-anchor="middle">AI Provider</text>
+        <text x="394" y="136" font-family="'JetBrains Mono', monospace" font-size="7" fill="var(--grey-500)" text-anchor="middle">OpenAI / Anthropic</text>
+        <!-- Thinking animation -->
+        <circle cx="440" cy="108" r="2" fill="#8b5cf6" opacity="0.5">
+          <animate attributeName="opacity" values="0.3;1;0.3" dur="1s" repeatCount="indefinite"/>
+        </circle>
+        <circle cx="448" cy="108" r="2" fill="#8b5cf6" opacity="0.5">
+          <animate attributeName="opacity" values="0.3;1;0.3" dur="1s" repeatCount="indefinite" begin="0.2s"/>
+        </circle>
+        <circle cx="456" cy="108" r="2" fill="#8b5cf6" opacity="0.5">
+          <animate attributeName="opacity" values="0.3;1;0.3" dur="1s" repeatCount="indefinite" begin="0.4s"/>
+        </circle>
+
+        <!-- Arrow to outputs -->
+        <line x1="464" y1="115" x2="520" y2="55" stroke="var(--grey-300)" stroke-width="1.2"/>
+        <polygon points="516,52 524,52 520,60" fill="var(--grey-300)"/>
+        <line x1="464" y1="135" x2="520" y2="175" stroke="var(--grey-300)" stroke-width="1.2"/>
+        <polygon points="516,178 524,178 520,170" fill="var(--grey-300)"/>
+
+        <!-- Output: MQTT -->
+        <rect x="524" y="30" width="180" height="50" rx="6" fill="var(--white)" stroke="var(--grey-200)" stroke-width="1.5"/>
+        <text x="614" y="50" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="600" fill="var(--black)" text-anchor="middle">MQTT Publish</text>
+        <text x="614" y="66" font-family="'JetBrains Mono', monospace" font-size="7" fill="var(--grey-500)" text-anchor="middle">v1.0/.../ai/anomaly</text>
+
+        <!-- Output: PostgreSQL audit -->
+        <rect x="524" y="155" width="180" height="50" rx="6" fill="var(--white)" stroke="var(--grey-200)" stroke-width="1.5"/>
+        <text x="614" y="175" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="600" fill="var(--black)" text-anchor="middle">PostgreSQL Audit</text>
+        <text x="614" y="191" font-family="'JetBrains Mono', monospace" font-size="7" fill="var(--grey-500)" text-anchor="middle">uns_ai table · full trail</text>
+
+        <!-- Animated output dots -->
+        <circle r="2.5" fill="#8b5cf6" opacity="0.7">
+          <animate attributeName="cx" values="468;520" dur="1.2s" repeatCount="indefinite"/>
+          <animate attributeName="cy" values="115;55" dur="1.2s" repeatCount="indefinite"/>
+          <animate attributeName="opacity" values="0;1;1;0" dur="1.2s" repeatCount="indefinite"/>
+        </circle>
+        <circle r="2.5" fill="#8b5cf6" opacity="0.7">
+          <animate attributeName="cx" values="468;520" dur="1.2s" repeatCount="indefinite" begin="0.4s"/>
+          <animate attributeName="cy" values="135;175" dur="1.2s" repeatCount="indefinite" begin="0.4s"/>
+          <animate attributeName="opacity" values="0;1;1;0" dur="1.2s" repeatCount="indefinite" begin="0.4s"/>
+        </circle>
+      </svg>
+    </div>
+
+    <div class="fn-grid">
+      <div class="fn-card">
+        <div>
+          <div class="fn-card-name">uns-ai</div>
+          <div class="fn-card-lang">Node.js</div>
+        </div>
+        <div class="fn-card-body">
+          <p><strong>AI-Powered Analysis.</strong> Reads live machine data from Valkey and historical data from PostgreSQL, assembles a rich context for the chosen analysis type, sends it to an AI provider (OpenAI or Anthropic), publishes structured results back to MQTT, and stores a full audit trail in PostgreSQL.</p>
+          <p>7 built-in analysis types: anomaly detection, shift summaries, smart alerting, predictive maintenance, production optimisation, root cause analysis, and custom prompts.</p>
+          <div class="fn-card-flow">Valkey + PostgreSQL → AI Provider → MQTT + PostgreSQL (uns_ai audit trail)</div>
+        </div>
+      </div>
+    </div>
+
+    <h3>Analysis Types</h3>
+
+    <table class="def-table">
+      <thead><tr><th>Type</th><th>Purpose</th><th>Data Sources</th></tr></thead>
+      <tbody>
+        <tr><td><code style="font-family:var(--font-mono);font-size:12px;background:var(--grey-100);padding:1px 6px;border-radius:3px;">anomaly</code></td><td>Detect abnormal machine behaviour</td><td>Live status, state history, baseline stats, alarms, tool data</td></tr>
+        <tr><td><code style="font-family:var(--font-mono);font-size:12px;background:var(--grey-100);padding:1px 6px;border-radius:3px;">shift-summary</code></td><td>Generate shift handover report</td><td>Live status, states, stoppages, production, scrap, operator notes</td></tr>
+        <tr><td><code style="font-family:var(--font-mono);font-size:12px;background:var(--grey-100);padding:1px 6px;border-radius:3px;">smart-alert</code></td><td>Contextual alert triage</td><td>Live status, recent alarms, stoppages, tool condition, production</td></tr>
+        <tr><td><code style="font-family:var(--font-mono);font-size:12px;background:var(--grey-100);padding:1px 6px;border-radius:3px;">predictive</code></td><td>Tool wear / maintenance prediction</td><td>Tool data, tool history, alarms, tool-related stoppages, baseline</td></tr>
+        <tr><td><code style="font-family:var(--font-mono);font-size:12px;background:var(--grey-100);padding:1px 6px;border-radius:3px;">optimisation</code></td><td>Machine-program assignment</td><td>Live status, production aggregates, scrap rates, reliability</td></tr>
+        <tr><td><code style="font-family:var(--font-mono);font-size:12px;background:var(--grey-100);padding:1px 6px;border-radius:3px;">root-cause</code></td><td>Explain why an alarm happened</td><td>State timeline, stoppages, tool condition, sensor history, notes</td></tr>
+        <tr><td><code style="font-family:var(--font-mono);font-size:12px;background:var(--grey-100);padding:1px 6px;border-radius:3px;">custom</code></td><td>User-defined prompt</td><td>Configurable — select which data sources to include</td></tr>
+      </tbody>
+    </table>
+
+    <div class="persona-grid">
+      <div class="persona-card">
+        <div class="persona-icon">🔧</div>
+        <h4>Manufacturing Engineer</h4>
+        <p>The shift-summary replaces manual handover notes. The anomaly detector catches patterns humans miss — like a machine that's technically running but cycling abnormally. Predictive maintenance tells you when to change a tool before it breaks. Root cause analysis explains <em>why</em> an alarm happened, not just <em>that</em> it happened.</p>
+      </div>
+      <div class="persona-card">
+        <div class="persona-icon">💻</div>
+        <h4>Developer</h4>
+        <p>Each analysis type has its own system prompt and data context assembly. The context builder queries Valkey and PostgreSQL, computes aggregates, and assembles everything into a structured prompt. Responses are structured JSON. Every call is logged with token counts, latency, and the complete response for debugging and cost tracking.</p>
+      </div>
+      <div class="persona-card">
+        <div class="persona-icon">🖥️</div>
+        <h4>IT Engineer</h4>
+        <p>Requires an API key for OpenAI or Anthropic — set via environment variable. All AI calls are audited in PostgreSQL (uns_ai table). Results are published back to MQTT, so they flow through the same infrastructure as machine data. Monitor token usage and API costs via the audit trail.</p>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- END-TO-END FLOW                         -->
+    <!-- ═══════════════════════════════════════ -->
+    <h2 id="end-to-end">End-to-End Data Flow</h2>
+
+    <p>Here's what happens when a single machine event — say, cnc-01 transitions from ACTIVE to ALARM — flows through the entire pipeline:</p>
+
+    <div class="network-diagram">
+      <svg viewBox="0 0 720 380" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <text x="360" y="16" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="600" fill="var(--grey-400)" text-anchor="middle" letter-spacing="0.08em">GOLDEN PATH — ONE EVENT THROUGH THE PIPELINE</text>
+
+        <!-- Step 1 -->
+        <rect x="16" y="30" width="688" height="40" rx="6" fill="#3b82f6" opacity="0.06" stroke="#3b82f6" stroke-width="1" opacity="0.3"/>
+        <circle cx="36" cy="50" r="10" fill="#3b82f6" opacity="0.15"/>
+        <text x="36" y="54" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="700" fill="#3b82f6" text-anchor="middle">1</text>
+        <text x="56" y="46" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="600" fill="var(--black)">cnc-01 publishes status: ALARM</text>
+        <text x="56" y="60" font-family="'JetBrains Mono', monospace" font-size="8" fill="var(--grey-500)">uns-sim → MQTT topic v1.0/enterprise/site1/area1/cnc-01/status</text>
+
+        <!-- Step 2 -->
+        <rect x="16" y="78" width="688" height="40" rx="6" fill="#3b82f6" opacity="0.06" stroke="#3b82f6" stroke-width="1" opacity="0.3"/>
+        <circle cx="36" cy="98" r="10" fill="#3b82f6" opacity="0.15"/>
+        <text x="36" y="102" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="700" fill="#3b82f6" text-anchor="middle">2</text>
+        <text x="56" y="94" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="600" fill="var(--black)">uns-framework caches the new value</text>
+        <text x="56" y="108" font-family="'JetBrains Mono', monospace" font-size="8" fill="var(--grey-500)">Valkey: uns:data:* = ALARM, uns:prev:* = ACTIVE, uns:meta:* updated</text>
+
+        <!-- Step 3 -->
+        <rect x="16" y="126" width="688" height="40" rx="6" fill="#f59e0b" opacity="0.06" stroke="#f59e0b" stroke-width="1" opacity="0.3"/>
+        <circle cx="36" cy="146" r="10" fill="#f59e0b" opacity="0.15"/>
+        <text x="36" y="150" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="700" fill="#f59e0b" text-anchor="middle">3</text>
+        <text x="56" y="142" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="600" fill="var(--black)">uns-historian logs the change immediately</text>
+        <text x="56" y="156" font-family="'JetBrains Mono', monospace" font-size="8" fill="var(--grey-500)">PostgreSQL: INSERT INTO uns_historian (topic, value) — real-time, no delay</text>
+
+        <!-- Step 4 -->
+        <rect x="16" y="174" width="688" height="40" rx="6" fill="#f59e0b" opacity="0.06" stroke="#f59e0b" stroke-width="1" opacity="0.3"/>
+        <circle cx="36" cy="194" r="10" fill="#f59e0b" opacity="0.15"/>
+        <text x="36" y="198" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="700" fill="#f59e0b" text-anchor="middle">4</text>
+        <text x="56" y="190" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="600" fill="var(--black)">uns-state detects ACTIVE → ALARM transition</text>
+        <text x="56" y="204" font-family="'JetBrains Mono', monospace" font-size="8" fill="var(--grey-500)">PostgreSQL: INSERT INTO uns_state (state=ACTIVE, duration_s=120, next_state=ALARM)</text>
+
+        <!-- Step 5 -->
+        <rect x="16" y="222" width="688" height="40" rx="6" fill="#f59e0b" opacity="0.06" stroke="#f59e0b" stroke-width="1" opacity="0.3"/>
+        <circle cx="36" cy="242" r="10" fill="#f59e0b" opacity="0.15"/>
+        <text x="36" y="246" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="700" fill="#f59e0b" text-anchor="middle">5</text>
+        <text x="56" y="238" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="600" fill="var(--black)">uns-stoppage auto-classifies: ALARM → FAULT (unplanned)</text>
+        <text x="56" y="252" font-family="'JetBrains Mono', monospace" font-size="8" fill="var(--grey-500)">PostgreSQL: INSERT INTO uns_stoppage — operator can override to TOOL_BREAK later</text>
+
+        <!-- Step 6 -->
+        <rect x="16" y="270" width="688" height="40" rx="6" fill="#10b981" opacity="0.06" stroke="#10b981" stroke-width="1" opacity="0.3"/>
+        <circle cx="36" cy="290" r="10" fill="#10b981" opacity="0.15"/>
+        <text x="36" y="294" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="700" fill="#10b981" text-anchor="middle">6</text>
+        <text x="56" y="286" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="600" fill="var(--black)">uns-kpi recalculates: utilisation drops, MTTR starts</text>
+        <text x="56" y="300" font-family="'JetBrains Mono', monospace" font-size="8" fill="var(--grey-500)">Next API call returns updated KPIs reflecting the alarm event</text>
+
+        <!-- Step 7 -->
+        <rect x="16" y="318" width="688" height="40" rx="6" fill="#8b5cf6" opacity="0.06" stroke="#8b5cf6" stroke-width="1" opacity="0.3"/>
+        <circle cx="36" cy="338" r="10" fill="#8b5cf6" opacity="0.15"/>
+        <text x="36" y="342" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="700" fill="#8b5cf6" text-anchor="middle">7</text>
+        <text x="56" y="334" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="600" fill="var(--black)">uns-ai detects anomaly, publishes root cause analysis</text>
+        <text x="56" y="348" font-family="'JetBrains Mono', monospace" font-size="8" fill="var(--grey-500)">MQTT: v1.0/.../ai/anomaly — "Tool T03 offset trending +0.02mm over 4 hours before alarm"</text>
+
+        <!-- Animated scanning line -->
+        <rect x="14" y="30" width="4" height="40" rx="2" fill="#3b82f6" opacity="0.3">
+          <animate attributeName="y" values="30;318" dur="6s" repeatCount="indefinite"/>
+          <animate attributeName="fill" values="#3b82f6;#3b82f6;#f59e0b;#f59e0b;#f59e0b;#10b981;#8b5cf6" dur="6s" repeatCount="indefinite"/>
+        </rect>
+      </svg>
+    </div>
+
+    <div class="success-indicator">
+      <span class="success-icon">✓</span>
+      <strong>Total time from machine event to AI insight:</strong> seconds. The entire pipeline runs continuously — no batch processing, no overnight jobs, no manual intervention.
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- INFRASTRUCTURE MAP                      -->
+    <!-- ═══════════════════════════════════════ -->
+    <h2 id="infrastructure">Infrastructure Map</h2>
+
+    <p>All 12 functions share 3 pieces of infrastructure. Here's exactly which function uses which:</p>
+
+    <table class="def-table">
+      <thead><tr><th>Function</th><th>MQTT Broker</th><th>Valkey Cache</th><th>PostgreSQL</th><th>External</th></tr></thead>
+      <tbody>
+        <tr><td><strong>uns-sim</strong></td><td>✓ publish</td><td>—</td><td>—</td><td>—</td></tr>
+        <tr><td><strong>uns-framework</strong></td><td>✓ subscribe</td><td>✓ write</td><td>—</td><td>—</td></tr>
+        <tr><td><strong>uns-cache</strong></td><td>—</td><td>✓ read</td><td>—</td><td>—</td></tr>
+        <tr><td><strong>uns-log</strong></td><td>—</td><td>✓ read</td><td>✓ write</td><td>—</td></tr>
+        <tr><td><strong>uns-historian</strong></td><td>✓ subscribe</td><td>✓ config</td><td>✓ write</td><td>—</td></tr>
+        <tr><td><strong>uns-state</strong></td><td>—</td><td>✓ read</td><td>✓ write</td><td>—</td></tr>
+        <tr><td><strong>uns-stoppage</strong></td><td>—</td><td>—</td><td>✓ read/write</td><td>—</td></tr>
+        <tr><td><strong>uns-productivity</strong></td><td>—</td><td>✓ read</td><td>✓ write</td><td>—</td></tr>
+        <tr><td><strong>uns-input</strong></td><td>—</td><td>—</td><td>✓ write</td><td>—</td></tr>
+        <tr><td><strong>uns-kpi</strong></td><td>—</td><td>—</td><td>✓ read</td><td>—</td></tr>
+        <tr><td><strong>uns-dashboard</strong></td><td>—</td><td>—</td><td>✓ read</td><td>—</td></tr>
+        <tr><td><strong>uns-ai</strong></td><td>✓ publish</td><td>✓ read</td><td>✓ read/write</td><td>AI API</td></tr>
+      </tbody>
+    </table>
+
+    <div class="info-banner">
+      <div class="info-icon">i</div>
+      <div><strong>All containers run on a single Docker network</strong> (<code style="font-family:var(--font-mono);font-size:12px;">fnkit-network</code>). Infrastructure services are addressed by container name: <code style="font-family:var(--font-mono);font-size:12px;">fnkit-mqtt</code>, <code style="font-family:var(--font-mono);font-size:12px;">fnkit-cache</code>, <code style="font-family:var(--font-mono);font-size:12px;">fnkit-db</code>. No service discovery, no DNS configuration — Docker handles it.</div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- DEPLOYMENT ORDER                        -->
+    <!-- ═══════════════════════════════════════ -->
+    <h2 id="deploy-order">Deployment Order</h2>
+
+    <p>Functions have dependencies — deploy them in this order:</p>
+
+    <div class="yaml-block"><pre style="margin:0;font:inherit;white-space:pre">Phase 1 — Infrastructure (required first)
+  ├── MQTT Broker (Mosquitto / EMQX)
+  ├── Valkey Cache
+  └── PostgreSQL
+
+Phase 2 — Capture (needs MQTT + Valkey)
+  ├── uns-framework     ← must be running before anything reads Valkey
+  └── uns-sim           ← or your real machines / edge agents
+
+Phase 3 — Process (needs Valkey + PostgreSQL)
+  ├── uns-cache         ← reads Valkey only
+  ├── uns-log           ← reads Valkey, writes PostgreSQL
+  ├── uns-historian     ← subscribes MQTT, writes PostgreSQL
+  ├── uns-state         ← reads Valkey, writes PostgreSQL
+  ├── uns-productivity  ← reads Valkey, writes PostgreSQL
+  ├── uns-input         ← writes PostgreSQL (independent)
+  └── uns-stoppage      ← reads uns_state table (deploy after uns-state)
+
+Phase 4 — Report (needs PostgreSQL tables populated)
+  ├── uns-kpi           ← reads all tables
+  └── uns-dashboard     ← reads all tables via Grafana
+
+Phase 5 — AI (needs everything)
+  └── uns-ai            ← reads Valkey + PostgreSQL, calls AI API</pre></div>
+
+    <div class="warning-banner">
+      <span class="warning-icon">⚠</span>
+      <div>
+        <strong>uns-framework must be running before any processing function.</strong> It's the only function that writes to Valkey. If it's not running, the cache is empty and all downstream functions have nothing to read.
+      </div>
+    </div>
+
+    <h3>Quick Start — Full Pipeline</h3>
+
+    <div class="yaml-block"><pre style="margin:0;font:inherit;white-space:pre"># Start infrastructure (if not already running via fnkit)
+# fnkit handles MQTT, Valkey, and PostgreSQL automatically
+
+# Phase 2: Capture
+cd uns-framework && cp .env.example .env && docker compose up -d && cd ..
+cd uns-sim && cp .env.example .env && docker compose up -d && cd ..
+
+# Phase 3: Process
+cd uns-cache && cp .env.example .env && docker compose up -d && cd ..
+cd uns-log && cp .env.example .env && docker compose up -d && cd ..
+cd uns-historian && docker compose up -d && cd ..
+cd uns-state && cp .env.example .env && docker compose up -d && cd ..
+cd uns-productivity && cp .env.example .env && docker compose up -d && cd ..
+cd uns-input && cp .env.example .env && docker compose up -d && cd ..
+cd uns-stoppage && cp .env.example .env && docker compose up -d && cd ..
+
+# Phase 4: Report
+cd uns-kpi && cp .env.example .env && docker compose up -d && cd ..
+cd uns-dashboard && cp .env.example .env && docker compose up -d && cd ..
+
+# Phase 5: AI (optional — requires API key)
+cd uns-ai && cp .env.example .env && docker compose up -d && cd ..</pre></div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- NEXT STEPS                              -->
+    <!-- ═══════════════════════════════════════ -->
+    <h2 id="next-steps">Next Steps</h2>
+
+    <table class="def-table">
+      <thead><tr><th>Resource</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td><a href="/docs/components.html" style="color:var(--black);border-bottom:1px solid var(--grey-300);">Components Overview</a></td><td>Quick reference table of all 12 functions with links to individual docs</td></tr>
+        <tr><td><a href="/docs/getting-started.html" style="color:var(--black);border-bottom:1px solid var(--grey-300);">Quick Start</a></td><td>Get the full pipeline running in under 5 minutes</td></tr>
+        <tr><td><a href="/docs/architecture.html" style="color:var(--black);border-bottom:1px solid var(--grey-300);">Architecture</a></td><td>System architecture, infrastructure layout, and design decisions</td></tr>
+        <tr><td><a href="/docs/code-patterns.html" style="color:var(--black);border-bottom:1px solid var(--grey-300);">Code Patterns</a></td><td>Implementation patterns shared across all functions</td></tr>
+        <tr><td><a href="/docs/manufacturing-kpis.html" style="color:var(--black);border-bottom:1px solid var(--grey-300);">Manufacturing KPIs</a></td><td>Deep dive into KPI calculations and what they mean</td></tr>
+        <tr><td><a href="/docs/extending.html" style="color:var(--black);border-bottom:1px solid var(--grey-300);">Extending</a></td><td>How to add your own functions to the pipeline</td></tr>
+        <tr><td><a href="/docs/database-schema.html" style="color:var(--black);border-bottom:1px solid var(--grey-300);">Database Schema</a></td><td>All PostgreSQL table definitions and relationships</td></tr>
+      </tbody>
+    </table>
+
+    <div style="margin-top:32px;padding:20px;background:var(--grey-50);border:1px solid var(--grey-200);border-radius:10px;">
+      <p style="font-family:var(--font-mono);font-size:12px;color:var(--grey-500);margin-bottom:4px;">
+        Guide Version: 1.0 · Applies To: fn-uns pipeline (all 12 functions)
+      </p>
+      <p style="font-size:13px;color:var(--grey-500);margin-bottom:0;">
+        Last updated March 2026.
+      </p>
+    </div>
+
+    <!-- NAV BUTTONS -->
+    <div class="docs-nav-buttons">
+      <a href="/guides/" class="docs-nav-btn">
+        <span class="nav-label">Back</span>
+        <span class="nav-title">All Guides</span>
+      </a>
+      <a href="/docs/components.html" class="docs-nav-btn next">
+        <span class="nav-label">Related</span>
+        <span class="nav-title">Components Overview</span>
+      </a>
+    </div>
+
+  </main>
+</div>
+
+<script src="../shared.js"></script>
+<script>
+// Scroll-spy: highlight sidebar link matching current section
+(function() {
+  const sidebarLinks = document.querySelectorAll('.docs-sidebar a[href^="#"]');
+  const sections = [];
+  sidebarLinks.forEach(link => {
+    const id = link.getAttribute('href').slice(1);
+    const el = document.getElementById(id);
+    if (el) sections.push({ id, el, link });
+  });
+  if (!sections.length) return;
+
+  function update() {
+    const scrollY = window.scrollY + 80;
+    let current = sections[0];
+    for (const s of sections) {
+      if (s.el.offsetTop <= scrollY) current = s;
+    }
+    sidebarLinks.forEach(l => l.classList.remove('active'));
+    current.link.classList.add('active');
+  }
+
+  let ticking = false;
+  window.addEventListener('scroll', () => {
+    if (!ticking) {
+      requestAnimationFrame(() => { update(); ticking = false; });
+      ticking = true;
+    }
+  });
+  update();
+})();
+</script>
+</body>
+</html>

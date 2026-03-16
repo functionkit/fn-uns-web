@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>uns-ai — AI-Powered Analysis — fn-uns Docs</title>
+<meta name="description" content="AI-powered manufacturing analysis with built-in anomaly detection, shift summaries, smart alerting, predictive maintenance, and more."/>
+<link rel="stylesheet" href="../style.css"/>
+<link rel="stylesheet" href="../docs.css"/>
+</head>
+<body>
+<nav>
+  <a href="/" class="logo">UNS Framework</a>
+  <div class="links">
+    <a href="/fn-uns/">fn-uns</a>
+    <a href="/framework/">Standard Docs</a>
+    <a href="/docs/">UNS Docs</a>
+        <a href="/guides/">Guides</a>
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+      <div class="toggle-thumb"><span class="toggle-icon-sun">☀</span><span class="toggle-icon-moon">☾</span></div>
+    </button>
+  </div>
+  <button class="menu-toggle" aria-label="Menu" aria-expanded="false">☰</button>
+  <div class="mobile-menu">
+    <a href="/fn-uns/">fn-uns</a>
+    <a href="/framework/">Standard Docs</a>
+    <a href="/docs/">UNS Docs</a>
+        <a href="/guides/">Guides</a>
+  </div>
+</nav>
+<div class="docs-layout">
+  <aside class="docs-sidebar">
+    <div class="sidebar-section"><div class="sidebar-title">fn-uns</div><a href="/docs/">Overview</a></div>
+    <div class="sidebar-section"><div class="sidebar-title">Introduction</div><a href="/docs/what-is-uns.html">What is the UNS?</a><a href="/docs/why-uns.html">Why UNS Matters</a><a href="/docs/why-faas.html">Why FaaS &amp; GitOps?</a><a href="/docs/architecture.html">Architecture</a></div>
+    <div class="sidebar-section"><div class="sidebar-title">Getting Started</div><a href="/docs/getting-started.html">Quick Start</a><a href="/docs/fnkit-basics.html">fnkit Basics</a><a href="/docs/first-deployment.html">First Deployment</a></div>
+    <div class="sidebar-section"><div class="sidebar-title">Components</div><a href="/docs/components.html">Overview</a><a href="/docs/uns-sim.html">uns-sim</a><a href="/docs/uns-framework.html">uns-framework</a><a href="/docs/uns-cache.html">uns-cache</a><a href="/docs/uns-log.html">uns-log</a><a href="/docs/uns-historian.html">uns-historian</a><a href="/docs/uns-state.html">uns-state</a><a href="/docs/uns-stoppage.html">uns-stoppage</a><a href="/docs/uns-productivity.html">uns-productivity</a><a href="/docs/uns-input.html">uns-input</a><a href="/docs/uns-kpi.html">uns-kpi</a><a href="/docs/uns-dashboard.html">uns-dashboard</a><a href="/docs/uns-ai.html" class="active">uns-ai</a></div>
+    <div class="sidebar-section"><div class="sidebar-title">Guides</div><a href="/docs/configuration.html">Configuration</a><a href="/docs/manufacturing-kpis.html">Manufacturing KPIs</a><a href="/docs/api-reference.html">API Reference</a></div>
+    <div class="sidebar-section"><div class="sidebar-title">Developer</div><a href="/docs/code-patterns.html">Code Patterns</a><a href="/docs/extending.html">Extending</a><a href="/docs/database-schema.html">Database Schema</a></div>
+  </aside>
+  <main class="docs-content">
+    <h1>uns-ai — AI-Powered Analysis</h1>
+    <p class="page-desc">Runs AI analysis on live and historical manufacturing data. Built-in analysis types for anomaly detection, shift summaries, smart alerting, predictive maintenance, production optimisation, and root cause analysis.</p>
+    <table class="def-table"><tbody>
+        <tr><td>Language</td><td>Node.js</td></tr>
+        <tr><td>Type</td><td>HTTP function</td></tr>
+        <tr><td>Scaffolded with</td><td>fnkit node</td></tr>
+        <tr><td>Depends on</td><td>Valkey, PostgreSQL, MQTT Broker, AI Provider (OpenAI/Anthropic)</td></tr>
+    </tbody></table>
+
+    <h2>What It Does</h2>
+    <p>Reads live machine data from Valkey cache and historical data from PostgreSQL, assembles a rich context for the chosen analysis type, sends it to an AI provider, publishes results back to MQTT, and stores a full audit trail in PostgreSQL.</p>
+
+    <h2>Analysis Types</h2>
+    <table class="def-table">
+      <thead><tr><th>Type</th><th>Purpose</th><th>Data Sources</th></tr></thead>
+      <tbody>
+        <tr><td><code style="font-family:var(--font-mono);font-size:13px;background:var(--grey-100);padding:2px 8px;border-radius:4px;">anomaly</code></td><td>Detect abnormal machine behaviour</td><td>Live status, state history, baseline stats, alarms, tool data</td></tr>
+        <tr><td><code style="font-family:var(--font-mono);font-size:13px;background:var(--grey-100);padding:2px 8px;border-radius:4px;">shift-summary</code></td><td>Generate shift handover report</td><td>Live status, states, stoppages, production, scrap, operator notes</td></tr>
+        <tr><td><code style="font-family:var(--font-mono);font-size:13px;background:var(--grey-100);padding:2px 8px;border-radius:4px;">smart-alert</code></td><td>Contextual alert triage</td><td>Live status, recent alarms, stoppages, tool condition, production</td></tr>
+        <tr><td><code style="font-family:var(--font-mono);font-size:13px;background:var(--grey-100);padding:2px 8px;border-radius:4px;">predictive</code></td><td>Tool wear / maintenance prediction</td><td>Tool data, tool history, alarms, tool-related stoppages, baseline</td></tr>
+        <tr><td><code style="font-family:var(--font-mono);font-size:13px;background:var(--grey-100);padding:2px 8px;border-radius:4px;">optimisation</code></td><td>Machine-program assignment</td><td>Live status, production aggregates, scrap rates, reliability</td></tr>
+        <tr><td><code style="font-family:var(--font-mono);font-size:13px;background:var(--grey-100);padding:2px 8px;border-radius:4px;">root-cause</code></td><td>Explain why an alarm happened</td><td>State timeline, stoppages, tool condition, sensor history, notes</td></tr>
+        <tr><td><code style="font-family:var(--font-mono);font-size:13px;background:var(--grey-100);padding:2px 8px;border-radius:4px;">custom</code></td><td>User-defined prompt</td><td>Configurable — select which data sources to include</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Data Context Assembly</h2>
+    <p>Each analysis type automatically assembles the right data from across the UNS pipeline:</p>
+    <div class="yaml-block"><pre style="margin:0;font:inherit;white-space:pre">1. LIVE LAYER (Valkey cache)
+   └─ Status, program, tool payloads per machine
+
+2. HISTORY LAYER (PostgreSQL)
+   └─ uns_state, uns_stoppage, uns_productivity, uns_input, uns_historian
+
+3. AGGREGATE LAYER (computed at query time)
+   └─ Utilisation %, MTBF, MTTR, alarm frequency, stoppage pareto
+
+4. PROMPT ASSEMBLY
+   └─ System prompt (analysis-specific) + data context → AI provider</pre></div>
+
+    <h2>Config in Valkey</h2>
+    <div class="yaml-block"><pre style="margin:0;font:inherit;white-space:pre">docker exec fnkit-cache valkey-cli SET fnkit:config:uns-ai \
+  '{"provider":"openai","model":"gpt-4o-mini","analysis":"anomaly",
+    "machines":["cnc-01","cnc-02","cnc-03","cnc-04"],
+    "context":{"history_hours":24,"baseline_days":7},
+    "output_topic":"v1.0/enterprise/site1/ai/anomaly"}'</pre></div>
+    <p>Supports <code style="font-family:var(--font-mono);font-size:13px;background:var(--grey-100);padding:2px 8px;border-radius:4px;">openai</code> and <code style="font-family:var(--font-mono);font-size:13px;background:var(--grey-100);padding:2px 8px;border-radius:4px;">anthropic</code> providers. All responses are structured JSON with full token/latency tracking.</p>
+
+    <h2>API Usage</h2>
+    <div class="yaml-block"><pre style="margin:0;font:inherit;white-space:pre"># Run analysis (from config)
+curl https://api.fnkit.dev/uns-ai
+
+# Override analysis type
+curl "https://api.fnkit.dev/uns-ai?analysis=shift-summary&hours=8"
+
+# Filter to specific machine
+curl "https://api.fnkit.dev/uns-ai?machine=cnc-01"
+
+# Query past AI results
+curl "https://api.fnkit.dev/uns-ai?history=true&hours=24"
+
+# List available analysis types
+curl "https://api.fnkit.dev/uns-ai?types=true"</pre></div>
+
+    <h2>PostgreSQL Table</h2>
+    <div class="yaml-block"><pre style="margin:0;font:inherit;white-space:pre">CREATE TABLE IF NOT EXISTS uns_ai (
+  id BIGSERIAL PRIMARY KEY, logged_at TIMESTAMPTZ DEFAULT NOW(),
+  enterprise TEXT, site TEXT, area TEXT, machine TEXT,
+  provider TEXT, model TEXT, analysis TEXT,
+  prompt_tokens INT, completion_tokens INT, latency_ms INT,
+  input_data JSONB, response JSONB,
+  output_topic TEXT, published BOOLEAN );</pre></div>
+    <p>Every AI call is logged — full audit trail with token counts, latency, and the complete response.</p>
+
+    <h2>Quick Start</h2>
+    <div class="yaml-block"><pre style="margin:0;font:inherit;white-space:pre"># Set config in Valkey
+docker exec fnkit-cache valkey-cli SET fnkit:config:uns-ai \
+  '{"provider":"openai","model":"gpt-4o-mini","analysis":"anomaly",
+    "machines":["cnc-01","cnc-02","cnc-03","cnc-04"]}'
+
+# Set API key and start
+cp .env.example .env  # edit OPENAI_API_KEY
+cd uns-ai && docker compose up -d
+
+# Run an analysis
+curl http://localhost:8080/uns-ai</pre></div>
+
+    <div class="docs-nav-buttons">
+      <a href="/docs/uns-dashboard.html" class="docs-nav-btn"><span class="nav-label">Previous</span><span class="nav-title">uns-dashboard</span></a>
+      <a href="/docs/configuration.html" class="docs-nav-btn next"><span class="nav-label">Next</span><span class="nav-title">Configuration</span></a>
+    </div>
+  </main>
+</div>
+<script src="../shared.js"></script>
+</body>
+</html>

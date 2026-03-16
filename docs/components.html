@@ -33,13 +33,13 @@
     <div class="sidebar-section"><div class="sidebar-title">fn-uns</div><a href="/docs/">Overview</a></div>
     <div class="sidebar-section"><div class="sidebar-title">Introduction</div><a href="/docs/what-is-uns.html">What is the UNS?</a><a href="/docs/why-uns.html">Why UNS Matters</a><a href="/docs/why-faas.html">Why FaaS &amp; GitOps?</a><a href="/docs/architecture.html">Architecture</a></div>
     <div class="sidebar-section"><div class="sidebar-title">Getting Started</div><a href="/docs/getting-started.html">Quick Start</a><a href="/docs/fnkit-basics.html">fnkit Basics</a><a href="/docs/first-deployment.html">First Deployment</a></div>
-    <div class="sidebar-section"><div class="sidebar-title">Components</div><a href="/docs/components.html" class="active">Overview</a><a href="/docs/uns-sim.html">uns-sim</a><a href="/docs/uns-framework.html">uns-framework</a><a href="/docs/uns-cache.html">uns-cache</a><a href="/docs/uns-log.html">uns-log</a><a href="/docs/uns-historian.html">uns-historian</a><a href="/docs/uns-state.html">uns-state</a><a href="/docs/uns-stoppage.html">uns-stoppage</a><a href="/docs/uns-productivity.html">uns-productivity</a><a href="/docs/uns-input.html">uns-input</a><a href="/docs/uns-kpi.html">uns-kpi</a><a href="/docs/uns-dashboard.html">uns-dashboard</a></div>
+    <div class="sidebar-section"><div class="sidebar-title">Components</div><a href="/docs/components.html" class="active">Overview</a><a href="/docs/uns-sim.html">uns-sim</a><a href="/docs/uns-framework.html">uns-framework</a><a href="/docs/uns-cache.html">uns-cache</a><a href="/docs/uns-log.html">uns-log</a><a href="/docs/uns-historian.html">uns-historian</a><a href="/docs/uns-state.html">uns-state</a><a href="/docs/uns-stoppage.html">uns-stoppage</a><a href="/docs/uns-productivity.html">uns-productivity</a><a href="/docs/uns-input.html">uns-input</a><a href="/docs/uns-kpi.html">uns-kpi</a><a href="/docs/uns-dashboard.html">uns-dashboard</a><a href="/docs/uns-ai.html">uns-ai</a></div>
     <div class="sidebar-section"><div class="sidebar-title">Guides</div><a href="/docs/configuration.html">Configuration</a><a href="/docs/manufacturing-kpis.html">Manufacturing KPIs</a><a href="/docs/api-reference.html">API Reference</a></div>
     <div class="sidebar-section"><div class="sidebar-title">Developer</div><a href="/docs/code-patterns.html">Code Patterns</a><a href="/docs/extending.html">Extending</a><a href="/docs/database-schema.html">Database Schema</a></div>
   </aside>
   <main class="docs-content">
     <h1>Components</h1>
-    <p class="page-desc">The 10 functions that make up the UNS pipeline. They communicate through shared infrastructure — not through direct calls to each other.</p>
+    <p class="page-desc">The 11 functions that make up the UNS pipeline. They communicate through shared infrastructure — not through direct calls to each other.</p>
 
     <h2>Data Pipeline</h2>
     <div class="yaml-block">
@@ -63,6 +63,14 @@
 ┌──────────────────────────────────┼──────────────────────────┐
 │                        REPORT    │                           │
 │  uns-kpi ← reads all PostgreSQL tables ──→ JSON KPI response│
+└──────────────────────────────────┬──────────────────────────┘
+                                   │
+┌──────────────────────────────────┼──────────────────────────┐
+│                        AI        │                           │
+│  uns-ai ← reads Valkey + all PostgreSQL tables              │
+│         → calls AI provider (OpenAI / Anthropic)            │
+│         → publishes results to MQTT                         │
+│         → stores audit trail in PostgreSQL                  │
 └─────────────────────────────────────────────────────────────┘</pre>
     </div>
 
@@ -95,6 +103,14 @@
       <tbody>
         <tr><td><a href="/docs/uns-kpi.html">uns-kpi</a></td><td>Go</td><td>HTTP</td><td>Computes manufacturing KPIs from all data</td></tr>
         <tr><td><a href="/docs/uns-dashboard.html">uns-dashboard</a></td><td>Grafana</td><td>Dashboards</td><td>5 dashboards for real-time manufacturing visibility</td></tr>
+      </tbody>
+    </table>
+
+    <h2>AI Layer</h2>
+    <table class="def-table">
+      <thead><tr><th>Component</th><th>Language</th><th>Type</th><th>Purpose</th></tr></thead>
+      <tbody>
+        <tr><td><a href="/docs/uns-ai.html">uns-ai</a></td><td>Node.js</td><td>HTTP</td><td>AI-powered analysis: anomaly detection, shift summaries, smart alerting, predictive maintenance</td></tr>
       </tbody>
     </table>
 

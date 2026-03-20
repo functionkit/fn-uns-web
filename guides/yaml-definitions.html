@@ -1,0 +1,1695 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>YAML Definitions — Describing Your Factory as Code — UNS Framework</title>
+<meta name="description" content="An in-depth guide to the UNS Framework standard YAML definitions — why YAML, why GitOps, how monoliths fail at scale, and a hands-on walkthrough of describing a small CNC shop as version-controlled code. Includes every definition type, templates, generated MQTT topics, and multi-site scaling."/>
+<link rel="canonical" href="https://unsframework.com/guides/yaml-definitions.html" />
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>"/>
+<link rel="stylesheet" href="../style.css"/>
+<link rel="stylesheet" href="../docs.css"/>
+<style>
+/* Guide-specific styles */
+.guide-hero {
+  background: var(--grey-50);
+  border: 1px solid var(--grey-200);
+  border-radius: 12px;
+  padding: 32px;
+  margin-bottom: 48px;
+}
+.guide-hero-meta {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+.guide-hero-meta .tag {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--grey-700);
+  background: var(--grey-100);
+  padding: 4px 12px;
+  border-radius: 100px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.guide-hero h1 {
+  font-size: 32px !important;
+  margin-bottom: 12px !important;
+}
+.guide-hero .guide-subtitle {
+  font-size: 16px;
+  color: var(--grey-700);
+  line-height: 1.7;
+  max-width: 640px;
+}
+
+/* TOC */
+.guide-toc {
+  border: 1px solid var(--grey-200);
+  border-radius: 10px;
+  padding: 24px 28px;
+  margin: 24px 0 48px;
+}
+.guide-toc-title {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--grey-500);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+.guide-toc ol {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  counter-reset: toc;
+}
+.guide-toc ol li {
+  counter-increment: toc;
+  padding: 4px 0;
+}
+.guide-toc ol li a {
+  font-size: 14px;
+  color: var(--grey-700);
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: color 0.15s;
+}
+.guide-toc ol li a:hover { color: var(--black); }
+.guide-toc ol li a::before {
+  content: counter(toc, decimal-leading-zero);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--grey-400);
+  min-width: 20px;
+}
+
+/* Warning / info banners */
+.warning-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 16px 20px;
+  background: #fef3c7;
+  border: 1px solid #f59e0b;
+  border-radius: 10px;
+  margin: 24px 0;
+  font-size: 14px;
+  color: #92400e;
+  line-height: 1.6;
+}
+[data-theme="dark"] .warning-banner {
+  background: #451a03;
+  border-color: #b45309;
+  color: #fde68a;
+}
+.warning-banner .warning-icon {
+  flex-shrink: 0;
+  font-size: 16px;
+  margin-top: 1px;
+}
+
+.success-indicator {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  background: var(--grey-50);
+  border: 1px solid var(--grey-200);
+  border-radius: 8px;
+  margin: 16px 0;
+  font-size: 14px;
+  color: var(--grey-700);
+}
+.success-indicator .success-icon {
+  color: #16a34a;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+/* Persona cards */
+.persona-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 1px;
+  background: var(--grey-200);
+  border: 1px solid var(--grey-200);
+  border-radius: 10px;
+  overflow: hidden;
+  margin: 24px 0;
+}
+.persona-card {
+  background: var(--white);
+  padding: 24px;
+}
+.persona-card .persona-icon {
+  font-size: 20px;
+  margin-bottom: 8px;
+}
+.persona-card h4 {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--black);
+  margin-bottom: 8px;
+  letter-spacing: -0.01em;
+}
+.persona-card p {
+  font-size: 13px !important;
+  color: var(--grey-700);
+  line-height: 1.6;
+  margin-bottom: 0 !important;
+}
+
+/* Option cards */
+.option-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px;
+  background: var(--grey-200);
+  border: 1px solid var(--grey-200);
+  border-radius: 10px;
+  overflow: hidden;
+  margin: 24px 0;
+}
+.option-card {
+  background: var(--white);
+  padding: 24px;
+}
+.option-card h4 {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--black);
+  margin-bottom: 6px;
+}
+.option-card p {
+  font-size: 13px !important;
+  color: var(--grey-700);
+  line-height: 1.55;
+  margin-bottom: 0 !important;
+}
+
+/* Checklist */
+.checklist {
+  list-style: none;
+  padding: 0;
+  margin: 16px 0 24px;
+}
+.checklist li {
+  padding: 8px 0;
+  font-size: 14px;
+  color: var(--grey-700);
+  border-bottom: 1px solid var(--grey-100);
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  line-height: 1.5;
+}
+.checklist li:last-child { border-bottom: none; }
+.checklist .check {
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  border: 1.5px solid var(--grey-300);
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  margin-top: 2px;
+  color: var(--grey-500);
+}
+
+/* Network diagram */
+.network-diagram {
+  background: var(--grey-50);
+  border: 1px solid var(--grey-200);
+  border-radius: 12px;
+  padding: 32px;
+  margin: 24px 0;
+  text-align: center;
+  overflow-x: auto;
+}
+.network-diagram svg { max-width: 100%; height: auto; }
+
+/* Research callout */
+.research-callout {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 20px 24px;
+  background: var(--grey-50);
+  border: 1px solid var(--grey-200);
+  border-left: 3px solid var(--black);
+  border-radius: 0 10px 10px 0;
+  margin: 24px 0;
+  font-size: 13px;
+  color: var(--grey-700);
+  line-height: 1.65;
+}
+.research-callout .research-source {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--grey-500);
+  margin-top: 8px;
+}
+.research-callout strong {
+  color: var(--black);
+}
+
+/* Scroll-margin for anchor links */
+.docs-content h2[id] {
+  scroll-margin-top: 80px;
+}
+
+/* Animations */
+@keyframes yamlPulse {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 1; }
+}
+@keyframes yamlFlow {
+  to { stroke-dashoffset: -16; }
+}
+.yaml-pulse { animation: yamlPulse 2.4s ease-in-out infinite; }
+.yaml-pulse-d1 { animation-delay: 0s; }
+.yaml-pulse-d2 { animation-delay: 0.4s; }
+.yaml-pulse-d3 { animation-delay: 0.8s; }
+.yaml-pulse-d4 { animation-delay: 1.2s; }
+.yaml-flow { stroke-dasharray: 4 8; animation: yamlFlow 1.2s linear infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Print styles */
+@media print {
+  nav, .docs-sidebar, .menu-toggle, .mobile-menu { display: none !important; }
+  .docs-layout { grid-template-columns: 1fr !important; }
+  .docs-content { padding: 0 !important; max-width: 100% !important; }
+  .warning-banner, .info-banner, .success-indicator { break-inside: avoid; }
+  .def-table, .yaml-block, .network-diagram { break-inside: avoid; }
+  .guide-toc { break-inside: avoid; }
+  .docs-nav-buttons { display: none !important; }
+  * { color: #000 !important; animation: none !important; }
+}
+
+@media (max-width: 600px) {
+  .guide-hero { padding: 20px; }
+  .guide-hero h1 { font-size: 24px !important; }
+  .option-grid { grid-template-columns: 1fr; }
+  .persona-grid { grid-template-columns: 1fr; }
+  .guide-hero-meta { gap: 8px; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="logo">UNS Framework</a>
+  <div class="links">
+    <a href="/fn-uns/">fn-uns</a>
+    <a href="/framework/">Standard Docs</a>
+    <a href="/docs/">UNS Docs</a>
+    <a href="/guides/">Guides</a>
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+      <div class="toggle-thumb"><span class="toggle-icon-sun">☀</span><span class="toggle-icon-moon">☾</span></div>
+    </button>
+  </div>
+  <button class="menu-toggle" aria-label="Menu" aria-expanded="false">☰</button>
+  <div class="mobile-menu">
+    <a href="/fn-uns/">fn-uns</a>
+    <a href="/framework/">Standard Docs</a>
+    <a href="/docs/">UNS Docs</a>
+    <a href="/guides/">Guides</a>
+  </div>
+</nav>
+
+<div class="docs-layout">
+  <aside class="docs-sidebar">
+    <div class="sidebar-section">
+      <div class="sidebar-title">Guides</div>
+      <a href="/guides/">All Guides</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-title">This Guide</div>
+      <a href="#how-factories-are-described-today">How Factories Are Described Today</a>
+      <a href="#the-monolith-problem">The Monolith Problem</a>
+      <a href="#why-gitops">Why GitOps for Factory Definitions</a>
+      <a href="#why-yaml">Why YAML</a>
+      <a href="#the-standard-definitions">The Standard Definitions</a>
+      <a href="#walkthrough">Walkthrough: Describing a CNC Shop</a>
+      <a href="#templates">Templates &amp; Reuse</a>
+      <a href="#generated-topics">Generated MQTT Topics</a>
+      <a href="#yaml-to-running-system">From YAML to Running System</a>
+      <a href="#scaling-multi-site">Scaling to Multiple Sites</a>
+      <a href="#bottom-line">The Bottom Line</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-title">Related</div>
+      <a href="/framework/">Standard Docs</a>
+      <a href="/framework/core-definitions.html">Core Definitions</a>
+      <a href="/framework/example.html">Full Example</a>
+      <a href="/guides/digital-twin-gitops.html">Digital Twins &amp; GitOps</a>
+      <a href="/guides/flow-vs-gitops.html">Flow vs GitOps</a>
+    </div>
+  </aside>
+
+  <main class="docs-content">
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- HERO                                    -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="guide-hero">
+      <div class="guide-hero-meta">
+        <span class="tag">YAML</span>
+        <span class="tag">UNS Framework Standard</span>
+        <span class="tag">GitOps</span>
+        <span class="tag">ISA-95</span>
+        <span class="tag">~20 min read</span>
+      </div>
+      <h1>YAML Definitions — Describing Your Factory as Code</h1>
+      <p class="guide-subtitle">
+        An in-depth look at the UNS Framework standard YAML definitions — how factories are described today inside monolithic vendor tools, why that breaks at scale, and how a set of simple YAML files gives you a version-controlled, human-readable, machine-readable single source of truth for your entire manufacturing namespace. Includes a hands-on walkthrough of describing a small CNC shop from scratch.
+      </p>
+    </div>
+
+    <!-- TABLE OF CONTENTS -->
+    <div class="guide-toc">
+      <div class="guide-toc-title">Contents</div>
+      <ol>
+        <li><a href="#how-factories-are-described-today">How Factories Are Described Today</a></li>
+        <li><a href="#the-monolith-problem">The Monolith Problem at Scale</a></li>
+        <li><a href="#why-gitops">Why GitOps for Factory Definitions</a></li>
+        <li><a href="#why-yaml">Why YAML</a></li>
+        <li><a href="#the-standard-definitions">The UNS Framework Standard Definitions</a></li>
+        <li><a href="#walkthrough">Walkthrough: Describing a Small CNC Shop</a></li>
+        <li><a href="#templates">Templates &amp; Reuse with YAML Anchors</a></li>
+        <li><a href="#generated-topics">Generated MQTT Topics</a></li>
+        <li><a href="#yaml-to-running-system">From YAML to a Running System</a></li>
+        <li><a href="#scaling-multi-site">Scaling to Multiple Sites</a></li>
+        <li><a href="#bottom-line">The Bottom Line</a></li>
+      </ol>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- HOW FACTORIES ARE DESCRIBED TODAY       -->
+    <!-- ═══════════════════════════════════════ -->
+    <h2 id="how-factories-are-described-today">How Factories Are Described Today</h2>
+
+    <p>Every factory has a model of itself — a description of what machines exist, where they are, what they produce, and how data flows between systems. The problem is that this model almost never exists in one place. Instead, it's scattered across half a dozen systems, each with its own partial, incompatible view of reality.</p>
+
+    <h3>Where Factory Definitions Live Today</h3>
+
+    <table class="def-table">
+      <thead><tr><th>System</th><th>What It Knows</th><th>Format</th><th>Who Can Access It</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>SCADA / HMI</td>
+          <td>Tag names, alarm thresholds, screen layouts, PLC addresses</td>
+          <td>Proprietary binary project files (WinCC, FactoryTalk, Ignition)</td>
+          <td>The controls engineer who built it</td>
+        </tr>
+        <tr>
+          <td>MES</td>
+          <td>Work centres, routings, production orders, equipment IDs</td>
+          <td>Relational database tables (vendor-specific schema)</td>
+          <td>The MES administrator</td>
+        </tr>
+        <tr>
+          <td>ERP</td>
+          <td>Cost centres, asset numbers, depreciation schedules</td>
+          <td>SAP/Oracle tables, often with custom fields</td>
+          <td>Finance and IT</td>
+        </tr>
+        <tr>
+          <td>CMMS</td>
+          <td>Equipment hierarchy, maintenance schedules, spare parts</td>
+          <td>Another vendor database (Maximo, SAP PM, Fiix)</td>
+          <td>Maintenance team</td>
+        </tr>
+        <tr>
+          <td>Spreadsheets</td>
+          <td>Machine lists, IP addresses, sensor mappings, "the master list"</td>
+          <td>Excel files on a shared drive, emailed between teams</td>
+          <td>Whoever last saved it</td>
+        </tr>
+        <tr>
+          <td>Tribal knowledge</td>
+          <td>"CNC-03 is actually in Bay 4 now, not Bay 2 like the system says"</td>
+          <td>Someone's head</td>
+          <td>That one person who's been here 15 years</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p>The result is that <strong>no single system has a complete, accurate, up-to-date description of the factory</strong>. The SCADA knows the tag names but not the production context. The MES knows the work centres but not the sensor addresses. The spreadsheet was accurate six months ago. And the person who knows where CNC-03 actually is — they're on holiday.</p>
+
+    <div class="persona-grid">
+      <div class="persona-card">
+        <div class="persona-icon">🔧</div>
+        <h4>Manufacturing Engineer</h4>
+        <p>You've spent hours reconciling machine lists between the MES and the SCADA. The MES calls it "MC-2001." The SCADA calls it "CNC_Bay3_Mill." The ERP calls it "Asset 40071." They're all the same machine. Nobody documented the mapping — you just know.</p>
+      </div>
+      <div class="persona-card">
+        <div class="persona-icon">💻</div>
+        <h4>Developer</h4>
+        <p>You're building a dashboard and need to know what machines exist, what data they produce, and what topics to subscribe to. The answer is "ask Dave" or "check the spreadsheet on the S: drive." There's no API, no schema, no documentation you can programmatically consume.</p>
+      </div>
+      <div class="persona-card">
+        <div class="persona-icon">🖥️</div>
+        <h4>IT Engineer</h4>
+        <p>You need to replicate the MQTT topic structure at a new site. The original was configured manually in the broker and the SCADA over three months. Nobody wrote down the naming conventions. You're reverse-engineering the topic tree from a packet capture.</p>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- THE MONOLITH PROBLEM                    -->
+    <!-- ═══════════════════════════════════════ -->
+    <h2 id="the-monolith-problem">The Monolith Problem at Scale</h2>
+
+    <p>Each of those systems — SCADA, MES, ERP, CMMS — is a <strong>monolith</strong>. It owns its model of the factory, stores it in a proprietary format, and exposes it only through its own interface. This creates five fundamental problems that get worse as you scale.</p>
+
+    <h3>The Five Problems</h3>
+
+    <table class="def-table">
+      <thead><tr><th>Problem</th><th>What Happens</th><th>Why It Gets Worse at Scale</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><strong>No single source of truth</strong></td>
+          <td>Every system has a different, partial model. When they disagree — and they always disagree — there's no authoritative answer.</td>
+          <td>At 1 site with 10 machines, you can keep it in your head. At 5 sites with 500 machines, the inconsistencies multiply exponentially. Nobody knows which system is "right."</td>
+        </tr>
+        <tr>
+          <td><strong>No version control</strong></td>
+          <td>Someone changes a tag name in the SCADA, renames a work centre in the MES, or updates the spreadsheet. There's no record of what changed, when, or why.</td>
+          <td>Configuration drift becomes invisible. Six months later, the dashboard shows wrong data and nobody can trace when it broke. Regulated industries (aerospace, pharma) can't prove compliance.</td>
+        </tr>
+        <tr>
+          <td><strong>No portability</strong></td>
+          <td>The factory model is locked inside vendor-specific formats. You can't export your SCADA configuration and import it into a different tool. You can't diff two versions of your MES setup.</td>
+          <td>Migrating to a new SCADA vendor means rebuilding the entire configuration from scratch. Multi-vendor environments (common at scale) mean maintaining parallel models in incompatible formats.</td>
+        </tr>
+        <tr>
+          <td><strong>No automation</strong></td>
+          <td>Adding a new machine means manually updating the SCADA, the MES, the CMMS, the spreadsheet, and the MQTT broker. Each update is a separate, manual, error-prone process.</td>
+          <td>At scale, "add a machine" becomes a multi-week project involving 4 teams and 6 systems. The overhead of maintaining the model exceeds the value of the model itself.</td>
+        </tr>
+        <tr>
+          <td><strong>No reproducibility</strong></td>
+          <td>You can't take the factory definition from Site A and deploy it at Site B. Each site is configured independently, manually, from scratch.</td>
+          <td>Multi-site rollouts take months instead of minutes. Each site drifts independently. "Standard" configurations are aspirational, not enforced.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="research-callout">
+      <div>
+        <strong>A 2023 study by LNS Research found that manufacturers spend an average of 30% of their digital transformation budget on data integration and system reconciliation</strong> — not on building new capabilities, but on making existing systems agree on basic facts like "what machines do we have?" and "what data do they produce?" This is the tax you pay for having your factory model trapped inside monolithic vendor tools.
+        <div class="research-source">Source: LNS Research (2023) "The Cost of Data Integration in Manufacturing"; McKinsey (2022) "Unlocking the industrial IoT"</div>
+      </div>
+    </div>
+
+    <div class="network-diagram">
+      <svg viewBox="0 0 720 260" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <text x="360" y="16" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="600" fill="var(--grey-400)" text-anchor="middle" letter-spacing="0.1em">THE MONOLITH PROBLEM — EVERY SYSTEM HAS ITS OWN MODEL</text>
+
+        <!-- Factory (centre) -->
+        <rect x="260" y="90" width="200" height="60" rx="8" fill="var(--white)" stroke="var(--black)" stroke-width="1.5"/>
+        <text x="360" y="116" font-family="'JetBrains Mono', monospace" font-size="11" font-weight="600" fill="var(--black)" text-anchor="middle">Your Factory</text>
+        <text x="360" y="134" font-family="'JetBrains Mono', monospace" font-size="8" fill="var(--grey-500)" text-anchor="middle">The actual physical reality</text>
+
+        <!-- SCADA -->
+        <rect x="16" y="30" width="140" height="48" rx="6" fill="var(--white)" stroke="#ef4444" stroke-width="1.5"/>
+        <text x="86" y="52" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="600" fill="#ef4444" text-anchor="middle">SCADA</text>
+        <text x="86" y="66" font-family="'JetBrains Mono', monospace" font-size="7" fill="var(--grey-500)" text-anchor="middle">proprietary binary</text>
+        <line x1="156" y1="54" x2="260" y2="100" stroke="var(--grey-300)" stroke-width="1" stroke-dasharray="4 4"/>
+
+        <!-- MES -->
+        <rect x="16" y="170" width="140" height="48" rx="6" fill="var(--white)" stroke="#f59e0b" stroke-width="1.5"/>
+        <text x="86" y="192" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="600" fill="#f59e0b" text-anchor="middle">MES</text>
+        <text x="86" y="206" font-family="'JetBrains Mono', monospace" font-size="7" fill="var(--grey-500)" text-anchor="middle">vendor database</text>
+        <line x1="156" y1="194" x2="260" y2="140" stroke="var(--grey-300)" stroke-width="1" stroke-dasharray="4 4"/>
+
+        <!-- ERP -->
+        <rect x="564" y="30" width="140" height="48" rx="6" fill="var(--white)" stroke="#3b82f6" stroke-width="1.5"/>
+        <text x="634" y="52" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="600" fill="#3b82f6" text-anchor="middle">ERP</text>
+        <text x="634" y="66" font-family="'JetBrains Mono', monospace" font-size="7" fill="var(--grey-500)" text-anchor="middle">SAP / Oracle</text>
+        <line x1="564" y1="54" x2="460" y2="100" stroke="var(--grey-300)" stroke-width="1" stroke-dasharray="4 4"/>
+
+        <!-- CMMS -->
+        <rect x="564" y="170" width="140" height="48" rx="6" fill="var(--white)" stroke="#8b5cf6" stroke-width="1.5"/>
+        <text x="634" y="192" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="600" fill="#8b5cf6" text-anchor="middle">CMMS</text>
+        <text x="634" y="206" font-family="'JetBrains Mono', monospace" font-size="7" fill="var(--grey-500)" text-anchor="middle">Maximo / SAP PM</text>
+        <line x1="564" y1="194" x2="460" y2="140" stroke="var(--grey-300)" stroke-width="1" stroke-dasharray="4 4"/>
+
+        <!-- Spreadsheet -->
+        <rect x="290" y="190" width="140" height="48" rx="6" fill="var(--white)" stroke="#10b981" stroke-width="1.5"/>
+        <text x="360" y="212" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="600" fill="#10b981" text-anchor="middle">Spreadsheet</text>
+        <text x="360" y="226" font-family="'JetBrains Mono', monospace" font-size="7" fill="var(--grey-500)" text-anchor="middle">"the master list"</text>
+        <line x1="360" y1="150" x2="360" y2="190" stroke="var(--grey-300)" stroke-width="1" stroke-dasharray="4 4"/>
+
+        <!-- Conflict markers -->
+        <text x="200" y="88" font-family="'JetBrains Mono', monospace" font-size="8" fill="#ef4444" text-anchor="middle">≠</text>
+        <text x="520" y="88" font-family="'JetBrains Mono', monospace" font-size="8" fill="#ef4444" text-anchor="middle">≠</text>
+        <text x="200" y="168" font-family="'JetBrains Mono', monospace" font-size="8" fill="#ef4444" text-anchor="middle">≠</text>
+        <text x="520" y="168" font-family="'JetBrains Mono', monospace" font-size="8" fill="#ef4444" text-anchor="middle">≠</text>
+
+        <!-- Bottom label -->
+        <text x="360" y="256" font-family="'JetBrains Mono', monospace" font-size="8" fill="var(--grey-400)" text-anchor="middle">Every system disagrees. No single source of truth. No version control.</text>
+      </svg>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- WHY GITOPS                              -->
+    <!-- ═══════════════════════════════════════ -->
+    <h2 id="why-gitops">Why GitOps for Factory Definitions</h2>
+
+    <p>The software industry solved this exact problem 15 years ago. It was called <strong>"works on my machine"</strong> — every developer had a different environment, configured manually, impossible to reproduce. The solution was <strong>infrastructure as code</strong>: describe your infrastructure in version-controlled text files, and let tooling make reality match the description.</p>
+
+    <table class="def-table">
+      <thead><tr><th>Software World</th><th>Manufacturing World</th><th>The Pattern</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>Dockerfile</td>
+          <td>uns.yml + site.yml</td>
+          <td>Describe what you have in a text file. The file <em>is</em> the specification.</td>
+        </tr>
+        <tr>
+          <td>docker-compose.yml</td>
+          <td>function.yml + mqtt.yml + database.yml</td>
+          <td>Describe how components connect. Services, endpoints, ports.</td>
+        </tr>
+        <tr>
+          <td>Kubernetes manifests</td>
+          <td>UNS Framework YAML definitions</td>
+          <td>Declarative: describe the desired state, not the steps to get there.</td>
+        </tr>
+        <tr>
+          <td>Terraform</td>
+          <td>Multi-site YAML configs</td>
+          <td>Same definition, different environments. Reproducible deployments.</td>
+        </tr>
+        <tr>
+          <td><code style="font-family:var(--font-mono);font-size:12px;background:var(--grey-100);padding:1px 6px;border-radius:3px;">git diff</code></td>
+          <td><code style="font-family:var(--font-mono);font-size:12px;background:var(--grey-100);padding:1px 6px;border-radius:3px;">git diff site.yml</code></td>
+          <td>See exactly what changed, when, and who changed it.</td>
+        </tr>
+        <tr>
+          <td><code style="font-family:var(--font-mono);font-size:12px;background:var(--grey-100);padding:1px 6px;border-radius:3px;">git revert</code></td>
+          <td><code style="font-family:var(--font-mono);font-size:12px;background:var(--grey-100);padding:1px 6px;border-radius:3px;">git revert</code></td>
+          <td>Undo any change instantly. Roll back to any previous state.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p>The UNS Framework applies this same pattern to manufacturing. Instead of your factory model being trapped inside vendor databases, spreadsheets, and tribal knowledge, it lives in <strong>YAML files in a git repository</strong>. These files are:</p>
+
+    <ul class="checklist">
+      <li><span class="check" style="background:var(--black);color:var(--white);border-color:var(--black);">✓</span> <strong>Version-controlled</strong> — every change has an author, a timestamp, and a commit message explaining why</li>
+      <li><span class="check" style="background:var(--black);color:var(--white);border-color:var(--black);">✓</span> <strong>Diff-able</strong> — <code style="font-family:var(--font-mono);font-size:12px;background:var(--grey-100);padding:1px 6px;border-radius:3px;">git diff</code> shows exactly what changed between any two versions</li>
+      <li><span class="check" style="background:var(--black);color:var(--white);border-color:var(--black);">✓</span> <strong>Reviewable</strong> — pull requests let the team review changes before they go live</li>
+      <li><span class="check" style="background:var(--black);color:var(--white);border-color:var(--black);">✓</span> <strong>Reproducible</strong> — <code style="font-family:var(--font-mono);font-size:12px;background:var(--grey-100);padding:1px 6px;border-radius:3px;">git clone</code> at a new site gives you an identical factory definition</li>
+      <li><span class="check" style="background:var(--black);color:var(--white);border-color:var(--black);">✓</span> <strong>Auditable</strong> — <code style="font-family:var(--font-mono);font-size:12px;background:var(--grey-100);padding:1px 6px;border-radius:3px;">git log</code> provides a complete, immutable audit trail for regulators</li>
+      <li><span class="check" style="background:var(--black);color:var(--white);border-color:var(--black);">✓</span> <strong>Machine-readable</strong> — any tool, script, or application can parse YAML and act on it</li>
+      <li><span class="check" style="background:var(--black);color:var(--white);border-color:var(--black);">✓</span> <strong>Human-readable</strong> — an engineer can open the file and understand the factory structure immediately</li>
+    </ul>
+
+    <div class="research-callout">
+      <div>
+        <strong>The GitOps pattern has been validated at massive scale in software infrastructure.</strong> A 2024 CNCF survey found that 76% of organisations using Kubernetes manage their infrastructure through GitOps workflows. The key insight that transfers to manufacturing: <strong>the git repository becomes the single source of truth</strong>, and every other system derives its state from that truth — not the other way around.
+        <div class="research-source">Source: CNCF (2024) "Annual Survey: GitOps Adoption"; Weaveworks (2023) "The State of GitOps"</div>
+      </div>
+    </div>
+
+    <div class="option-grid">
+      <div class="option-card">
+        <h4>Without GitOps</h4>
+        <p>"We added CNC-05 last Tuesday. I updated the SCADA and the spreadsheet. I think someone updated the MES. The CMMS still shows the old layout. The MQTT topics were configured manually — I'm not sure if the naming matches the convention we used for the other machines."</p>
+      </div>
+      <div class="option-card">
+        <h4>With YAML + GitOps</h4>
+        <p><code style="font-family:var(--font-mono);font-size:12px;background:var(--grey-100);padding:1px 6px;border-radius:3px;">git log --oneline site.yml</code> → <code style="font-family:var(--font-mono);font-size:12px;">a3f2c1d Add CNC-05 to Area 1, Cell 2</code>. One file changed. One commit. The MQTT topics, the naming convention, the sensor model — all defined in the same YAML, all version-controlled, all consistent.</p>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- WHY YAML                                -->
+    <!-- ═══════════════════════════════════════ -->
+    <h2 id="why-yaml">Why YAML</h2>
+
+    <p>The UNS Framework uses YAML as its definition language. This isn't an arbitrary choice — YAML has specific properties that make it the right format for describing manufacturing infrastructure.</p>
+
+    <h3>YAML vs Alternatives</h3>
+
+    <table class="def-table">
+      <thead><tr><th>Format</th><th>Human-Readable</th><th>Machine-Readable</th><th>Supports Hierarchy</th><th>Templates / Reuse</th><th>Industry Adoption</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><strong>YAML</strong></td>
+          <td>✓ Excellent — indentation-based, minimal syntax</td>
+          <td>✓ Parsers in every language</td>
+          <td>✓ Native nesting</td>
+          <td>✓ Anchors &amp; aliases (<code style="font-family:var(--font-mono);font-size:11px;">&amp;</code> / <code style="font-family:var(--font-mono);font-size:11px;">*</code>)</td>
+          <td>Docker Compose, Kubernetes, GitHub Actions, Ansible, CloudFormation</td>
+        </tr>
+        <tr>
+          <td>JSON</td>
+          <td>Moderate — brackets and quotes add noise</td>
+          <td>✓ Universal</td>
+          <td>✓ Native nesting</td>
+          <td>✗ No native reuse mechanism</td>
+          <td>APIs, config files, data exchange</td>
+        </tr>
+        <tr>
+          <td>XML</td>
+          <td>Poor — verbose, tag-heavy</td>
+          <td>✓ Mature parsers</td>
+          <td>✓ Native nesting</td>
+          <td>Partial (XInclude, entities)</td>
+          <td>Legacy enterprise, OPC UA, B2MML</td>
+        </tr>
+        <tr>
+          <td>TOML</td>
+          <td>Good for flat config</td>
+          <td>✓ Growing support</td>
+          <td>Limited — deep nesting is awkward</td>
+          <td>✗ No native reuse</td>
+          <td>Rust ecosystem, some config files</td>
+        </tr>
+        <tr>
+          <td>Proprietary binary</td>
+          <td>✗ Requires vendor tool</td>
+          <td>✗ Vendor-locked</td>
+          <td>Varies</td>
+          <td>Varies</td>
+          <td>SCADA, PLC, MES vendor tools</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p>YAML wins on the combination that matters most for factory definitions: <strong>a manufacturing engineer can read and edit it without special tools</strong>, while <strong>any software system can parse and act on it programmatically</strong>. It's the same reason Docker chose YAML for Compose files and Kubernetes chose it for manifests — the format disappears, and you focus on what you're describing.</p>
+
+    <h3>Key YAML Features for Factory Definitions</h3>
+
+    <div class="yaml-block"><pre style="margin:0;font:inherit;white-space:pre"><span class="yaml-comment"># 1. Hierarchy maps naturally to ISA-95</span>
+<span class="yaml-key">site:</span>
+  - <span class="yaml-key">name:</span> <span class="yaml-val">Detroit</span>
+    <span class="yaml-key">area:</span>
+      - <span class="yaml-key">name:</span> <span class="yaml-val">Machining</span>
+        <span class="yaml-key">line:</span>
+          - <span class="yaml-key">name:</span> <span class="yaml-val">CNC Line 1</span>
+            <span class="yaml-key">cell:</span>
+              - <span class="yaml-key">name:</span> <span class="yaml-val">Cell A</span>
+
+<span class="yaml-comment"># 2. Anchors eliminate repetition</span>
+<span class="yaml-key">template_cnc:</span> <span class="yaml-val">&amp;cnc_sensor</span>
+  <span class="yaml-key">information_model:</span>
+    <span class="yaml-key">status:</span> { <span class="yaml-key">data_type:</span> <span class="yaml-val">string</span> }
+    <span class="yaml-key">spindle_speed:</span> { <span class="yaml-key">data_type:</span> <span class="yaml-val">float</span> }
+
+<span class="yaml-comment"># 3. Aliases reuse templates — DRY principle</span>
+<span class="yaml-key">sensors:</span>
+  - <span class="yaml-key">id:</span> <span class="yaml-val">S1</span>
+    <span class="yaml-key">&lt;&lt;:</span> <span class="yaml-val">*cnc_sensor</span>    <span class="yaml-comment"># Inherits the full template</span>
+  - <span class="yaml-key">id:</span> <span class="yaml-val">S2</span>
+    <span class="yaml-key">&lt;&lt;:</span> <span class="yaml-val">*cnc_sensor</span>    <span class="yaml-comment"># Same template, different sensor</span>
+
+<span class="yaml-comment"># 4. Comments document intent — crucial for team collaboration</span>
+<span class="yaml-comment"># Added 2026-03-15 — new mill installed in Cell A</span>
+<span class="yaml-comment"># Approved by: J. Smith (maintenance) + M. Chen (controls)</span></pre></div>
+
+    <div class="success-indicator">
+      <span class="success-icon">✓</span>
+      <strong>YAML is not a new technology to learn.</strong> If your team uses Docker Compose, Kubernetes, GitHub Actions, or Ansible — they already know YAML. The UNS Framework leverages this existing knowledge rather than introducing a proprietary format.
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- THE STANDARD DEFINITIONS                -->
+    <!-- ═══════════════════════════════════════ -->
+    <h2 id="the-standard-definitions">The UNS Framework Standard Definitions</h2>
+
+    <p>The UNS Framework defines a set of <strong>standard YAML definition types</strong> that together describe your entire manufacturing namespace. Each definition type maps to a specific concept in the ISA-95 hierarchy or the supporting infrastructure. Think of them as building blocks — you compose them to describe your specific factory.</p>
+
+    <h3>The Definition Types</h3>
+
+    <table class="def-table">
+      <thead><tr><th>Definition</th><th>File</th><th>What It Describes</th><th>ISA-95 Level</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><strong><a href="/framework/uns.html" style="color:var(--black);border-bottom:1px solid var(--grey-300);">UNS</a></strong></td>
+          <td><code style="font-family:var(--font-mono);font-size:11px;">uns.yml</code></td>
+          <td>The namespace itself — name, region, timezone, topic structure, topic standard, information model</td>
+          <td>Enterprise</td>
+        </tr>
+        <tr>
+          <td><strong><a href="/framework/site.html" style="color:var(--black);border-bottom:1px solid var(--grey-300);">Site</a></strong></td>
+          <td><code style="font-family:var(--font-mono);font-size:11px;">site.yml</code></td>
+          <td>A physical or logical location — factory, plant, building</td>
+          <td>Level 4 — Site</td>
+        </tr>
+        <tr>
+          <td><strong><a href="/framework/area.html" style="color:var(--black);border-bottom:1px solid var(--grey-300);">Area</a></strong></td>
+          <td><code style="font-family:var(--font-mono);font-size:11px;">site.yml</code></td>
+          <td>A subdivision within a site — building, floor, department, bay</td>
+          <td>Level 3 — Area</td>
+        </tr>
+        <tr>
+          <td><strong><a href="/framework/line.html" style="color:var(--black);border-bottom:1px solid var(--grey-300);">Line</a></strong></td>
+          <td><code style="font-family:var(--font-mono);font-size:11px;">site.yml</code></td>
+          <td>A production line within an area</td>
+          <td>Level 3 — Line</td>
+        </tr>
+        <tr>
+          <td><strong><a href="/framework/cell.html" style="color:var(--black);border-bottom:1px solid var(--grey-300);">Cell</a></strong></td>
+          <td><code style="font-family:var(--font-mono);font-size:11px;">site.yml</code></td>
+          <td>A workstation or unit within a line</td>
+          <td>Level 2 — Cell</td>
+        </tr>
+        <tr>
+          <td><strong><a href="/framework/equipment.html" style="color:var(--black);border-bottom:1px solid var(--grey-300);">Equipment</a></strong></td>
+          <td><code style="font-family:var(--font-mono);font-size:11px;">site.yml</code></td>
+          <td>A machine, device, or hardware that performs tasks</td>
+          <td>Level 1 — Equipment</td>
+        </tr>
+        <tr>
+          <td><strong><a href="/framework/sensor.html" style="color:var(--black);border-bottom:1px solid var(--grey-300);">Sensor</a></strong></td>
+          <td><code style="font-family:var(--font-mono);font-size:11px;">site.yml</code></td>
+          <td>A data source attached to equipment — temperature, pressure, status, position</td>
+          <td>Level 0 — Sensor</td>
+        </tr>
+        <tr>
+          <td><strong><a href="/framework/function.html" style="color:var(--black);border-bottom:1px solid var(--grey-300);">Function</a></strong></td>
+          <td><code style="font-family:var(--font-mono);font-size:11px;">function.yml</code></td>
+          <td>A self-contained block of code that processes data in the namespace</td>
+          <td>Processing</td>
+        </tr>
+        <tr>
+          <td><strong><a href="/framework/producer.html" style="color:var(--black);border-bottom:1px solid var(--grey-300);">Producer</a></strong></td>
+          <td><code style="font-family:var(--font-mono);font-size:11px;">producer.yml</code></td>
+          <td>An entity that sends data into the namespace — PLC gateway, Node-RED flow, OPC UA client</td>
+          <td>Data source</td>
+        </tr>
+        <tr>
+          <td><strong><a href="/framework/consumer.html" style="color:var(--black);border-bottom:1px solid var(--grey-300);">Consumer</a></strong></td>
+          <td><code style="font-family:var(--font-mono);font-size:11px;">consumer.yml</code></td>
+          <td>An entity that receives data from the namespace — ERP, MES, dashboard, analytics</td>
+          <td>Data sink</td>
+        </tr>
+        <tr>
+          <td><strong><a href="/framework/mqtt.html" style="color:var(--black);border-bottom:1px solid var(--grey-300);">MQTT</a></strong></td>
+          <td><code style="font-family:var(--font-mono);font-size:11px;">mqtt.yml</code></td>
+          <td>The MQTT broker — host, port, credentials</td>
+          <td>Infrastructure</td>
+        </tr>
+        <tr>
+          <td><strong><a href="/framework/database.html" style="color:var(--black);border-bottom:1px solid var(--grey-300);">Database</a></strong></td>
+          <td><code style="font-family:var(--font-mono);font-size:11px;">database.yml</code></td>
+          <td>The database for historical storage — host, port, credentials</td>
+          <td>Infrastructure</td>
+        </tr>
+        <tr>
+          <td><strong><a href="/framework/artifact.html" style="color:var(--black);border-bottom:1px solid var(--grey-300);">Artifact</a></strong></td>
+          <td><code style="font-family:var(--font-mono);font-size:11px;">artifact.yml</code></td>
+          <td>Static data and reusable templates — equipment specs, sensor catalogues</td>
+          <td>Reference data</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>How They Map to ISA-95</h3>
+
+    <p>The physical hierarchy definitions (Site → Area → Line → Cell → Equipment → Sensor) map directly to the ISA-95 equipment hierarchy standard. This isn't accidental — ISA-95 is the most widely adopted standard for describing manufacturing operations, and the UNS Framework's YAML structure mirrors it exactly.</p>
+
+    <div class="network-diagram">
+      <svg viewBox="0 0 720 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <text x="360" y="16" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="600" fill="var(--grey-400)" text-anchor="middle" letter-spacing="0.1em">YAML DEFINITIONS → ISA-95 HIERARCHY → MQTT TOPICS</text>
+
+        <!-- Column headers -->
+        <text x="120" y="42" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="600" fill="var(--black)" text-anchor="middle">YAML Definition</text>
+        <text x="360" y="42" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="600" fill="var(--black)" text-anchor="middle">ISA-95 Level</text>
+        <text x="600" y="42" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="600" fill="var(--black)" text-anchor="middle">MQTT Topic Segment</text>
+
+        <!-- UNS -->
+        <rect x="30" y="56" width="180" height="28" rx="4" fill="var(--white)" stroke="var(--grey-200)" stroke-width="1"/>
+        <text x="120" y="74" font-family="'JetBrains Mono', monospace" font-size="9" fill="var(--black)" text-anchor="middle">uns.yml → version</text>
+        <rect x="270" y="56" width="180" height="28" rx="4" fill="var(--white)" stroke="var(--grey-200)" stroke-width="1"/>
+        <text x="360" y="74" font-family="'JetBrains Mono', monospace" font-size="9" fill="var(--grey-500)" text-anchor="middle">Enterprise</text>
+        <rect x="510" y="56" width="180" height="28" rx="4" fill="var(--white)" stroke="var(--black)" stroke-width="1.5"/>
+        <text x="600" y="74" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="600" fill="var(--black)" text-anchor="middle">v1.0/</text>
+
+        <!-- Connectors -->
+        <line x1="210" y1="70" x2="270" y2="70" stroke="var(--grey-300)" stroke-width="1"/>
+        <line x1="450" y1="70" x2="510" y2="70" stroke="var(--grey-300)" stroke-width="1"/>
+
+        <!-- Site -->
+        <rect x="30" y="92" width="180" height="28" rx="4" fill="var(--white)" stroke="var(--grey-200)" stroke-width="1"/>
+        <text x="120" y="110" font-family="'JetBrains Mono', monospace" font-size="9" fill="var(--black)" text-anchor="middle">site: name / id</text>
+        <rect x="270" y="92" width="180" height="28" rx="4" fill="var(--white)" stroke="var(--grey-200)" stroke-width="1"/>
+        <text x="360" y="110" font-family="'JetBrains Mono', monospace" font-size="9" fill="var(--grey-500)" text-anchor="middle">Level 4 — Site</text>
+        <rect x="510" y="92" width="180" height="28" rx="4" fill="var(--white)" stroke="var(--black)" stroke-width="1.5"/>
+        <text x="600" y="110" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="600" fill="var(--black)" text-anchor="middle">v1.0/detroit/</text>
+        <line x1="210" y1="106" x2="270" y2="106" stroke="var(--grey-300)" stroke-width="1"/>
+        <line x1="450" y1="106" x2="510" y2="106" stroke="var(--grey-300)" stroke-width="1"/>
+
+        <!-- Area -->
+        <rect x="30" y="128" width="180" height="28" rx="4" fill="var(--white)" stroke="var(--grey-200)" stroke-width="1"/>
+        <text x="120" y="146" font-family="'JetBrains Mono', monospace" font-size="9" fill="var(--black)" text-anchor="middle">area: name / id</text>
+        <rect x="270" y="128" width="180" height="28" rx="4" fill="var(--white)" stroke="var(--grey-200)" stroke-width="1"/>
+        <text x="360" y="146" font-family="'JetBrains Mono', monospace" font-size="9" fill="var(--grey-500)" text-anchor="middle">Level 3 — Area</text>
+        <rect x="510" y="128" width="180" height="28" rx="4" fill="var(--white)" stroke="var(--black)" stroke-width="1.5"/>
+        <text x="600" y="146" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="600" fill="var(--black)" text-anchor="middle">v1.0/detroit/machining/</text>
+        <line x1="210" y1="142" x2="270" y2="142" stroke="var(--grey-300)" stroke-width="1"/>
+        <line x1="450" y1="142" x2="510" y2="142" stroke="var(--grey-300)" stroke-width="1"/>
+
+        <!-- Line / Cell -->
+        <rect x="30" y="164" width="180" height="28" rx="4" fill="var(--white)" stroke="var(--grey-200)" stroke-width="1"/>
+        <text x="120" y="182" font-family="'JetBrains Mono', monospace" font-size="9" fill="var(--black)" text-anchor="middle">line → cell</text>
+        <rect x="270" y="164" width="180" height="28" rx="4" fill="var(--white)" stroke="var(--grey-200)" stroke-width="1"/>
+        <text x="360" y="182" font-family="'JetBrains Mono', monospace" font-size="9" fill="var(--grey-500)" text-anchor="middle">Level 3/2 — Line / Cell</text>
+        <rect x="510" y="164" width="180" height="28" rx="4" fill="var(--white)" stroke="var(--black)" stroke-width="1.5"/>
+        <text x="600" y="182" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="600" fill="var(--black)" text-anchor="middle">.../line1/cell-a/</text>
+        <line x1="210" y1="178" x2="270" y2="178" stroke="var(--grey-300)" stroke-width="1"/>
+        <line x1="450" y1="178" x2="510" y2="178" stroke="var(--grey-300)" stroke-width="1"/>
+
+        <!-- Equipment -->
+        <rect x="30" y="200" width="180" height="28" rx="4" fill="var(--white)" stroke="var(--grey-200)" stroke-width="1"/>
+        <text x="120" y="218" font-family="'JetBrains Mono', monospace" font-size="9" fill="var(--black)" text-anchor="middle">equipment: id / name</text>
+        <rect x="270" y="200" width="180" height="28" rx="4" fill="var(--white)" stroke="var(--grey-200)" stroke-width="1"/>
+        <text x="360" y="218" font-family="'JetBrains Mono', monospace" font-size="9" fill="var(--grey-500)" text-anchor="middle">Level 1 — Equipment</text>
+        <rect x="510" y="200" width="180" height="28" rx="4" fill="var(--white)" stroke="var(--black)" stroke-width="1.5"/>
+        <text x="600" y="218" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="600" fill="var(--black)" text-anchor="middle">.../cell-a/cnc-01/</text>
+        <line x1="210" y1="214" x2="270" y2="214" stroke="var(--grey-300)" stroke-width="1"/>
+        <line x1="450" y1="214" x2="510" y2="214" stroke="var(--grey-300)" stroke-width="1"/>
+
+        <!-- Sensor -->
+        <rect x="30" y="236" width="180" height="28" rx="4" fill="var(--white)" stroke="var(--grey-200)" stroke-width="1"/>
+        <text x="120" y="254" font-family="'JetBrains Mono', monospace" font-size="9" fill="var(--black)" text-anchor="middle">sensor: id + info model</text>
+        <rect x="270" y="236" width="180" height="28" rx="4" fill="var(--white)" stroke="var(--grey-200)" stroke-width="1"/>
+        <text x="360" y="254" font-family="'JetBrains Mono', monospace" font-size="9" fill="var(--grey-500)" text-anchor="middle">Level 0 — Sensor</text>
+        <rect x="510" y="236" width="180" height="28" rx="4" fill="var(--white)" stroke="var(--black)" stroke-width="1.5"/>
+        <text x="600" y="254" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="600" fill="var(--black)" text-anchor="middle">.../cnc-01/s1/status</text>
+        <line x1="210" y1="250" x2="270" y2="250" stroke="var(--grey-300)" stroke-width="1"/>
+        <line x1="450" y1="250" x2="510" y2="250" stroke="var(--grey-300)" stroke-width="1"/>
+
+        <!-- Vertical connectors on right -->
+        <line x1="600" y1="84" x2="600" y2="92" stroke="var(--grey-200)" stroke-width="1"/>
+        <line x1="600" y1="120" x2="600" y2="128" stroke="var(--grey-200)" stroke-width="1"/>
+        <line x1="600" y1="156" x2="600" y2="164" stroke="var(--grey-200)" stroke-width="1"/>
+        <line x1="600" y1="192" x2="600" y2="200" stroke="var(--grey-200)" stroke-width="1"/>
+        <line x1="600" y1="228" x2="600" y2="236" stroke="var(--grey-200)" stroke-width="1"/>
+
+        <!-- Bottom label -->
+        <text x="360" y="286" font-family="'JetBrains Mono', monospace" font-size="8" fill="var(--grey-400)" text-anchor="middle">Each YAML definition maps to an ISA-95 level and generates an MQTT topic segment</text>
+      </svg>
+    </div>
+
+    <div class="success-indicator">
+      <span class="success-icon">✓</span>
+      <strong>The UNS Framework is not a software product — it's a descriptive standard.</strong> It doesn't replace your SCADA, MES, or MQTT broker. It describes what you have in a portable, version-controlled format that any system can consume. Think of it as a Dockerfile for your factory.
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- WALKTHROUGH                             -->
+    <!-- ═══════════════════════════════════════ -->
+    <h2 id="walkthrough">Walkthrough: Describing a Small CNC Shop</h2>
+
+    <p>Let's build a complete set of UNS Framework YAML definitions from scratch. We'll describe a small CNC machining shop with 2 machines in 1 area — enough to see every definition type in action, small enough to understand completely.</p>
+
+    <h3>The Physical Reality</h3>
+
+    <p>Our shop has:</p>
+    <ul class="checklist">
+      <li><span class="check">•</span> <strong>1 site</strong> — a factory in Detroit</li>
+      <li><span class="check">•</span> <strong>1 area</strong> — the machining department</li>
+      <li><span class="check">•</span> <strong>1 line</strong> — CNC Line 1</li>
+      <li><span class="check">•</span> <strong>1 cell</strong> — Cell A (a group of machines that work together)</li>
+      <li><span class="check">•</span> <strong>2 machines</strong> — a Haas VF-2 mill (cnc-01) and a DMG Mori lathe (cnc-02)</li>
+      <li><span class="check">•</span> <strong>1 sensor per machine</strong> — each publishing status, spindle speed, program, and tool data</li>
+      <li><span class="check">•</span> <strong>1 environment sensor</strong> — temperature monitoring in the cell</li>
+      <li><span class="check">•</span> <strong>1 MQTT broker</strong> — Eclipse Mosquitto running locally</li>
+      <li><span class="check">•</span> <strong>1 database</strong> — PostgreSQL for historical storage</li>
+      <li><span class="check">•</span> <strong>2 functions</strong> — state tracking and historical logging</li>
+      <li><span class="check">•</span> <strong>1 producer</strong> — a Node-RED flow reading from the PLCs</li>
+      <li><span class="check">•</span> <strong>1 consumer</strong> — the ERP system pulling production data</li>
+    </ul>
+
+    <h3>Step 1: uns.yml — Define the Namespace</h3>
+
+    <p>Start with the namespace itself. This file describes the top-level configuration — what version of the standard you're using, the topic structure, and the information model.</p>
+
+    <div class="yaml-block"><pre style="margin:0;font:inherit;white-space:pre"><span class="yaml-comment"># uns.yml — the namespace definition</span>
+<span class="yaml-comment"># This is the root of your factory-as-code description.</span>
+
+<span class="yaml-key">version:</span> <span class="yaml-val">'1.0'</span>
+
+<span class="yaml-key">uns:</span>
+  <span class="yaml-key">name:</span> <span class="yaml-val">'Detroit CNC Shop'</span>
+  <span class="yaml-key">region:</span> <span class="yaml-val">'US'</span>
+  <span class="yaml-key">timezone:</span> <span class="yaml-val">'America/Detroit'</span>
+  <span class="yaml-key">topic_structure:</span> <span class="yaml-val">'version/site/area/line/cell/equipment/sensor/information_model/'</span>
+  <span class="yaml-key">topic_standard:</span> <span class="yaml-val">'ISA95'</span>
+  <span class="yaml-key">information_model:</span> <span class="yaml-val">'User Defined'</span></pre></div>
+
+    <p>This tells anyone — human or machine — that this namespace follows ISA-95, uses a versioned topic structure, and is located in the US Eastern timezone. The <code style="font-family:var(--font-mono);font-size:12px;background:var(--grey-100);padding:1px 6px;border-radius:3px;">topic_structure</code> field is the blueprint for how every MQTT topic in the namespace will be constructed.</p>
+
+    <h3>Step 2: site.yml — Describe the Physical Hierarchy</h3>
+
+    <p>This is the most important file — it describes the physical structure of your factory, from site down to individual sensors. The hierarchy is nested, just like the physical reality.</p>
+
+    <div class="yaml-block"><pre style="margin:0;font:inherit;white-space:pre"><span class="yaml-comment"># site.yml — the physical hierarchy</span>
+<span class="yaml-comment"># Site → Area → Line → Cell → Equipment → Sensors</span>
+
+<span class="yaml-key">version:</span> <span class="yaml-val">'1.0'</span>
+
+<span class="yaml-comment"># ── Templates (defined once, reused everywhere) ──────────────</span>
+
+<span class="yaml-key">template_equipment:</span> <span class="yaml-val">&amp;template_equipment</span>
+  <span class="yaml-key">dataops:</span>
+    <span class="yaml-key">normalization:</span>
+      <span class="yaml-key">units:</span> <span class="yaml-val">'mm'</span>
+    <span class="yaml-key">transformation:</span>
+      <span class="yaml-key">timezone:</span> <span class="yaml-val">'utc'</span>
+
+<span class="yaml-key">template_sensor_cnc:</span> <span class="yaml-val">&amp;template_sensor_cnc</span>
+  <span class="yaml-key">information_model:</span>
+    <span class="yaml-key">status:</span>
+      <span class="yaml-key">data_type:</span> <span class="yaml-val">string</span>       <span class="yaml-comment"># ACTIVE, IDLE, ALARM, SETUP, OFFLINE</span>
+    <span class="yaml-key">spindle_speed:</span>
+      <span class="yaml-key">data_type:</span> <span class="yaml-val">float</span>        <span class="yaml-comment"># RPM</span>
+    <span class="yaml-key">feed_rate:</span>
+      <span class="yaml-key">data_type:</span> <span class="yaml-val">float</span>        <span class="yaml-comment"># mm/min</span>
+    <span class="yaml-key">program:</span>
+      <span class="yaml-key">data_type:</span> <span class="yaml-val">string</span>       <span class="yaml-comment"># Current program name</span>
+    <span class="yaml-key">tool:</span>
+      <span class="yaml-key">data_type:</span> <span class="yaml-val">string</span>       <span class="yaml-comment"># Current tool ID</span>
+    <span class="yaml-key">spindle_load:</span>
+      <span class="yaml-key">data_type:</span> <span class="yaml-val">float</span>        <span class="yaml-comment"># Percentage</span>
+
+<span class="yaml-key">template_sensor_env:</span> <span class="yaml-val">&amp;template_sensor_env</span>
+  <span class="yaml-key">information_model:</span>
+    <span class="yaml-key">temperature:</span>
+      <span class="yaml-key">data_type:</span> <span class="yaml-val">float</span>        <span class="yaml-comment"># Celsius</span>
+    <span class="yaml-key">humidity:</span>
+      <span class="yaml-key">data_type:</span> <span class="yaml-val">float</span>        <span class="yaml-comment"># Percentage</span>
+
+<span class="yaml-comment"># ── Physical Hierarchy ────────────────────────────────────────</span>
+
+<span class="yaml-key">site:</span>
+  - <span class="yaml-key">name:</span> <span class="yaml-val">Detroit</span>
+    <span class="yaml-key">id:</span> <span class="yaml-val">detroit</span>
+    <span class="yaml-key">location:</span> <span class="yaml-val">'Detroit, MI, USA'</span>
+    <span class="yaml-key">area:</span>
+      - <span class="yaml-key">name:</span> <span class="yaml-val">Machining</span>
+        <span class="yaml-key">id:</span> <span class="yaml-val">machining</span>
+        <span class="yaml-key">line:</span>
+          - <span class="yaml-key">name:</span> <span class="yaml-val">CNC Line 1</span>
+            <span class="yaml-key">id:</span> <span class="yaml-val">line1</span>
+            <span class="yaml-key">cell:</span>
+              - <span class="yaml-key">name:</span> <span class="yaml-val">Cell A</span>
+                <span class="yaml-key">id:</span> <span class="yaml-val">cell-a</span>
+                <span class="yaml-key">equipment:</span>
+                  - <span class="yaml-key">id:</span> <span class="yaml-val">'cnc-01'</span>
+                    <span class="yaml-key">name:</span> <span class="yaml-val">'Haas VF-2 Mill'</span>
+                    <span class="yaml-key">&lt;&lt;:</span> <span class="yaml-val">*template_equipment</span>
+                    <span class="yaml-key">sensors:</span>
+                      - <span class="yaml-key">id:</span> <span class="yaml-val">'s1'</span>
+                        <span class="yaml-key">&lt;&lt;:</span> <span class="yaml-val">*template_sensor_cnc</span>
+
+                  - <span class="yaml-key">id:</span> <span class="yaml-val">'cnc-02'</span>
+                    <span class="yaml-key">name:</span> <span class="yaml-val">'DMG Mori NLX 2500'</span>
+                    <span class="yaml-key">&lt;&lt;:</span> <span class="yaml-val">*template_equipment</span>
+                    <span class="yaml-key">sensors:</span>
+                      - <span class="yaml-key">id:</span> <span class="yaml-val">'s2'</span>
+                        <span class="yaml-key">&lt;&lt;:</span> <span class="yaml-val">*template_sensor_cnc</span>
+
+                  - <span class="yaml-key">id:</span> <span class="yaml-val">'env-01'</span>
+                    <span class="yaml-key">name:</span> <span class="yaml-val">'Environment Sensor'</span>
+                    <span class="yaml-key">sensors:</span>
+                      - <span class="yaml-key">id:</span> <span class="yaml-val">'s3'</span>
+                        <span class="yaml-key">&lt;&lt;:</span> <span class="yaml-val">*template_sensor_env</span></pre></div>
+
+    <div class="warning-banner">
+      <span class="warning-icon">⚠</span>
+      <div>
+        <strong>The <code style="font-family:var(--font-mono);font-size:12px;">&lt;&lt;: *template_name</code> syntax is a YAML merge key.</strong> It pulls in all the fields from the referenced anchor (<code style="font-family:var(--font-mono);font-size:12px;">&amp;template_name</code>). This means you define your sensor information model once and reuse it across every machine — the DRY (Don't Repeat Yourself) principle applied to factory definitions. We'll cover templates in detail in the next section.
+      </div>
+    </div>
+
+    <h3>Step 3: mqtt.yml — Describe the Broker</h3>
+
+    <div class="yaml-block"><pre style="margin:0;font:inherit;white-space:pre"><span class="yaml-comment"># mqtt.yml — MQTT broker configuration</span>
+
+<span class="yaml-key">version:</span> <span class="yaml-val">'1.0'</span>
+
+<span class="yaml-key">mqtt:</span>
+  <span class="yaml-key">broker:</span>
+    <span class="yaml-key">host:</span> <span class="yaml-val">'mqtt://mqtt.detroit-factory.local'</span>
+    <span class="yaml-key">port:</span> <span class="yaml-val">1883</span>
+    <span class="yaml-key">username:</span> <span class="yaml-val">'uns-service'</span>
+    <span class="yaml-key">password:</span> <span class="yaml-val">'${MQTT_PASSWORD}'</span>  <span class="yaml-comment"># Use env var for secrets</span></pre></div>
+
+    <h3>Step 4: database.yml — Describe the Historian</h3>
+
+    <div class="yaml-block"><pre style="margin:0;font:inherit;white-space:pre"><span class="yaml-comment"># database.yml — historical storage configuration</span>
+
+<span class="yaml-key">version:</span> <span class="yaml-val">'1.0'</span>
+
+<span class="yaml-key">database:</span>
+  <span class="yaml-key">timeseries:</span>
+    <span class="yaml-key">host:</span> <span class="yaml-val">'postgres.detroit-factory.local'</span>
+    <span class="yaml-key">port:</span> <span class="yaml-val">5432</span>
+    <span class="yaml-key">username:</span> <span class="yaml-val">'uns'</span>
+    <span class="yaml-key">password:</span> <span class="yaml-val">'${DATABASE_PASSWORD}'</span></pre></div>
+
+    <h3>Step 5: function.yml — Describe the Processing Functions</h3>
+
+    <div class="yaml-block"><pre style="margin:0;font:inherit;white-space:pre"><span class="yaml-comment"># function.yml — data processing functions</span>
+
+<span class="yaml-key">version:</span> <span class="yaml-val">'1.0'</span>
+
+<span class="yaml-key">function:</span>
+  - <span class="yaml-key">name:</span> <span class="yaml-val">uns-state</span>
+    <span class="yaml-key">endpoint:</span> <span class="yaml-val">http://uns-state:8080</span>
+    <span class="yaml-comment"># Tracks machine state transitions (ACTIVE → IDLE → ALARM)</span>
+
+  - <span class="yaml-key">name:</span> <span class="yaml-val">uns-historian</span>
+    <span class="yaml-key">endpoint:</span> <span class="yaml-val">http://uns-historian:8080</span>
+    <span class="yaml-comment"># Logs every value change to PostgreSQL</span>
+
+  - <span class="yaml-key">name:</span> <span class="yaml-val">uns-kpi</span>
+    <span class="yaml-key">endpoint:</span> <span class="yaml-val">http://uns-kpi:8080</span>
+    <span class="yaml-comment"># Calculates OEE, availability, performance</span></pre></div>
+
+    <h3>Step 6: producer.yml &amp; consumer.yml — Describe Data Flow</h3>
+
+    <div class="yaml-block"><pre style="margin:0;font:inherit;white-space:pre"><span class="yaml-comment"># producer.yml — entities that send data into the namespace</span>
+
+<span class="yaml-key">version:</span> <span class="yaml-val">'1.0'</span>
+
+<span class="yaml-key">producer:</span>
+  - <span class="yaml-key">name:</span> <span class="yaml-val">Node-RED-PLC-Gateway</span>
+    <span class="yaml-key">endpoint:</span> <span class="yaml-val">http://nodered.detroit-factory.local:1880</span>
+    <span class="yaml-comment"># Reads Modbus from both CNCs, publishes to MQTT</span></pre></div>
+
+    <div class="yaml-block"><pre style="margin:0;font:inherit;white-space:pre"><span class="yaml-comment"># consumer.yml — entities that receive data from the namespace</span>
+
+<span class="yaml-key">version:</span> <span class="yaml-val">'1.0'</span>
+
+<span class="yaml-key">consumer:</span>
+  - <span class="yaml-key">name:</span> <span class="yaml-val">ERP-Production-Sync</span>
+    <span class="yaml-key">endpoint:</span> <span class="yaml-val">opcua://erp.detroit-factory.local:4840</span>
+    <span class="yaml-comment"># Pulls production counts and cycle times into ERP</span></pre></div>
+
+    <h3>The Complete File Structure</h3>
+
+    <div class="yaml-block"><pre style="margin:0;font:inherit;white-space:pre"><span class="yaml-comment"># Your factory, described as code</span>
+
+detroit-uns/
+├── uns.yml          <span class="yaml-comment"># Namespace: version, region, topic structure</span>
+├── site.yml         <span class="yaml-comment"># Physical: site → area → line → cell → equipment → sensors</span>
+├── mqtt.yml         <span class="yaml-comment"># Infrastructure: MQTT broker connection</span>
+├── database.yml     <span class="yaml-comment"># Infrastructure: PostgreSQL connection</span>
+├── function.yml     <span class="yaml-comment"># Processing: functions that act on the data</span>
+├── producer.yml     <span class="yaml-comment"># Data flow: what sends data in</span>
+├── consumer.yml     <span class="yaml-comment"># Data flow: what reads data out</span>
+└── README.md        <span class="yaml-comment"># Documentation for the team</span>
+
+<span class="yaml-comment"># Total: 7 YAML files. Your entire factory in a git repository.</span>
+<span class="yaml-comment"># Any engineer can read it. Any tool can parse it.</span>
+<span class="yaml-comment"># Every change is tracked. Every version is recoverable.</span></pre></div>
+
+    <div class="success-indicator">
+      <span class="success-icon">✓</span>
+      <strong>That's it.</strong> Seven YAML files describe your entire manufacturing namespace — the physical hierarchy, the data infrastructure, the processing functions, and the data flow. This is your single source of truth. Everything else — MQTT topics, dashboard configurations, function subscriptions — derives from these files.
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- TEMPLATES                               -->
+    <!-- ═══════════════════════════════════════ -->
+    <h2 id="templates">Templates &amp; Reuse with YAML Anchors</h2>
+
+    <p>In a real factory, you don't have one machine — you have dozens or hundreds, many of the same type. Without templates, you'd copy-paste the same sensor definition for every machine. YAML anchors and aliases solve this elegantly.</p>
+
+    <h3>How Anchors Work</h3>
+
+    <div class="yaml-block"><pre style="margin:0;font:inherit;white-space:pre"><span class="yaml-comment"># Step 1: Define the template with an anchor (&amp;)</span>
+<span class="yaml-key">template_sensor_cnc:</span> <span class="yaml-val">&amp;template_sensor_cnc</span>
+  <span class="yaml-key">information_model:</span>
+    <span class="yaml-key">status:</span>
+      <span class="yaml-key">data_type:</span> <span class="yaml-val">string</span>
+    <span class="yaml-key">spindle_speed:</span>
+      <span class="yaml-key">data_type:</span> <span class="yaml-val">float</span>
+    <span class="yaml-key">feed_rate:</span>
+      <span class="yaml-key">data_type:</span> <span class="yaml-val">float</span>
+    <span class="yaml-key">program:</span>
+      <span class="yaml-key">data_type:</span> <span class="yaml-val">string</span>
+    <span class="yaml-key">tool:</span>
+      <span class="yaml-key">data_type:</span> <span class="yaml-val">string</span>
+    <span class="yaml-key">spindle_load:</span>
+      <span class="yaml-key">data_type:</span> <span class="yaml-val">float</span>
+
+<span class="yaml-comment"># Step 2: Reuse with an alias (*) and merge key (&lt;&lt;:)</span>
+<span class="yaml-key">equipment:</span>
+  - <span class="yaml-key">id:</span> <span class="yaml-val">'cnc-01'</span>
+    <span class="yaml-key">sensors:</span>
+      - <span class="yaml-key">id:</span> <span class="yaml-val">'s1'</span>
+        <span class="yaml-key">&lt;&lt;:</span> <span class="yaml-val">*template_sensor_cnc</span>   <span class="yaml-comment"># ← All 6 fields inherited</span>
+
+  - <span class="yaml-key">id:</span> <span class="yaml-val">'cnc-02'</span>
+    <span class="yaml-key">sensors:</span>
+      - <span class="yaml-key">id:</span> <span class="yaml-val">'s2'</span>
+        <span class="yaml-key">&lt;&lt;:</span> <span class="yaml-val">*template_sensor_cnc</span>   <span class="yaml-comment"># ← Same 6 fields, no copy-paste</span>
+
+  - <span class="yaml-key">id:</span> <span class="yaml-val">'cnc-03'</span>
+    <span class="yaml-key">sensors:</span>
+      - <span class="yaml-key">id:</span> <span class="yaml-val">'s3'</span>
+        <span class="yaml-key">&lt;&lt;:</span> <span class="yaml-val">*template_sensor_cnc</span>   <span class="yaml-comment"># ← And again. Define once, use everywhere.</span></pre></div>
+
+    <h3>Why Templates Matter at Scale</h3>
+
+    <table class="def-table">
+      <thead><tr><th>Scenario</th><th>Without Templates</th><th>With Templates</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>10 identical CNC machines</td>
+          <td>Copy-paste the sensor definition 10 times. 60+ lines of duplicated YAML.</td>
+          <td>Define the template once (6 lines). Reference it 10 times (1 line each). 16 lines total.</td>
+        </tr>
+        <tr>
+          <td>Change the information model</td>
+          <td>Find and update all 10 copies. Miss one? That machine's data is now inconsistent.</td>
+          <td>Update the template once. All 10 machines inherit the change automatically.</td>
+        </tr>
+        <tr>
+          <td>Add a new sensor field</td>
+          <td>Add it to all 10 copies manually. Hope you don't introduce a typo in copy #7.</td>
+          <td>Add it to the template. Done. Every machine that references the template gets the new field.</td>
+        </tr>
+        <tr>
+          <td>New site with same machine types</td>
+          <td>Copy the entire site.yml. The templates are embedded in the copy — changes don't propagate.</td>
+          <td>The new site references the same templates. Consistency is guaranteed by the YAML structure.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p>Templates can also be composed. An equipment template defines dataops (normalisation, transformation), while a sensor template defines the information model. Combine them for a complete machine definition:</p>
+
+    <div class="yaml-block"><pre style="margin:0;font:inherit;white-space:pre"><span class="yaml-comment"># Equipment template — how to process the data</span>
+<span class="yaml-key">template_equipment:</span> <span class="yaml-val">&amp;template_equipment</span>
+  <span class="yaml-key">dataops:</span>
+    <span class="yaml-key">normalization:</span>
+      <span class="yaml-key">units:</span> <span class="yaml-val">'mm'</span>
+      <span class="yaml-key">scale:</span> <span class="yaml-val">1.0</span>
+    <span class="yaml-key">transformation:</span>
+      <span class="yaml-key">timezone:</span> <span class="yaml-val">'utc'</span>
+      <span class="yaml-key">aggregation:</span>
+        <span class="yaml-key">method:</span> <span class="yaml-val">'average'</span>
+        <span class="yaml-key">window:</span> <span class="yaml-val">60</span>
+
+<span class="yaml-comment"># Sensor template — what data the sensor produces</span>
+<span class="yaml-key">template_sensor_cnc:</span> <span class="yaml-val">&amp;template_sensor_cnc</span>
+  <span class="yaml-key">information_model:</span>
+    <span class="yaml-key">status:</span> { <span class="yaml-key">data_type:</span> <span class="yaml-val">string</span> }
+    <span class="yaml-key">spindle_speed:</span> { <span class="yaml-key">data_type:</span> <span class="yaml-val">float</span> }
+
+<span class="yaml-comment"># Compose both templates on a single machine</span>
+<span class="yaml-key">equipment:</span>
+  - <span class="yaml-key">id:</span> <span class="yaml-val">'cnc-01'</span>
+    <span class="yaml-key">name:</span> <span class="yaml-val">'Haas VF-2 Mill'</span>
+    <span class="yaml-key">&lt;&lt;:</span> <span class="yaml-val">*template_equipment</span>       <span class="yaml-comment"># ← Inherits dataops</span>
+    <span class="yaml-key">sensors:</span>
+      - <span class="yaml-key">id:</span> <span class="yaml-val">'s1'</span>
+        <span class="yaml-key">&lt;&lt;:</span> <span class="yaml-val">*template_sensor_cnc</span>   <span class="yaml-comment"># ← Inherits information model</span></pre></div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- GENERATED TOPICS                        -->
+    <!-- ═══════════════════════════════════════ -->
+    <h2 id="generated-topics">Generated MQTT Topics</h2>
+
+    <p>The YAML definitions don't just document your factory — they <strong>define the MQTT topic tree</strong>. Each level of the hierarchy becomes a segment in the topic path, following the <code style="font-family:var(--font-mono);font-size:12px;background:var(--grey-100);padding:1px 6px;border-radius:3px;">topic_structure</code> defined in <code style="font-family:var(--font-mono);font-size:12px;background:var(--grey-100);padding:1px 6px;border-radius:3px;">uns.yml</code>.</p>
+
+    <p>From our walkthrough example, the following MQTT topics are generated:</p>
+
+    <h3>CNC-01 (Haas VF-2 Mill)</h3>
+
+    <div class="yaml-block" style="line-height:2;"><pre style="margin:0;font:inherit;white-space:pre">v1.0/detroit/machining/line1/cell-a/cnc-01/s1/status
+v1.0/detroit/machining/line1/cell-a/cnc-01/s1/spindle_speed
+v1.0/detroit/machining/line1/cell-a/cnc-01/s1/feed_rate
+v1.0/detroit/machining/line1/cell-a/cnc-01/s1/program
+v1.0/detroit/machining/line1/cell-a/cnc-01/s1/tool
+v1.0/detroit/machining/line1/cell-a/cnc-01/s1/spindle_load</pre></div>
+
+    <h3>CNC-02 (DMG Mori NLX 2500)</h3>
+
+    <div class="yaml-block" style="line-height:2;"><pre style="margin:0;font:inherit;white-space:pre">v1.0/detroit/machining/line1/cell-a/cnc-02/s2/status
+v1.0/detroit/machining/line1/cell-a/cnc-02/s2/spindle_speed
+v1.0/detroit/machining/line1/cell-a/cnc-02/s2/feed_rate
+v1.0/detroit/machining/line1/cell-a/cnc-02/s2/program
+v1.0/detroit/machining/line1/cell-a/cnc-02/s2/tool
+v1.0/detroit/machining/line1/cell-a/cnc-02/s2/spindle_load</pre></div>
+
+    <h3>Environment Sensor</h3>
+
+    <div class="yaml-block" style="line-height:2;"><pre style="margin:0;font:inherit;white-space:pre">v1.0/detroit/machining/line1/cell-a/env-01/s3/temperature
+v1.0/detroit/machining/line1/cell-a/env-01/s3/humidity</pre></div>
+
+    <h3>Functions</h3>
+
+    <div class="yaml-block" style="line-height:2;"><pre style="margin:0;font:inherit;white-space:pre">v1.0/fn/uns-state
+v1.0/fn/uns-historian
+v1.0/fn/uns-kpi</pre></div>
+
+    <p>Every topic is <strong>deterministic</strong> — given the YAML definitions, you can compute the exact topic tree. No manual configuration, no guessing, no "ask Dave." The YAML is the specification, and the topics are the implementation.</p>
+
+    <div class="network-diagram">
+      <svg viewBox="0 0 720 340" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <text x="360" y="16" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="600" fill="var(--grey-400)" text-anchor="middle" letter-spacing="0.1em">YAML DEFINITIONS → MQTT TOPIC TREE</text>
+
+        <!-- Root -->
+        <rect x="300" y="32" width="120" height="28" rx="4" fill="var(--white)" stroke="var(--black)" stroke-width="1.5"/>
+        <text x="360" y="50" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="600" fill="var(--black)" text-anchor="middle">v1.0</text>
+
+        <!-- Site -->
+        <line x1="360" y1="60" x2="360" y2="76" stroke="var(--grey-300)" stroke-width="1"/>
+        <rect x="290" y="76" width="140" height="28" rx="4" fill="var(--white)" stroke="var(--grey-200)" stroke-width="1"/>
+        <text x="360" y="94" font-family="'JetBrains Mono', monospace" font-size="9" fill="var(--black)" text-anchor="middle">detroit</text>
+
+        <!-- Area -->
+        <line x1="360" y1="104" x2="360" y2="120" stroke="var(--grey-300)" stroke-width="1"/>
+        <rect x="280" y="120" width="160" height="28" rx="4" fill="var(--white)" stroke="var(--grey-200)" stroke-width="1"/>
+        <text x="360" y="138" font-family="'JetBrains Mono', monospace" font-size="9" fill="var(--black)" text-anchor="middle">machining</text>
+
+        <!-- Line -->
+        <line x1="360" y1="148" x2="360" y2="164" stroke="var(--grey-300)" stroke-width="1"/>
+        <rect x="300" y="164" width="120" height="28" rx="4" fill="var(--white)" stroke="var(--grey-200)" stroke-width="1"/>
+        <text x="360" y="182" font-family="'JetBrains Mono', monospace" font-size="9" fill="var(--black)" text-anchor="middle">line1</text>
+
+        <!-- Cell -->
+        <line x1="360" y1="192" x2="360" y2="208" stroke="var(--grey-300)" stroke-width="1"/>
+        <rect x="300" y="208" width="120" height="28" rx="4" fill="var(--white)" stroke="var(--grey-200)" stroke-width="1"/>
+        <text x="360" y="226" font-family="'JetBrains Mono', monospace" font-size="9" fill="var(--black)" text-anchor="middle">cell-a</text>
+
+        <!-- Fan out to equipment -->
+        <line x1="330" y1="236" x2="120" y2="260" stroke="var(--grey-300)" stroke-width="1"/>
+        <line x1="360" y1="236" x2="360" y2="260" stroke="var(--grey-300)" stroke-width="1"/>
+        <line x1="390" y1="236" x2="600" y2="260" stroke="var(--grey-300)" stroke-width="1"/>
+
+        <!-- CNC-01 -->
+        <rect x="40" y="260" width="160" height="28" rx="4" fill="var(--white)" stroke="#22c55e" stroke-width="1.5"/>
+        <text x="120" y="278" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="600" fill="#22c55e" text-anchor="middle">cnc-01 / s1</text>
+        <text x="120" y="300" font-family="'JetBrains Mono', monospace" font-size="7" fill="var(--grey-500)" text-anchor="middle">status · spindle · feed · program · tool · load</text>
+
+        <!-- CNC-02 -->
+        <rect x="280" y="260" width="160" height="28" rx="4" fill="var(--white)" stroke="#3b82f6" stroke-width="1.5"/>
+        <text x="360" y="278" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="600" fill="#3b82f6" text-anchor="middle">cnc-02 / s2</text>
+        <text x="360" y="300" font-family="'JetBrains Mono', monospace" font-size="7" fill="var(--grey-500)" text-anchor="middle">status · spindle · feed · program · tool · load</text>
+
+        <!-- ENV-01 -->
+        <rect x="520" y="260" width="160" height="28" rx="4" fill="var(--white)" stroke="#f59e0b" stroke-width="1.5"/>
+        <text x="600" y="278" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="600" fill="#f59e0b" text-anchor="middle">env-01 / s3</text>
+        <text x="600" y="300" font-family="'JetBrains Mono', monospace" font-size="7" fill="var(--grey-500)" text-anchor="middle">temperature · humidity</text>
+
+        <!-- Animated pulses -->
+        <circle cx="120" cy="274" r="3" fill="#22c55e" class="yaml-pulse yaml-pulse-d1"/>
+        <circle cx="360" cy="274" r="3" fill="#3b82f6" class="yaml-pulse yaml-pulse-d2"/>
+        <circle cx="600" cy="274" r="3" fill="#f59e0b" class="yaml-pulse yaml-pulse-d3"/>
+
+        <!-- Bottom label -->
+        <text x="360" y="330" font-family="'JetBrains Mono', monospace" font-size="8" fill="var(--grey-400)" text-anchor="middle">14 MQTT topics generated deterministically from 7 YAML files</text>
+      </svg>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- YAML TO RUNNING SYSTEM                  -->
+    <!-- ═══════════════════════════════════════ -->
+    <h2 id="yaml-to-running-system">From YAML to a Running System</h2>
+
+    <p>The YAML definitions are not just documentation — they're the <strong>contract</strong> between every component in your system. Here's how the definitions connect to a running fn-uns deployment.</p>
+
+    <h3>How Each Component Uses the Definitions</h3>
+
+    <table class="def-table">
+      <thead><tr><th>Component</th><th>Reads From</th><th>What It Does With It</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><strong>uns-sim</strong> (simulator)</td>
+          <td><code style="font-family:var(--font-mono);font-size:11px;">config.yaml</code> (derived from site.yml)</td>
+          <td>Generates realistic machine data for every equipment and sensor defined. The simulator's config mirrors the site hierarchy — areas, machines, sensors, programs.</td>
+        </tr>
+        <tr>
+          <td><strong>uns-framework</strong></td>
+          <td>MQTT wildcard <code style="font-family:var(--font-mono);font-size:11px;">v1.0/#</code></td>
+          <td>Subscribes to the entire namespace. The topic structure defined in uns.yml determines what the framework sees. New machines appear automatically — no configuration change needed.</td>
+        </tr>
+        <tr>
+          <td><strong>uns-state / uns-historian</strong></td>
+          <td>Valkey cache + PostgreSQL</td>
+          <td>The cache keys and database columns follow the topic structure. The YAML defines the namespace; the functions process whatever appears in it.</td>
+        </tr>
+        <tr>
+          <td><strong>uns-input</strong></td>
+          <td><code style="font-family:var(--font-mono);font-size:11px;">config.yaml</code></td>
+          <td>The operator input screen is configured with YAML — reason codes, categories, theme colours, API endpoints. Same pattern: describe what you want, the system implements it.</td>
+        </tr>
+        <tr>
+          <td><strong>Dashboards</strong></td>
+          <td>PostgreSQL queries</td>
+          <td>Dashboard queries reference the topic structure. The YAML definitions ensure consistent naming — the dashboard knows that <code style="font-family:var(--font-mono);font-size:11px;">cnc-01</code> in the database matches <code style="font-family:var(--font-mono);font-size:11px;">cnc-01</code> in the YAML.</td>
+        </tr>
+        <tr>
+          <td><strong>New developers</strong></td>
+          <td>The YAML files directly</td>
+          <td>A new team member opens site.yml and immediately understands the factory structure — what machines exist, where they are, what data they produce. No tribal knowledge required.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="research-callout">
+      <div>
+        <strong>The "describe what you have" philosophy is borrowed directly from infrastructure as code.</strong> Just as a Dockerfile doesn't run your application — it describes how to build the container that runs it — the UNS Framework YAML doesn't run your factory. It describes the factory so that every tool, function, and person can work from the same shared understanding. The YAML is the map; the running system is the territory.
+        <div class="research-source">Source: UNS Framework Standard v1.0; inspired by Docker, Kubernetes, and Terraform design principles</div>
+      </div>
+    </div>
+
+    <div class="persona-grid">
+      <div class="persona-card">
+        <div class="persona-icon">🔧</div>
+        <h4>Manufacturing Engineer</h4>
+        <p>When you add a new machine to the shop floor, you add it to site.yml. That single change propagates everywhere — the simulator generates data for it, the framework processes it, the dashboard shows it. One file, one change, one source of truth.</p>
+      </div>
+      <div class="persona-card">
+        <div class="persona-icon">💻</div>
+        <h4>Developer</h4>
+        <p>You're building a new function and need to know the topic structure? Open uns.yml. Need to know what sensors exist on cnc-01? Open site.yml. Need the database connection? Open database.yml. Everything is documented, parseable, and version-controlled. No more "ask Dave."</p>
+      </div>
+      <div class="persona-card">
+        <div class="persona-icon">🖥️</div>
+        <h4>IT Engineer</h4>
+        <p>Deploying to a new site? <code style="font-family:var(--font-mono);font-size:12px;background:var(--grey-100);padding:1px 6px;border-radius:3px;">git clone</code> the repository, update the site-specific values in the YAML files (broker address, database credentials, site name), and <code style="font-family:var(--font-mono);font-size:12px;background:var(--grey-100);padding:1px 6px;border-radius:3px;">docker compose up</code>. The entire namespace is defined in the files — no manual broker configuration, no manual topic setup.</p>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- SCALING MULTI-SITE                      -->
+    <!-- ═══════════════════════════════════════ -->
+    <h2 id="scaling-multi-site">Scaling to Multiple Sites</h2>
+
+    <p>The real power of YAML definitions becomes clear when you scale beyond a single site. Adding a second factory is not a new project — it's a new set of YAML files in the same repository.</p>
+
+    <h3>Adding a Second Site</h3>
+
+    <div class="yaml-block"><pre style="margin:0;font:inherit;white-space:pre"><span class="yaml-comment"># site.yml — now with two sites</span>
+
+<span class="yaml-key">version:</span> <span class="yaml-val">'1.0'</span>
+
+<span class="yaml-comment"># Templates are shared across all sites</span>
+<span class="yaml-key">template_sensor_cnc:</span> <span class="yaml-val">&amp;template_sensor_cnc</span>
+  <span class="yaml-key">information_model:</span>
+    <span class="yaml-key">status:</span> { <span class="yaml-key">data_type:</span> <span class="yaml-val">string</span> }
+    <span class="yaml-key">spindle_speed:</span> { <span class="yaml-key">data_type:</span> <span class="yaml-val">float</span> }
+    <span class="yaml-key">feed_rate:</span> { <span class="yaml-key">data_type:</span> <span class="yaml-val">float</span> }
+    <span class="yaml-key">program:</span> { <span class="yaml-key">data_type:</span> <span class="yaml-val">string</span> }
+    <span class="yaml-key">tool:</span> { <span class="yaml-key">data_type:</span> <span class="yaml-val">string</span> }
+    <span class="yaml-key">spindle_load:</span> { <span class="yaml-key">data_type:</span> <span class="yaml-val">float</span> }
+
+<span class="yaml-key">site:</span>
+  <span class="yaml-comment"># ── Site 1: Detroit ──────────────────────────────────────</span>
+  - <span class="yaml-key">name:</span> <span class="yaml-val">Detroit</span>
+    <span class="yaml-key">id:</span> <span class="yaml-val">detroit</span>
+    <span class="yaml-key">location:</span> <span class="yaml-val">'Detroit, MI, USA'</span>
+    <span class="yaml-key">area:</span>
+      - <span class="yaml-key">name:</span> <span class="yaml-val">Machining</span>
+        <span class="yaml-key">id:</span> <span class="yaml-val">machining</span>
+        <span class="yaml-key">line:</span>
+          - <span class="yaml-key">name:</span> <span class="yaml-val">CNC Line 1</span>
+            <span class="yaml-key">id:</span> <span class="yaml-val">line1</span>
+            <span class="yaml-key">cell:</span>
+              - <span class="yaml-key">name:</span> <span class="yaml-val">Cell A</span>
+                <span class="yaml-key">id:</span> <span class="yaml-val">cell-a</span>
+                <span class="yaml-key">equipment:</span>
+                  - <span class="yaml-key">id:</span> <span class="yaml-val">'cnc-01'</span>
+                    <span class="yaml-key">name:</span> <span class="yaml-val">'Haas VF-2 Mill'</span>
+                    <span class="yaml-key">sensors:</span>
+                      - <span class="yaml-key">id:</span> <span class="yaml-val">'s1'</span>
+                        <span class="yaml-key">&lt;&lt;:</span> <span class="yaml-val">*template_sensor_cnc</span>
+                  - <span class="yaml-key">id:</span> <span class="yaml-val">'cnc-02'</span>
+                    <span class="yaml-key">name:</span> <span class="yaml-val">'DMG Mori NLX 2500'</span>
+                    <span class="yaml-key">sensors:</span>
+                      - <span class="yaml-key">id:</span> <span class="yaml-val">'s2'</span>
+                        <span class="yaml-key">&lt;&lt;:</span> <span class="yaml-val">*template_sensor_cnc</span>
+
+  <span class="yaml-comment"># ── Site 2: Munich ───────────────────────────────────────</span>
+  - <span class="yaml-key">name:</span> <span class="yaml-val">Munich</span>
+    <span class="yaml-key">id:</span> <span class="yaml-val">munich</span>
+    <span class="yaml-key">location:</span> <span class="yaml-val">'Munich, Bavaria, Germany'</span>
+    <span class="yaml-key">area:</span>
+      - <span class="yaml-key">name:</span> <span class="yaml-val">Precision Machining</span>
+        <span class="yaml-key">id:</span> <span class="yaml-val">precision</span>
+        <span class="yaml-key">line:</span>
+          - <span class="yaml-key">name:</span> <span class="yaml-val">5-Axis Line</span>
+            <span class="yaml-key">id:</span> <span class="yaml-val">5axis</span>
+            <span class="yaml-key">cell:</span>
+              - <span class="yaml-key">name:</span> <span class="yaml-val">Cell 1</span>
+                <span class="yaml-key">id:</span> <span class="yaml-val">cell-1</span>
+                <span class="yaml-key">equipment:</span>
+                  - <span class="yaml-key">id:</span> <span class="yaml-val">'cnc-10'</span>
+                    <span class="yaml-key">name:</span> <span class="yaml-val">'DMG Mori DMU 50'</span>
+                    <span class="yaml-key">sensors:</span>
+                      - <span class="yaml-key">id:</span> <span class="yaml-val">'s10'</span>
+                        <span class="yaml-key">&lt;&lt;:</span> <span class="yaml-val">*template_sensor_cnc</span>
+                  - <span class="yaml-key">id:</span> <span class="yaml-val">'cnc-11'</span>
+                    <span class="yaml-key">name:</span> <span class="yaml-val">'Hermle C 400'</span>
+                    <span class="yaml-key">sensors:</span>
+                      - <span class="yaml-key">id:</span> <span class="yaml-val">'s11'</span>
+                        <span class="yaml-key">&lt;&lt;:</span> <span class="yaml-val">*template_sensor_cnc</span></pre></div>
+
+    <p>The git diff for this change tells the whole story:</p>
+
+    <div class="yaml-block"><pre style="margin:0;font:inherit;white-space:pre"><span class="yaml-comment"># git diff site.yml</span>
+
+<span class="yaml-val">+ # ── Site 2: Munich ───────────────────────────────────────</span>
+<span class="yaml-val">+ - name: Munich</span>
+<span class="yaml-val">+   id: munich</span>
+<span class="yaml-val">+   location: 'Munich, Bavaria, Germany'</span>
+<span class="yaml-val">+   area:</span>
+<span class="yaml-val">+     - name: Precision Machining</span>
+<span class="yaml-val">+       ...</span>
+
+<span class="yaml-comment"># git log --oneline</span>
+<span class="yaml-val">b7e4a2f Add Munich site — 5-axis line with DMU 50 and Hermle C 400</span>
+<span class="yaml-val">a3f2c1d Initial Detroit site — 2 CNCs in Cell A</span></pre></div>
+
+    <h3>Multi-Site Topic Namespacing</h3>
+
+    <p>Because the site ID is part of the topic path, topics from different sites are naturally namespaced:</p>
+
+    <div class="yaml-block" style="line-height:2;"><pre style="margin:0;font:inherit;white-space:pre"><span class="yaml-comment"># Detroit topics</span>
+v1.0/<span class="yaml-val">detroit</span>/machining/line1/cell-a/cnc-01/s1/status
+v1.0/<span class="yaml-val">detroit</span>/machining/line1/cell-a/cnc-02/s2/status
+
+<span class="yaml-comment"># Munich topics</span>
+v1.0/<span class="yaml-val">munich</span>/precision/5axis/cell-1/cnc-10/s10/status
+v1.0/<span class="yaml-val">munich</span>/precision/5axis/cell-1/cnc-11/s11/status
+
+<span class="yaml-comment"># Subscribe to everything at one site</span>
+v1.0/detroit/#
+
+<span class="yaml-comment"># Subscribe to everything across all sites</span>
+v1.0/#</pre></div>
+
+    <div class="option-grid">
+      <div class="option-card">
+        <h4>Without YAML Definitions</h4>
+        <p>Adding a second site means: fly someone to Munich, manually configure the MQTT broker, manually set up the SCADA tags, manually create the database tables, manually build the dashboards, hope the naming conventions match Detroit, document everything in a spreadsheet that will be outdated by next month.</p>
+      </div>
+      <div class="option-card">
+        <h4>With YAML + GitOps</h4>
+        <p>Adding a second site means: add a new <code style="font-family:var(--font-mono);font-size:12px;background:var(--grey-100);padding:1px 6px;border-radius:3px;">site</code> entry to site.yml, commit, push. The templates guarantee the same information model. The topic structure guarantees consistent naming. The git history documents when Munich was added and by whom. Deploy with <code style="font-family:var(--font-mono);font-size:12px;background:var(--grey-100);padding:1px 6px;border-radius:3px;">git clone</code> + <code style="font-family:var(--font-mono);font-size:12px;background:var(--grey-100);padding:1px 6px;border-radius:3px;">docker compose up</code>.</p>
+      </div>
+    </div>
+
+    <div class="network-diagram">
+      <svg viewBox="0 0 720 180" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <text x="360" y="16" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="600" fill="var(--grey-400)" text-anchor="middle" letter-spacing="0.1em">MULTI-SITE YAML DEFINITIONS — ONE REPO, MANY FACTORIES</text>
+
+        <!-- Git repo (centre top) -->
+        <rect x="260" y="30" width="200" height="40" rx="6" fill="var(--white)" stroke="var(--black)" stroke-width="1.5"/>
+        <text x="360" y="48" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="600" fill="var(--black)" text-anchor="middle">Git Repository</text>
+        <text x="360" y="62" font-family="'JetBrains Mono', monospace" font-size="7" fill="var(--grey-500)" text-anchor="middle">uns.yml · site.yml · mqtt.yml · function.yml</text>
+
+        <!-- Fan-out lines -->
+        <line x1="310" y1="70" x2="140" y2="100" stroke="var(--grey-300)" stroke-width="1.2"/>
+        <line x1="360" y1="70" x2="360" y2="100" stroke="var(--grey-300)" stroke-width="1.2"/>
+        <line x1="410" y1="70" x2="580" y2="100" stroke="var(--grey-300)" stroke-width="1.2"/>
+
+        <text x="230" y="88" font-family="'JetBrains Mono', monospace" font-size="7" fill="var(--grey-400)" text-anchor="middle">git clone</text>
+        <text x="490" y="88" font-family="'JetBrains Mono', monospace" font-size="7" fill="var(--grey-400)" text-anchor="middle">git clone</text>
+
+        <!-- Site boxes -->
+        <rect x="40" y="100" width="200" height="60" rx="6" fill="var(--white)" stroke="var(--grey-200)" stroke-width="1.5"/>
+        <text x="140" y="120" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="600" fill="var(--black)" text-anchor="middle">Detroit</text>
+        <text x="140" y="136" font-family="'JetBrains Mono', monospace" font-size="7" fill="var(--grey-500)" text-anchor="middle">2 CNCs · 1 env sensor · 3 functions</text>
+        <text x="140" y="150" font-family="'JetBrains Mono', monospace" font-size="7" fill="#22c55e" text-anchor="middle">same YAML, same standard ✓</text>
+
+        <rect x="260" y="100" width="200" height="60" rx="6" fill="var(--white)" stroke="var(--grey-200)" stroke-width="1.5"/>
+        <text x="360" y="120" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="600" fill="var(--black)" text-anchor="middle">Munich</text>
+        <text x="360" y="136" font-family="'JetBrains Mono', monospace" font-size="7" fill="var(--grey-500)" text-anchor="middle">2 5-axis CNCs · 3 functions</text>
+        <text x="360" y="150" font-family="'JetBrains Mono', monospace" font-size="7" fill="#22c55e" text-anchor="middle">same YAML, same standard ✓</text>
+
+        <rect x="480" y="100" width="200" height="60" rx="6" fill="var(--white)" stroke="var(--grey-200)" stroke-width="1.5" stroke-dasharray="4 4"/>
+        <text x="580" y="120" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="600" fill="var(--grey-400)" text-anchor="middle">Site 3 — Future</text>
+        <text x="580" y="136" font-family="'JetBrains Mono', monospace" font-size="7" fill="var(--grey-400)" text-anchor="middle">add to site.yml · git push</text>
+        <text x="580" y="150" font-family="'JetBrains Mono', monospace" font-size="7" fill="var(--grey-400)" text-anchor="middle">same templates, same standard</text>
+
+        <!-- Bottom label -->
+        <text x="360" y="178" font-family="'JetBrains Mono', monospace" font-size="8" fill="var(--grey-400)" text-anchor="middle">Shared templates guarantee consistency. Git guarantees traceability. YAML guarantees readability.</text>
+      </svg>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- THE BOTTOM LINE                         -->
+    <!-- ═══════════════════════════════════════ -->
+    <h2 id="bottom-line">The Bottom Line</h2>
+
+    <p>Your factory has a structure. Today, that structure is described inside vendor databases, spreadsheets, and people's heads — fragmented, unversioned, and impossible to reproduce. The UNS Framework standard gives you a better way.</p>
+
+    <table class="def-table">
+      <thead><tr><th>Property</th><th>Monolithic Vendor Tools</th><th>UNS Framework YAML</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>Source of truth</td>
+          <td>Scattered across 6+ systems, each with a partial view</td>
+          <td>One set of YAML files in a git repository</td>
+        </tr>
+        <tr>
+          <td>Version control</td>
+          <td>None — changes are invisible and untrackable</td>
+          <td>Full git history — every change has an author, date, and reason</td>
+        </tr>
+        <tr>
+          <td>Portability</td>
+          <td>Locked in vendor-specific binary formats</td>
+          <td>Plain text YAML — readable by any tool, any language, any platform</td>
+        </tr>
+        <tr>
+          <td>Reproducibility</td>
+          <td>Manual configuration at each site, each time</td>
+          <td><code style="font-family:var(--font-mono);font-size:12px;">git clone</code> → identical factory definition, instantly</td>
+        </tr>
+        <tr>
+          <td>Collaboration</td>
+          <td>"Ask Dave" / check the spreadsheet on the shared drive</td>
+          <td>Pull requests, code review, comments in the YAML itself</td>
+        </tr>
+        <tr>
+          <td>Automation</td>
+          <td>Manual updates across multiple systems for every change</td>
+          <td>Tools parse the YAML and act on it — topics, configs, dashboards derived automatically</td>
+        </tr>
+        <tr>
+          <td>Auditability</td>
+          <td>No trail — "who changed the tag name?" is unanswerable</td>
+          <td><code style="font-family:var(--font-mono);font-size:12px;">git log</code> + <code style="font-family:var(--font-mono);font-size:12px;">git blame</code> — cryptographically signed, immutable history</td>
+        </tr>
+        <tr>
+          <td>Multi-site scaling</td>
+          <td>Months of manual configuration per site</td>
+          <td>Add a site entry to site.yml, push, deploy. Templates guarantee consistency.</td>
+        </tr>
+        <tr>
+          <td>Cost</td>
+          <td>Vendor licenses per site, per device, per user</td>
+          <td>Free — open standard, open source, plain text files</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="success-indicator">
+      <span class="success-icon">✓</span>
+      <strong>The UNS Framework standard is a Dockerfile for your factory.</strong> It doesn't replace your SCADA, MES, or MQTT broker — it describes what you have in a portable, version-controlled, human-readable format that becomes the single source of truth for your entire manufacturing namespace. Start with one site, one area, a few machines. The YAML grows with you.
+    </div>
+
+    <h3>Next Steps</h3>
+
+    <table class="def-table">
+      <thead><tr><th>Resource</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td><a href="/framework/" style="color:var(--black);border-bottom:1px solid var(--grey-300);">UNS Framework Standard</a></td><td>The complete standard documentation — every definition type, every parameter, every schema</td></tr>
+        <tr><td><a href="/framework/core-definitions.html" style="color:var(--black);border-bottom:1px solid var(--grey-300);">Core Definitions</a></td><td>Detailed reference for all 13 definition types</td></tr>
+        <tr><td><a href="/framework/example.html" style="color:var(--black);border-bottom:1px solid var(--grey-300);">Full Example</a></td><td>A complete example deployment with all YAML files and generated MQTT topics</td></tr>
+        <tr><td><a href="/guides/digital-twin-gitops.html" style="color:var(--black);border-bottom:1px solid var(--grey-300);">Digital Twins &amp; GitOps</a></td><td>How YAML definitions and GitOps enable composable digital twins</td></tr>
+        <tr><td><a href="/guides/flow-vs-gitops.html" style="color:var(--black);border-bottom:1px solid var(--grey-300);">Flow vs GitOps</a></td><td>When to graduate from Node-RED experiments to production GitOps</td></tr>
+        <tr><td><a href="/docs/getting-started.html" style="color:var(--black);border-bottom:1px solid var(--grey-300);">Getting Started</a></td><td>Deploy the fn-uns reference pipeline — see the YAML definitions in action</td></tr>
+      </tbody>
+    </table>
+
+    <!-- NAV BUTTONS -->
+    <div class="docs-nav-buttons">
+      <a href="/guides/" class="docs-nav-btn">
+        <span class="nav-label">Back</span>
+        <span class="nav-title">All Guides</span>
+      </a>
+      <a href="/guides/digital-twin-gitops.html" class="docs-nav-btn next">
+        <span class="nav-label">Related</span>
+        <span class="nav-title">Digital Twins &amp; GitOps</span>
+      </a>
+    </div>
+
+    <div style="margin-top:32px;padding:20px;background:var(--grey-50);border:1px solid var(--grey-200);border-radius:10px;">
+      <p style="font-family:var(--font-mono);font-size:12px;color:var(--grey-500);margin-bottom:4px;">
+        Guide Version: 1.0 · Applies To: UNS Framework Standard v1.0, YAML definitions, GitOps, ISA-95 topic hierarchy
+      </p>
+      <p style="font-size:13px;color:var(--grey-500);margin-bottom:0;">
+        Last updated March 2026.
+      </p>
+    </div>
+
+  </main>
+</div>
+
+<script src="../shared.js"></script>
+<script>
+// Scroll-spy: highlight sidebar link matching current section
+(function() {
+  const sidebarLinks = document.querySelectorAll('.docs-sidebar a[href^="#"]');
+  const sections = [];
+  sidebarLinks.forEach(link => {
+    const id = link.getAttribute('href').slice(1);
+    const el = document.getElementById(id);
+    if (el) sections.push({ id, el, link });
+  });
+  if (!sections.length) return;
+
+  function update() {
+    const scrollY = window.scrollY + 80;
+    let current = sections[0];
+    for (const s of sections) {
+      if (s.el.offsetTop <= scrollY) current = s;
+    }
+    sidebarLinks.forEach(l => l.classList.remove('active'));
+    current.link.classList.add('active');
+  }
+
+  let ticking = false;
+  window.addEventListener('scroll', () => {
+    if (!ticking) {
+      requestAnimationFrame(() => { update(); ticking = false; });
+      ticking = true;
+    }
+  });
+  update();
+})();
+</script>
+</body>
+</html>

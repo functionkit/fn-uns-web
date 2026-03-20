@@ -3,247 +3,238 @@
   <!-- Homepage -->
   <url>
     <loc>https://unsframework.com/</loc>
-    <changefreq>weekly</changefreq>
-    <priority>1.0</priority>
+    <lastmod>2026-03-20</lastmod>
+  </url>
+
+  <!-- UNS Explainer Pages -->
+  <url>
+    <loc>https://unsframework.com/uns/</loc>
+    <lastmod>2026-03-20</lastmod>
+  </url>
+  <url>
+    <loc>https://unsframework.com/how-it-works/</loc>
+    <lastmod>2026-03-20</lastmod>
   </url>
 
   <!-- fn-uns -->
   <url>
     <loc>https://unsframework.com/fn-uns/</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
+    <lastmod>2026-03-20</lastmod>
   </url>
 
   <!-- Framework Standard -->
   <url>
     <loc>https://unsframework.com/framework/</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
+    <lastmod>2026-03-20</lastmod>
   </url>
   <url>
     <loc>https://unsframework.com/framework/core-definitions.html</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <lastmod>2026-03-20</lastmod>
   </url>
   <url>
     <loc>https://unsframework.com/framework/uns.html</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
+    <lastmod>2026-03-20</lastmod>
   </url>
   <url>
     <loc>https://unsframework.com/framework/site.html</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
+    <lastmod>2026-03-20</lastmod>
   </url>
   <url>
     <loc>https://unsframework.com/framework/area.html</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
+    <lastmod>2026-03-20</lastmod>
   </url>
   <url>
     <loc>https://unsframework.com/framework/line.html</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
+    <lastmod>2026-03-20</lastmod>
   </url>
   <url>
     <loc>https://unsframework.com/framework/cell.html</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
+    <lastmod>2026-03-20</lastmod>
   </url>
   <url>
     <loc>https://unsframework.com/framework/equipment.html</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
+    <lastmod>2026-03-20</lastmod>
   </url>
   <url>
     <loc>https://unsframework.com/framework/sensor.html</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
+    <lastmod>2026-03-20</lastmod>
   </url>
   <url>
     <loc>https://unsframework.com/framework/function.html</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
+    <lastmod>2026-03-20</lastmod>
   </url>
   <url>
     <loc>https://unsframework.com/framework/producer.html</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
+    <lastmod>2026-03-20</lastmod>
   </url>
   <url>
     <loc>https://unsframework.com/framework/consumer.html</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
+    <lastmod>2026-03-20</lastmod>
   </url>
   <url>
     <loc>https://unsframework.com/framework/mqtt.html</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
+    <lastmod>2026-03-20</lastmod>
   </url>
   <url>
     <loc>https://unsframework.com/framework/database.html</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
+    <lastmod>2026-03-20</lastmod>
   </url>
   <url>
     <loc>https://unsframework.com/framework/artifact.html</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
+    <lastmod>2026-03-20</lastmod>
   </url>
   <url>
     <loc>https://unsframework.com/framework/example.html</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
+    <lastmod>2026-03-20</lastmod>
   </url>
 
   <!-- Documentation -->
   <url>
     <loc>https://unsframework.com/docs/</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <lastmod>2026-03-20</lastmod>
   </url>
   <url>
     <loc>https://unsframework.com/docs/what-is-uns.html</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
+    <lastmod>2026-03-20</lastmod>
   </url>
   <url>
     <loc>https://unsframework.com/docs/why-uns.html</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <lastmod>2026-03-20</lastmod>
   </url>
   <url>
     <loc>https://unsframework.com/docs/why-faas.html</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <lastmod>2026-03-20</lastmod>
   </url>
   <url>
     <loc>https://unsframework.com/docs/architecture.html</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <lastmod>2026-03-20</lastmod>
   </url>
   <url>
     <loc>https://unsframework.com/docs/getting-started.html</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <lastmod>2026-03-20</lastmod>
   </url>
   <url>
     <loc>https://unsframework.com/docs/first-deployment.html</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <lastmod>2026-03-20</lastmod>
   </url>
   <url>
     <loc>https://unsframework.com/docs/fnkit-basics.html</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
+    <lastmod>2026-03-20</lastmod>
   </url>
   <url>
     <loc>https://unsframework.com/docs/components.html</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <lastmod>2026-03-20</lastmod>
   </url>
   <url>
     <loc>https://unsframework.com/docs/uns-framework.html</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
+    <lastmod>2026-03-20</lastmod>
   </url>
   <url>
     <loc>https://unsframework.com/docs/uns-cache.html</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
+    <lastmod>2026-03-20</lastmod>
   </url>
   <url>
     <loc>https://unsframework.com/docs/uns-sim.html</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
+    <lastmod>2026-03-20</lastmod>
   </url>
   <url>
     <loc>https://unsframework.com/docs/uns-state.html</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
+    <lastmod>2026-03-20</lastmod>
   </url>
   <url>
     <loc>https://unsframework.com/docs/uns-stoppage.html</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
+    <lastmod>2026-03-20</lastmod>
   </url>
   <url>
     <loc>https://unsframework.com/docs/uns-productivity.html</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
+    <lastmod>2026-03-20</lastmod>
   </url>
   <url>
     <loc>https://unsframework.com/docs/uns-log.html</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
+    <lastmod>2026-03-20</lastmod>
   </url>
   <url>
     <loc>https://unsframework.com/docs/uns-historian.html</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
+    <lastmod>2026-03-20</lastmod>
   </url>
   <url>
     <loc>https://unsframework.com/docs/uns-input.html</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
+    <lastmod>2026-03-20</lastmod>
   </url>
   <url>
     <loc>https://unsframework.com/docs/uns-kpi.html</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
+    <lastmod>2026-03-20</lastmod>
+  </url>
+  <url>
+    <loc>https://unsframework.com/docs/uns-dashboard.html</loc>
+    <lastmod>2026-03-20</lastmod>
+  </url>
+  <url>
+    <loc>https://unsframework.com/docs/uns-ai.html</loc>
+    <lastmod>2026-03-20</lastmod>
   </url>
   <url>
     <loc>https://unsframework.com/docs/configuration.html</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
+    <lastmod>2026-03-20</lastmod>
   </url>
   <url>
     <loc>https://unsframework.com/docs/manufacturing-kpis.html</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
+    <lastmod>2026-03-20</lastmod>
   </url>
   <url>
     <loc>https://unsframework.com/docs/api-reference.html</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
+    <lastmod>2026-03-20</lastmod>
   </url>
   <url>
     <loc>https://unsframework.com/docs/database-schema.html</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
+    <lastmod>2026-03-20</lastmod>
   </url>
   <url>
     <loc>https://unsframework.com/docs/code-patterns.html</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
+    <lastmod>2026-03-20</lastmod>
   </url>
   <url>
     <loc>https://unsframework.com/docs/extending.html</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
+    <lastmod>2026-03-20</lastmod>
   </url>
 
   <!-- Guides -->
   <url>
     <loc>https://unsframework.com/guides/</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <lastmod>2026-03-20</lastmod>
   </url>
   <url>
     <loc>https://unsframework.com/guides/connectivity-options.html</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <lastmod>2026-03-20</lastmod>
   </url>
   <url>
     <loc>https://unsframework.com/guides/siemens-logo-mqtt.html</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <lastmod>2026-03-20</lastmod>
+  </url>
+  <url>
+    <loc>https://unsframework.com/guides/siemens-logo-wiring.html</loc>
+    <lastmod>2026-03-20</lastmod>
+  </url>
+  <url>
+    <loc>https://unsframework.com/guides/yaml-definitions.html</loc>
+    <lastmod>2026-03-20</lastmod>
+  </url>
+  <url>
+    <loc>https://unsframework.com/guides/digital-twin-gitops.html</loc>
+    <lastmod>2026-03-20</lastmod>
+  </url>
+  <url>
+    <loc>https://unsframework.com/guides/flow-vs-gitops.html</loc>
+    <lastmod>2026-03-20</lastmod>
+  </url>
+  <url>
+    <loc>https://unsframework.com/guides/pipeline-functions.html</loc>
+    <lastmod>2026-03-20</lastmod>
   </url>
 
   <!-- Changelog -->
   <url>
     <loc>https://unsframework.com/changelog.html</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.4</priority>
+    <lastmod>2026-03-20</lastmod>
   </url>
 </urlset>

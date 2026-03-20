@@ -6,7 +6,7 @@
     <title>Unified Namespace Framework — Open Source Manufacturing Data Integration</title>
     <meta
       name="description"
-      content="Manufacturing data is trapped. Lets fix that. Three open-source projects that give every machine on your shop floor a voice. Open source. Self-hosted. Zero vendor lock-in."
+      content="An open-source framework for building a Unified Namespace — the shared data layer that gives every system, dashboard, and AI agent real-time access to your shop floor. Open source. Self-hosted. AI-ready."
     />
 
     <!-- Canonical & Sitemap -->
@@ -22,7 +22,7 @@
     />
     <meta
       property="og:description"
-      content="Manufacturing data is trapped. Lets fix that. Three open-source projects that give every machine on your shop floor a voice. Open source. Self-hosted. Zero vendor lock-in."
+      content="An open-source framework for building a Unified Namespace — the shared data layer that gives every system, dashboard, and AI agent real-time access to your shop floor."
     />
     <meta property="og:url" content="https://unsframework.com/" />
 
@@ -34,9 +34,9 @@
     />
     <meta
       name="twitter:description"
-      content="Manufacturing data is trapped. Lets fix that. Three open-source projects — one unified solution."
+      content="An open-source framework for building a Unified Namespace — real-time manufacturing data for every system, dashboard, and AI agent."
     />
-    <meta name="keywords" content="unified namespace, manufacturing data integration, UNS MQTT, ISA-95, open source manufacturing, UNS Framework, real-time factory data" />
+    <meta name="keywords" content="unified namespace, manufacturing data integration, UNS MQTT, ISA-95, open source manufacturing, UNS Framework, real-time factory data, manufacturing AI, predictive maintenance" />
 
     <!-- Favicon -->
     <link
@@ -888,8 +888,7 @@
     <div class="hero" style="padding-top: 4em">
       <div class="container">
         <div class="hero-badge">
-          <span class="dot"></span> Open Source · Three Projects · One Unified
-          Solution
+          <span class="dot"></span> Open Source · Self-Hosted · AI-Ready
         </div>
         <h1>Manufacturing data is&nbsp;trapped. Lets&nbsp;fix&nbsp;that.</h1>
 
@@ -897,7 +896,8 @@
           Every factory generates vast amounts of data — but it's fragmented
           across disconnected systems that don't talk to each other. The UNS
           Framework replaces point-to-point integrations with a single, shared
-          data layer
+          data layer — giving every system, dashboard, and AI agent real-time
+          access to your shop floor.
         </p>
         <div
           class="cta-group"
@@ -2224,6 +2224,83 @@
 
     <div class="divider"></div>
 
+    <!-- AI-READY — THE UNS AS AI FOUNDATION -->
+    <section class="fade-in" style="padding: 120px 0; background: var(--grey-50); border-top: 1px solid var(--grey-200); border-bottom: 1px solid var(--grey-200);">
+      <div class="container">
+        <div class="section-label">AI-Ready Architecture</div>
+        <h2>The data layer AI agents actually&nbsp;need.</h2>
+        <p class="lead">
+          AI in manufacturing fails when it can't access clean, structured, real-time data. The UNS solves this — it gives AI agents the same structured context that humans get, through the same APIs, in real time.
+        </p>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: start;">
+          <div>
+            <h3 style="font-size: 18px; font-weight: 700; letter-spacing: -0.01em; margin-bottom: 12px;">
+              Structured context, not messy CSVs
+            </h3>
+            <p style="font-size: 15px; color: var(--grey-700); line-height: 1.7; margin-bottom: 24px;">
+              Every machine's state, every stoppage reason, every production run — structured in PostgreSQL with precise timestamps. AI agents read the same data as your KPI dashboards. No data wrangling, no export pipelines, no stale spreadsheets.
+            </p>
+
+            <h3 style="font-size: 18px; font-weight: 700; letter-spacing: -0.01em; margin-bottom: 12px;">
+              Agents that participate in the namespace
+            </h3>
+            <p style="font-size: 15px; color: var(--grey-700); line-height: 1.7; margin-bottom: 24px;">
+              AI results publish back to MQTT — so an anomaly detection agent or a shift summary agent is just another participant in the UNS. Other systems can subscribe to AI output topics the same way they subscribe to machine data. The AI becomes part of the architecture, not bolted on top.
+            </p>
+
+            <h3 style="font-size: 18px; font-weight: 700; letter-spacing: -0.01em; margin-bottom: 12px;">
+              Full audit trail
+            </h3>
+            <p style="font-size: 15px; color: var(--grey-700); line-height: 1.7;">
+              Every AI call is logged — the data that went in, the response that came out, token counts, latency, and the complete structured result. Traceability from raw machine data to AI recommendation.
+            </p>
+          </div>
+
+          <div>
+            <div style="border: 1px solid var(--grey-200); border-radius: 12px; overflow: hidden; background: var(--white);">
+              <div style="padding: 16px 24px; background: var(--white); border-bottom: 1px solid var(--grey-200); font-family: var(--font-mono); font-size: 11px; font-weight: 600; color: var(--grey-500); letter-spacing: 0.06em; text-transform: uppercase;">
+                Built-in Analysis Types
+              </div>
+              <div style="padding: 14px 24px; border-bottom: 1px solid var(--grey-100); font-size: 14px;">
+                <span style="font-weight: 600; color: var(--black);">Anomaly Detection</span>
+                <span style="color: var(--grey-700);"> — spot abnormal machine behaviour against baselines</span>
+              </div>
+              <div style="padding: 14px 24px; border-bottom: 1px solid var(--grey-100); font-size: 14px;">
+                <span style="font-weight: 600; color: var(--black);">Predictive Maintenance</span>
+                <span style="color: var(--grey-700);"> — tool wear prediction from usage patterns</span>
+              </div>
+              <div style="padding: 14px 24px; border-bottom: 1px solid var(--grey-100); font-size: 14px;">
+                <span style="font-weight: 600; color: var(--black);">Shift Summaries</span>
+                <span style="color: var(--grey-700);"> — auto-generated handover reports</span>
+              </div>
+              <div style="padding: 14px 24px; border-bottom: 1px solid var(--grey-100); font-size: 14px;">
+                <span style="font-weight: 600; color: var(--black);">Smart Alerting</span>
+                <span style="color: var(--grey-700);"> — contextual triage instead of alarm floods</span>
+              </div>
+              <div style="padding: 14px 24px; border-bottom: 1px solid var(--grey-100); font-size: 14px;">
+                <span style="font-weight: 600; color: var(--black);">Root Cause Analysis</span>
+                <span style="color: var(--grey-700);"> — explain why an alarm happened</span>
+              </div>
+              <div style="padding: 14px 24px; font-size: 14px;">
+                <span style="font-weight: 600; color: var(--black);">Custom Prompts</span>
+                <span style="color: var(--grey-700);"> — bring your own analysis with configurable data sources</span>
+              </div>
+            </div>
+            <p style="font-size: 13px; color: var(--grey-500); margin-top: 16px; font-family: var(--font-mono); line-height: 1.6;">
+              Supports OpenAI and Anthropic · Structured JSON responses · Results publish to MQTT
+            </p>
+          </div>
+        </div>
+
+        <div style="margin-top: 36px">
+          <a href="/docs/uns-ai.html" class="btn-secondary">Explore uns-ai →</a>
+        </div>
+      </div>
+    </section>
+
+    <div class="divider"></div>
+
     <!-- WHY UNS MATTERS — BUSINESS VALUE -->
     <section class="why-uns-section fade-in">
       <div class="container">
@@ -2383,12 +2460,13 @@
             <h3>fn-uns</h3>
             <div class="stack-url">fn.unsframework.com</div>
             <p>
-              Serverless functions that implement a complete UNS data pipeline
-              on fnkit. From machine simulation to KPI computation — capture,
-              process, and report on manufacturing data using the UNS Framework
-              standard.
+              A complete reference implementation of a UNS — open source
+              serverless functions you can learn from, fork, and extend. Covers
+              the full pipeline from machine simulation through to AI-powered
+              analysis, dashboards, and a data historian. Built on fnkit,
+              follows the UNS Framework standard.
             </p>
-            <div class="stack-role">Delivers the functions</div>
+            <div class="stack-role">Reference implementation</div>
           </a>
         </div>
       </div>
@@ -2410,6 +2488,7 @@
           <a href="/uns/" class="btn-primary">What is a UNS? →</a>
           <a href="/framework/" class="btn-secondary">Read the Standard →</a>
           <a href="/fn-uns/" class="btn-secondary">Explore fn-uns →</a>
+          <a href="/guides/" class="btn-secondary">Guides →</a>
           <a
             href="https://github.com/unsframework"
             class="btn-secondary"
@@ -2432,6 +2511,7 @@
           <a href="https://functionkit.github.io/fnkit/" target="_blank"
             >fnkit</a
           >
+          <a href="/guides/">Guides</a>
           <a href="/changelog.html">Changelog</a>
         </div>
       </div>

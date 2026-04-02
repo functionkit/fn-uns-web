@@ -1,0 +1,2553 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+      Teltonika RUT200 Digital I/O — Machine Status via Cellular MQTT — UNS
+      Framework
+    </title>
+    <meta
+      name="description"
+      content="Step-by-step guide to using a Teltonika RUT200 industrial cellular router's digital inputs for machine running/stopped status. Covers cellular network setup, 24V and dry contact wiring, and MQTT publishing to the UNS."
+    />
+    <link
+      rel="canonical"
+      href="https://unsframework.com/guides/teltonika-rut200-digital-io.html"
+    />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>"
+    />
+<link rel="sitemap" type="application/xml" href="/sitemap.xml" />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="UNS Framework" />
+<meta property="og:title" content="Teltonika RUT200 Digital I/O — Machine Status via Cellular MQTT" />
+<meta property="og:description" content="Use a Teltonika RUT200 industrial cellular router to detect machine running/stopped status and publish to the UNS via MQTT." />
+<meta property="og:url" content="https://unsframework.com/guides/teltonika-rut200-digital-io.html" />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content="Teltonika RUT200 Digital I/O — Machine Status via Cellular MQTT" />
+<meta name="twitter:description" content="Detect machine running/stopped status with a Teltonika RUT200 and publish via cellular MQTT." />
+<meta name="keywords" content="Teltonika RUT200, digital input, cellular MQTT, machine status, industrial IoT, dry contact wiring, 4G router I/O" />
+    <link rel="stylesheet" href="../style.css" />
+    <link rel="stylesheet" href="../docs.css" />
+    <style>
+      /* Guide-specific styles */
+      .guide-hero {
+        background: var(--grey-50);
+        border: 1px solid var(--grey-200);
+        border-radius: 12px;
+        padding: 32px;
+        margin-bottom: 48px;
+      }
+      .guide-hero-meta {
+        display: flex;
+        gap: 16px;
+        flex-wrap: wrap;
+        margin-bottom: 16px;
+      }
+      .guide-hero-meta .tag {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        font-weight: 600;
+        color: var(--grey-700);
+        background: var(--grey-100);
+        padding: 4px 12px;
+        border-radius: 100px;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+      }
+      .guide-hero h1 {
+        font-size: 32px !important;
+        margin-bottom: 12px !important;
+      }
+      .guide-hero .guide-subtitle {
+        font-size: 16px;
+        color: var(--grey-700);
+        line-height: 1.7;
+        max-width: 640px;
+      }
+
+      /* Step numbering */
+      .step-label {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        font-weight: 600;
+        color: var(--grey-500);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        margin-top: 40px;
+        margin-bottom: 4px;
+        display: block;
+      }
+      .step-label + h3 {
+        margin-top: 4px;
+      }
+      h2 + .step-label {
+        margin-top: 12px;
+      }
+      h2 + p + .step-label,
+      .guide-toc + .step-label {
+        margin-top: 24px;
+      }
+      .warning-banner + .step-label {
+        margin-top: 24px;
+      }
+
+      /* Wire diagram */
+      .wire-diagram {
+        background: var(--grey-50);
+        border: 1px solid var(--grey-200);
+        border-radius: 12px;
+        padding: 32px;
+        margin: 24px 0;
+        text-align: center;
+      }
+      .wire-diagram img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 8px;
+      }
+      .wire-diagram svg {
+        max-width: 100%;
+        height: auto;
+      }
+      .wire-diagram-caption {
+        font-family: var(--font-mono);
+        font-size: 12px;
+        color: var(--grey-500);
+        margin-top: 12px;
+        line-height: 1.5;
+      }
+
+      /* Image placeholder */
+      .img-placeholder {
+        background: var(--grey-50);
+        border: 2px dashed var(--grey-300);
+        border-radius: 10px;
+        padding: 48px 24px;
+        text-align: center;
+        margin: 24px 0;
+        transition: border-color 0.2s;
+      }
+      .img-placeholder:hover {
+        border-color: var(--grey-500);
+      }
+      .img-placeholder .img-icon {
+        font-size: 28px;
+        margin-bottom: 8px;
+        opacity: 0.5;
+      }
+      .img-placeholder .img-caption {
+        font-family: var(--font-mono);
+        font-size: 12px;
+        color: var(--grey-500);
+        line-height: 1.5;
+      }
+
+      /* Checklist */
+      .checklist {
+        list-style: none;
+        padding: 0;
+        margin: 16px 0 24px;
+      }
+      .checklist li {
+        padding: 8px 0;
+        font-size: 14px;
+        color: var(--grey-700);
+        border-bottom: 1px solid var(--grey-100);
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        line-height: 1.5;
+      }
+      .checklist li:last-child {
+        border-bottom: none;
+      }
+      .checklist .check {
+        flex-shrink: 0;
+        width: 18px;
+        height: 18px;
+        border: 1.5px solid var(--grey-300);
+        border-radius: 4px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 10px;
+        margin-top: 2px;
+        color: var(--grey-500);
+      }
+
+      /* Warning / Critical banner */
+      .warning-banner {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        padding: 16px 20px;
+        background: #fef3c7;
+        border: 1px solid #f59e0b;
+        border-radius: 10px;
+        margin: 24px 0;
+        font-size: 14px;
+        color: #92400e;
+        line-height: 1.6;
+      }
+      [data-theme='dark'] .warning-banner {
+        background: #451a03;
+        border-color: #b45309;
+        color: #fde68a;
+      }
+      .warning-banner .warning-icon {
+        flex-shrink: 0;
+        font-size: 16px;
+        margin-top: 1px;
+      }
+
+      /* Success indicator */
+      .success-indicator {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 12px 16px;
+        background: var(--grey-50);
+        border: 1px solid var(--grey-200);
+        border-radius: 8px;
+        margin: 16px 0;
+        font-size: 14px;
+        color: var(--grey-700);
+      }
+      .success-indicator .success-icon {
+        color: #16a34a;
+        font-size: 14px;
+        flex-shrink: 0;
+      }
+
+      /* Config explanation */
+      .config-explain {
+        margin: 16px 0 24px;
+        padding: 0;
+        list-style: none;
+      }
+      .config-explain li {
+        padding: 6px 0;
+        font-size: 13px;
+        color: var(--grey-700);
+        line-height: 1.5;
+        display: flex;
+        gap: 8px;
+      }
+      .config-explain code {
+        font-family: var(--font-mono);
+        font-size: 12px;
+        background: var(--grey-100);
+        padding: 2px 8px;
+        border-radius: 4px;
+        color: var(--black);
+        white-space: nowrap;
+        flex-shrink: 0;
+      }
+
+      /* TOC */
+      .guide-toc {
+        border: 1px solid var(--grey-200);
+        border-radius: 10px;
+        padding: 24px 28px;
+        margin: 24px 0 48px;
+      }
+      .guide-toc-title {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        font-weight: 600;
+        color: var(--grey-500);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        margin-bottom: 12px;
+      }
+      .guide-toc ol {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        counter-reset: toc;
+      }
+      .guide-toc ol li {
+        counter-increment: toc;
+        padding: 4px 0;
+      }
+      .guide-toc ol li a {
+        font-size: 14px;
+        color: var(--grey-700);
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        transition: color 0.15s;
+      }
+      .guide-toc ol li a:hover {
+        color: var(--black);
+      }
+      .guide-toc ol li a::before {
+        content: counter(toc, decimal-leading-zero);
+        font-family: var(--font-mono);
+        font-size: 11px;
+        font-weight: 600;
+        color: var(--grey-400);
+        min-width: 20px;
+      }
+
+      /* Lessons learned cards */
+      .lesson-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1px;
+        background: var(--grey-200);
+        border: 1px solid var(--grey-200);
+        border-radius: 10px;
+        overflow: hidden;
+        margin: 24px 0;
+      }
+      .lesson-card {
+        background: var(--white);
+        padding: 24px;
+      }
+      .lesson-card h4 {
+        font-size: 14px;
+        font-weight: 700;
+        color: var(--black);
+        margin-bottom: 6px;
+      }
+      .lesson-card p {
+        font-size: 13px !important;
+        color: var(--grey-700);
+        line-height: 1.55;
+        margin-bottom: 0 !important;
+      }
+
+      /* Signal source cards */
+      .signal-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1px;
+        background: var(--grey-200);
+        border: 1px solid var(--grey-200);
+        border-radius: 10px;
+        overflow: hidden;
+        margin: 24px 0;
+      }
+      .signal-card {
+        background: var(--white);
+        padding: 24px;
+      }
+      .signal-card h4 {
+        font-size: 14px;
+        font-weight: 700;
+        color: var(--black);
+        margin-bottom: 6px;
+      }
+      .signal-card p {
+        font-size: 13px !important;
+        color: var(--grey-700);
+        line-height: 1.55;
+        margin-bottom: 0 !important;
+      }
+      .signal-card .signal-wiring {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        color: var(--grey-500);
+        margin-top: 8px;
+        line-height: 1.6;
+      }
+
+      /* Scroll-margin for anchor links */
+      .docs-content h2[id] {
+        scroll-margin-top: 80px;
+      }
+
+      /* Print styles */
+      @media print {
+        nav,
+        .docs-sidebar,
+        .menu-toggle,
+        .mobile-menu {
+          display: none !important;
+        }
+        .docs-layout {
+          grid-template-columns: 1fr !important;
+        }
+        .docs-content {
+          padding: 0 !important;
+          max-width: 100% !important;
+        }
+        .img-placeholder {
+          break-inside: avoid;
+        }
+        .warning-banner,
+        .info-banner,
+        .success-indicator {
+          break-inside: avoid;
+        }
+        .lesson-grid,
+        .signal-grid,
+        .def-table,
+        .yaml-block {
+          break-inside: avoid;
+        }
+        .guide-toc {
+          break-inside: avoid;
+        }
+        .docs-nav-buttons {
+          display: none !important;
+        }
+        .docs-content h2 {
+          break-before: page;
+        }
+        .docs-content h2:first-of-type {
+          break-before: avoid;
+        }
+        .guide-hero {
+          break-after: avoid;
+        }
+        .guide-toc {
+          break-after: page;
+        }
+        h3 {
+          break-after: avoid;
+          break-inside: avoid;
+        }
+        .step-label {
+          break-after: avoid;
+          break-inside: avoid;
+        }
+        .step-label,
+        .step-label + h3,
+        .step-label + h3 + p,
+        .step-label + h3 + .yaml-block,
+        .step-label + h3 + .info-banner {
+          break-before: auto;
+        }
+        .img-placeholder,
+        .yaml-block,
+        .info-banner,
+        .warning-banner,
+        .success-indicator,
+        .checklist,
+        .def-table,
+        .config-explain,
+        .wire-diagram,
+        .lesson-card,
+        .signal-card {
+          break-inside: avoid;
+        }
+        p,
+        ol,
+        ul {
+          orphans: 3;
+          widows: 3;
+        }
+        * {
+          color: #000 !important;
+        }
+        .guide-hero,
+        .info-banner,
+        .success-indicator,
+        .img-placeholder,
+        .yaml-block,
+        .wire-diagram,
+        .signal-card,
+        .lesson-card,
+        .guide-toc,
+        .checklist .check,
+        .guide-hero-meta .tag {
+          background: #fff !important;
+          border-color: #ccc !important;
+          box-shadow: none !important;
+        }
+        .warning-banner {
+          background: #fff !important;
+          border-color: #000 !important;
+          color: #000 !important;
+        }
+        .yaml-block {
+          background: #f5f5f5 !important;
+        }
+        .yaml-block,
+        .yaml-block * {
+          color: #000 !important;
+        }
+        a {
+          text-decoration: underline !important;
+        }
+      }
+
+      @media (max-width: 600px) {
+        .guide-hero {
+          padding: 20px;
+        }
+        .guide-hero h1 {
+          font-size: 24px !important;
+        }
+        .lesson-grid {
+          grid-template-columns: 1fr;
+        }
+        .signal-grid {
+          grid-template-columns: 1fr;
+        }
+        .guide-hero-meta {
+          gap: 8px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <nav>
+      <a href="/" class="logo">UNS Framework</a>
+      <div class="links">
+        <a href="/fn-uns/">fn-uns</a>
+        <a href="/framework/">Standard Docs</a>
+        <a href="/docs/">UNS Docs</a>
+        <a href="/guides/">Guides</a>
+        <button
+          class="theme-toggle"
+          id="themeToggle"
+          aria-label="Toggle dark mode"
+        >
+          <div class="toggle-thumb">
+            <span class="toggle-icon-sun">☀</span
+            ><span class="toggle-icon-moon">☾</span>
+          </div>
+        </button>
+      </div>
+      <button class="menu-toggle" aria-label="Menu" aria-expanded="false">
+        ☰
+      </button>
+      <div class="mobile-menu">
+        <a href="/fn-uns/">fn-uns</a>
+        <a href="/framework/">Standard Docs</a>
+        <a href="/docs/">UNS Docs</a>
+        <a href="/guides/">Guides</a>
+      </div>
+    </nav>
+
+    <div class="docs-layout">
+      <aside class="docs-sidebar">
+        <div class="sidebar-section">
+          <div class="sidebar-title">Guides</div>
+          <a href="/guides/">All Guides</a>
+        </div>
+        <div class="sidebar-section">
+          <div class="sidebar-title">Hardware</div>
+          <a href="/guides/connectivity-options.html">Connectivity Options</a>
+          <a href="/guides/siemens-logo-mqtt.html">Siemens Logo 8.4 MQTT</a>
+          <a href="/guides/siemens-logo-wiring.html"
+            >Wiring Digital Inputs</a
+          >
+          <a href="/guides/teltonika-rut200-digital-io.html" class="active"
+            >RUT200 Digital I/O</a
+          >
+        </div>
+        <div class="sidebar-section">
+          <div class="sidebar-title">This Guide</div>
+          <a href="#the-goal">The Goal</a>
+          <a href="#prerequisites">Prerequisites</a>
+          <a href="#hardware-overview">RUT200 Hardware</a>
+          <a href="#network-setup">Network Setup</a>
+          <a href="#wiring">Wiring Digital Inputs</a>
+          <a href="#io-config">Configuring I/O</a>
+          <a href="#mqtt-config">MQTT Configuration</a>
+          <a href="#testing">Testing</a>
+          <a href="#safety">Safety &amp; Best Practice</a>
+          <a href="#troubleshooting">Troubleshooting</a>
+          <a href="#lessons">Lessons Learned</a>
+          <a href="#next-steps">Next Steps</a>
+        </div>
+      </aside>
+
+      <main class="docs-content">
+        <!-- HERO -->
+        <div class="guide-hero">
+          <div class="guide-hero-meta">
+            <span class="tag">Hardware</span>
+            <span class="tag">Wiring</span>
+            <span class="tag">Cellular MQTT</span>
+            <span class="tag">Teltonika RUT200</span>
+            <span class="tag">~45 min</span>
+          </div>
+          <h1>Teltonika RUT200 — Digital I/O for Machine Status</h1>
+          <p class="guide-subtitle">
+            How to use a Teltonika RUT200 industrial cellular router's built-in
+            digital inputs to detect whether a machine is running or stopped —
+            and publish that state directly to the Unified Namespace over
+            cellular MQTT. No PLC required. Covers full network setup, 24V and
+            dry contact wiring, and MQTT configuration.
+          </p>
+        </div>
+
+        <!-- TABLE OF CONTENTS -->
+        <div class="guide-toc">
+          <div class="guide-toc-title">Contents</div>
+          <ol>
+            <li><a href="#the-goal">The Goal</a></li>
+            <li><a href="#prerequisites">Prerequisites</a></li>
+            <li>
+              <a href="#hardware-overview">RUT200 Hardware Overview</a>
+            </li>
+            <li><a href="#network-setup">Network Setup</a></li>
+            <li><a href="#wiring">Wiring Digital Inputs</a></li>
+            <li><a href="#io-config">Configuring I/O</a></li>
+            <li><a href="#mqtt-config">MQTT Configuration</a></li>
+            <li><a href="#testing">Testing</a></li>
+            <li><a href="#safety">Safety &amp; Best Practice</a></li>
+            <li><a href="#troubleshooting">Troubleshooting</a></li>
+            <li><a href="#lessons">Lessons Learned</a></li>
+            <li><a href="#next-steps">Next Steps</a></li>
+          </ol>
+        </div>
+
+        <!-- ═══════════════════════════════════════ -->
+        <!-- THE GOAL -->
+        <!-- ═══════════════════════════════════════ -->
+        <h2 id="the-goal">The Goal</h2>
+
+        <p>
+          You have machines on the factory floor. You want to know if they are
+          <strong>running</strong> or <strong>stopped</strong>. That data needs
+          to reach your Unified Namespace via MQTT, where it drives dashboards,
+          KPIs, and alerts.
+        </p>
+
+        <p>
+          The Teltonika RUT200 is an industrial cellular router with
+          <strong>built-in digital inputs</strong>. It can detect a signal from
+          the machine <em>and</em> publish it directly to your MQTT broker over
+          4G — no separate PLC, no Ethernet cable to the machine, no middleware.
+          One device does both jobs.
+        </p>
+
+        <h3>What Counts as "Running"?</h3>
+
+        <p>
+          There is no universal definition. "Running" depends on your machine
+          and your process. Common approaches:
+        </p>
+
+        <table class="def-table">
+          <thead>
+            <tr>
+              <th>Signal Source</th>
+              <th>Logic</th>
+              <th>What It Tells You</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Stack light — green lamp</td>
+              <td>Green ON = Running</td>
+              <td>Machine is in automatic cycle</td>
+            </tr>
+            <tr>
+              <td>Safety door sensor</td>
+              <td>Door CLOSED = Running</td>
+              <td>Machine is enclosed and operating</td>
+            </tr>
+            <tr>
+              <td>Motor contactor auxiliary</td>
+              <td>Contactor CLOSED = Running</td>
+              <td>Main drive motor is energised</td>
+            </tr>
+            <tr>
+              <td>Relay from existing controller</td>
+              <td>Relay ON = Running</td>
+              <td>Existing PLC or controller says "go"</td>
+            </tr>
+            <tr>
+              <td>Proximity sensor on spindle</td>
+              <td>Pulses = Running</td>
+              <td>Spindle or conveyor is physically moving</td>
+            </tr>
+            <tr>
+              <td>Hydraulic pressure switch</td>
+              <td>Pressure OK = Running</td>
+              <td>Hydraulic system is pressurised</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="info-banner">
+          <div class="info-icon">i</div>
+          <div>
+            <strong>Start simple.</strong> Pick one signal that reliably
+            indicates "running" for your machine. You can always wire the
+            second digital input later. A stack light green signal or a motor
+            contactor auxiliary contact are the most common starting points.
+          </div>
+        </div>
+
+        <div class="info-banner">
+          <div class="info-icon">i</div>
+          <div>
+            <strong>The RUT200 is not a PLC replacement.</strong> It is a
+            connectivity device with I/O. For simple binary machine status
+            (running/stopped), it does the job without a PLC. For complex logic,
+            timers, or multiple sensors with interlock logic, use a PLC like the
+            Siemens Logo and connect it via
+            <a href="/guides/connectivity-options.html">Ethernet or LoRaWAN</a>.
+          </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════ -->
+        <!-- PREREQUISITES -->
+        <!-- ═══════════════════════════════════════ -->
+        <h2 id="prerequisites">Prerequisites</h2>
+
+        <h3>Hardware</h3>
+        <ul class="checklist">
+          <li>
+            <span class="check">&#9744;</span> Teltonika RUT200 industrial
+            cellular router (any RUT200xxxxx variant)
+          </li>
+          <li>
+            <span class="check">&#9744;</span> Active SIM card with data plan
+            (standard SIM size — or micro/nano with adapter)
+          </li>
+          <li>
+            <span class="check">&#9744;</span> LTE antenna (included with
+            RUT200, or external for better signal in metal enclosures)
+          </li>
+          <li>
+            <span class="check">&#9744;</span> 9–30 VDC power supply (DIN rail
+            PSU or bench supply — the RUT200 accepts a wide input range)
+          </li>
+          <li>
+            <span class="check">&#9744;</span> Signal source — stack light tap,
+            door sensor, relay contact, or dry contact output from the machine
+          </li>
+          <li>
+            <span class="check">&#9744;</span> Wire — 0.5–1.5 mm&#178;
+            stranded, rated for the signal voltage (typically brown/blue or per
+            your site standard)
+          </li>
+          <li>
+            <span class="check">&#9744;</span> Optional: DIN rail mounting
+            bracket (Teltonika PR5MEC23 or equivalent)
+          </li>
+        </ul>
+
+        <h3>Tools</h3>
+        <ul class="checklist">
+          <li>
+            <span class="check">&#9744;</span> Small flat-blade screwdriver (for
+            the RUT200 I/O terminal block)
+          </li>
+          <li>
+            <span class="check">&#9744;</span> Wire strippers
+          </li>
+          <li>
+            <span class="check">&#9744;</span> Multimeter (for verifying signal
+            voltage and continuity)
+          </li>
+          <li>
+            <span class="check">&#9744;</span> Laptop with Ethernet port (for
+            initial WebUI configuration)
+          </li>
+          <li>
+            <span class="check">&#9744;</span> Ethernet cable (for initial setup
+            only — not needed in production)
+          </li>
+        </ul>
+
+        <h3>Software &amp; Network</h3>
+        <ul class="checklist">
+          <li>
+            <span class="check">&#9744;</span> MQTT broker accessible from the
+            internet (or via VPN) — e.g. HiveMQ Cloud, EMQX Cloud, or
+            self-hosted Mosquitto with TLS and port forwarding
+          </li>
+          <li>
+            <span class="check">&#9744;</span> MQTT client for testing — VS Code
+            MQTT extension, MQTT Explorer, or
+            <code>mosquitto_sub</code> from the command line
+          </li>
+        </ul>
+
+        <div class="warning-banner">
+          <span class="warning-icon">&#9888;</span>
+          <div>
+            <strong>Voltage limit: 30 VDC maximum.</strong> The RUT200 digital
+            inputs are rated for 0–30 VDC. Connecting mains voltage (110 V /
+            230 V) or any voltage above 30 V will destroy the device. If your
+            signal source exceeds 30 V, use an interposing relay to step it
+            down. Always verify the signal voltage with a multimeter before
+            connecting.
+          </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════ -->
+        <!-- HARDWARE OVERVIEW -->
+        <!-- ═══════════════════════════════════════ -->
+        <h2 id="hardware-overview">RUT200 Hardware Overview</h2>
+
+        <h3>Terminal Layout</h3>
+
+        <p>
+          The RUT200 has two connectors relevant to this guide: a 2-pin power
+          connector and a 4-pin I/O connector. Both use screw terminals
+          accessible with a small flat-blade screwdriver.
+        </p>
+
+        <div class="yaml-block">
+          <pre>
+# RUT200 Power Connector (2-pin)
+Pin 1 — V+  (9–30 VDC positive)
+Pin 2 — GND (power ground)
+
+# RUT200 I/O Terminal Block (4-pin)
+Pin 1 — DIN1  (Digital Input 1)
+Pin 2 — DIN2  (Digital Input 2)
+Pin 3 — DOUT1 (Digital Output 1 — open collector)
+Pin 4 — GND   (ground reference for all I/O)</pre>
+        </div>
+
+        <ul class="config-explain">
+          <li>
+            <code>DIN1</code> Primary digital input — this is what we will wire
+            for machine running/stopped detection
+          </li>
+          <li>
+            <code>DIN2</code> Second digital input — available for a second
+            signal (e.g. fault status, door sensor)
+          </li>
+          <li>
+            <code>DOUT1</code> Digital output (open collector) — can drive
+            an indicator LED or relay remotely via MQTT; not used in this guide
+          </li>
+          <li>
+            <code>GND</code> Shared ground reference for all I/O — must be
+            connected to the signal source ground
+          </li>
+        </ul>
+
+        <div class="img-placeholder">
+          <div class="img-icon">&#128247;</div>
+          <div class="img-caption">
+            Photo: RUT200 rear panel showing I/O terminal block, power
+            connector, Ethernet port, and SIM slot
+          </div>
+        </div>
+
+        <h3>Digital Input Specifications</h3>
+
+        <table class="def-table">
+          <thead>
+            <tr>
+              <th>Parameter</th>
+              <th>Value</th>
+              <th>What It Means</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Input voltage range</td>
+              <td>0–30 VDC</td>
+              <td>
+                Accepts a wider range than the Siemens Logo's 24 V-only inputs
+              </td>
+            </tr>
+            <tr>
+              <td>Logic HIGH threshold</td>
+              <td>Configurable (default &gt;5 V)</td>
+              <td>
+                Anything above this voltage registers as ON (1)
+              </td>
+            </tr>
+            <tr>
+              <td>Logic LOW threshold</td>
+              <td>Configurable (default &lt;3 V)</td>
+              <td>
+                Anything below this voltage registers as OFF (0)
+              </td>
+            </tr>
+            <tr>
+              <td>Input type</td>
+              <td>Dry contact or active voltage</td>
+              <td>
+                Supports both wiring methods — choose based on your signal
+                source
+              </td>
+            </tr>
+            <tr>
+              <td>Debounce</td>
+              <td>Configurable in WebUI</td>
+              <td>
+                Software filter for mechanical contact bounce
+              </td>
+            </tr>
+            <tr>
+              <td>Sampling rate</td>
+              <td>~100 ms</td>
+              <td>
+                Adequate for machine status; not for high-speed pulse counting
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>How the Digital Inputs Work</h3>
+
+        <p>
+          The RUT200 digital inputs support two modes. Which one you use depends
+          on what kind of signal your machine provides:
+        </p>
+
+        <div class="signal-grid">
+          <div class="signal-card">
+            <h4>Active Voltage (24 V Signal)</h4>
+            <p>
+              The signal source provides a voltage (e.g. 24 VDC from a stack
+              light, PLC output, or contactor auxiliary). When the signal is
+              active, voltage appears at the input. When inactive, the input
+              sees 0 V.
+            </p>
+            <div class="signal-wiring">
+              Signal wire &#8594; DIN1<br />
+              Signal GND &#8594; RUT200 GND
+            </div>
+          </div>
+          <div class="signal-card">
+            <h4>Dry Contact (Potential-Free)</h4>
+            <p>
+              The signal source is a switch or relay contact with no voltage of
+              its own (e.g. a relay dry contact, reed switch, or door interlock
+              contact). The RUT200 uses an internal pull-up to detect whether
+              the contact is open or closed.
+            </p>
+            <div class="signal-wiring">
+              Contact side A &#8594; DIN1<br />
+              Contact side B &#8594; RUT200 GND
+            </div>
+          </div>
+        </div>
+
+        <div class="info-banner">
+          <div class="info-icon">i</div>
+          <div>
+            <strong>For IT teams:</strong> Think of the RUT200 as a network
+            device that also has GPIO pins. It is a router that can sense the
+            physical world. If you have used a Raspberry Pi's GPIO, the concept
+            is identical — but in an industrial-rated package with cellular
+            connectivity built in.
+          </div>
+        </div>
+
+        <h3>LED Indicators</h3>
+
+        <table class="def-table">
+          <thead>
+            <tr>
+              <th>LED</th>
+              <th>Colour</th>
+              <th>What It Tells You</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Power</td>
+              <td>Green</td>
+              <td>Device is powered on</td>
+            </tr>
+            <tr>
+              <td>Signal strength (4 bars)</td>
+              <td>Green</td>
+              <td>
+                Number of lit bars indicates cellular signal quality (aim for 3+)
+              </td>
+            </tr>
+            <tr>
+              <td>Ethernet</td>
+              <td>Green</td>
+              <td>Ethernet link is active (used during initial setup)</td>
+            </tr>
+            <tr>
+              <td>WiFi</td>
+              <td>Green</td>
+              <td>WiFi radio is active (can be disabled to save power)</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- ═══════════════════════════════════════ -->
+        <!-- NETWORK SETUP -->
+        <!-- ═══════════════════════════════════════ -->
+        <h2 id="network-setup">Network Setup</h2>
+
+        <p>
+          Before wiring any I/O, get the RUT200 online and verify it can reach
+          your MQTT broker. This section walks through the complete cellular
+          setup from unboxing to verified internet connectivity.
+        </p>
+
+        <span class="step-label">Step 1</span>
+        <h3>Insert the SIM Card</h3>
+
+        <p>
+          Power off the RUT200 (or do this before first power-on). The SIM slot
+          is on the bottom of the device, behind a small cover secured with a
+          Phillips screw.
+        </p>
+
+        <ol>
+          <li>Remove the SIM slot cover screw and slide the cover off</li>
+          <li>
+            Insert the SIM card with the gold contacts facing down and the
+            notched corner oriented as shown on the slot label
+          </li>
+          <li>Push the SIM card until it clicks into place</li>
+          <li>Replace the cover and screw</li>
+        </ol>
+
+        <div class="img-placeholder">
+          <div class="img-icon">&#128247;</div>
+          <div class="img-caption">
+            Photo: RUT200 SIM slot location and correct SIM orientation
+          </div>
+        </div>
+
+        <div class="warning-banner">
+          <span class="warning-icon">&#9888;</span>
+          <div>
+            <strong>Always insert or remove the SIM with power off.</strong>
+            Hot-swapping the SIM card can corrupt the SIM or cause the modem to
+            enter an error state requiring a factory reset.
+          </div>
+        </div>
+
+        <span class="step-label">Step 2</span>
+        <h3>Power On and Access the WebUI</h3>
+
+        <ol>
+          <li>
+            Connect 9–30 VDC to the power terminals (Pin 1 = V+, Pin 2 = GND)
+          </li>
+          <li>
+            Connect an Ethernet cable from your laptop to the RUT200 LAN port
+          </li>
+          <li>Wait approximately 30 seconds for the device to boot</li>
+          <li>
+            Open a browser and navigate to
+            <code>http://192.168.1.1</code>
+          </li>
+          <li>
+            Log in with the default credentials — username:
+            <code>admin</code>, password: printed on the device label
+            (commonly <code>admin01</code> on older units)
+          </li>
+        </ol>
+
+        <div class="info-banner">
+          <div class="info-icon">i</div>
+          <div>
+            <strong>First login.</strong> The RUT200 will prompt you to change
+            the default password on first login. Choose a strong password and
+            record it — you will need it for future configuration changes and
+            remote access.
+          </div>
+        </div>
+
+        <div class="success-indicator">
+          <span class="success-icon">&#10003;</span>
+          You should see the RutOS dashboard with device status, signal
+          indicators, and navigation menu.
+        </div>
+
+        <span class="step-label">Step 3</span>
+        <h3>Configure the Cellular Connection</h3>
+
+        <p>
+          Navigate to <strong>Network &rarr; Mobile &rarr; General</strong> in
+          the WebUI. Configure the following:
+        </p>
+
+        <table class="def-table">
+          <thead>
+            <tr>
+              <th>Parameter</th>
+              <th>Value</th>
+              <th>Notes</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>SIM card</td>
+              <td>SIM 1</td>
+              <td>The RUT200 has a single SIM slot</td>
+            </tr>
+            <tr>
+              <td>APN</td>
+              <td>Your carrier's APN</td>
+              <td>
+                e.g. <code>internet</code>, <code>m2m.com.attz</code>,
+                <code>fast.t-mobile.com</code> — check with your SIM provider
+              </td>
+            </tr>
+            <tr>
+              <td>Authentication</td>
+              <td>None (most carriers)</td>
+              <td>
+                Some M2M SIMs require PAP or CHAP — check your provider's docs
+              </td>
+            </tr>
+            <tr>
+              <td>PIN</td>
+              <td>Leave blank unless SIM has PIN lock</td>
+              <td>Enter the SIM PIN if your card requires one</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <p>Click <strong>Save &amp; Apply</strong>.</p>
+
+        <div class="success-indicator">
+          <span class="success-icon">&#10003;</span>
+          The signal strength LEDs on the front panel should light up within
+          30 seconds. Check <strong>Status &rarr; Network &rarr;
+          Mobile</strong> for connection state and assigned IP address.
+        </div>
+
+        <span class="step-label">Step 4</span>
+        <h3>Verify Internet Connectivity</h3>
+
+        <p>
+          Navigate to <strong>System &rarr; Administration &rarr; Troubleshoot
+          &rarr; Diagnostics</strong>. Run a ping test:
+        </p>
+
+        <div class="yaml-block">
+          <pre>
+# Ping a public DNS server
+Host: 8.8.8.8
+Protocol: ICMP
+
+# Then ping your MQTT broker
+Host: your-broker.example.com
+Protocol: ICMP</pre>
+        </div>
+
+        <div class="success-indicator">
+          <span class="success-icon">&#10003;</span>
+          If both pings succeed, the RUT200 has internet access over cellular
+          and can resolve your broker's hostname.
+        </div>
+
+        <div class="info-banner">
+          <div class="info-icon">i</div>
+          <div>
+            <strong>Ping fails?</strong> Check: (1) SIM card is seated
+            properly, (2) APN is correct for your carrier, (3) antenna is
+            connected, (4) you have cellular coverage at this location, (5) the
+            data plan is active and not exhausted.
+          </div>
+        </div>
+
+        <span class="step-label">Step 5</span>
+        <h3>Firewall Configuration for MQTT</h3>
+
+        <p>
+          The RUT200 needs to initiate <strong>outbound</strong> connections to
+          your MQTT broker. By default, outbound traffic is allowed on most
+          cellular configurations. However, some corporate SIMs or carrier
+          policies restrict outbound ports.
+        </p>
+
+        <p>
+          Navigate to <strong>Network &rarr; Firewall &rarr; Traffic
+          Rules</strong> and verify that outbound traffic on your MQTT port is
+          not blocked.
+        </p>
+
+        <table class="def-table">
+          <thead>
+            <tr>
+              <th>Port</th>
+              <th>Protocol</th>
+              <th>Use Case</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>8883</td>
+              <td>MQTT over TLS</td>
+              <td>
+                <strong>Recommended.</strong> Encrypted MQTT — use this for all
+                cellular connections
+              </td>
+            </tr>
+            <tr>
+              <td>1883</td>
+              <td>MQTT (unencrypted)</td>
+              <td>
+                Testing only. Never use over the public internet
+              </td>
+            </tr>
+            <tr>
+              <td>443</td>
+              <td>MQTT over WebSocket/TLS</td>
+              <td>
+                Alternative when carrier blocks non-standard ports
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="warning-banner">
+          <span class="warning-icon">&#9888;</span>
+          <div>
+            <strong>Never use unencrypted MQTT (port 1883) over the public
+            internet.</strong> Cellular traffic traverses the public network.
+            Anyone can intercept unencrypted MQTT messages. Always use TLS
+            (port 8883) or a VPN when the RUT200 is on cellular. This is
+            non-negotiable for production deployments.
+          </div>
+        </div>
+
+        <span class="step-label">Step 6</span>
+        <h3>Remote Access (Optional)</h3>
+
+        <p>
+          Most cellular connections receive a dynamic IP behind carrier-grade
+          NAT. This is fine for MQTT — the RUT200 initiates the outbound
+          connection to your broker, so no inbound ports or static IP are
+          needed.
+        </p>
+
+        <p>
+          If you need to remotely access the RUT200 WebUI for configuration
+          changes:
+        </p>
+
+        <ul>
+          <li>
+            <strong>Teltonika RMS</strong> (Remote Management System) — the
+            recommended approach. Teltonika's cloud platform provides secure
+            remote WebUI access, firmware updates, and fleet management with no
+            port forwarding required.
+          </li>
+          <li>
+            <strong>VPN</strong> — configure WireGuard or OpenVPN on the RUT200
+            to connect to your corporate VPN. This gives the device a
+            fixed internal IP.
+          </li>
+        </ul>
+
+        <div class="info-banner">
+          <div class="info-icon">i</div>
+          <div>
+            <strong>For MQTT publishing, you do not need a static IP or port
+            forwarding.</strong> The RUT200 connects outbound to your broker.
+            Remote access is only needed if you want to change the RUT200's
+            configuration remotely.
+          </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════ -->
+        <!-- WIRING DIGITAL INPUTS -->
+        <!-- ═══════════════════════════════════════ -->
+        <h2 id="wiring">Wiring Digital Inputs</h2>
+
+        <p>
+          There are two ways to wire a signal into the RUT200's digital inputs,
+          depending on what kind of signal your machine provides. Read both
+          methods, then follow the one that matches your signal source.
+        </p>
+
+        <div class="signal-grid">
+          <div class="signal-card">
+            <h4>Method A: 24 V Active Signal</h4>
+            <p>
+              Use this when the signal source provides its own voltage — a 24 V
+              output from a stack light, a PLC digital output, or a contactor
+              auxiliary contact powered by an external 24 VDC supply.
+            </p>
+            <div class="signal-wiring">
+              Requires: signal wire + ground wire
+            </div>
+          </div>
+          <div class="signal-card">
+            <h4>Method B: Dry Contact</h4>
+            <p>
+              Use this when the signal source is a potential-free switch or
+              relay contact — no voltage of its own. The RUT200's internal
+              pull-up provides the sensing voltage. Simpler wiring, fewer
+              ground reference issues.
+            </p>
+            <div class="signal-wiring">
+              Requires: two wires between contact and RUT200
+            </div>
+          </div>
+        </div>
+
+        <h3>Method A: 24 V Active Signal Wiring</h3>
+
+        <p>
+          When the signal source provides voltage (typically 24 VDC), wire it
+          directly to the digital input with a common ground:
+        </p>
+
+        <div class="wire-diagram">
+          <pre style="
+            text-align: left;
+            display: inline-block;
+            font-family: var(--font-mono);
+            font-size: 13px;
+            line-height: 1.8;
+            color: var(--grey-700);
+          ">
+  ┌─────────────────┐          ┌──────────────────┐
+  │  SIGNAL SOURCE   │          │    RUT200 I/O     │
+  │  (stack light,   │          │                   │
+  │   PLC output,    │          │  Pin 1  DIN1  ◄───── signal wire (24V when active)
+  │   contactor aux) │          │  Pin 2  DIN2      │
+  │                  │          │  Pin 3  DOUT1     │
+  │  Signal + ───────┼──────────┤  Pin 4  GND   ◄───── ground wire (0V reference)
+  │  Signal GND ─────┼──────────┤                   │
+  └─────────────────┘          └──────────────────┘
+
+  When signal is ACTIVE:   DIN1 sees ~24V → Logic HIGH (1)
+  When signal is INACTIVE: DIN1 sees ~0V  → Logic LOW  (0)</pre>
+          <div class="wire-diagram-caption">
+            Method A: Active 24 VDC signal wiring — signal source provides
+            voltage
+          </div>
+        </div>
+
+        <ol>
+          <li>
+            <strong>Identify the signal wire.</strong> Use a multimeter to
+            confirm the voltage between the signal wire and ground when the
+            machine is running. It should read 20–28 VDC (within the RUT200's
+            0–30 V range).
+          </li>
+          <li>
+            <strong>Run the signal wire</strong> from the signal source to the
+            RUT200 I/O terminal block, Pin 1 (DIN1). Strip 6–8 mm of
+            insulation and insert into the screw terminal. Tighten firmly.
+          </li>
+          <li>
+            <strong>Connect the ground.</strong> Run a wire from the signal
+            source's ground (0 V / common) to the RUT200 I/O terminal block,
+            Pin 4 (GND). This is critical — the RUT200 needs a common ground
+            reference with the signal source.
+          </li>
+          <li>
+            <strong>Verify.</strong> With the machine running, measure the
+            voltage between DIN1 and GND on the RUT200 terminals. You should
+            see the signal voltage. With the machine stopped, it should read
+            near 0 V.
+          </li>
+        </ol>
+
+        <div class="info-banner">
+          <div class="info-icon">i</div>
+          <div>
+            <strong>Check the 0 V path.</strong> The most common wiring mistake
+            is forgetting the ground wire. Without a shared ground reference,
+            the input will float and give unreliable readings. If the signal
+            source and the RUT200 share the same power supply, they may already
+            share a ground — but always verify with a multimeter.
+          </div>
+        </div>
+
+        <h3>Method B: Dry Contact Wiring</h3>
+
+        <p>
+          When the signal source is a potential-free contact (relay dry contact,
+          reed switch, limit switch, door interlock), wire it between the
+          digital input and ground. The RUT200 uses an internal pull-up resistor
+          to detect whether the contact is open or closed.
+        </p>
+
+        <div class="wire-diagram">
+          <pre style="
+            text-align: left;
+            display: inline-block;
+            font-family: var(--font-mono);
+            font-size: 13px;
+            line-height: 1.8;
+            color: var(--grey-700);
+          ">
+  ┌─────────────────┐          ┌──────────────────┐
+  │  DRY CONTACT     │          │    RUT200 I/O     │
+  │  (relay, reed    │          │                   │
+  │   switch, limit  │          │  Pin 1  DIN1  ◄───── wire A
+  │   switch)        │          │  Pin 2  DIN2      │
+  │                  │          │  Pin 3  DOUT1     │
+  │  Terminal A ─────┼──────────┤  Pin 4  GND   ◄───── wire B
+  │  Terminal B ─────┼──────────┤                   │
+  └─────────────────┘          └──────────────────┘
+
+  Contact CLOSED: DIN1 pulled to GND → Logic LOW  (0)
+  Contact OPEN:   DIN1 pulled HIGH   → Logic HIGH (1)
+
+  Note: Logic is INVERTED compared to Method A.
+  Configure accordingly in the I/O settings (see next section).</pre>
+          <div class="wire-diagram-caption">
+            Method B: Dry contact wiring — RUT200 internal pull-up detects
+            contact state
+          </div>
+        </div>
+
+        <ol>
+          <li>
+            <strong>Identify the contact terminals.</strong> A dry contact has
+            two terminals (or three — COM, NO, NC). For "running = contact
+            closed", use the COM and NO (normally open) terminals.
+          </li>
+          <li>
+            <strong>Wire terminal A</strong> to the RUT200 I/O terminal block,
+            Pin 1 (DIN1).
+          </li>
+          <li>
+            <strong>Wire terminal B</strong> to the RUT200 I/O terminal block,
+            Pin 4 (GND).
+          </li>
+          <li>
+            <strong>Verify.</strong> With the contact closed (machine running),
+            measure continuity between DIN1 and GND — it should be near 0
+            ohms. With the contact open (machine stopped), it should be open
+            circuit.
+          </li>
+        </ol>
+
+        <div class="info-banner">
+          <div class="info-icon">i</div>
+          <div>
+            <strong>Logic inversion.</strong> In dry contact mode, the logic is
+            inverted: contact closed = input LOW, contact open = input HIGH.
+            You can handle this in two ways: (1) invert the logic in the
+            RUT200's I/O configuration, or (2) swap the JSON payload values in
+            the MQTT template. Both approaches are covered in the configuration
+            sections below.
+          </div>
+        </div>
+
+        <h3>Stack Light Wiring (Most Common)</h3>
+
+        <p>
+          The most common signal source is a tap from the machine's stack
+          light — specifically the green lamp wire, which is typically energised
+          when the machine is in automatic cycle.
+        </p>
+
+        <div class="wire-diagram">
+          <pre style="
+            text-align: left;
+            display: inline-block;
+            font-family: var(--font-mono);
+            font-size: 13px;
+            line-height: 1.8;
+            color: var(--grey-700);
+          ">
+  Machine Control Panel
+  ┌──────────────────────────────┐
+  │                              │
+  │  24VDC Bus ──┬── Green Lamp  │
+  │              │               │
+  │              │  ┌── tap ───────────────┐
+  │              │  │            │          │
+  │  0V Bus ─────┼──┼── Lamp GND│          │
+  │              │  │            │          │
+  └──────────────┼──┼────────────┘          │
+                 │  │                       │
+                 │  │    ┌──────────────┐   │
+                 │  └───►│ DIN1 (Pin 1) │   │
+                 │       │ DIN2 (Pin 2) │   │
+                 │       │ DOUT1(Pin 3) │   │
+                 └──────►│ GND  (Pin 4) │   │
+                         └──────────────┘   │
+                            RUT200 I/O      │
+                                            │
+  Green lamp ON  → DIN1 sees 24V → Running  │
+  Green lamp OFF → DIN1 sees 0V  → Stopped</pre>
+          <div class="wire-diagram-caption">
+            Stack light tap: green lamp wire to DIN1, shared 0 V to GND
+          </div>
+        </div>
+
+        <div class="warning-banner">
+          <span class="warning-icon">&#9888;</span>
+          <div>
+            <strong>30 V maximum.</strong> Most industrial stack lights run on
+            24 VDC, which is within the RUT200's input range. However, some
+            older machines use 48 V or even 230 VAC stack lights. Always verify
+            with a multimeter before connecting. If the voltage exceeds 30 V,
+            use an interposing relay: wire the high-voltage signal to the relay
+            coil, and wire the relay's dry contact to the RUT200 using Method B.
+          </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════ -->
+        <!-- CONFIGURING I/O -->
+        <!-- ═══════════════════════════════════════ -->
+        <h2 id="io-config">Configuring I/O</h2>
+
+        <p>
+          With the signal wired, configure the RUT200 to correctly read the
+          digital input state.
+        </p>
+
+        <span class="step-label">Step 1</span>
+        <h3>Access the I/O Configuration</h3>
+
+        <p>
+          In the RUT200 WebUI, navigate to <strong>Services &rarr;
+          Input/Output</strong>. You will see the status and configuration
+          for DIN1, DIN2, and DOUT1.
+        </p>
+
+        <div class="img-placeholder">
+          <div class="img-icon">&#128247;</div>
+          <div class="img-caption">
+            Screenshot: RutOS Services &rarr; Input/Output configuration page
+          </div>
+        </div>
+
+        <span class="step-label">Step 2</span>
+        <h3>Configure the Input Parameters</h3>
+
+        <p>
+          Click on <strong>DIN1</strong> to open its configuration. Set the
+          parameters based on your wiring method:
+        </p>
+
+        <table class="def-table">
+          <thead>
+            <tr>
+              <th>Parameter</th>
+              <th>Method A (24 V Active)</th>
+              <th>Method B (Dry Contact)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Enabled</td>
+              <td>Yes</td>
+              <td>Yes</td>
+            </tr>
+            <tr>
+              <td>Input type</td>
+              <td>Digital</td>
+              <td>Digital</td>
+            </tr>
+            <tr>
+              <td>Active state</td>
+              <td>High (default)</td>
+              <td>Low (inverted — contact closed = active)</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <ul class="config-explain">
+          <li>
+            <code>Enabled</code> Activates the input for reading and
+            event generation
+          </li>
+          <li>
+            <code>Input type</code> Set to Digital for binary on/off state
+            detection
+          </li>
+          <li>
+            <code>Active state</code> Determines which logic level means
+            "active" (running). For Method A, HIGH = active because voltage
+            present means running. For Method B, LOW = active because contact
+            closed pulls the input to ground
+          </li>
+        </ul>
+
+        <span class="step-label">Step 3</span>
+        <h3>Set Debounce</h3>
+
+        <p>
+          Debounce filters out rapid state changes caused by mechanical contact
+          bounce in relays and switches. Without debounce, a single relay
+          closure can generate multiple false transitions.
+        </p>
+
+        <div class="yaml-block">
+          <pre>
+# Recommended debounce settings
+Machine status (stack light, contactor): 200–500 ms
+Door sensor / safety interlock:          100–200 ms
+Solid-state signal (PLC output):         50 ms or off</pre>
+        </div>
+
+        <p>
+          For machine running/stopped detection, <strong>300 ms</strong> is a
+          safe default. This means the input must be stable for 300 ms before
+          the RUT200 registers a state change.
+        </p>
+
+        <div class="info-banner">
+          <div class="info-icon">i</div>
+          <div>
+            <strong>Too much debounce hides real transitions.</strong> If you
+            set debounce to 5 seconds, a machine that stops for 3 seconds and
+            restarts will not be captured. Keep it under 1 second for machine
+            status monitoring.
+          </div>
+        </div>
+
+        <span class="step-label">Step 4</span>
+        <h3>Test the I/O State in the WebUI</h3>
+
+        <p>
+          Navigate to <strong>Services &rarr; Input/Output</strong> and observe
+          the live status of DIN1.
+        </p>
+
+        <ol>
+          <li>
+            Activate the signal (start the machine or manually apply the
+            signal)
+          </li>
+          <li>Confirm DIN1 shows state <strong>1</strong> (active / running)</li>
+          <li>Deactivate the signal (stop the machine or remove the signal)</li>
+          <li>Confirm DIN1 shows state <strong>0</strong> (inactive / stopped)</li>
+        </ol>
+
+        <div class="success-indicator">
+          <span class="success-icon">&#10003;</span>
+          DIN1 should toggle between 1 and 0 as you activate and deactivate the
+          signal. If it does not change, see the
+          <a href="#troubleshooting">Troubleshooting</a> section.
+        </div>
+
+        <!-- ═══════════════════════════════════════ -->
+        <!-- MQTT CONFIGURATION -->
+        <!-- ═══════════════════════════════════════ -->
+        <h2 id="mqtt-config">MQTT Configuration</h2>
+
+        <p>
+          The RUT200 has a built-in <strong>Data to Server</strong> feature that
+          can publish I/O state changes directly via MQTT. No scripting, no
+          middleware, no edge gateway. Configure it once and the device handles
+          the rest.
+        </p>
+
+        <span class="step-label">Step 1</span>
+        <h3>Create the MQTT Connection</h3>
+
+        <p>
+          Navigate to <strong>Services &rarr; Data to Server</strong>. Click
+          <strong>Add</strong> to create a new data sender instance. Configure
+          the connection parameters:
+        </p>
+
+        <table class="def-table">
+          <thead>
+            <tr>
+              <th>Parameter</th>
+              <th>Value</th>
+              <th>Notes</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Name</td>
+              <td><code>uns-machine-status</code></td>
+              <td>A descriptive name for this sender instance</td>
+            </tr>
+            <tr>
+              <td>Type</td>
+              <td>MQTT</td>
+              <td>Select MQTT (not HTTP, Modbus, or other protocols)</td>
+            </tr>
+            <tr>
+              <td>Broker hostname</td>
+              <td><code>your-broker.example.com</code></td>
+              <td>FQDN or IP address of your MQTT broker</td>
+            </tr>
+            <tr>
+              <td>Port</td>
+              <td><code>8883</code></td>
+              <td>
+                TLS-encrypted MQTT — use 8883 for production, 1883 only for
+                local testing
+              </td>
+            </tr>
+            <tr>
+              <td>TLS</td>
+              <td>Enabled</td>
+              <td>
+                Upload the CA certificate if using a self-signed broker cert.
+                Public brokers (HiveMQ Cloud, EMQX Cloud) use publicly trusted
+                CAs — no upload needed.
+              </td>
+            </tr>
+            <tr>
+              <td>Client ID</td>
+              <td><code>rut200-factory1-cnc001</code></td>
+              <td>
+                Unique per device — use a naming convention like
+                <code>rut200-{site}-{machine}</code>
+              </td>
+            </tr>
+            <tr>
+              <td>Username</td>
+              <td>Your broker username</td>
+              <td>Required for most cloud brokers</td>
+            </tr>
+            <tr>
+              <td>Password</td>
+              <td>Your broker password</td>
+              <td>Required for most cloud brokers</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <ul class="config-explain">
+          <li>
+            <code>Client ID</code> Must be unique across all devices connecting
+            to the same broker. If two devices use the same Client ID, they will
+            disconnect each other in a loop.
+          </li>
+          <li>
+            <code>TLS</code> For self-signed certificates: navigate to
+            Services &rarr; Data to Server &rarr; your instance &rarr;
+            Security, and upload the CA certificate file (.crt or .pem).
+          </li>
+        </ul>
+
+        <span class="step-label">Step 2</span>
+        <h3>Configure the Topic</h3>
+
+        <p>
+          Set the MQTT topic to follow the UNS Framework topic hierarchy. This
+          ensures the data integrates cleanly with the fn-uns pipeline and any
+          other consumers on the namespace.
+        </p>
+
+        <div class="yaml-block">
+          <pre>
+# UNS Framework topic hierarchy
+uns/v1/{enterprise}/{site}/{area}/{line}/{cell}/status/running
+
+# Example for a CNC machine:
+uns/v1/acme/factory-1/machining/line-a/cnc-001/status/running</pre>
+        </div>
+
+        <ul class="config-explain">
+          <li>
+            <code>uns/v1</code> UNS Framework version prefix
+          </li>
+          <li>
+            <code>acme</code> Your enterprise / company name
+          </li>
+          <li>
+            <code>factory-1</code> The physical site where the machine is
+            located
+          </li>
+          <li>
+            <code>machining</code> The area within the site (ISA-95 area level)
+          </li>
+          <li>
+            <code>line-a</code> The production line
+          </li>
+          <li>
+            <code>cnc-001</code> The specific machine
+          </li>
+          <li>
+            <code>status/running</code> The data point — machine running status
+          </li>
+        </ul>
+
+        <div class="info-banner">
+          <div class="info-icon">i</div>
+          <div>
+            <strong>Follow the hierarchy from the start.</strong> It is tempting
+            to use a flat topic like <code>rut200/din1</code> — but this will
+            not scale and will not integrate with the fn-uns pipeline. See the
+            <a href="/guides/yaml-definitions.html">YAML Definitions guide</a>
+            for a full walkthrough of the topic hierarchy.
+          </div>
+        </div>
+
+        <span class="step-label">Step 3</span>
+        <h3>Configure the JSON Payload</h3>
+
+        <p>
+          In the Data to Server instance, configure the payload format. The
+          RUT200 supports template variables that are replaced with live values
+          at publish time.
+        </p>
+
+        <div class="yaml-block">
+          <pre>
+{
+  "timestamp": "%t",
+  "running": %i1,
+  "source": "din1",
+  "device": "rut200-cnc-001"
+}</pre>
+        </div>
+
+        <ul class="config-explain">
+          <li>
+            <code>%t</code> Replaced with the Unix timestamp at publish time
+          </li>
+          <li>
+            <code>%i1</code> Replaced with the current state of DIN1 — 1 for
+            active (running), 0 for inactive (stopped)
+          </li>
+          <li>
+            <code>source</code> Identifies which input this reading came from
+            (useful when you add DIN2 later)
+          </li>
+          <li>
+            <code>device</code> Identifies the physical device — helpful for
+            troubleshooting when you have multiple RUT200s
+          </li>
+        </ul>
+
+        <div class="info-banner">
+          <div class="info-icon">i</div>
+          <div>
+            <strong>Template variables depend on RutOS version.</strong> The
+            exact variable names (e.g. <code>%i1</code> vs
+            <code>%din1</code>) may differ between RutOS versions. Check
+            <strong>Services &rarr; Data to Server &rarr; Format
+            Help</strong> in your WebUI for the available variables on your
+            firmware version.
+          </div>
+        </div>
+
+        <span class="step-label">Step 4</span>
+        <h3>Configure the Trigger</h3>
+
+        <p>
+          The Data to Server feature can publish on three triggers. Use a
+          combination of <strong>On Change</strong> and
+          <strong>Periodic</strong> for best results:
+        </p>
+
+        <table class="def-table">
+          <thead>
+            <tr>
+              <th>Trigger</th>
+              <th>When It Publishes</th>
+              <th>Use Case</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>On Change</td>
+              <td>
+                Immediately when DIN1 state changes (after debounce)
+              </td>
+              <td>
+                <strong>Essential.</strong> Captures machine start/stop events
+                in real time
+              </td>
+            </tr>
+            <tr>
+              <td>Periodic</td>
+              <td>
+                At a fixed interval regardless of state changes
+              </td>
+              <td>
+                <strong>Heartbeat.</strong> Proves the device is alive even when
+                the machine state has not changed
+              </td>
+            </tr>
+            <tr>
+              <td>On Boot</td>
+              <td>
+                Once when the RUT200 starts up
+              </td>
+              <td>
+                Useful for detecting power cycles and restarts
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="yaml-block">
+          <pre>
+# Recommended trigger configuration
+On Change:  Enabled
+Periodic:   Enabled — every 60 seconds
+On Boot:    Enabled</pre>
+        </div>
+
+        <div class="info-banner">
+          <div class="info-icon">i</div>
+          <div>
+            <strong>On Change + Periodic is the heartbeat pattern.</strong> This
+            is the same approach used in the
+            <a href="/guides/siemens-logo-mqtt.html">Siemens Logo MQTT
+            guide</a>. The periodic publish ensures your monitoring system knows
+            the device is alive even when the machine state has not changed. If
+            you only use On Change, a disconnected RUT200 looks identical to a
+            machine that simply has not changed state.
+          </div>
+        </div>
+
+        <span class="step-label">Step 5</span>
+        <h3>Enable and Save</h3>
+
+        <ol>
+          <li>
+            Set the Data to Server instance to <strong>Enabled</strong>
+          </li>
+          <li>Click <strong>Save &amp; Apply</strong></li>
+          <li>
+            Navigate to <strong>Services &rarr; Data to Server</strong> and
+            check the instance status
+          </li>
+        </ol>
+
+        <div class="success-indicator">
+          <span class="success-icon">&#10003;</span>
+          The instance should show <strong>Connected</strong> and the last
+          publish timestamp should be recent (within the periodic interval).
+          If it shows "Disconnected" or "Error", check the broker hostname,
+          port, TLS settings, and credentials.
+        </div>
+
+        <!-- ═══════════════════════════════════════ -->
+        <!-- TESTING -->
+        <!-- ═══════════════════════════════════════ -->
+        <h2 id="testing">Testing</h2>
+
+        <p>
+          Run through each layer of the stack to confirm data flows end-to-end:
+          cellular connectivity, I/O reading, and MQTT delivery.
+        </p>
+
+        <span class="step-label">Step 1</span>
+        <h3>Verify Cellular Connectivity</h3>
+
+        <p>
+          Navigate to <strong>Status &rarr; Network &rarr; Mobile</strong> and
+          confirm:
+        </p>
+
+        <ul class="checklist">
+          <li>
+            <span class="check">&#9744;</span> Connection state shows
+            <strong>Connected</strong>
+          </li>
+          <li>
+            <span class="check">&#9744;</span> Signal strength shows 3+ bars
+          </li>
+          <li>
+            <span class="check">&#9744;</span> An IP address is assigned
+          </li>
+          <li>
+            <span class="check">&#9744;</span> Data usage counters are
+            incrementing
+          </li>
+        </ul>
+
+        <span class="step-label">Step 2</span>
+        <h3>Verify I/O Reads Correctly</h3>
+
+        <p>
+          Navigate to <strong>Services &rarr; Input/Output</strong> and check
+          the live state of DIN1:
+        </p>
+
+        <ol>
+          <li>
+            Activate the signal (start machine or apply signal) &rarr;
+            DIN1 should show <strong>1</strong>
+          </li>
+          <li>
+            Deactivate the signal (stop machine or remove signal) &rarr;
+            DIN1 should show <strong>0</strong>
+          </li>
+        </ol>
+
+        <div class="success-indicator">
+          <span class="success-icon">&#10003;</span>
+          DIN1 toggles correctly between 0 and 1.
+        </div>
+
+        <span class="step-label">Step 3</span>
+        <h3>Verify MQTT Messages Arrive</h3>
+
+        <p>
+          On your laptop or server, subscribe to the topic and watch for
+          messages:
+        </p>
+
+        <div class="yaml-block">
+          <pre>
+# Using mosquitto_sub (command line)
+mosquitto_sub \
+  -h your-broker.example.com \
+  -p 8883 \
+  --cafile ca.crt \
+  -u your-username \
+  -P your-password \
+  -t "uns/v1/acme/factory-1/machining/line-a/cnc-001/status/#" \
+  -v</pre>
+        </div>
+
+        <p>You should see messages like:</p>
+
+        <div class="yaml-block">
+          <pre>
+uns/v1/acme/factory-1/machining/line-a/cnc-001/status/running {"timestamp":"1711612800","running":1,"source":"din1","device":"rut200-cnc-001"}
+uns/v1/acme/factory-1/machining/line-a/cnc-001/status/running {"timestamp":"1711612860","running":1,"source":"din1","device":"rut200-cnc-001"}
+uns/v1/acme/factory-1/machining/line-a/cnc-001/status/running {"timestamp":"1711612875","running":0,"source":"din1","device":"rut200-cnc-001"}</pre>
+        </div>
+
+        <ul class="config-explain">
+          <li>
+            <code>Line 1</code> Initial state or periodic heartbeat — machine
+            is running
+          </li>
+          <li>
+            <code>Line 2</code> Periodic heartbeat 60 seconds later — still
+            running, no change
+          </li>
+          <li>
+            <code>Line 3</code> On Change event — machine stopped (running
+            changed from 1 to 0)
+          </li>
+        </ul>
+
+        <div class="success-indicator">
+          <span class="success-icon">&#10003;</span>
+          JSON messages arrive on the correct topic with the correct running
+          state.
+        </div>
+
+        <span class="step-label">Step 4</span>
+        <h3>End-to-End State Change Test</h3>
+
+        <p>
+          With <code>mosquitto_sub</code> still running, perform a full cycle:
+        </p>
+
+        <ol>
+          <li>
+            <strong>Start the machine</strong> &rarr; confirm a message arrives
+            with <code>"running":1</code>
+          </li>
+          <li>
+            <strong>Wait 60 seconds</strong> &rarr; confirm a periodic
+            heartbeat message arrives (still <code>"running":1</code>)
+          </li>
+          <li>
+            <strong>Stop the machine</strong> &rarr; confirm a message arrives
+            with <code>"running":0</code>
+          </li>
+          <li>
+            <strong>Wait 60 seconds</strong> &rarr; confirm a heartbeat arrives
+            (still <code>"running":0</code>)
+          </li>
+        </ol>
+
+        <div class="success-indicator">
+          <span class="success-icon">&#10003;</span>
+          All four messages arrive with correct timing and correct state values.
+          The RUT200 is publishing machine status to the UNS.
+        </div>
+
+        <!-- ═══════════════════════════════════════ -->
+        <!-- SAFETY & BEST PRACTICE -->
+        <!-- ═══════════════════════════════════════ -->
+        <h2 id="safety">Safety &amp; Best Practice</h2>
+
+        <div class="warning-banner">
+          <span class="warning-icon">&#9888;</span>
+          <div>
+            <strong>This section is not optional.</strong> Incorrect wiring can
+            damage the RUT200, the machine, or create a safety hazard.
+            Unencrypted network traffic exposes production data. Follow these
+            rules.
+          </div>
+        </div>
+
+        <h3>Electrical Safety</h3>
+
+        <table class="def-table">
+          <thead>
+            <tr>
+              <th>Rule</th>
+              <th>Detail</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Maximum 30 VDC</td>
+              <td>
+                Never connect signals above 30 VDC to the I/O terminals. Use an
+                interposing relay for higher voltages.
+              </td>
+            </tr>
+            <tr>
+              <td>Isolate before wiring</td>
+              <td>
+                Power off the RUT200 and isolate the signal source before making
+                or changing any wiring connections.
+              </td>
+            </tr>
+            <tr>
+              <td>Use ferrules</td>
+              <td>
+                Use wire ferrules on stranded wire to prevent loose strands from
+                causing short circuits in the terminal block.
+              </td>
+            </tr>
+            <tr>
+              <td>Protect cable routing</td>
+              <td>
+                Route signal cables away from high-voltage power cables, VFD
+                outputs, and sources of electromagnetic interference. Use
+                shielded cable for runs longer than 5 metres.
+              </td>
+            </tr>
+            <tr>
+              <td>Verify with a multimeter</td>
+              <td>
+                Always measure the signal voltage before connecting. Never
+                assume — measure.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>Network Security</h3>
+
+        <table class="def-table">
+          <thead>
+            <tr>
+              <th>Rule</th>
+              <th>Detail</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Always use TLS</td>
+              <td>
+                MQTT over cellular must be encrypted (port 8883). Unencrypted
+                MQTT (port 1883) over the public internet means anyone can read
+                your production data.
+              </td>
+            </tr>
+            <tr>
+              <td>Change default password</td>
+              <td>
+                The RUT200 ships with a default password. Change it on first
+                login. Use a strong, unique password.
+              </td>
+            </tr>
+            <tr>
+              <td>Disable unused services</td>
+              <td>
+                If you are not using WiFi, disable the WiFi AP in the WebUI.
+                Fewer attack surfaces means better security.
+              </td>
+            </tr>
+            <tr>
+              <td>Keep firmware updated</td>
+              <td>
+                Teltonika releases regular RutOS updates with security patches.
+                Use Teltonika RMS or manual updates to stay current.
+              </td>
+            </tr>
+            <tr>
+              <td>Use RMS for remote access</td>
+              <td>
+                Do not expose the WebUI to the public internet. Use Teltonika
+                RMS or a VPN for remote management.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>Installation Best Practice</h3>
+
+        <table class="def-table">
+          <thead>
+            <tr>
+              <th>Rule</th>
+              <th>Detail</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>DIN rail mounting</td>
+              <td>
+                Use the optional DIN rail bracket for permanent installations.
+                The RUT200 is rated for industrial DIN rail cabinets.
+              </td>
+            </tr>
+            <tr>
+              <td>IP rating</td>
+              <td>
+                The RUT200 is not IP-rated for direct outdoor exposure. Mount it
+                inside a weatherproof enclosure (IP65+) if installing outside a
+                control cabinet.
+              </td>
+            </tr>
+            <tr>
+              <td>Antenna placement</td>
+              <td>
+                Metal enclosures attenuate cellular signal. Use an external
+                antenna mounted outside the enclosure with a short cable run.
+                Test signal strength before permanent mounting.
+              </td>
+            </tr>
+            <tr>
+              <td>Cable glands</td>
+              <td>
+                Use cable glands on the enclosure for all cable entries (power,
+                I/O, antenna) to maintain the IP rating and prevent cable
+                strain.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- ═══════════════════════════════════════ -->
+        <!-- TROUBLESHOOTING -->
+        <!-- ═══════════════════════════════════════ -->
+        <h2 id="troubleshooting">Troubleshooting</h2>
+
+        <h3>Cellular Connection Issues</h3>
+
+        <ul class="checklist">
+          <li>
+            <span class="check">&#9744;</span> <strong>No signal
+            LEDs:</strong> Verify the SIM is seated properly and the antenna is
+            connected. Try removing and reinserting the SIM (with power off).
+          </li>
+          <li>
+            <span class="check">&#9744;</span> <strong>Signal but no
+            data:</strong> Verify the APN is correct for your carrier. Check
+            that the SIM's data plan is active and has remaining data
+            allowance.
+          </li>
+          <li>
+            <span class="check">&#9744;</span> <strong>SIM PIN
+            required:</strong> If the SIM has PIN lock enabled, enter it in
+            Network &rarr; Mobile &rarr; SIM. Or disable the PIN using a
+            phone first.
+          </li>
+          <li>
+            <span class="check">&#9744;</span> <strong>Carrier blocks
+            ports:</strong> Some M2M SIMs restrict outbound ports. Try port
+            443 (MQTT over WebSocket/TLS) if 8883 is blocked. Contact your SIM
+            provider to confirm allowed ports.
+          </li>
+          <li>
+            <span class="check">&#9744;</span> <strong>Weak signal:</strong>
+            Move the antenna to a higher position or outside a metal enclosure.
+            Consider an external high-gain antenna for difficult RF
+            environments.
+          </li>
+        </ul>
+
+        <h3>Digital Input Not Reading</h3>
+
+        <ul class="checklist">
+          <li>
+            <span class="check">&#9744;</span> <strong>Measure
+            voltage:</strong> Use a multimeter to measure voltage between DIN1
+            (Pin 1) and GND (Pin 4) directly at the RUT200 terminals. For
+            Method A, you should see signal voltage when active, ~0 V when
+            inactive.
+          </li>
+          <li>
+            <span class="check">&#9744;</span> <strong>Check ground
+            wire:</strong> The most common cause of a non-reading input is a
+            missing or disconnected ground wire. Verify continuity between the
+            signal source ground and RUT200 Pin 4.
+          </li>
+          <li>
+            <span class="check">&#9744;</span> <strong>Correct
+            input?</strong> Verify you are wired to DIN1 (Pin 1), not DIN2
+            (Pin 2) or DOUT1 (Pin 3). The pin ordering is printed on the
+            device label.
+          </li>
+          <li>
+            <span class="check">&#9744;</span> <strong>Check
+            threshold:</strong> If using a low-voltage signal (e.g. 5 V logic),
+            verify the input threshold is set lower than the signal voltage in
+            the I/O configuration.
+          </li>
+          <li>
+            <span class="check">&#9744;</span> <strong>Dry contact
+            continuity:</strong> For Method B, verify the contact actually
+            closes with a multimeter on continuity mode. Some relay contacts
+            have a COM, NO, and NC terminal — make sure you are using the
+            correct pair.
+          </li>
+        </ul>
+
+        <h3>MQTT Not Publishing</h3>
+
+        <ul class="checklist">
+          <li>
+            <span class="check">&#9744;</span> <strong>Instance
+            enabled?</strong> Navigate to Services &rarr; Data to Server and
+            verify the instance shows "Enabled".
+          </li>
+          <li>
+            <span class="check">&#9744;</span> <strong>Connection
+            status:</strong> Check the instance status. "Disconnected" or
+            "Error" indicates a broker connection problem — verify hostname,
+            port, TLS, and credentials.
+          </li>
+          <li>
+            <span class="check">&#9744;</span> <strong>TLS
+            certificate:</strong> If using a self-signed broker certificate,
+            verify the CA cert is uploaded correctly. Certificate mismatch is a
+            silent failure — the connection simply will not establish.
+          </li>
+          <li>
+            <span class="check">&#9744;</span> <strong>Broker
+            firewall:</strong> Verify your MQTT broker allows inbound
+            connections on port 8883 from the RUT200's cellular IP range (or
+            from any IP if the broker is publicly accessible).
+          </li>
+          <li>
+            <span class="check">&#9744;</span> <strong>Test with a
+            public broker:</strong> Temporarily configure the RUT200 to publish
+            to a public test broker (e.g. <code>test.mosquitto.org</code> port
+            1883) to isolate whether the issue is with your broker or the
+            RUT200.
+          </li>
+        </ul>
+
+        <h3>Messages Arrive But Data Is Wrong</h3>
+
+        <ul class="checklist">
+          <li>
+            <span class="check">&#9744;</span> <strong>JSON template
+            syntax:</strong> Check for missing commas, unmatched braces, or
+            incorrect variable names in the payload template. Use the WebUI's
+            format help to verify available template variables.
+          </li>
+          <li>
+            <span class="check">&#9744;</span> <strong>Inverted
+            logic:</strong> If <code>"running":1</code> appears when the machine
+            is stopped, your active state configuration is inverted. Change the
+            Active State setting in the I/O configuration (see
+            <a href="#io-config">Configuring I/O</a>).
+          </li>
+          <li>
+            <span class="check">&#9744;</span> <strong>Wrong
+            topic:</strong> If messages arrive on an unexpected topic, check the
+            topic string in the Data to Server configuration for typos or
+            missing path segments.
+          </li>
+          <li>
+            <span class="check">&#9744;</span> <strong>Debounce too
+            aggressive:</strong> If short machine stops are not captured, reduce
+            the debounce timer. A 5-second debounce will hide any stop shorter
+            than 5 seconds.
+          </li>
+        </ul>
+
+        <!-- ═══════════════════════════════════════ -->
+        <!-- LESSONS LEARNED -->
+        <!-- ═══════════════════════════════════════ -->
+        <h2 id="lessons">Lessons Learned</h2>
+
+        <div class="lesson-grid">
+          <div class="lesson-card">
+            <h4>Cellular Is Not Ethernet</h4>
+            <p>
+              Expect latency (50–200 ms), occasional disconnects, and data
+              costs. The RUT200 handles reconnection automatically, but design
+              your UNS consumers to tolerate gaps. MQTT QoS 1 ensures messages
+              are not lost during brief outages — the broker will receive them
+              when the connection recovers.
+            </p>
+          </div>
+          <div class="lesson-card">
+            <h4>Signal Strength Matters</h4>
+            <p>
+              A RUT200 in a metal enclosure in a basement will struggle. Test
+              signal strength before permanent installation. An external antenna
+              on a short cable run can make the difference between 1 bar and 4.
+              Move the antenna, not the router.
+            </p>
+          </div>
+          <div class="lesson-card">
+            <h4>Dry Contact Is Simpler</h4>
+            <p>
+              If the machine provides a potential-free relay output, use dry
+              contact mode (Method B). No external voltage needed, no ground
+              reference issues, fewer wires. Two wires, two terminals, done. It
+              just works.
+            </p>
+          </div>
+          <div class="lesson-card">
+            <h4>TLS or Nothing</h4>
+            <p>
+              Unencrypted MQTT over cellular means anyone can read your
+              production data. It takes 5 minutes to configure TLS on the
+              RUT200. There is no excuse. Port 8883, certificate uploaded,
+              done.
+            </p>
+          </div>
+          <div class="lesson-card">
+            <h4>Test the Heartbeat</h4>
+            <p>
+              The periodic publish is your proof of life. If you only use On
+              Change, a disconnected RUT200 looks identical to a machine that
+              has not changed state. Set a 60-second heartbeat and alert if it
+              goes silent for more than 3 intervals (3 minutes).
+            </p>
+          </div>
+          <div class="lesson-card">
+            <h4>One Device, One Machine</h4>
+            <p>
+              Resist the temptation to run long signal wires from multiple
+              machines to one RUT200. Keep it 1:1. The wiring is simpler,
+              troubleshooting is faster, and if the RUT200 needs replacement,
+              only one machine is affected.
+            </p>
+          </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════ -->
+        <!-- NEXT STEPS -->
+        <!-- ═══════════════════════════════════════ -->
+        <h2 id="next-steps">Next Steps</h2>
+
+        <table class="def-table">
+          <thead>
+            <tr>
+              <th>Step</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>1. Connect to fn-uns pipeline</td>
+              <td>
+                The machine status messages are now in the UNS. Connect the
+                <a href="/guides/pipeline-functions.html">fn-uns pipeline
+                functions</a> to calculate OEE, generate dashboards, and trigger
+                alerts from the running/stopped data.
+              </td>
+            </tr>
+            <tr>
+              <td>2. Wire DIN2</td>
+              <td>
+                Use the second digital input for a second signal — fault status,
+                door sensor, or a different machine. Add a second Data to Server
+                instance for DIN2's topic.
+              </td>
+            </tr>
+            <tr>
+              <td>3. Use the Digital Output</td>
+              <td>
+                DOUT1 can be controlled remotely via MQTT subscribe. Use it to
+                drive an indicator light, buzzer, or relay — for example, light
+                a lamp when a downstream process needs attention.
+              </td>
+            </tr>
+            <tr>
+              <td>4. Set up VPN</td>
+              <td>
+                Configure WireGuard or OpenVPN on the RUT200 for secure remote
+                access to the WebUI and the local network behind the router.
+              </td>
+            </tr>
+            <tr>
+              <td>5. Adopt the full topic hierarchy</td>
+              <td>
+                Follow the
+                <a href="/guides/yaml-definitions.html">UNS Framework YAML
+                Definitions</a> to describe your factory as code and generate
+                the full topic tree for all machines and data points.
+              </td>
+            </tr>
+            <tr>
+              <td>6. Pair with a Siemens Logo</td>
+              <td>
+                For machines requiring complex PLC logic (timers, counters,
+                interlocks), pair the RUT200 with a
+                <a href="/guides/siemens-logo-mqtt.html">Siemens Logo 8.4</a>.
+                The Logo handles the automation logic; the RUT200 provides the
+                cellular uplink to the UNS.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- GUIDE VERSION -->
+        <div
+          style="
+            margin-top: 64px;
+            padding-top: 24px;
+            border-top: 1px solid var(--grey-200);
+          "
+        >
+          <p style="font-size: 13px; color: var(--grey-500); margin-bottom: 6px">
+            Guide Version: 1.0 · Applies To: Teltonika RUT200 (all
+            RUT200xxxxx variants, RutOS 7.x+)
+          </p>
+          <p style="font-size: 13px; color: var(--grey-500); margin-bottom: 0">
+            Last updated March 2026.
+          </p>
+        </div>
+
+        <!-- NAV BUTTONS -->
+        <div class="docs-nav-buttons">
+          <a href="/guides/siemens-logo-wiring.html" class="docs-nav-btn">
+            <span class="nav-label">Previous</span>
+            <span class="nav-title">Wiring Digital Inputs</span>
+          </a>
+          <a href="/guides/connectivity-options.html" class="docs-nav-btn next">
+            <span class="nav-label">Next</span>
+            <span class="nav-title">Connectivity Options</span>
+          </a>
+        </div>
+      </main>
+    </div>
+
+    <script src="../shared.js"></script>
+    <script>
+      // Scroll-spy: highlight sidebar link matching current section
+      ;(function () {
+        const sidebarLinks = document.querySelectorAll(
+          '.docs-sidebar a[href^="#"]',
+        )
+        const sections = []
+        sidebarLinks.forEach((link) => {
+          const id = link.getAttribute('href').slice(1)
+          const el = document.getElementById(id)
+          if (el) sections.push({ id, el, link })
+        })
+        if (!sections.length) return
+
+        function update() {
+          const scrollY = window.scrollY + 80
+          let current = sections[0]
+          for (const s of sections) {
+            if (s.el.offsetTop <= scrollY) current = s
+          }
+          sidebarLinks.forEach((l) => l.classList.remove('active'))
+          current.link.classList.add('active')
+        }
+
+        let ticking = false
+        window.addEventListener('scroll', () => {
+          if (!ticking) {
+            requestAnimationFrame(() => {
+              update()
+              ticking = false
+            })
+            ticking = true
+          }
+        })
+        update()
+      })()
+    </script>
+  </body>
+</html>

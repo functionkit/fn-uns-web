@@ -494,36 +494,36 @@
     <div class="maturity-grid">
       <div class="maturity-card">
         <span class="maturity-level" style="background:#3b82f6;color:#fff;border:none;">Level 1</span>
-        <h4>Digital Shadow</h4>
-        <p>One-way data flow from physical to digital. The software representation reflects reality but cannot influence it. Think: a dashboard that shows machine status, or a historian that logs sensor values. Data flows from the machine to the twin — never the other way.</p>
-        <p style="margin-top:10px;font-family:var(--font-mono);font-size:11px;color:var(--grey-500);">Physical → Digital</p>
+        <h4>Digital Model</h4>
+        <p>No automatic data exchange between the physical asset and its digital representation. The model exists — a CAD file, a simulation, a spreadsheet — but it's updated manually. Think: an offline simulation model that an engineer updates with new parameters after each production run.</p>
+        <p style="margin-top:10px;font-family:var(--font-mono);font-size:11px;color:var(--grey-500);">Physical ⇸ Digital (manual)</p>
       </div>
       <div class="maturity-card">
         <span class="maturity-level" style="background:#f59e0b;color:#fff;border:none;">Level 2</span>
-        <h4>Digital Twin</h4>
-        <p>Bidirectional data flow. The digital representation can send commands, setpoints, or recommendations back to the physical system. Think: an AI that detects anomalous vibration and automatically adjusts feed rate, or a scheduling system that pushes optimised programs to machines.</p>
-        <p style="margin-top:10px;font-family:var(--font-mono);font-size:11px;color:var(--grey-500);">Physical ↔ Digital</p>
+        <h4>Digital Shadow</h4>
+        <p>One-way automatic data flow from physical to digital. The software representation reflects reality in real-time but cannot influence it. Think: a dashboard that shows machine status, or a historian that logs sensor values. Data flows from the machine to the shadow — never the other way.</p>
+        <p style="margin-top:10px;font-family:var(--font-mono);font-size:11px;color:var(--grey-500);">Physical → Digital (automatic)</p>
       </div>
       <div class="maturity-card">
         <span class="maturity-level" style="background:#10b981;color:#fff;border:none;">Level 3</span>
-        <h4>Digital Thread</h4>
-        <p>Full lifecycle traceability from design through manufacturing to service. The twin connects CAD/CAM data, process parameters, quality measurements, and field performance into a single traceable thread. Think: tracing a quality defect back to a specific tool, program revision, and material batch.</p>
-        <p style="margin-top:10px;font-family:var(--font-mono);font-size:11px;color:var(--grey-500);">Design → Manufacturing → Service</p>
+        <h4>Digital Twin</h4>
+        <p>Bidirectional automatic data flow. The digital representation both receives data from and sends commands, setpoints, or recommendations back to the physical system. Think: an AI that detects anomalous vibration and automatically adjusts feed rate, or a scheduling system that pushes optimised programs to machines.</p>
+        <p style="margin-top:10px;font-family:var(--font-mono);font-size:11px;color:var(--grey-500);">Physical ↔ Digital (automatic)</p>
       </div>
     </div>
 
     <div class="research-callout">
       <div>
-        <strong>A 2019 Gartner survey found that 75% of organisations implementing IoT already use or plan to use digital twins.</strong> Yet the vast majority remain at Level 1 — digital shadows with one-way data flow. The gap between aspiration and reality is enormous, and it's almost entirely an architecture problem, not a technology problem. Most organisations can collect the data — they just can't structure, correlate, and act on it in real-time.
+        <strong>A 2019 Gartner survey found that 75% of organisations implementing IoT already use or plan to use digital twins.</strong> Yet the vast majority remain at Level 2 — digital shadows with one-way data flow. The gap between aspiration and reality is enormous, and it's almost entirely an architecture problem, not a technology problem. Most organisations can collect the data — they just can't structure, correlate, and act on it in real-time.
         <div class="research-source">Source: Gartner (2019) "Gartner Survey Reveals Digital Twins Are Entering Mainstream Use"</div>
       </div>
     </div>
 
-    <p>Most manufacturing organisations today are at <strong>Level 1 — Digital Shadow</strong>. They have dashboards, historians, and SCADA systems that reflect machine state. The fn-uns reference pipeline gives you a solid Level 1 starting point, with a clear path to Level 2 through MQTT's bidirectional pub/sub architecture. But the real power is that <strong>fnkit lets you scaffold new twin functions</strong> — quality prediction, vibration analysis, thermal compensation, energy monitoring — whatever your specific factory needs to move up the maturity curve.</p>
+    <p>Most manufacturing organisations today are at <strong>Level 2 — Digital Shadow</strong>. They have dashboards, historians, and SCADA systems that reflect machine state. The fn-uns reference pipeline gives you a solid Level 2 starting point, with a clear path to Level 3 through MQTT's bidirectional pub/sub architecture. But the real power is that <strong>fnkit lets you scaffold new twin functions</strong> — quality prediction, vibration analysis, thermal compensation, energy monitoring — whatever your specific factory needs to move up the maturity curve.</p>
 
     <div class="success-indicator">
       <span class="success-icon">✓</span>
-      <strong>Key insight:</strong> You don't need to build a Level 3 digital thread on day one. Start with a digital shadow — real-time state, historical context, derived KPIs — and evolve incrementally. Each new function you scaffold with fnkit adds a new capability to your twin.
+      <strong>Key insight:</strong> You don't need to build a Level 3 digital twin on day one. Start with a digital shadow — real-time state, historical context, derived KPIs — and evolve incrementally. Each new function you scaffold with fnkit adds a new capability to your twin.
     </div>
 
     <!-- ═══════════════════════════════════════ -->

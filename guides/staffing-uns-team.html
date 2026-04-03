@@ -1,0 +1,1263 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Staffing a UNS Team — Why Team Composition Breaks More Projects Than Technology</title>
+<meta name="description" content="An in-depth guide to building the cross-functional team that delivers a Unified Namespace. Covers core roles, team sizing by phase, build vs hire vs partner, org models, and the IT/OT skills gap — with anonymised war stories from real projects."/>
+<link rel="canonical" href="https://unsframework.com/guides/staffing-uns-team.html" />
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>"/>
+<link rel="sitemap" type="application/xml" href="/sitemap.xml" />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="UNS Framework" />
+<meta property="og:title" content="Staffing a UNS Team — Why Team Composition Breaks More Projects Than Technology" />
+<meta property="og:description" content="An in-depth guide to building the cross-functional team that delivers a Unified Namespace — roles, sizing, org models, and what breaks without each one." />
+<meta property="og:url" content="https://unsframework.com/guides/staffing-uns-team.html" />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content="Staffing a UNS Team — Building the Team That Actually Delivers" />
+<meta name="twitter:description" content="Why team composition breaks more UNS projects than technology. Roles, sizing, org models, and the IT/OT skills gap." />
+<meta name="keywords" content="UNS team, OT IT convergence, manufacturing staffing, DataOps team, industrial IoT team, unified namespace" />
+<link rel="stylesheet" href="../style.css"/>
+<link rel="stylesheet" href="../docs.css"/>
+<style>
+/* Guide-specific styles */
+.guide-hero {
+  background: var(--grey-50);
+  border: 1px solid var(--grey-200);
+  border-radius: 12px;
+  padding: 32px;
+  margin-bottom: 48px;
+}
+.guide-hero-meta {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+.guide-hero-meta .tag {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--grey-700);
+  background: var(--grey-100);
+  padding: 4px 12px;
+  border-radius: 100px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+/* TOC */
+.guide-toc {
+  border: 1px solid var(--grey-200);
+  border-radius: 10px;
+  padding: 24px 28px;
+  margin: 24px 0 48px;
+}
+.guide-toc-title {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--grey-500);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+.guide-toc ol {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  counter-reset: toc;
+}
+.guide-toc ol li {
+  counter-increment: toc;
+  padding: 4px 0;
+}
+.guide-toc ol li a {
+  font-size: 14px;
+  color: var(--grey-700);
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: color 0.15s;
+}
+.guide-toc ol li a:hover { color: var(--black); }
+.guide-toc ol li a::before {
+  content: counter(toc, decimal-leading-zero);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--grey-400);
+  min-width: 20px;
+}
+
+/* Warning / info banners */
+.warning-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 16px 20px;
+  background: #fef3c7;
+  border: 1px solid #f59e0b;
+  border-radius: 10px;
+  margin: 24px 0;
+  font-size: 14px;
+  color: #92400e;
+  line-height: 1.6;
+}
+[data-theme="dark"] .warning-banner {
+  background: #451a03;
+  border-color: #b45309;
+  color: #fde68a;
+}
+.warning-banner .warning-icon {
+  flex-shrink: 0;
+  font-size: 16px;
+  margin-top: 1px;
+}
+
+.success-indicator {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  background: var(--grey-50);
+  border: 1px solid var(--grey-200);
+  border-radius: 8px;
+  margin: 16px 0;
+  font-size: 14px;
+  color: var(--grey-700);
+}
+.success-indicator .success-icon {
+  color: #16a34a;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+/* Persona cards */
+.persona-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 1px;
+  background: var(--grey-200);
+  border: 1px solid var(--grey-200);
+  border-radius: 10px;
+  overflow: hidden;
+  margin: 24px 0;
+}
+.persona-card {
+  background: var(--white);
+  padding: 24px;
+}
+.persona-card .persona-icon {
+  font-size: 20px;
+  margin-bottom: 8px;
+}
+.persona-card h4 {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--black);
+  margin-bottom: 8px;
+  letter-spacing: -0.01em;
+}
+.persona-card p {
+  font-size: 13px !important;
+  color: var(--grey-700);
+  line-height: 1.6;
+  margin-bottom: 0 !important;
+}
+
+/* Option cards */
+.option-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px;
+  background: var(--grey-200);
+  border: 1px solid var(--grey-200);
+  border-radius: 10px;
+  overflow: hidden;
+  margin: 24px 0;
+}
+.option-card {
+  background: var(--white);
+  padding: 24px;
+}
+.option-card h4 {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--black);
+  margin-bottom: 6px;
+}
+.option-card p {
+  font-size: 13px !important;
+  color: var(--grey-700);
+  line-height: 1.55;
+  margin-bottom: 0 !important;
+}
+
+/* Checklist */
+.checklist {
+  list-style: none;
+  padding: 0;
+  margin: 16px 0 24px;
+}
+.checklist li {
+  padding: 8px 0;
+  font-size: 14px;
+  color: var(--grey-700);
+  border-bottom: 1px solid var(--grey-100);
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  line-height: 1.5;
+}
+.checklist li:last-child { border-bottom: none; }
+.checklist .check {
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  border: 1.5px solid var(--grey-300);
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  margin-top: 2px;
+  color: var(--grey-500);
+}
+
+/* Network diagram */
+.network-diagram {
+  background: var(--grey-50);
+  border: 1px solid var(--grey-200);
+  border-radius: 12px;
+  padding: 32px;
+  margin: 24px 0;
+  text-align: center;
+  overflow-x: auto;
+}
+.network-diagram svg { max-width: 100%; height: auto; }
+
+/* Research callout */
+.research-callout {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 20px 24px;
+  background: var(--grey-50);
+  border: 1px solid var(--grey-200);
+  border-left: 3px solid var(--black);
+  border-radius: 0 10px 10px 0;
+  margin: 24px 0;
+  font-size: 13px;
+  color: var(--grey-700);
+  line-height: 1.65;
+}
+.research-callout .research-source {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--grey-500);
+  margin-top: 8px;
+}
+.research-callout strong {
+  color: var(--black);
+}
+
+/* Phase cards */
+.phase-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 1px;
+  background: var(--grey-200);
+  border: 1px solid var(--grey-200);
+  border-radius: 10px;
+  overflow: hidden;
+  margin: 24px 0;
+}
+.phase-card {
+  background: var(--white);
+  padding: 24px;
+}
+.phase-card .phase-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 3px 10px;
+  border-radius: 100px;
+  display: inline-block;
+  margin-bottom: 10px;
+}
+.phase-card h4 {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--black);
+  margin-bottom: 8px;
+  letter-spacing: -0.01em;
+}
+.phase-card p, .phase-card ul {
+  font-size: 13px !important;
+  color: var(--grey-700);
+  line-height: 1.6;
+}
+.phase-card ul {
+  padding-left: 16px;
+  margin: 8px 0 0;
+}
+.phase-card ul li {
+  padding: 2px 0;
+}
+
+@media print {
+  nav, .docs-sidebar, .menu-toggle, .mobile-menu { display: none !important; }
+  .docs-layout { grid-template-columns: 1fr !important; }
+  .docs-content { padding: 0 !important; max-width: 100% !important; }
+  .warning-banner, .info-banner, .success-indicator { break-inside: avoid; }
+  .def-table, .network-diagram { break-inside: avoid; }
+  .guide-toc { break-inside: avoid; }
+  .docs-nav-buttons { display: none !important; }
+  * { color: #000 !important; animation: none !important; }
+}
+
+@media (max-width: 600px) {
+  .guide-hero { padding: 20px; }
+  .guide-hero h1 { font-size: 24px !important; }
+  .option-grid { grid-template-columns: 1fr; }
+  .persona-grid { grid-template-columns: 1fr; }
+  .phase-grid { grid-template-columns: 1fr; }
+  .guide-hero-meta { gap: 8px; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="logo">UNS Framework</a>
+  <div class="links">
+    <a href="/fn-uns/">fn-uns</a>
+    <a href="/framework/">Standard Docs</a>
+    <a href="/docs/">UNS Docs</a>
+    <a href="/guides/">Guides</a>
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+      <div class="toggle-thumb"><span class="toggle-icon-sun">☀</span><span class="toggle-icon-moon">☾</span></div>
+    </button>
+  </div>
+  <button class="menu-toggle" aria-label="Menu" aria-expanded="false">☰</button>
+  <div class="mobile-menu">
+    <a href="/fn-uns/">fn-uns</a>
+    <a href="/framework/">Standard Docs</a>
+    <a href="/docs/">UNS Docs</a>
+    <a href="/guides/">Guides</a>
+  </div>
+</nav>
+
+<div class="docs-layout">
+  <aside class="docs-sidebar">
+    <div class="sidebar-section">
+      <div class="sidebar-title">Guides</div>
+      <a href="/guides/">All Guides</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-title">This Guide</div>
+      <a href="#the-real-problem">The Real Problem</a>
+      <a href="#roles-that-matter">The Roles That Matter</a>
+      <a href="#what-breaks">What Breaks Without Each Role</a>
+      <a href="#team-sizing">Team Sizing by Phase</a>
+      <a href="#build-hire-partner">Build, Hire, or Partner</a>
+      <a href="#org-models">Three Org Models</a>
+      <a href="#bridging-the-gap">Bridging the IT/OT Gap</a>
+      <a href="#success-factors">Key Success Factors</a>
+      <a href="#bottom-line">The Bottom Line</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-title">Related</div>
+      <a href="/guides/digital-twin-gitops.html">Digital Twins &amp; GitOps</a>
+      <a href="/guides/pipeline-functions.html">Pipeline Functions</a>
+      <a href="/docs/architecture.html">Architecture</a>
+    </div>
+  </aside>
+
+  <main class="docs-content">
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- HERO                                    -->
+    <!-- ═══════════════════════════════════════ -->
+    <div class="guide-hero">
+      <div class="guide-hero-meta">
+        <span class="tag">Strategy</span>
+        <span class="tag">Team Building</span>
+        <span class="tag">OT/IT Convergence</span>
+        <span class="tag">~25 min read</span>
+      </div>
+      <h1>Staffing a UNS Team — Why Team Composition Breaks More Projects Than Technology</h1>
+      <p class="guide-subtitle">
+        An in-depth guide to building the cross-functional team that actually delivers a Unified Namespace. Covers the roles that matter, what breaks without each one, how to size your team by project phase, when to build vs hire vs partner, three org models, and how to bridge the IT/OT skills gap — grounded in patterns from real industrial projects.
+      </p>
+    </div>
+
+    <!-- TABLE OF CONTENTS -->
+    <div class="guide-toc">
+      <div class="guide-toc-title">Contents</div>
+      <ol>
+        <li><a href="#the-real-problem">The Real Problem Isn't Technology</a></li>
+        <li><a href="#roles-that-matter">The Roles That Matter</a></li>
+        <li><a href="#what-breaks">What Breaks Without Each Role</a></li>
+        <li><a href="#team-sizing">Team Sizing by Phase</a></li>
+        <li><a href="#build-hire-partner">Build, Hire, or Partner</a></li>
+        <li><a href="#org-models">Three Org Models</a></li>
+        <li><a href="#bridging-the-gap">Bridging the IT/OT Skills Gap</a></li>
+        <li><a href="#success-factors">Key Success Factors</a></li>
+        <li><a href="#bottom-line">The Bottom Line</a></li>
+      </ol>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- THE REAL PROBLEM                        -->
+    <!-- ═══════════════════════════════════════ -->
+    <h2 id="the-real-problem">The Real Problem Isn't Technology</h2>
+
+    <p>The technology for a Unified Namespace has been proven. MQTT brokers are mature. OPC UA is well-understood. Edge gateways are commodity hardware. Time-series databases are battle-tested. You can stand up a working UNS prototype in a day.</p>
+
+    <p>And yet, the majority of UNS and industrial IoT projects stall, shrink in scope, or quietly die after the pilot phase. The technology works. <strong>The team doesn't.</strong></p>
+
+    <p>The pattern is consistent. A manufacturer decides to build a UNS. They assign it to whoever seems closest to the problem — usually IT, sometimes OT, occasionally a lone "digital transformation" hire. That person or team builds something technically functional on a single line or a handful of machines. It works. Leadership gets excited. Then they try to scale it, and everything breaks — not because the architecture fails, but because the team lacks the breadth of skills to handle what scaling actually demands.</p>
+
+    <div class="research-callout">
+      <div>
+        <strong>73% of manufacturers cite the shortage of OT/IT hybrid skills as a primary barrier to industrial digitalisation.</strong> The gap isn't in any single domain — there are plenty of competent IT architects and experienced OT engineers. The gap is in the overlap. People who understand both PLC programming and cloud infrastructure. People who can design an ISA-95 namespace and also configure a Kubernetes deployment. These people are rare, and building a team that covers the full spectrum is the single most important decision in any UNS project.
+        <div class="research-source">Source: EITT Academy — IT Competencies in Manufacturing and Industry 4.0 (2025)</div>
+      </div>
+    </div>
+
+    <p>This guide is for the person who has been asked to make the UNS happen — and now needs to figure out who to put in the room. Whether you're a plant manager, VP of Engineering, or digital transformation lead, the decisions you make about team composition in the first three months will determine whether your project scales or stalls.</p>
+
+    <h3>The Three Failure Modes</h3>
+
+    <p>Before we talk about what works, here's what doesn't — drawn from patterns we've seen repeated across dozens of projects:</p>
+
+    <div class="persona-grid">
+      <div class="persona-card">
+        <div class="persona-icon">🖥️</div>
+        <h4>The IT-Only Team</h4>
+        <p>IT builds an elegant cloud architecture with Kafka, Kubernetes, and a beautiful Grafana dashboard. It works perfectly — with simulated data. When they try to connect real PLCs on the factory floor, they discover that the Siemens S7 they need to read from requires a specific protocol variant, the Allen-Bradley uses a different communication model entirely, and the 15-year-old Fanuc CNC only speaks serial. The project stalls for months while they learn what OT engineers already know.</p>
+      </div>
+      <div class="persona-card">
+        <div class="persona-icon">🔧</div>
+        <h4>The OT-Only Team</h4>
+        <p>The controls engineers build a perfectly functional data collection system. Every PLC is connected, every signal is mapped. But the data lands in a flat structure with no namespace governance, no semantic consistency, and no API layer. When business systems need to consume the data — MES, ERP, BI tools — there's no integration path. The architecture can't scale beyond a single site because there's no infrastructure-as-code, no CI/CD, no version control.</p>
+      </div>
+      <div class="persona-card">
+        <div class="persona-icon">💼</div>
+        <h4>The Outsourced Team</h4>
+        <p>A system integrator delivers a working UNS on time and on budget. Six months later, something breaks. Nobody internal understands the architecture. The SI's engineers have moved to other projects. A simple configuration change requires a change order, a statement of work, and a 4-week lead time. The organisation has a UNS but no capability — and no ability to evolve the system as requirements change.</p>
+      </div>
+    </div>
+
+    <p>Every one of these failure modes is a team composition problem, not a technology problem. The fix isn't better tools — it's the right mix of people.</p>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- THE ROLES THAT MATTER                   -->
+    <!-- ═══════════════════════════════════════ -->
+    <h2 id="roles-that-matter">The Roles That Matter</h2>
+
+    <p>A successful UNS team is interdisciplinary by definition. It bridges OT, IT, data, security, and business domains. No single person covers all of these — but every one needs to be represented. Here are the roles that matter, what each one actually does, and why you can't skip any of them.</p>
+
+    <table class="def-table">
+      <thead>
+        <tr><th>Role</th><th>Domain</th><th>What They Actually Do</th><th>Key Skills</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Integration Lead</strong></td>
+          <td>Leadership</td>
+          <td>Owns the project end-to-end. Translates between IT, OT, and business stakeholders. Makes architectural trade-off decisions. Removes blockers. Manages budget and timeline.</td>
+          <td>OT/IT convergence experience, project management, stakeholder communication, industrial domain knowledge</td>
+        </tr>
+        <tr>
+          <td><strong>OT/Controls Engineer</strong></td>
+          <td>OT</td>
+          <td>Connects physical equipment to the data layer. Configures PLC communication, maps signals, handles protocol translation, and ensures data collection doesn't interfere with machine operation or safety systems.</td>
+          <td>PLC programming (Ladder, Structured Text), OPC UA, Modbus, PROFINET, EtherNet/IP, SCADA systems, industrial safety</td>
+        </tr>
+        <tr>
+          <td><strong>IT Systems Architect</strong></td>
+          <td>IT</td>
+          <td>Designs and maintains the infrastructure — MQTT broker, edge gateways, databases, networking, containerisation, CI/CD pipelines. Ensures the system is reliable, scalable, and maintainable.</td>
+          <td>Linux, Docker/Kubernetes, MQTT, networking, cloud platforms, Infrastructure as Code, DevOps practices</td>
+        </tr>
+        <tr>
+          <td><strong>Data Architect</strong></td>
+          <td>Data</td>
+          <td>Designs the namespace structure, defines naming conventions, establishes governance policies, models semantic meaning. This person decides how data is organised, versioned, and extended.</td>
+          <td>ISA-95, OPC UA information models, data governance frameworks, namespace design, time-series databases</td>
+        </tr>
+        <tr>
+          <td><strong>Data Engineer</strong></td>
+          <td>Data</td>
+          <td>Builds the data pipelines — ETL workflows, stream processing, data validation, quality checks, protocol translation. Turns raw machine signals into structured, queryable, trustworthy data.</td>
+          <td>Python, SQL, stream processing, data quality frameworks, protocol translation, time-series data at scale</td>
+        </tr>
+        <tr>
+          <td><strong>OT Security Specialist</strong></td>
+          <td>Security</td>
+          <td>Designs network segmentation, configures firewalls and DMZs, implements certificate-based authentication, defines access control policies. Ensures the UNS doesn't become an attack surface.</td>
+          <td>IEC 62443, NIST SP 800-82, network segmentation, PKI/certificate management, OT threat landscape</td>
+        </tr>
+        <tr>
+          <td><strong>MES/ERP Integration Specialist</strong></td>
+          <td>Integration</td>
+          <td>Connects the UNS to business systems — MES, ERP, quality management, scheduling. Maps ISA-95 Level 3/4 data flows. Ensures production data reaches the people who make business decisions.</td>
+          <td>MES platforms, ERP systems (SAP/Oracle), ISA-95 Part 2, API design, business process mapping</td>
+        </tr>
+        <tr>
+          <td><strong>Analytics Engineer</strong></td>
+          <td>Analytics</td>
+          <td>Builds dashboards, defines KPIs, develops reports, creates the visualisation layer that makes the UNS data actionable for operators, supervisors, and management.</td>
+          <td>BI tools (Grafana, Power BI), SQL, time-series analysis, OEE/KPI frameworks, data storytelling</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="warning-banner">
+      <span class="warning-icon">⚠</span>
+      <div>
+        <strong>Not every role needs a dedicated full-time person.</strong> In a pilot phase, one person might cover two or three roles. The Integration Lead might also be the Data Architect. The IT Architect might also handle security. But every role needs to be <em>covered</em> — the skills need to exist somewhere in the team, even if they're shared across people or brought in part-time. The moment you scale beyond a pilot, the role separation becomes essential.
+      </div>
+    </div>
+
+    <h3>The Role Most People Forget</h3>
+
+    <p>Every team on this list is technical. But UNS projects that succeed at scale always have one more person: a <strong>subject matter expert from operations</strong> — a shift supervisor, a production manager, or a process engineer who knows the plant floor intimately.</p>
+
+    <p>This person doesn't write code or configure PLCs. They answer questions like: "What does it actually mean when CNC-03 reports status code 47?" or "Why does OEE always drop on Wednesday afternoons?" or "That alarm fires three times a day and everyone ignores it — here's why." Without this person, the team builds a technically correct system that misses the operational context that makes data meaningful.</p>
+
+    <div class="success-indicator">
+      <span class="success-icon">✓</span>
+      <strong>Rule of thumb:</strong> If nobody on the team has operated the equipment being connected, the team is incomplete.
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- WHAT BREAKS WITHOUT EACH ROLE           -->
+    <!-- ═══════════════════════════════════════ -->
+    <h2 id="what-breaks">What Breaks Without Each Role</h2>
+
+    <p>The easiest way to understand why each role matters is to see what happens when it's missing. These aren't hypotheticals — they're compressed versions of patterns that play out repeatedly in real projects.</p>
+
+    <table class="def-table">
+      <thead>
+        <tr><th>Missing Role</th><th>What Goes Wrong</th><th>When You Find Out</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>OT/Controls Engineer</strong></td>
+          <td>A mid-size manufacturer assigned their UNS project entirely to the IT department. The IT team built a solid MQTT infrastructure and connected a few machines that had modern Ethernet interfaces. Then they hit the 20-year-old injection moulding machines that only communicated over serial Modbus RTU. Three months of trial and error, two fried communication cards, and one unplanned production stoppage later, they hired a controls engineer. The project timeline slipped by five months.</td>
+          <td>First week of connecting legacy equipment</td>
+        </tr>
+        <tr>
+          <td><strong>Data Architect</strong></td>
+          <td>Three different engineers at a multi-site manufacturer each designed their own topic structure. Site A used <code style="font-family:var(--font-mono);font-size:12px;background:var(--grey-100);padding:1px 6px;border-radius:3px;">factory/machine/signal</code>. Site B used <code style="font-family:var(--font-mono);font-size:12px;background:var(--grey-100);padding:1px 6px;border-radius:3px;">site/area/line/equipment/metric</code>. Site C used the machine vendor's default topic names. When leadership wanted a cross-site OEE dashboard, it took four months of refactoring to normalise the data. A data architect with an ISA-95 namespace standard on day one would have prevented the problem entirely.</td>
+          <td>First attempt at cross-site analytics</td>
+        </tr>
+        <tr>
+          <td><strong>OT Security Specialist</strong></td>
+          <td>An IT team connected a PLC network directly to the corporate LAN to speed up the pilot. A routine vulnerability scan from the IT security team sent a burst of network traffic to the PLC subnet. Two machines faulted. Production stopped for 90 minutes on a line producing 200 units per hour. The root cause was trivial — no network segmentation, no DMZ, no traffic filtering. An OT security specialist would have flagged this in the architecture review.</td>
+          <td>First interaction between IT and OT networks</td>
+        </tr>
+        <tr>
+          <td><strong>IT Systems Architect</strong></td>
+          <td>The OT team deployed their MQTT broker on a single machine under a desk in the server room. No redundancy, no monitoring, no backup strategy. The system ran fine for eight months — until the hard drive failed on a Friday night. The entire UNS was down for a weekend. Historical data from three months was lost because nobody had configured log retention or database backups.</td>
+          <td>First infrastructure failure</td>
+        </tr>
+        <tr>
+          <td><strong>MES/ERP Integration Specialist</strong></td>
+          <td>The UNS collected perfect machine data — cycle times, status, throughput. But the production planning team couldn't use it because the data wasn't linked to work orders, part numbers, or customer jobs. The operations team still relied on manual spreadsheets because the UNS data existed in a vacuum, disconnected from the business context that made it actionable.</td>
+          <td>First business review asking "what's the ROI?"</td>
+        </tr>
+        <tr>
+          <td><strong>Subject Matter Expert</strong></td>
+          <td>The data showed that Machine 7 had 40% lower OEE than identical Machine 8 on the same line. The team spent two weeks investigating — checking sensors, reviewing PLC programs, analysing vibration data. The shift supervisor, when finally asked, said: "Oh, Machine 7 runs our prototype jobs. It's supposed to be slower — the setups take three times longer." Two weeks of engineering time wasted because nobody asked the person who runs the floor.</td>
+          <td>First time the data doesn't match expectations</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="research-callout">
+      <div>
+        <strong>The OT engineering workforce is facing a generational cliff.</strong> The average age of a controls engineer in North American manufacturing is over 50. Many entered the field when PLCs were programmed with hand-held terminals and serial cables. They carry decades of institutional knowledge about equipment behaviour, failure modes, and operational quirks that doesn't exist in any documentation. Every UNS project is also a knowledge-capture opportunity — but only if OT engineers are embedded in the team, not consulted after the fact.
+        <div class="research-source">Source: Synigent — The 5 Roles Manufacturers Will Regret Not Hiring by Mid-2026</div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- TEAM SIZING BY PHASE                    -->
+    <!-- ═══════════════════════════════════════ -->
+    <h2 id="team-sizing">Team Sizing by Phase</h2>
+
+    <p>You don't need a 20-person team on day one. The team should grow with the project — starting lean for the pilot, expanding for plant-wide deployment, and reaching full strength for enterprise scale. Here's what each phase looks like.</p>
+
+    <div class="phase-grid">
+      <div class="phase-card">
+        <span class="phase-label" style="background:#3b82f6;color:#fff;border:none;">Phase 1</span>
+        <h4>Pilot — Single Line or Area</h4>
+        <p><strong>Team size: 4–6 people</strong></p>
+        <ul>
+          <li>1 Integration Lead (can be part-time)</li>
+          <li>1 OT/Controls Engineer</li>
+          <li>1 IT Architect / Engineer</li>
+          <li>1 Data Engineer</li>
+          <li>1 Security Specialist (shared resource)</li>
+          <li>1 Subject Matter Expert from operations</li>
+        </ul>
+        <p style="margin-top:12px;"><strong>Duration:</strong> 3–6 months</p>
+        <p><strong>Goal:</strong> Prove the architecture works with real equipment. Connect 5–15 machines. Deliver one visible use case (typically real-time OEE or machine status dashboard).</p>
+      </div>
+      <div class="phase-card">
+        <span class="phase-label" style="background:#f59e0b;color:#fff;border:none;">Phase 2</span>
+        <h4>Plant-Wide Deployment</h4>
+        <p><strong>Team size: 8–12 people</strong></p>
+        <ul>
+          <li>1 Integration Lead (full-time)</li>
+          <li>2–3 OT Engineers (for different equipment types)</li>
+          <li>2 IT Architects / Engineers</li>
+          <li>1 Data Architect</li>
+          <li>1–2 Data Engineers</li>
+          <li>1 Security Specialist</li>
+          <li>1 MES/ERP Integration Specialist</li>
+          <li>1 Analytics Engineer</li>
+        </ul>
+        <p style="margin-top:12px;"><strong>Duration:</strong> 6–12 months</p>
+        <p><strong>Goal:</strong> Scale to all production areas. Establish namespace governance. Connect business systems. Deliver analytics that drive operational decisions.</p>
+      </div>
+      <div class="phase-card">
+        <span class="phase-label" style="background:#10b981;color:#fff;border:none;">Phase 3</span>
+        <h4>Enterprise — Multi-Site</h4>
+        <p><strong>Team size: 15–25 people</strong></p>
+        <ul>
+          <li>All Phase 2 roles, plus:</li>
+          <li>Regional OT/IT leads per site</li>
+          <li>Dedicated governance team (2–3 people)</li>
+          <li>Site replication engineers</li>
+          <li>Change management lead</li>
+          <li>Training and documentation specialist</li>
+          <li>24/7 support rotation</li>
+        </ul>
+        <p style="margin-top:12px;"><strong>Duration:</strong> 12–24 months</p>
+        <p><strong>Goal:</strong> Consistent UNS across all sites. Standardised namespace. Cross-site analytics. Replication playbooks. Continuous improvement.</p>
+      </div>
+    </div>
+
+    <h3>The Staffing Ramp</h3>
+
+    <div class="network-diagram">
+      <svg viewBox="0 0 720 260" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <text x="360" y="16" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="600" fill="var(--grey-400)" text-anchor="middle" letter-spacing="0.1em">TEAM SIZE OVER TIME</text>
+
+        <!-- Axes -->
+        <line x1="60" y1="40" x2="60" y2="210" stroke="var(--grey-300)" stroke-width="1"/>
+        <line x1="60" y1="210" x2="690" y2="210" stroke="var(--grey-300)" stroke-width="1"/>
+        <text x="25" y="130" font-family="'JetBrains Mono', monospace" font-size="8" fill="var(--grey-400)" text-anchor="middle" transform="rotate(-90 25 130)">TEAM SIZE</text>
+        <text x="375" y="230" font-family="'JetBrains Mono', monospace" font-size="8" fill="var(--grey-400)" text-anchor="middle">TIMELINE</text>
+
+        <!-- Y-axis markers -->
+        <text x="52" y="195" font-family="'JetBrains Mono', monospace" font-size="8" fill="var(--grey-500)" text-anchor="end">4</text>
+        <line x1="56" y1="192" x2="64" y2="192" stroke="var(--grey-300)" stroke-width="1"/>
+        <text x="52" y="155" font-family="'JetBrains Mono', monospace" font-size="8" fill="var(--grey-500)" text-anchor="end">10</text>
+        <line x1="56" y1="152" x2="64" y2="152" stroke="var(--grey-300)" stroke-width="1"/>
+        <text x="52" y="105" font-family="'JetBrains Mono', monospace" font-size="8" fill="var(--grey-500)" text-anchor="end">18</text>
+        <line x1="56" y1="102" x2="64" y2="102" stroke="var(--grey-300)" stroke-width="1"/>
+        <text x="52" y="70" font-family="'JetBrains Mono', monospace" font-size="8" fill="var(--grey-500)" text-anchor="end">25</text>
+        <line x1="56" y1="67" x2="64" y2="67" stroke="var(--grey-300)" stroke-width="1"/>
+
+        <!-- Phase labels -->
+        <text x="170" y="245" font-family="'JetBrains Mono', monospace" font-size="8" fill="#3b82f6" text-anchor="middle" font-weight="600">PILOT</text>
+        <text x="360" y="245" font-family="'JetBrains Mono', monospace" font-size="8" fill="#f59e0b" text-anchor="middle" font-weight="600">PLANT-WIDE</text>
+        <text x="570" y="245" font-family="'JetBrains Mono', monospace" font-size="8" fill="#10b981" text-anchor="middle" font-weight="600">ENTERPRISE</text>
+
+        <!-- Phase boundaries -->
+        <line x1="255" y1="40" x2="255" y2="210" stroke="var(--grey-200)" stroke-width="1" stroke-dasharray="4 4"/>
+        <line x1="460" y1="40" x2="460" y2="210" stroke="var(--grey-200)" stroke-width="1" stroke-dasharray="4 4"/>
+
+        <!-- Time markers -->
+        <text x="100" y="225" font-family="'JetBrains Mono', monospace" font-size="7" fill="var(--grey-500)" text-anchor="middle">Month 1</text>
+        <text x="255" y="225" font-family="'JetBrains Mono', monospace" font-size="7" fill="var(--grey-500)" text-anchor="middle">Month 6</text>
+        <text x="460" y="225" font-family="'JetBrains Mono', monospace" font-size="7" fill="var(--grey-500)" text-anchor="middle">Month 12</text>
+        <text x="660" y="225" font-family="'JetBrains Mono', monospace" font-size="7" fill="var(--grey-500)" text-anchor="middle">Month 24+</text>
+
+        <!-- Staffing curve -->
+        <path d="M 100 192 L 160 188 L 220 180 L 255 172 L 300 155 L 360 145 L 420 135 L 460 128 L 510 110 L 560 95 L 620 80 L 660 75" stroke="var(--black)" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+
+        <!-- Key hires annotated -->
+        <circle cx="100" cy="192" r="4" fill="#3b82f6"/>
+        <text x="100" y="205" font-family="'JetBrains Mono', monospace" font-size="7" fill="#3b82f6" text-anchor="middle">Core team</text>
+
+        <circle cx="220" cy="180" r="4" fill="#3b82f6"/>
+        <text x="220" y="175" font-family="'JetBrains Mono', monospace" font-size="7" fill="#3b82f6" text-anchor="middle">+Security</text>
+
+        <circle cx="300" cy="155" r="4" fill="#f59e0b"/>
+        <text x="300" y="150" font-family="'JetBrains Mono', monospace" font-size="7" fill="#f59e0b" text-anchor="middle">+Data Arch</text>
+
+        <circle cx="420" cy="135" r="4" fill="#f59e0b"/>
+        <text x="420" y="130" font-family="'JetBrains Mono', monospace" font-size="7" fill="#f59e0b" text-anchor="middle">+MES/Analytics</text>
+
+        <circle cx="510" cy="110" r="4" fill="#10b981"/>
+        <text x="510" y="105" font-family="'JetBrains Mono', monospace" font-size="7" fill="#10b981" text-anchor="middle">+Site leads</text>
+
+        <circle cx="620" cy="80" r="4" fill="#10b981"/>
+        <text x="620" y="75" font-family="'JetBrains Mono', monospace" font-size="7" fill="#10b981" text-anchor="middle">+Support/Gov</text>
+      </svg>
+    </div>
+
+    <p>The key insight is that this isn't linear hiring — it's <strong>phased capability building</strong>. Each new hire unlocks the next stage of the project. Don't bring the analytics engineer on board before you have data flowing. Don't hire site replication leads before you've proven the architecture at one site. Match your team to what the project actually needs right now.</p>
+
+    <div class="success-indicator">
+      <span class="success-icon">✓</span>
+      <strong>The most expensive mistake is hiring too many people too early.</strong> A 12-person team burning budget on a pilot that only needs 5 people creates political pressure to show ROI before the architecture is proven. Start lean, prove the approach, then scale the team alongside the project.
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- BUILD, HIRE, OR PARTNER                 -->
+    <!-- ═══════════════════════════════════════ -->
+    <h2 id="build-hire-partner">Build, Hire, or Partner</h2>
+
+    <p>The question every decision-maker asks: "Do we do this ourselves, hire contractors, or bring in a system integrator?" The honest answer is that the right approach changes as the project matures. Here's what we recommend at each stage.</p>
+
+    <h3>Pilot Phase: Lead with a Partner, Embed Your People</h3>
+
+    <p>In the pilot, speed matters more than self-sufficiency. You need to prove the concept before you can justify headcount. But you also need someone internal learning alongside the partner — otherwise you're buying a demo, not building a capability.</p>
+
+    <div class="option-grid">
+      <div class="option-card">
+        <h4>What to outsource</h4>
+        <p>Architecture design, initial infrastructure setup, first equipment connections. A system integrator or specialist contractor who has done this before will move 3–5x faster than an internal team figuring it out from scratch. They bring proven patterns, known pitfalls, and equipment-specific experience.</p>
+      </div>
+      <div class="option-card">
+        <h4>What to keep internal</h4>
+        <p>At minimum: one OT engineer who knows your equipment and one IT person who will own the infrastructure long-term. These people should be paired with the external team, not watching from the sidelines. Every architectural decision, every configuration choice, every troubleshooting session is a knowledge transfer opportunity.</p>
+      </div>
+    </div>
+
+    <h3>Plant-Wide: Hybrid — Core Internal, Specialists External</h3>
+
+    <p>By this stage, the architecture is proven and you're scaling. The internal team should own the day-to-day — they know the systems, the equipment, the organisational context. But you'll still need external specialists for areas that don't justify a full-time hire.</p>
+
+    <table class="def-table">
+      <thead>
+        <tr><th>Keep Internal</th><th>Why</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Integration Lead</td><td>Institutional knowledge, stakeholder relationships, long-term accountability</td></tr>
+        <tr><td>OT Engineers (1–2)</td><td>Equipment knowledge, plant-floor relationships, safety awareness</td></tr>
+        <tr><td>IT Architect</td><td>Infrastructure ownership, on-call responsibility, evolving requirements</td></tr>
+        <tr><td>Data Architect</td><td>Namespace governance is ongoing, not one-time — this person prevents drift</td></tr>
+      </tbody>
+    </table>
+
+    <table class="def-table" style="margin-top:16px;">
+      <thead>
+        <tr><th>Contract or Partner</th><th>Why</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>OT Security Specialist</td><td>Specialised domain, periodic assessments rather than daily work, expensive to retain full-time</td></tr>
+        <tr><td>Edge Computing / Protocol Specialists</td><td>Needed for specific equipment integrations, not ongoing</td></tr>
+        <tr><td>MES/ERP Integration</td><td>Often requires vendor-specific expertise (SAP, Oracle) that's project-based</td></tr>
+        <tr><td>Architecture Validation</td><td>External review catches blind spots — useful quarterly, not daily</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Enterprise: Mostly Internal with Strategic Partners</h3>
+
+    <p>At enterprise scale, the UNS is critical infrastructure. You wouldn't outsource your ERP support or your network operations — and you shouldn't outsource your data backbone either. The internal team should be self-sufficient for day-to-day operations, with external partners reserved for architecture reviews, scaling challenges, and new technology adoption.</p>
+
+    <div class="warning-banner">
+      <span class="warning-icon">⚠</span>
+      <div>
+        <strong>The knowledge transfer trap.</strong> Every engagement with an external partner should include explicit knowledge transfer milestones. "The SI will configure the broker" is a recipe for dependency. "The SI will configure the broker while pair-programming with our IT architect, who will document the configuration and perform the next deployment independently" is a capability investment. Build this into every statement of work.
+      </div>
+    </div>
+
+    <p>The right framework or tooling changes this equation significantly. A platform like fn-uns that uses standard technologies (MQTT, Docker, Git) and provides scaffolding for common patterns reduces the need for deep custom development — which means your team can be smaller and less specialised than a team building everything from scratch. The architecture decisions are already made; your team focuses on connecting equipment and building business logic.</p>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- THREE ORG MODELS                        -->
+    <!-- ═══════════════════════════════════════ -->
+    <h2 id="org-models">Three Org Models</h2>
+
+    <p>How you structure the team matters as much as who's on it. Here are three models we've seen work, each suited to different organisational contexts.</p>
+
+    <h3>Model 1: Centralised DataOps Team</h3>
+
+    <div class="network-diagram">
+      <svg viewBox="0 0 680 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <text x="340" y="16" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="600" fill="var(--grey-400)" text-anchor="middle" letter-spacing="0.1em">CENTRALISED DATAOPS TEAM</text>
+
+        <!-- Top: CDO -->
+        <rect x="255" y="32" width="170" height="36" rx="6" fill="var(--white)" stroke="var(--grey-300)" stroke-width="1.5"/>
+        <text x="340" y="55" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="600" fill="var(--black)" text-anchor="middle">DataOps Director</text>
+
+        <!-- Lines down -->
+        <line x1="340" y1="68" x2="340" y2="90" stroke="var(--grey-300)" stroke-width="1"/>
+        <line x1="120" y1="90" x2="560" y2="90" stroke="var(--grey-300)" stroke-width="1"/>
+        <line x1="120" y1="90" x2="120" y2="104" stroke="var(--grey-300)" stroke-width="1"/>
+        <line x1="267" y1="90" x2="267" y2="104" stroke="var(--grey-300)" stroke-width="1"/>
+        <line x1="413" y1="90" x2="413" y2="104" stroke="var(--grey-300)" stroke-width="1"/>
+        <line x1="560" y1="90" x2="560" y2="104" stroke="var(--grey-300)" stroke-width="1"/>
+
+        <!-- 4 team boxes -->
+        <rect x="40" y="104" width="160" height="36" rx="6" fill="var(--white)" stroke="#3b82f6" stroke-width="1.5"/>
+        <text x="120" y="127" font-family="'JetBrains Mono', monospace" font-size="8" font-weight="600" fill="#3b82f6" text-anchor="middle">OT Integration</text>
+
+        <rect x="187" y="104" width="160" height="36" rx="6" fill="var(--white)" stroke="#f59e0b" stroke-width="1.5"/>
+        <text x="267" y="127" font-family="'JetBrains Mono', monospace" font-size="8" font-weight="600" fill="#f59e0b" text-anchor="middle">IT Infrastructure</text>
+
+        <rect x="333" y="104" width="160" height="36" rx="6" fill="var(--white)" stroke="#10b981" stroke-width="1.5"/>
+        <text x="413" y="127" font-family="'JetBrains Mono', monospace" font-size="8" font-weight="600" fill="#10b981" text-anchor="middle">Data &amp; Analytics</text>
+
+        <rect x="480" y="104" width="160" height="36" rx="6" fill="var(--white)" stroke="#ef4444" stroke-width="1.5"/>
+        <text x="560" y="127" font-family="'JetBrains Mono', monospace" font-size="8" font-weight="600" fill="#ef4444" text-anchor="middle">Security</text>
+
+        <!-- Lines to sites -->
+        <line x1="120" y1="140" x2="120" y2="165" stroke="var(--grey-300)" stroke-width="1"/>
+        <line x1="60" y1="165" x2="180" y2="165" stroke="var(--grey-300)" stroke-width="1"/>
+        <line x1="60" y1="165" x2="60" y2="180" stroke="var(--grey-300)" stroke-width="1"/>
+        <line x1="120" y1="165" x2="120" y2="180" stroke="var(--grey-300)" stroke-width="1"/>
+        <line x1="180" y1="165" x2="180" y2="180" stroke="var(--grey-300)" stroke-width="1"/>
+
+        <rect x="20" y="180" width="80" height="30" rx="4" fill="var(--grey-50)" stroke="var(--grey-200)" stroke-width="1"/>
+        <text x="60" y="199" font-family="'JetBrains Mono', monospace" font-size="7" fill="var(--grey-600)" text-anchor="middle">Plant A</text>
+
+        <rect x="80" y="180" width="80" height="30" rx="4" fill="var(--grey-50)" stroke="var(--grey-200)" stroke-width="1"/>
+        <text x="120" y="199" font-family="'JetBrains Mono', monospace" font-size="7" fill="var(--grey-600)" text-anchor="middle">Plant B</text>
+
+        <rect x="140" y="180" width="80" height="30" rx="4" fill="var(--grey-50)" stroke="var(--grey-200)" stroke-width="1"/>
+        <text x="180" y="199" font-family="'JetBrains Mono', monospace" font-size="7" fill="var(--grey-600)" text-anchor="middle">Plant C</text>
+
+        <!-- Pros/Cons -->
+        <text x="340" y="245" font-family="'JetBrains Mono', monospace" font-size="8" fill="var(--grey-500)" text-anchor="middle">Single team serves all sites · Standardised approach · Shared services</text>
+        <text x="340" y="260" font-family="'JetBrains Mono', monospace" font-size="8" fill="var(--grey-500)" text-anchor="middle">Risk: becomes bottleneck · slow response to local needs · travel overhead</text>
+      </svg>
+    </div>
+
+    <p>The centralised model works well for organisations with <strong>similar operations across sites</strong> — same equipment types, same products, same processes. One team builds the standard, then deploys it everywhere. The risk is that the central team becomes a bottleneck, and local sites feel underserved. This model requires strong executive sponsorship to prevent sites from building shadow systems when the central team can't respond fast enough.</p>
+
+    <h3>Model 2: Federated Hub-and-Spoke</h3>
+
+    <div class="network-diagram">
+      <svg viewBox="0 0 680 320" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <text x="340" y="16" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="600" fill="var(--grey-400)" text-anchor="middle" letter-spacing="0.1em">FEDERATED HUB-AND-SPOKE</text>
+
+        <!-- Hub: CoE -->
+        <rect x="225" y="36" width="230" height="44" rx="8" fill="var(--white)" stroke="var(--black)" stroke-width="2"/>
+        <text x="340" y="55" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="700" fill="var(--black)" text-anchor="middle">Centre of Excellence</text>
+        <text x="340" y="70" font-family="'JetBrains Mono', monospace" font-size="7" fill="var(--grey-500)" text-anchor="middle">Architecture · Standards · Security · Governance</text>
+
+        <!-- Spokes -->
+        <line x1="260" y1="80" x2="120" y2="130" stroke="var(--grey-300)" stroke-width="1"/>
+        <line x1="340" y1="80" x2="340" y2="130" stroke="var(--grey-300)" stroke-width="1"/>
+        <line x1="420" y1="80" x2="560" y2="130" stroke="var(--grey-300)" stroke-width="1"/>
+
+        <!-- Site A -->
+        <rect x="40" y="130" width="160" height="70" rx="6" fill="var(--white)" stroke="#3b82f6" stroke-width="1.5"/>
+        <text x="120" y="150" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="600" fill="#3b82f6" text-anchor="middle">Plant A Team</text>
+        <text x="120" y="165" font-family="'JetBrains Mono', monospace" font-size="7" fill="var(--grey-500)" text-anchor="middle">OT Eng · IT Eng · Data Eng</text>
+        <text x="120" y="180" font-family="'JetBrains Mono', monospace" font-size="7" fill="var(--grey-500)" text-anchor="middle">Local autonomy · site-specific</text>
+        <text x="120" y="192" font-family="'JetBrains Mono', monospace" font-size="7" fill="var(--grey-500)" text-anchor="middle">equipment knowledge</text>
+
+        <!-- Site B -->
+        <rect x="260" y="130" width="160" height="70" rx="6" fill="var(--white)" stroke="#f59e0b" stroke-width="1.5"/>
+        <text x="340" y="150" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="600" fill="#f59e0b" text-anchor="middle">Plant B Team</text>
+        <text x="340" y="165" font-family="'JetBrains Mono', monospace" font-size="7" fill="var(--grey-500)" text-anchor="middle">OT Eng · IT Eng · Data Eng</text>
+        <text x="340" y="180" font-family="'JetBrains Mono', monospace" font-size="7" fill="var(--grey-500)" text-anchor="middle">Different equipment mix</text>
+        <text x="340" y="192" font-family="'JetBrains Mono', monospace" font-size="7" fill="var(--grey-500)" text-anchor="middle">different product lines</text>
+
+        <!-- Site C -->
+        <rect x="480" y="130" width="160" height="70" rx="6" fill="var(--white)" stroke="#10b981" stroke-width="1.5"/>
+        <text x="560" y="150" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="600" fill="#10b981" text-anchor="middle">Plant C Team</text>
+        <text x="560" y="165" font-family="'JetBrains Mono', monospace" font-size="7" fill="var(--grey-500)" text-anchor="middle">OT Eng · IT Eng · Data Eng</text>
+        <text x="560" y="180" font-family="'JetBrains Mono', monospace" font-size="7" fill="var(--grey-500)" text-anchor="middle">Acquired facility</text>
+        <text x="560" y="192" font-family="'JetBrains Mono', monospace" font-size="7" fill="var(--grey-500)" text-anchor="middle">legacy integration</text>
+
+        <!-- Dotted feedback lines -->
+        <line x1="120" y1="130" x2="260" y2="80" stroke="var(--grey-200)" stroke-width="1" stroke-dasharray="4 3"/>
+        <line x1="340" y1="130" x2="340" y2="80" stroke="var(--grey-200)" stroke-width="1" stroke-dasharray="4 3"/>
+        <line x1="560" y1="130" x2="420" y2="80" stroke="var(--grey-200)" stroke-width="1" stroke-dasharray="4 3"/>
+
+        <text x="340" y="230" font-family="'JetBrains Mono', monospace" font-size="7" fill="var(--grey-400)" text-anchor="middle">── solid: standards flow down · · · dotted: feedback flows up ──</text>
+
+        <!-- Pros/Cons -->
+        <text x="340" y="265" font-family="'JetBrains Mono', monospace" font-size="8" fill="var(--grey-500)" text-anchor="middle">Local autonomy with central standards · scales to diverse operations</text>
+        <text x="340" y="280" font-family="'JetBrains Mono', monospace" font-size="8" fill="var(--grey-500)" text-anchor="middle">Risk: sites diverge from standards · CoE must have authority not just influence</text>
+      </svg>
+    </div>
+
+    <p>The hub-and-spoke model suits organisations with <strong>diverse operations across sites</strong> — different equipment types, different products, maybe acquired facilities with completely different infrastructure. The Centre of Excellence sets standards, provides architecture guidance, and handles security. Local teams have autonomy to adapt to site-specific needs. The risk is drift — without strong governance, sites diverge from the standard and you end up with three different UNS implementations wearing the same logo.</p>
+
+    <h3>Model 3: Product Team (Recommended)</h3>
+
+    <div class="network-diagram">
+      <svg viewBox="0 0 680 310" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <text x="340" y="16" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="600" fill="var(--grey-400)" text-anchor="middle" letter-spacing="0.1em">PRODUCT TEAM MODEL</text>
+
+        <!-- Product Owner -->
+        <rect x="230" y="36" width="220" height="40" rx="6" fill="var(--white)" stroke="var(--black)" stroke-width="2"/>
+        <text x="340" y="52" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="700" fill="var(--black)" text-anchor="middle">UNS Product Owner</text>
+        <text x="340" y="67" font-family="'JetBrains Mono', monospace" font-size="7" fill="var(--grey-500)" text-anchor="middle">Roadmap · Priorities · Stakeholder alignment</text>
+
+        <!-- Lines to squads -->
+        <line x1="340" y1="76" x2="340" y2="96" stroke="var(--grey-300)" stroke-width="1"/>
+        <line x1="120" y1="96" x2="560" y2="96" stroke="var(--grey-300)" stroke-width="1"/>
+        <line x1="120" y1="96" x2="120" y2="110" stroke="var(--grey-300)" stroke-width="1"/>
+        <line x1="340" y1="96" x2="340" y2="110" stroke="var(--grey-300)" stroke-width="1"/>
+        <line x1="560" y1="96" x2="560" y2="110" stroke="var(--grey-300)" stroke-width="1"/>
+
+        <!-- Squad 1: Data Ingestion -->
+        <rect x="30" y="110" width="180" height="100" rx="6" fill="var(--white)" stroke="#3b82f6" stroke-width="1.5"/>
+        <text x="120" y="130" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="600" fill="#3b82f6" text-anchor="middle">Data Ingestion Squad</text>
+        <line x1="45" y1="138" x2="195" y2="138" stroke="var(--grey-100)" stroke-width="1"/>
+        <circle cx="52" cy="155" r="4" fill="#3b82f6" opacity="0.3"/>
+        <text x="62" y="158" font-family="'JetBrains Mono', monospace" font-size="7" fill="var(--grey-600)">OT Engineer</text>
+        <circle cx="52" cy="172" r="4" fill="#f59e0b" opacity="0.3"/>
+        <text x="62" y="175" font-family="'JetBrains Mono', monospace" font-size="7" fill="var(--grey-600)">IT Engineer</text>
+        <circle cx="52" cy="189" r="4" fill="#10b981" opacity="0.3"/>
+        <text x="62" y="192" font-family="'JetBrains Mono', monospace" font-size="7" fill="var(--grey-600)">Data Engineer</text>
+
+        <!-- Squad 2: Analytics -->
+        <rect x="250" y="110" width="180" height="100" rx="6" fill="var(--white)" stroke="#f59e0b" stroke-width="1.5"/>
+        <text x="340" y="126" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="600" fill="#f59e0b" text-anchor="middle">Analytics &amp;</text>
+        <text x="340" y="137" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="600" fill="#f59e0b" text-anchor="middle">Visualisation Squad</text>
+        <line x1="265" y1="143" x2="415" y2="143" stroke="var(--grey-100)" stroke-width="1"/>
+        <circle cx="272" cy="160" r="4" fill="#10b981" opacity="0.3"/>
+        <text x="282" y="163" font-family="'JetBrains Mono', monospace" font-size="7" fill="var(--grey-600)">Data Architect</text>
+        <circle cx="272" cy="177" r="4" fill="#f59e0b" opacity="0.3"/>
+        <text x="282" y="180" font-family="'JetBrains Mono', monospace" font-size="7" fill="var(--grey-600)">Analytics Engineer</text>
+        <circle cx="272" cy="194" r="4" fill="#3b82f6" opacity="0.3"/>
+        <text x="282" y="197" font-family="'JetBrains Mono', monospace" font-size="7" fill="var(--grey-600)">SME / Ops Liaison</text>
+
+        <!-- Squad 3: Integration -->
+        <rect x="470" y="110" width="180" height="100" rx="6" fill="var(--white)" stroke="#10b981" stroke-width="1.5"/>
+        <text x="560" y="126" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="600" fill="#10b981" text-anchor="middle">Integration &amp;</text>
+        <text x="560" y="137" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="600" fill="#10b981" text-anchor="middle">Security Squad</text>
+        <line x1="485" y1="143" x2="635" y2="143" stroke="var(--grey-100)" stroke-width="1"/>
+        <circle cx="492" cy="160" r="4" fill="#f59e0b" opacity="0.3"/>
+        <text x="502" y="163" font-family="'JetBrains Mono', monospace" font-size="7" fill="var(--grey-600)">MES/ERP Specialist</text>
+        <circle cx="492" cy="177" r="4" fill="#ef4444" opacity="0.3"/>
+        <text x="502" y="180" font-family="'JetBrains Mono', monospace" font-size="7" fill="var(--grey-600)">Security Engineer</text>
+        <circle cx="492" cy="194" r="4" fill="#f59e0b" opacity="0.3"/>
+        <text x="502" y="197" font-family="'JetBrains Mono', monospace" font-size="7" fill="var(--grey-600)">IT Engineer</text>
+
+        <!-- Key insight -->
+        <rect x="120" y="230" width="440" height="36" rx="6" fill="var(--grey-50)" stroke="var(--grey-200)" stroke-width="1"/>
+        <text x="340" y="248" font-family="'JetBrains Mono', monospace" font-size="8" fill="var(--black)" text-anchor="middle" font-weight="600">Each squad has OT + IT + Data embedded together — no handoffs between silos</text>
+        <text x="340" y="260" font-family="'JetBrains Mono', monospace" font-size="7" fill="var(--grey-500)" text-anchor="middle">Squads own outcomes end-to-end · treat the UNS as an internal product with a backlog</text>
+
+        <!-- Pros/Cons -->
+        <text x="340" y="285" font-family="'JetBrains Mono', monospace" font-size="8" fill="var(--grey-500)" text-anchor="middle">Fastest delivery · eliminates IT/OT handoff delays · continuous improvement</text>
+        <text x="340" y="300" font-family="'JetBrains Mono', monospace" font-size="8" fill="var(--grey-500)" text-anchor="middle">Risk: requires agile maturity · needs product management discipline · cultural shift</text>
+      </svg>
+    </div>
+
+    <p>The product team model treats the UNS as an <strong>internal product with users, a backlog, and continuous delivery</strong> — not a one-time project with a finish date. Cross-functional squads own entire capabilities end-to-end. The OT engineer, IT engineer, and data engineer in the Data Ingestion squad sit together, plan together, and deliver together. There are no handoffs between departments, no tickets thrown over a wall, no "waiting for IT to provision the server."</p>
+
+    <p>This is the model we recommend for most organisations. It eliminates the IT/OT silo by design — you can't maintain a silo when the people sit in the same squad and share the same goals. It also builds in continuous improvement: the UNS is never "done," it's a platform that evolves as the business needs change.</p>
+
+    <div class="warning-banner">
+      <span class="warning-icon">⚠</span>
+      <div>
+        <strong>The product model requires a cultural shift.</strong> If your organisation has rigid department boundaries, approval chains for every cross-department collaboration, and measures individuals by department KPIs rather than outcomes, the product model will create friction. Start with one squad as a proof-of-concept. Let the results make the case for the structure.
+      </div>
+    </div>
+
+    <h3>Choosing the Right Model</h3>
+
+    <table class="def-table">
+      <thead>
+        <tr><th>Factor</th><th>Centralised</th><th>Hub-and-Spoke</th><th>Product Team</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Number of sites</td>
+          <td>2–5 similar sites</td>
+          <td>3+ diverse sites</td>
+          <td>Any (scales with squads)</td>
+        </tr>
+        <tr>
+          <td>Operations similarity</td>
+          <td>High — same equipment, same processes</td>
+          <td>Low — different equipment, acquired facilities</td>
+          <td>Any</td>
+        </tr>
+        <tr>
+          <td>Organisational maturity</td>
+          <td>Traditional hierarchy</td>
+          <td>Decentralised with central standards</td>
+          <td>Agile-capable, cross-functional culture</td>
+        </tr>
+        <tr>
+          <td>Speed of delivery</td>
+          <td>Moderate — central queue</td>
+          <td>Moderate — local autonomy helps</td>
+          <td>Fastest — squads own outcomes</td>
+        </tr>
+        <tr>
+          <td>Consistency risk</td>
+          <td>Low — one team, one standard</td>
+          <td>Medium — governance needed</td>
+          <td>Low — shared platform, squad autonomy</td>
+        </tr>
+        <tr>
+          <td>Biggest risk</td>
+          <td>Central bottleneck</td>
+          <td>Standards drift</td>
+          <td>Cultural resistance</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- BRIDGING THE GAP                        -->
+    <!-- ═══════════════════════════════════════ -->
+    <h2 id="bridging-the-gap">Bridging the IT/OT Skills Gap</h2>
+
+    <p>You won't find enough people who already have both IT and OT skills. The market doesn't produce them in sufficient numbers, and it won't any time soon. The practical strategy is to <strong>cross-train the people you already have</strong> — extending OT engineers into IT territory and IT engineers into OT territory.</p>
+
+    <p>This isn't about making everyone a generalist. It's about building enough shared understanding that the OT engineer can have an informed conversation about MQTT topic design, and the IT architect can understand why you can't just restart a PLC to apply a configuration change.</p>
+
+    <h3>OT Engineers → IT Skills</h3>
+
+    <table class="def-table">
+      <thead>
+        <tr><th>Skill to Add</th><th>Why It Matters for UNS Work</th><th>How to Build It</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>MQTT fundamentals</td>
+          <td>The UNS backbone — they need to understand pub/sub, topic hierarchies, QoS levels, retained messages</td>
+          <td>Hands-on workshop: connect a PLC to an MQTT broker, publish data, subscribe from a dashboard. Half-day exercise.</td>
+        </tr>
+        <tr>
+          <td>JSON / structured data</td>
+          <td>Machine data needs to be serialised for the UNS. Understanding JSON payloads and schema design is essential.</td>
+          <td>Practical sessions mapping PLC registers to JSON structures. Build on what they already know — PLC data tables are structured data.</td>
+        </tr>
+        <tr>
+          <td>Linux / Docker basics</td>
+          <td>Edge gateways and UNS infrastructure typically run on Linux containers. They need enough to troubleshoot, not to administer.</td>
+          <td>Focus on operational skills: reading logs, restarting containers, checking connectivity. Skip system administration depth.</td>
+        </tr>
+        <tr>
+          <td>Git fundamentals</td>
+          <td>Configuration-as-code means PLC configurations, topic maps, and integration scripts live in version control.</td>
+          <td>Start with the basics: clone, commit, push, pull request. Pair them with an IT engineer for their first few commits.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>IT Engineers → OT Skills</h3>
+
+    <table class="def-table">
+      <thead>
+        <tr><th>Skill to Add</th><th>Why It Matters for UNS Work</th><th>How to Build It</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Industrial protocols</td>
+          <td>You can't design integration architecture without understanding how OPC UA, Modbus, and PROFINET actually work — their capabilities, limitations, and failure modes.</td>
+          <td>Structured training on OPC UA (information model, server/client, browsing). Hands-on with a test PLC and protocol analyser.</td>
+        </tr>
+        <tr>
+          <td>Safety and availability</td>
+          <td>OT networks have different priorities than IT. Availability is non-negotiable. Safety systems cannot be interrupted. Patching cycles are measured in years, not days.</td>
+          <td>Site orientation: walk the plant floor. Understand what happens when a machine stops unexpectedly. Attend a safety review meeting.</td>
+        </tr>
+        <tr>
+          <td>ISA-95 / Purdue Model</td>
+          <td>The reference architecture for manufacturing — defines the levels from physical equipment to enterprise systems. Essential for namespace design and network segmentation.</td>
+          <td>Formal training course (2 days). Then apply it: map the existing plant to the ISA-95 model. This exercise alone builds massive understanding.</td>
+        </tr>
+        <tr>
+          <td>Plant-floor time</td>
+          <td>There is no substitute for standing next to a machine, watching an operator run it, and understanding the physical reality that the data represents.</td>
+          <td>Embed IT engineers on the plant floor for regular rotations — minimum one day per week during the pilot. Not observing from a distance. Actually helping connect equipment.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="research-callout">
+      <div>
+        <strong>Cross-training is a 6–12 month investment, not a week-long bootcamp.</strong> The goal isn't certification — it's fluency. An OT engineer who has deployed a Docker container and pushed a git commit thinks differently about integration architecture than one who hasn't. An IT architect who has watched a PLC fault halt a production line thinks differently about network design than one who hasn't. Build the training into the project work — pair people on real tasks, don't send them to classrooms.
+        <div class="research-source">Source: Slalom — Bridging the IT/OT Divide: The Operating Model Shift (2025)</div>
+      </div>
+    </div>
+
+    <div class="success-indicator">
+      <span class="success-icon">✓</span>
+      <strong>Plan 6–12 months for meaningful cross-training.</strong> Combine formal training, mentorship, and project-based learning. The best knowledge transfer happens when OT and IT engineers are paired on the same tasks — not when they attend the same PowerPoint presentation.
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- KEY SUCCESS FACTORS                     -->
+    <!-- ═══════════════════════════════════════ -->
+    <h2 id="success-factors">Key Success Factors</h2>
+
+    <p>Beyond getting the right people in the right roles, there are organisational factors that determine whether the team succeeds or stalls. These aren't optional nice-to-haves — they're the difference between projects that scale and projects that quietly die after the pilot.</p>
+
+    <h3>1. Executive Sponsorship with Authority</h3>
+
+    <p>A UNS project crosses every organisational boundary in the building — IT, OT, operations, quality, maintenance, engineering, finance. Without a sponsor at VP or C-level who can override departmental resistance, the project will stall the first time it needs something from a department that doesn't see the UNS as their priority.</p>
+
+    <p>The sponsor's job is not to attend steering committee meetings. It's to remove barriers: approve cross-department resource allocation, protect the budget from quarterly cost-cutting, and make the tough call when IT and OT disagree on architecture. If your sponsor can't do these things — or won't — the project is at risk regardless of how good the team is.</p>
+
+    <h3>2. Co-location During Implementation</h3>
+
+    <p>The IT/OT divide is partly cultural, partly physical. IT works in an office. OT works on the plant floor. They rarely share the same space, the same meetings, or the same problems. A UNS project demands that they share all three.</p>
+
+    <p>During the pilot and plant-wide phases, the team should share a physical workspace — ideally near the plant floor, not in a corporate office three buildings away. Decisions that take a week over email take five minutes in a shared room. Problems that seem intractable from one domain are often obvious from another.</p>
+
+    <h3>3. Shared Language</h3>
+
+    <p>OT and IT use different vocabularies for the same concepts — and sometimes the same words for different concepts. A "tag" in OT is a named data point. A "tag" in IT is a metadata label. A "controller" in OT is a PLC. A "controller" in IT is a software component. These misunderstandings are small but cumulative, and they erode trust between teams.</p>
+
+    <table class="def-table">
+      <thead>
+        <tr><th>Term</th><th>OT Meaning</th><th>IT Meaning</th><th>UNS Team Should Use</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Tag</td><td>A named data point in a PLC or SCADA system</td><td>A metadata label on a resource</td><td>"Data point" or "signal" for OT; "label" or "metadata" for IT</td></tr>
+        <tr><td>Controller</td><td>A PLC or industrial controller</td><td>A software component (e.g., Kubernetes controller)</td><td>Always qualify: "PLC" or "software controller"</td></tr>
+        <tr><td>Network</td><td>The industrial network (PROFINET, EtherNet/IP)</td><td>The IT network (TCP/IP, switches, firewalls)</td><td>"OT network" or "IT network" — never just "the network"</td></tr>
+        <tr><td>Downtime</td><td>Machine not producing — costs money per minute</td><td>System unavailable — measured in SLA percentages</td><td>Be specific: "production downtime" vs "system outage"</td></tr>
+        <tr><td>Patch</td><td>A firmware update requiring a maintenance window, possibly months away</td><td>A security update applied this week</td><td>Always specify timeline: "next maintenance window" vs "this sprint"</td></tr>
+      </tbody>
+    </table>
+
+    <p>Build a shared glossary in the first week. It sounds trivial. It prevents months of miscommunication.</p>
+
+    <h3>4. Clear Decision Rights</h3>
+
+    <p>The most destructive dynamic in cross-functional teams is when <strong>the people with authority don't have context, and the people with context don't have authority</strong>. A plant manager who approves network changes but doesn't understand network segmentation. A data architect who designs the namespace but can't enforce naming standards without a three-level approval chain.</p>
+
+    <p>Define decision rights explicitly for key areas:</p>
+
+    <table class="def-table">
+      <thead>
+        <tr><th>Decision Area</th><th>Who Decides</th><th>Who Must Be Consulted</th><th>Who Is Informed</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Namespace structure and naming</td><td>Data Architect</td><td>OT Engineers, IT Architect</td><td>Integration Lead, Operations</td></tr>
+        <tr><td>Network segmentation and security zones</td><td>OT Security Specialist</td><td>IT Architect, OT Engineers</td><td>Plant Manager</td></tr>
+        <tr><td>Equipment connection method and timing</td><td>OT Engineer</td><td>IT Architect, Security</td><td>Integration Lead, Operations</td></tr>
+        <tr><td>Infrastructure and platform choices</td><td>IT Architect</td><td>Data Architect, OT Engineers</td><td>Integration Lead</td></tr>
+        <tr><td>Production downtime windows for integration</td><td>Plant Manager / Operations</td><td>OT Engineer, Integration Lead</td><td>Entire team</td></tr>
+      </tbody>
+    </table>
+
+    <h3>5. Start with a Visible Win</h3>
+
+    <p>The first use case should be <strong>low-risk, high-visibility</strong>. Not the most complex problem. Not the highest-value problem. The problem that will generate the most visible result with the least risk — because the team needs early momentum more than it needs to solve the hardest problem first.</p>
+
+    <p>Real-time machine status on a wall-mounted screen. Live OEE for a single production line. A simple dashboard that replaces a manual spreadsheet the supervisors update every shift. These aren't technically impressive, but they're organisationally powerful — they give operators and managers something tangible, build trust in the system, and create internal demand for the next phase.</p>
+
+    <div class="research-callout">
+      <div>
+        <strong>Projects that deliver a visible result within the first 90 days have a significantly higher success rate at reaching enterprise scale.</strong> The visible result doesn't need to be sophisticated — it needs to be real, running on live data, and used by actual people. This creates a political constituency for the project: people who depend on it, ask for more features, and resist budget cuts. Without that constituency, the project is vulnerable to the next cost-reduction exercise.
+        <div class="research-source">Source: RS Industria — The Steps and Skills Required for IIoT Implementation</div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ -->
+    <!-- BOTTOM LINE                             -->
+    <!-- ═══════════════════════════════════════ -->
+    <h2 id="bottom-line">The Bottom Line</h2>
+
+    <p>The technology for a Unified Namespace is mature, proven, and increasingly commoditised. The difference between projects that stall at the pilot and projects that scale to the enterprise is almost never the broker, the database, or the protocol. It's the team.</p>
+
+    <p>Getting the team right means getting six things right:</p>
+
+    <ul class="checklist">
+      <li><span class="check" style="background:var(--black);color:var(--white);border-color:var(--black);">✓</span> <strong>Cross-functional from day one</strong> — OT, IT, and data skills in the same team, working on the same problems. No silos, no handoffs, no "throw it over the wall."</li>
+      <li><span class="check" style="background:var(--black);color:var(--white);border-color:var(--black);">✓</span> <strong>Every role covered</strong> — not every role needs a full-time person, but every role needs to be filled. The roles you skip become the problems you discover too late.</li>
+      <li><span class="check" style="background:var(--black);color:var(--white);border-color:var(--black);">✓</span> <strong>Phased growth</strong> — start lean for the pilot, expand for plant-wide, reach full strength for enterprise. Don't overhire early. Don't underhire late.</li>
+      <li><span class="check" style="background:var(--black);color:var(--white);border-color:var(--black);">✓</span> <strong>Intentional knowledge retention</strong> — every external engagement includes knowledge transfer. Every architectural decision is documented. The capability stays in-house.</li>
+      <li><span class="check" style="background:var(--black);color:var(--white);border-color:var(--black);">✓</span> <strong>Data governance from the start</strong> — a data architect with namespace authority before the first data source is connected. This is the cheapest investment that prevents the most expensive rework.</li>
+      <li><span class="check" style="background:var(--black);color:var(--white);border-color:var(--black);">✓</span> <strong>Executive sponsorship with teeth</strong> — not a name on an org chart, but a leader who removes barriers, protects budget, and resolves cross-departmental conflicts.</li>
+    </ul>
+
+    <p>If you're about to start a UNS project, the most important work you'll do in the first month isn't selecting a broker or designing a namespace. It's putting the right people in the room.</p>
+
+    <div class="success-indicator">
+      <span class="success-icon">✓</span>
+      <strong>The UNS is a team sport.</strong> No single discipline — OT, IT, data, security, operations — has the full picture. The projects that succeed are the ones where every perspective is represented, respected, and empowered to contribute. Get the team right, and the technology follows.
+    </div>
+
+    <h3>Next Steps</h3>
+
+    <table class="def-table">
+      <thead><tr><th>Resource</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td><a href="/docs/getting-started.html" style="color:var(--black);border-bottom:1px solid var(--grey-300);">Getting Started</a></td><td>Deploy the fn-uns reference pipeline in under 5 minutes — give your new team something to work with on day one</td></tr>
+        <tr><td><a href="/guides/pipeline-functions.html" style="color:var(--black);border-bottom:1px solid var(--grey-300);">Pipeline Functions Guide</a></td><td>Walkthrough of the 12 functions that form the data pipeline — a shared reference for the whole team</td></tr>
+        <tr><td><a href="/guides/digital-twin-gitops.html" style="color:var(--black);border-bottom:1px solid var(--grey-300);">Digital Twins &amp; GitOps</a></td><td>Where to go after the UNS is running — building twin functions with fnkit</td></tr>
+        <tr><td><a href="/guides/yaml-definitions.html" style="color:var(--black);border-bottom:1px solid var(--grey-300);">YAML Definitions Guide</a></td><td>How your data architect defines the factory structure as code — namespace governance in practice</td></tr>
+        <tr><td><a href="/framework/" style="color:var(--black);border-bottom:1px solid var(--grey-300);">UNS Framework Standard</a></td><td>The open standard that defines topic hierarchy, data formats, and naming conventions</td></tr>
+      </tbody>
+    </table>
+
+    <!-- NAV BUTTONS -->
+    <div class="docs-nav-buttons">
+      <a href="/guides/" class="docs-nav-btn">
+        <span class="nav-label">Back</span>
+        <span class="nav-title">All Guides</span>
+      </a>
+      <a href="/guides/digital-twin-gitops.html" class="docs-nav-btn next">
+        <span class="nav-label">Related</span>
+        <span class="nav-title">Digital Twins &amp; GitOps</span>
+      </a>
+    </div>
+
+    <div style="margin-top:32px;padding:20px;background:var(--grey-50);border:1px solid var(--grey-200);border-radius:10px;">
+      <p style="font-family:var(--font-mono);font-size:12px;color:var(--grey-500);margin-bottom:4px;">
+        Guide Version: 1.0 · Applies To: UNS team staffing, OT/IT convergence, DataOps team structure, industrial integration
+      </p>
+      <p style="font-size:13px;color:var(--grey-500);margin-bottom:0;">
+        Last updated April 2026.
+      </p>
+    </div>
+
+  </main>
+</div>
+
+<script src="../shared.js"></script>
+<script>
+// Scroll-spy: highlight sidebar link matching current section
+(function() {
+  const sidebarLinks = document.querySelectorAll('.docs-sidebar a[href^="#"]');
+  const sections = [];
+  sidebarLinks.forEach(link => {
+    const id = link.getAttribute('href').slice(1);
+    const el = document.getElementById(id);
+    if (el) sections.push({ id, el, link });
+  });
+  if (!sections.length) return;
+
+  function update() {
+    const scrollY = window.scrollY + 80;
+    let current = sections[0];
+    for (const s of sections) {
+      if (s.el.offsetTop <= scrollY) current = s;
+    }
+    sidebarLinks.forEach(l => l.classList.remove('active'));
+    current.link.classList.add('active');
+  }
+
+  let ticking = false;
+  window.addEventListener('scroll', () => {
+    if (!ticking) {
+      requestAnimationFrame(() => { update(); ticking = false; });
+      ticking = true;
+    }
+  });
+  update();
+})();
+</script>
+</body>
+</html>

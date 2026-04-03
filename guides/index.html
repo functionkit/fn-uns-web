@@ -26,55 +26,74 @@
     <link rel="stylesheet" href="../style.css" />
     <link rel="stylesheet" href="../docs.css" />
     <style>
+      .guide-section {
+        margin-bottom: 48px;
+      }
+      .guide-section-header {
+        display: flex;
+        align-items: baseline;
+        gap: 12px;
+        margin-bottom: 16px;
+      }
+      .guide-section-title {
+        font-size: 20px;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+        color: var(--black);
+      }
+      .guide-section-count {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        font-weight: 500;
+        color: var(--grey-500);
+        letter-spacing: 0.02em;
+      }
       .guide-grid {
         display: grid;
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(2, 1fr);
         gap: 1px;
         background: var(--grey-200);
         border: 1px solid var(--grey-200);
         border-radius: 12px;
         overflow: hidden;
-        margin: 32px 0;
+      }
+      .guide-grid.single {
+        grid-template-columns: 1fr;
       }
       .guide-card {
         background: var(--white);
-        padding: 28px 32px;
+        padding: 24px 28px;
         text-decoration: none;
-        display: block;
+        display: flex;
+        flex-direction: column;
         transition: background 0.15s;
       }
       .guide-card:hover {
         background: var(--grey-50);
       }
-      .guide-card-header {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        margin-bottom: 8px;
-      }
-      .guide-card-title {
-        font-size: 17px;
-        font-weight: 700;
-        color: var(--black);
-        letter-spacing: -0.01em;
-      }
       .guide-card-badge {
         font-family: var(--font-mono);
         font-size: 10px;
         font-weight: 600;
-        color: var(--grey-700);
-        background: var(--grey-100);
-        padding: 3px 10px;
-        border-radius: 100px;
+        color: var(--grey-500);
         letter-spacing: 0.04em;
         text-transform: uppercase;
-        white-space: nowrap;
+        margin-bottom: 8px;
+      }
+      .guide-card-title {
+        font-size: 16px;
+        font-weight: 700;
+        color: var(--black);
+        letter-spacing: -0.01em;
+        line-height: 1.35;
+        margin-bottom: 8px;
       }
       .guide-card-desc {
         font-size: 14px;
         color: var(--grey-700);
         line-height: 1.6;
         margin-bottom: 12px;
+        flex: 1;
       }
       .guide-card-meta {
         font-family: var(--font-mono);
@@ -83,6 +102,11 @@
         display: flex;
         gap: 16px;
         flex-wrap: wrap;
+      }
+      @media (max-width: 960px) {
+        .guide-grid {
+          grid-template-columns: 1fr;
+        }
       }
     </style>
   </head>
@@ -150,176 +174,157 @@
           including the troubleshooting and lessons learned.
         </p>
 
-        <div class="guide-grid">
-          <a href="/guides/yaml-definitions.html" class="guide-card">
-            <div class="guide-card-header">
-              <span class="guide-card-title">YAML Definitions — Describing Your Factory as Code</span>
-              <span class="guide-card-badge">Standard</span>
-            </div>
-            <div class="guide-card-desc">
-              An in-depth look at the UNS Framework standard YAML definitions —
-              how factories are described today inside monolithic vendor tools,
-              why that breaks at scale, and how a set of simple YAML files gives
-              you a version-controlled, human-readable, machine-readable single
-              source of truth. Includes a hands-on walkthrough of describing a
-              small CNC shop from scratch, templates, generated MQTT topics, and
-              multi-site scaling.
-            </div>
-            <div class="guide-card-meta">
-              <span>YAML</span>
-              <span>ISA-95</span>
-              <span>GitOps</span>
-              <span>~20 min read</span>
-            </div>
-          </a>
-          <a href="/guides/digital-twin-gitops.html" class="guide-card">
-            <div class="guide-card-header">
-              <span class="guide-card-title">Digital Twins &amp; GitOps — Managing Manufacturing Complexity</span>
-              <span class="guide-card-badge">Digital Twin</span>
-            </div>
-            <div class="guide-card-desc">
-              An in-depth look at digital twins in manufacturing — what they
-              really are, why they're notoriously hard to scale, and how a
-              Unified Namespace with function-based GitOps provides a composable,
-              version-controlled, vendor-neutral alternative to monolithic twin
-              platforms. Includes a CNC quality twin case study and industry research.
-            </div>
-            <div class="guide-card-meta">
-              <span>Digital Twin</span>
-              <span>GitOps</span>
-              <span>Quality</span>
-              <span>~25 min read</span>
-            </div>
-          </a>
-          <a href="/guides/flow-vs-gitops.html" class="guide-card">
-            <div class="guide-card-header">
-              <span class="guide-card-title">Node-RED to GitOps — Flows vs Functions</span>
-              <span class="guide-card-badge">Architecture</span>
-            </div>
-            <div class="guide-card-desc">
-              A practical guide comparing flow-based programming (Node-RED) with
-              the function-based GitOps approach used by fn-uns. Start with
-              Node-RED to experiment, then graduate to GitOps when you need
-              version control, failure isolation, and multi-site deployment.
-              Includes migration path and side-by-side comparisons.
-            </div>
-            <div class="guide-card-meta">
-              <span>Node-RED</span>
-              <span>GitOps</span>
-              <span>Scaling</span>
-              <span>~15 min read</span>
-            </div>
-          </a>
-          <a href="/guides/pipeline-functions.html" class="guide-card">
-            <div class="guide-card-header">
-              <span class="guide-card-title">Functions That Make Up the UNS Pipeline</span>
-              <span class="guide-card-badge">Pipeline</span>
-            </div>
-            <div class="guide-card-desc">
-              A complete walkthrough of the 12 functions that form the fn-uns
-              data pipeline — from machine data capture through processing,
-              reporting, and AI-powered analysis. Animated diagrams, layer-by-layer
-              breakdown, and persona-specific insights for developers, IT, and
-              manufacturing engineers.
-            </div>
-            <div class="guide-card-meta">
-              <span>12 Functions</span>
-              <span>4 Layers</span>
-              <span>Architecture</span>
-              <span>~20 min read</span>
-            </div>
-          </a>
-          <a href="/guides/connectivity-options.html" class="guide-card">
-            <div class="guide-card-header">
-              <span class="guide-card-title">PLC Connectivity Options</span>
-              <span class="guide-card-badge">Architecture</span>
-            </div>
-            <div class="guide-card-desc">
-              How to get data from a Siemens Logo 8.4 on the factory floor into
-              your MQTT broker. Covers wired Ethernet and wireless LoRaWAN with
-              cost analysis, decision matrix, and approved manufacturer list.
-            </div>
-            <div class="guide-card-meta">
-              <span>Siemens Logo 8.4</span>
-              <span>LoRaWAN</span>
-              <span>Ethernet</span>
-              <span>~15 min read</span>
-            </div>
-          </a>
-          <a href="/guides/siemens-logo-mqtt.html" class="guide-card">
-            <div class="guide-card-header">
-              <span class="guide-card-title">Siemens Logo 8.4 → MQTT</span>
-              <span class="guide-card-badge">Hardware</span>
-            </div>
-            <div class="guide-card-desc">
-              Complete tutorial for configuring a Siemens Logo PLC to publish
-              data via MQTT. Covers network setup, Mosquitto broker
-              installation, VS Code MQTT client, Logo configuration, data
-              mapping, and testing with real I/O signals.
-            </div>
-            <div class="guide-card-meta">
-              <span>Siemens Logo 8.4</span>
-              <span>Eclipse Mosquitto</span>
-              <span>MQTT</span>
-              <span>~60 min</span>
-            </div>
-          </a>
-          <a href="/guides/siemens-logo-wiring.html" class="guide-card">
-            <div class="guide-card-header">
-              <span class="guide-card-title">Wiring Digital Inputs for Machine Status</span>
-              <span class="guide-card-badge">Wiring</span>
-            </div>
-            <div class="guide-card-desc">
-              How to wire real-world signals — stack lights, door sensors, relay
-              contacts, proximity switches — into the Logo's digital inputs to
-              detect whether a machine is running. Includes wire diagram,
-              step-by-step instructions, and safety best practice.
-            </div>
-            <div class="guide-card-meta">
-              <span>Siemens Logo 8.4</span>
-              <span>Digital Inputs</span>
-              <span>24VDC Wiring</span>
-              <span>~30 min</span>
-            </div>
-          </a>
-          <a href="/guides/teltonika-rut200-digital-io.html" class="guide-card">
-            <div class="guide-card-header">
-              <span class="guide-card-title">Teltonika RUT200 — Digital I/O for Machine Status</span>
-              <span class="guide-card-badge">Hardware</span>
-            </div>
-            <div class="guide-card-desc">
-              How to use a Teltonika RUT200 industrial cellular router's
-              built-in digital inputs to detect machine running/stopped status
-              and publish directly to the UNS via cellular MQTT. Covers network
-              setup, 24V and dry contact wiring, and MQTT configuration.
-            </div>
-            <div class="guide-card-meta">
-              <span>Teltonika RUT200</span>
-              <span>Digital I/O</span>
-              <span>Cellular MQTT</span>
-              <span>~45 min</span>
-            </div>
-          </a>
-          <a href="/guides/staffing-uns-team.html" class="guide-card">
-            <div class="guide-card-header">
-              <span class="guide-card-title">Staffing a UNS Team — Why Team Composition Breaks More Projects Than Technology</span>
-              <span class="guide-card-badge">Strategy</span>
-            </div>
-            <div class="guide-card-desc">
-              An in-depth guide to building the cross-functional team that
-              actually delivers a Unified Namespace. Covers the roles that
-              matter, what breaks without each one, team sizing by phase,
-              when to build vs hire vs partner, three org models, and how
-              to bridge the IT/OT skills gap — grounded in patterns from
-              real industrial projects.
-            </div>
-            <div class="guide-card-meta">
-              <span>Strategy</span>
-              <span>Team Building</span>
-              <span>OT/IT</span>
-              <span>~25 min read</span>
-            </div>
-          </a>
+        <div class="guide-section">
+          <div class="guide-section-header">
+            <span class="guide-section-title">Software</span>
+            <span class="guide-section-count">4 guides</span>
+          </div>
+          <div class="guide-grid">
+            <a href="/guides/yaml-definitions.html" class="guide-card">
+              <div class="guide-card-badge">Standard</div>
+              <div class="guide-card-title">YAML Definitions — Describing Your Factory as Code</div>
+              <div class="guide-card-desc">
+                How a set of simple YAML files gives you a version-controlled,
+                human-readable single source of truth for your factory. Hands-on
+                walkthrough from scratch, templates, and multi-site scaling.
+              </div>
+              <div class="guide-card-meta">
+                <span>YAML</span>
+                <span>ISA-95</span>
+                <span>~20 min</span>
+              </div>
+            </a>
+            <a href="/guides/digital-twin-gitops.html" class="guide-card">
+              <div class="guide-card-badge">Digital Twin</div>
+              <div class="guide-card-title">Digital Twins &amp; GitOps — Managing Manufacturing Complexity</div>
+              <div class="guide-card-desc">
+                What digital twins really are, why they're hard to scale, and how
+                a UNS with function-based GitOps replaces monolithic twin
+                platforms. Includes a CNC quality twin case study.
+              </div>
+              <div class="guide-card-meta">
+                <span>GitOps</span>
+                <span>Quality</span>
+                <span>~25 min</span>
+              </div>
+            </a>
+            <a href="/guides/pipeline-functions.html" class="guide-card">
+              <div class="guide-card-badge">Pipeline</div>
+              <div class="guide-card-title">Functions That Make Up the UNS Pipeline</div>
+              <div class="guide-card-desc">
+                The 12 functions that form the fn-uns data pipeline — from
+                machine data capture through processing, reporting, and AI
+                analysis. Animated diagrams and layer-by-layer breakdown.
+              </div>
+              <div class="guide-card-meta">
+                <span>12 Functions</span>
+                <span>4 Layers</span>
+                <span>~20 min</span>
+              </div>
+            </a>
+            <a href="/guides/flow-vs-gitops.html" class="guide-card">
+              <div class="guide-card-badge">Architecture</div>
+              <div class="guide-card-title">Node-RED to GitOps — Flows vs Functions</div>
+              <div class="guide-card-desc">
+                Comparing flow-based programming (Node-RED) with function-based
+                GitOps. Start with Node-RED to experiment, graduate to GitOps for
+                version control and multi-site deployment.
+              </div>
+              <div class="guide-card-meta">
+                <span>Node-RED</span>
+                <span>Scaling</span>
+                <span>~15 min</span>
+              </div>
+            </a>
+          </div>
+        </div>
+
+        <div class="guide-section">
+          <div class="guide-section-header">
+            <span class="guide-section-title">Hardware</span>
+            <span class="guide-section-count">4 guides</span>
+          </div>
+          <div class="guide-grid">
+            <a href="/guides/connectivity-options.html" class="guide-card">
+              <div class="guide-card-badge">Architecture</div>
+              <div class="guide-card-title">PLC Connectivity Options</div>
+              <div class="guide-card-desc">
+                Getting data from a Siemens Logo 8.4 into your MQTT broker.
+                Wired Ethernet vs wireless LoRaWAN with cost analysis,
+                decision matrix, and approved manufacturer list.
+              </div>
+              <div class="guide-card-meta">
+                <span>LoRaWAN</span>
+                <span>Ethernet</span>
+                <span>~15 min</span>
+              </div>
+            </a>
+            <a href="/guides/siemens-logo-mqtt.html" class="guide-card">
+              <div class="guide-card-badge">Hardware</div>
+              <div class="guide-card-title">Siemens Logo 8.4 &rarr; MQTT</div>
+              <div class="guide-card-desc">
+                Configuring a Siemens Logo PLC to publish data via MQTT. Network
+                setup, Mosquitto broker, Logo configuration, data mapping, and
+                testing with real I/O signals.
+              </div>
+              <div class="guide-card-meta">
+                <span>Mosquitto</span>
+                <span>MQTT</span>
+                <span>~60 min</span>
+              </div>
+            </a>
+            <a href="/guides/siemens-logo-wiring.html" class="guide-card">
+              <div class="guide-card-badge">Wiring</div>
+              <div class="guide-card-title">Wiring Digital Inputs for Machine Status</div>
+              <div class="guide-card-desc">
+                Wiring stack lights, door sensors, relay contacts, and proximity
+                switches into the Logo's digital inputs. Wire diagrams,
+                step-by-step instructions, and safety best practice.
+              </div>
+              <div class="guide-card-meta">
+                <span>Digital Inputs</span>
+                <span>24VDC</span>
+                <span>~30 min</span>
+              </div>
+            </a>
+            <a href="/guides/teltonika-rut200-digital-io.html" class="guide-card">
+              <div class="guide-card-badge">Hardware</div>
+              <div class="guide-card-title">Teltonika RUT200 — Digital I/O for Machine Status</div>
+              <div class="guide-card-desc">
+                Using a Teltonika RUT200's built-in digital inputs to detect
+                machine status and publish directly to the UNS via cellular
+                MQTT. Covers 24V and dry contact wiring.
+              </div>
+              <div class="guide-card-meta">
+                <span>Cellular</span>
+                <span>Digital I/O</span>
+                <span>~45 min</span>
+              </div>
+            </a>
+          </div>
+        </div>
+
+        <div class="guide-section">
+          <div class="guide-section-header">
+            <span class="guide-section-title">Strategy</span>
+            <span class="guide-section-count">1 guide</span>
+          </div>
+          <div class="guide-grid single">
+            <a href="/guides/staffing-uns-team.html" class="guide-card">
+              <div class="guide-card-badge">Strategy</div>
+              <div class="guide-card-title">Staffing a UNS Team — Why Team Composition Breaks More Projects Than Technology</div>
+              <div class="guide-card-desc">
+                Building the cross-functional team that actually delivers a UNS.
+                Roles that matter, team sizing by phase, build vs hire vs partner,
+                three org models, and bridging the IT/OT skills gap.
+              </div>
+              <div class="guide-card-meta">
+                <span>Team Building</span>
+                <span>OT/IT</span>
+                <span>~25 min</span>
+              </div>
+            </a>
+          </div>
         </div>
 
         <div class="info-banner">
